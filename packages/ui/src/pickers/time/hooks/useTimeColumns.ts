@@ -1,0 +1,93 @@
+import { useCallback, useMemo } from 'react';
+
+import { getDayPeriods } from '@/core/utils/date.utils';
+import { DEFAULT_TIME_SEPARATOR, TIME_FORMAT } from '@/pickers/time/time.constants';
+import type { TimeColumnsOptions } from '@/pickers/time/time.types';
+import {
+  buildTime,
+  clampTimeOfDay,
+  getTimeBounds,
+  getTimeColumnSpecs,
+  getTimeParts,
+  getTimeSeparator,
+  is12HourFormat,
+} from '@/pickers/time/time.utils';
+
+/** The hour / minute / second / AM-PM wheel columns for `date`, and the separator between them. */
+export const useTimeColumns = ({
+  date,
+  onValueChange,
+  onValueChanging,
+  format = TIME_FORMAT.auto,
+  locale,
+  minuteInterval = 1,
+  showSeconds = false,
+  secondInterval = 1,
+  minTime,
+  maxTime,
+  loop = true,
+  padHours,
+  dayPeriodLabels,
+  dayPeriodFirst = false,
+  separator = DEFAULT_TIME_SEPARATOR,
+  testID,
+}: TimeColumnsOptions) => {
+  const is12 = is12HourFormat(format, locale);
+  const periods = useMemo(() => dayPeriodLabels ?? getDayPeriods(locale), [dayPeriodLabels, locale]);
+  const [minSecond, maxSecond] = getTimeBounds(minTime, maxTime);
+
+  const columns = useMemo(() => {
+    const parts = getTimeParts(date, minuteInterval, secondInterval);
+    const specs = getTimeColumnSpecs({
+      parts,
+      is12,
+      padHours: padHours ?? !is12,
+      periods,
+      dayPeriodFirst,
+      minuteInterval,
+      showSeconds,
+      secondInterval,
+      bounds: [minSecond, maxSecond],
+      loop,
+    });
+    return specs.map(({ toPatch, ...column }) => {
+      const timeFor = (v: number) => buildTime(date, parts, toPatch(v), showSeconds);
+      return {
+        ...column,
+        testID: testID ? `${testID}-${column.key}` : undefined,
+        onValueChange: (v: number) => onValueChange(clampTimeOfDay(timeFor(v), [minSecond, maxSecond], showSeconds)),
+        onValueChanging: onValueChanging ? (v: number) => onValueChanging(timeFor(v)) : undefined,
+      };
+    });
+  }, [
+    date,
+    dayPeriodFirst,
+    is12,
+    loop,
+    maxSecond,
+    minSecond,
+    minuteInterval,
+    onValueChange,
+    onValueChanging,
+    padHours,
+    periods,
+    secondInterval,
+    showSeconds,
+    testID,
+  ]);
+
+  const columnSeparator = useCallback(
+    (leftIndex: number) =>
+      getTimeSeparator(
+        columns.map((column) => column.key),
+        leftIndex,
+        separator
+      ),
+    [columns, separator]
+  );
+
+  return {
+    columns,
+    separator: columnSeparator,
+  };
+};
