@@ -1,0 +1,89 @@
+name: Release
+
+# release-please reads the Conventional Commits on master and keeps a "chore(release)" PR open with the
+# version bump and CHANGELOG. Merging that PR tags the release, creates the GitHub release, publishes to
+# npm and redeploys the docs so the new version shows up in the version dropdown.
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    # Opens and updates the release PR, tags the release and creates the GitHub release.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+
+  # Builds and checks the tarball with read-only access: lint and tests run hundreds of dev dependencies, so none
+  # of them ever sees the npm publishing token.
+  build:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      # No dependency cache in the release path: a poisoned cache entry can't reach what gets published.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      # Ships the docs in the package so agents read the API offline. The docs site is built from the private repo
+      # and deployed before a release, so its copy matches this version.
+      - run: pnpm build:llms
+      # npm shows the package's README and LICENSE; the repo keeps one copy at the root.
+      - run: cp README.md LICENSE packages/ui/
+      - run: node packages/ui/scripts/check-pack.js
+      - run: npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/package"
+        working-directory: packages/ui
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: package
+          path: ${{ runner.temp }}/package/*.tgz
+          if-no-files-found: error
+          retention-days: 5
+
+  # The only job that can publish: no checkout, no install, no project code. It uploads the tarball built above
+  # through npm Trusted Publishing (OIDC, no stored token), which also attaches provenance.
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    # Give the `npm` environment a required reviewer and name it in npm's Trusted Publisher settings: then every
+    # publish waits for a click, and no other workflow or job can publish even with id-token access.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # Node 24 ships npm 11, which npm Trusted Publishing requires.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: package
+          path: package
+      - run: npm publish package/*.tgz --ignore-scripts --access public
