@@ -1,0 +1,56 @@
+import type { ViewStyle } from 'react-native';
+
+import type { Design } from '@/core/theme/theme.types';
+import type { ChoiceArrowSide, ChoiceIconPosition, ListDesign } from './segmented.types';
+
+export const CHOICE_VARIANT = {
+  segmented: 'segmented',
+  chips: 'chips',
+} as const;
+
+export const ICON_POSITION = {
+  left: 'left',
+  right: 'right',
+  top: 'top',
+  bottom: 'bottom',
+} as const;
+
+/** The item's direction that puts its icon (rendered first) on that side of the label. */
+export const ICON_POSITION_DIRECTION: Record<ChoiceIconPosition, ViewStyle['flexDirection']> = {
+  left: 'row',
+  right: 'row-reverse',
+  top: 'column',
+  bottom: 'column-reverse',
+};
+
+export const CHIP_HEIGHT = 34;
+export const SEGMENT_HEIGHT = 30;
+/** Space between the segmented track's edge and its items. */
+export const TRACK_PADDING = 3;
+export const SEGMENT_GAP = 2;
+export const DISABLED_ITEM_OPACITY = 0.45;
+
+/** Material outlines the segments and chips and marks the chosen one with a check; iOS and the web slide a raised thumb. */
+export const LIST_DESIGN: Record<Design, ListDesign> = {
+  brand: { outlined: false },
+  ios: { outlined: false },
+  material: { outlined: true },
+  web: { outlined: false },
+};
+export const OUTLINED_SEGMENT_HEIGHT = 40;
+
+/** Physical sides, like scroll offsets: the left arrow always scrolls toward x = 0. */
+export const SCROLL_ARROW_SIDE = {
+  left: 'left',
+  right: 'right',
+} as const;
+
+export const SCROLL_ARROW_SIDES: readonly ChoiceArrowSide[] = [SCROLL_ARROW_SIDE.left, SCROLL_ARROW_SIDE.right];
+export const SCROLL_ARROW_GLYPHS: Record<ChoiceArrowSide, string> = { left: '‹', right: '›' };
+export const SCROLL_ARROW_LABELS: Record<ChoiceArrowSide, string> = { left: 'Scroll left', right: 'Scroll right' };
+export const SCROLL_ARROW_SIZE = 28;
+
+export const ARROW_POSITION = {
+  outside: 'outside',
+  overlay: 'overlay',
+} as const;
