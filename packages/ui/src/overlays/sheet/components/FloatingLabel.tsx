@@ -1,0 +1,30 @@
+import { Animated, StyleSheet, View } from 'react-native';
+
+import { textStyle } from '@/core';
+import { useFloatingLabel } from '@/overlays/sheet/hooks/useFloatingLabel';
+import { REQUIRED_MARK } from '@/overlays/sheet/sheet.constants';
+import { styles } from '@/overlays/sheet/sheet.styles';
+import type { FloatingLabelProps } from '@/overlays/sheet/sheet.types';
+
+/** A Material label: inside the empty field like a placeholder, raised onto the border once the field opens or has a value. */
+export const FloatingLabel = ({ label, raised, open, invalid, required, borderWidth, theme, style }: FloatingLabelProps) => {
+  const floating = useFloatingLabel(raised, borderWidth, theme);
+  const c = theme.colors;
+  return (
+    <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.floatingLabelBox]} onLayout={floating.onBoxLayout}>
+      <Animated.Text
+        numberOfLines={1}
+        onLayout={floating.onTextLayout}
+        style={[
+          textStyle(theme, 'md'),
+          styles.floatingLabel,
+          { backgroundColor: c.background, color: invalid ? c.danger : open ? c.primary : c.textSecondary, transform: floating.transform },
+          style,
+        ]}
+      >
+        {label}
+        {required ? REQUIRED_MARK : null}
+      </Animated.Text>
+    </View>
+  );
+};
