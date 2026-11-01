@@ -1,0 +1,93 @@
+import { View } from 'react-native';
+
+import { PickerText } from '@/core/components/PickerText';
+import { Touchable } from '@/core/components/Touchable';
+import { CHECK_MARK } from '@/core/core.constants';
+import {
+  CHOICE_VARIANT,
+  DISABLED_ITEM_OPACITY,
+  ICON_POSITION,
+  ICON_POSITION_DIRECTION,
+  LIST_DESIGN,
+} from '@/inputs/segmented/segmented.constants';
+import { styles } from '@/inputs/segmented/segmented.styles';
+import type { ListItemProps } from '@/inputs/segmented/segmented.types';
+
+export const ListItem = <T,>({
+  item,
+  selected,
+  divided,
+  variant,
+  iconPosition,
+  renderItem,
+  onPress,
+  onLayout,
+  theme,
+  slots,
+  testID,
+}: ListItemProps<T>) => {
+  const c = theme.colors;
+  const disabled = !!item.disabled;
+  const segmented = variant === CHOICE_VARIANT.segmented;
+  const { outlined } = LIST_DESIGN[theme.design];
+  const background = segmented ? 'transparent' : selected ? c.primaryMuted : c.surface;
+  const labelColor = outlined ? c.text : selected ? c.primary : segmented ? c.textSecondary : c.text;
+  // An icon above or below the label makes the item taller than the fixed segment or chip height.
+  const stacked = iconPosition === ICON_POSITION.top || iconPosition === ICON_POSITION.bottom;
+  const icon = typeof item.icon === 'function' ? item.icon({ selected, disabled, color: labelColor }) : item.icon;
+  return (
+    <View onLayout={(e) => onLayout(e.nativeEvent.layout)} style={segmented && styles.segmentSlot} testID={testID}>
+      <Touchable
+        theme={theme}
+        pressScale={!segmented}
+        disabled={disabled}
+        onPress={onPress}
+        accessibilityRole="radio"
+        accessibilityState={{ checked: selected, disabled }}
+        accessibilityLabel={item.label}
+        style={[
+          styles.item,
+          !stacked && (segmented ? styles.segment : styles.chip),
+          stacked && { paddingVertical: theme.spacing.xs },
+          {
+            flexDirection: ICON_POSITION_DIRECTION[iconPosition],
+            gap: theme.spacing.xs,
+            paddingHorizontal: theme.spacing.md,
+            borderRadius: segmented ? theme.radius.sm : theme.radius.full,
+            backgroundColor: background,
+            opacity: disabled ? DISABLED_ITEM_OPACITY : 1,
+          },
+          outlined && { backgroundColor: selected ? c.primaryMuted : 'transparent', borderColor: c.textSecondary },
+          outlined &&
+            segmented && [styles.outlinedSegment, !stacked && styles.outlinedSegmentHeight, { borderStartWidth: divided ? 1 : 0 }],
+          outlined && !segmented && { borderRadius: theme.radius.sm, borderWidth: selected ? 0 : 1 },
+          slots?.item,
+          selected && slots?.selectedItem,
+        ]}
+      >
+        {renderItem ? (
+          renderItem({ item, selected, disabled, theme })
+        ) : (
+          <>
+            {outlined && selected ? (
+              <PickerText theme={theme} size="sm" weight="bold" style={{ color: labelColor }}>
+                {CHECK_MARK}
+              </PickerText>
+            ) : (
+              icon
+            )}
+            <PickerText
+              theme={theme}
+              size="sm"
+              weight={selected && !segmented ? 'bold' : 'medium'}
+              numberOfLines={1}
+              style={[{ color: labelColor }, slots?.itemLabel, selected && slots?.selectedItemLabel]}
+            >
+              {item.label}
+            </PickerText>
+          </>
+        )}
+      </Touchable>
+    </View>
+  );
+};
