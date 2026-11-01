@@ -1,0 +1,132 @@
+import { Text } from 'react-native';
+
+import { fireEvent, render, screen } from '@testing-library/react-native';
+
+import { toDateKey } from '@/core/utils/date.utils';
+import { Calendar } from './Calendar';
+import type { DateRange } from './calendar.types';
+
+const OCTOBER = new Date(2026, 9, 1);
+const dayCell = (d: number, month = 'October') => screen.getByLabelText(new RegExp(`${month} ${d}, 2026`));
+const pressDay = (d: number) => fireEvent.press(dayCell(d));
+const rangeKeys = (range: DateRange) => [range.start && toDateKey(range.start), range.end && toDateKey(range.end)];
+
+describe('Calendar', () => {
+  it('selects a single day', async () => {
+    const onValueChange = jest.fn();
+    await render(<Calendar initialMonth={OCTOBER} onValueChange={onValueChange} />);
+    await pressDay(15);
+    expect(toDateKey(onValueChange.mock.calls[0][0])).toBe('2026-10-15');
+    expect(dayCell(15).props.accessibilityState).toMatchObject({ selected: true });
+  });
+
+  it('labels weekdays with one letter in Material, and the short names elsewhere', async () => {
+    const { rerender } = await render(<Calendar initialMonth={OCTOBER} locale="en-US" design="material" />);
+    expect(screen.getAllByText('S')).toHaveLength(2);
+    await rerender(<Calendar initialMonth={OCTOBER} locale="en-US" design="web" />);
+    expect(screen.getByText('Sun')).toBeTruthy();
+    await rerender(<Calendar initialMonth={OCTOBER} locale="en-US" design="material" weekdayFormat="short" />);
+    expect(screen.getByText('Sun')).toBeTruthy();
+  });
+
+  it('builds a range from two taps', async () => {
+    const onValueChange = jest.fn();
+    await render(<Calendar mode="range" initialMonth={OCTOBER} onValueChange={onValueChange} />);
+    await pressDay(10);
+    await pressDay(14);
+    expect(onValueChange.mock.calls.map(([range]) => rangeKeys(range))).toEqual([
+      ['2026-10-10', null],
+      ['2026-10-10', '2026-10-14'],
+    ]);
+  });
+
+  it('picks a whole range from a preset, marks it selected and shows its month', async () => {
+    const onValueChange = jest.fn();
+    const presets = [{ label: 'Trip', start: new Date(2026, 10, 2), end: new Date(2026, 10, 6) }];
+    await render(<Calendar mode="range" initialMonth={OCTOBER} presets={presets} onValueChange={onValueChange} />);
+    await fireEvent.press(screen.getByText('Trip'));
+    expect(rangeKeys(onValueChange.mock.calls[0][0])).toEqual(['2026-11-02', '2026-11-06']);
+    expect(screen.getByRole('radio', { name: 'Trip' }).props.accessibilityState).toMatchObject({ checked: true });
+    expect(dayCell(2, 'November').props.accessibilityState).toMatchObject({ selected: true });
+    expect(screen.getByText('November 2026')).toBeTruthy();
+  });
+
+  it('passes presetsProps to the presets list, keeping the presets and the range its own', async () => {
+    const presets = [{ label: 'Trip', start: new Date(2026, 9, 2), end: new Date(2026, 9, 6) }];
+    await render(
+      <Calendar
+        mode="range"
+        initialMonth={OCTOBER}
+        presets={presets}
+        presetsProps={{ testID: 'presets', renderItem: ({ item, selected }) => <Text>{`${item.label}${selected ? ' ✓' : ''}`}</Text> }}
+      />
+    );
+    expect(screen.getByTestId('presets')).toBeTruthy();
+    await fireEvent.press(screen.getByText('Trip'));
+    expect(screen.getByText('Trip ✓')).toBeTruthy();
+  });
+
+  it('builds several ranges and removes one when tapped', async () => {
+    const onValueChange = jest.fn();
+    await render(<Calendar mode="ranges" initialMonth={OCTOBER} onValueChange={onValueChange} />);
+    await pressDay(3);
+    await pressDay(5);
+    await pressDay(20);
+    await pressDay(22);
+    expect(onValueChange.mock.calls[3][0].map(rangeKeys)).toEqual([
+      ['2026-10-03', '2026-10-05'],
+      ['2026-10-20', '2026-10-22'],
+    ]);
+    await pressDay(4);
+    expect(onValueChange.mock.calls[4][0].map(rangeKeys)).toEqual([['2026-10-20', '2026-10-22']]);
+  });
+
+  it('stops adding days at maxSelections in multiple mode', async () => {
+    const onValueChange = jest.fn();
+    await render(<Calendar mode="multiple" maxSelections={2} initialMonth={OCTOBER} onValueChange={onValueChange} />);
+    await pressDay(3);
+    await pressDay(7);
+    await pressDay(9);
+    expect(onValueChange).toHaveBeenCalledTimes(2);
+    expect(onValueChange.mock.calls[1][0].map(toDateKey)).toEqual(['2026-10-03', '2026-10-07']);
+  });
+
+  it('ignores disabled days', async () => {
+    const onValueChange = jest.fn();
+    await render(<Calendar initialMonth={OCTOBER} minDate={new Date(2026, 9, 12)} onValueChange={onValueChange} />);
+    await pressDay(11);
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(dayCell(11).props.accessibilityState).toMatchObject({ disabled: true });
+  });
+
+  it('pages months with the arrows and respects minDate', async () => {
+    const onMonthChange = jest.fn();
+    await render(<Calendar initialMonth={OCTOBER} minDate={new Date(2026, 9, 5)} onMonthChange={onMonthChange} />);
+    expect(screen.getByLabelText('Previous').props.accessibilityState).toMatchObject({ disabled: true });
+    await fireEvent.press(screen.getByLabelText('Next'));
+    expect(screen.getByText('November 2026')).toBeTruthy();
+    expect(onMonthChange.mock.calls[0][0].getMonth()).toBe(10);
+  });
+
+  it('jumps to a month through the title', async () => {
+    const onMonthChange = jest.fn();
+    await render(<Calendar initialMonth={OCTOBER} onMonthChange={onMonthChange} />);
+    await fireEvent.press(screen.getByText('October 2026'));
+    expect(screen.getByText('2026')).toBeTruthy();
+    await fireEvent.press(screen.getByText('Mar'));
+    expect(screen.getByText('March 2026')).toBeTruthy();
+    expect(onMonthChange.mock.calls[0][0].getMonth()).toBe(2);
+  });
+
+  it('follows a controlled value into another month', async () => {
+    const { rerender } = await render(<Calendar value={new Date(2026, 9, 15)} />);
+    expect(screen.getByText('October 2026')).toBeTruthy();
+    await rerender(<Calendar value={new Date(2027, 0, 5)} />);
+    expect(screen.getByText('January 2027')).toBeTruthy();
+  });
+
+  it('renders marked date labels', async () => {
+    await render(<Calendar initialMonth={OCTOBER} markedDates={{ '2026-10-30': { label: '$89' } }} />);
+    expect(screen.getByText('$89')).toBeTruthy();
+  });
+});
