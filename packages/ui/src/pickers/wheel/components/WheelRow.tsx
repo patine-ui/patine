@@ -1,0 +1,81 @@
+import { memo, useMemo } from 'react';
+import { Animated, Pressable } from 'react-native';
+
+import { PickerText } from '@/core/components/PickerText';
+import { TouchFeedback } from '@/core/components/TouchFeedback';
+import { useTouchFeedback } from '@/core/hooks/useTouchFeedback';
+import { PERSPECTIVE } from '@/pickers/wheel/wheel.constants';
+import { styles } from '@/pickers/wheel/wheel.styles';
+import type { WheelRowProps } from '@/pickers/wheel/wheel.types';
+import { getRowFrames } from '@/pickers/wheel/wheel.utils';
+
+const WheelRowImpl = <T,>({
+  dataIndex,
+  logicalIndex,
+  item,
+  selected,
+  itemHeight,
+  visibleItems,
+  scrollY,
+  variant,
+  rotation,
+  fadeTo,
+  theme,
+  textAlign,
+  slots,
+  renderItem,
+  onSelect,
+}: WheelRowProps<T>) => {
+  const animatedStyle = useMemo(() => {
+    const frames = getRowFrames({ dataIndex, itemHeight, visibleItems, variant, rotation, fadeTo });
+    const interpolate = <V extends number | string>(outputRange: V[]) =>
+      scrollY.interpolate<V>({ inputRange: frames.inputRange, outputRange, extrapolate: 'clamp' });
+    const opacity = interpolate(frames.opacity);
+    const scale = interpolate(frames.scale);
+    if (!frames.translateY || !frames.rotateX)
+      return {
+        opacity,
+        transform: [{ scale }],
+      };
+    return {
+      opacity,
+      transform: [
+        { perspective: PERSPECTIVE },
+        { translateY: interpolate(frames.translateY) },
+        { rotateX: interpolate(frames.rotateX) },
+        { scale },
+      ],
+    };
+  }, [dataIndex, fadeTo, itemHeight, rotation, scrollY, variant, visibleItems]);
+
+  const color = item.disabled ? theme.colors.textDisabled : selected ? theme.colors.text : theme.colors.textSecondary;
+  const pressable = !!onSelect && !item.disabled;
+  const touch = useTouchFeedback(theme, !pressable, false);
+
+  return (
+    <Pressable {...touch.handlers} onPress={pressable ? () => onSelect?.(dataIndex) : undefined} accessible={false}>
+      {/* Hover only, no ripple: the hover tint lives inside the animated row, so it rotates and fades with it */}
+      <Animated.View
+        ref={touch.ref}
+        style={[styles.row, { height: itemHeight, paddingHorizontal: theme.spacing.sm }, animatedStyle, slots?.item]}
+      >
+        <TouchFeedback {...touch.feedback} borderRadius={theme.radius.md} />
+        {renderItem ? (
+          renderItem({ item, index: logicalIndex, selected, theme })
+        ) : (
+          <PickerText
+            theme={theme}
+            size="lg"
+            weight={selected ? 'bold' : 'regular'}
+            numberOfLines={1}
+            style={[{ textAlign, color }, slots?.itemText, selected && slots?.selectedItemText, item.disabled && slots?.disabledItemText]}
+          >
+            {item.label}
+          </PickerText>
+        )}
+      </Animated.View>
+    </Pressable>
+  );
+};
+
+export const WheelRow = memo(WheelRowImpl) as typeof WheelRowImpl;
