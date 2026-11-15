@@ -1,0 +1,51 @@
+import { useCallback, useMemo, useState } from 'react';
+
+import { usePlatform } from '@/core/theme/ThemeProvider';
+import { FIELD_PRESENTATION } from '@/overlays/sheet/sheet.constants';
+import type { FieldPresentation, FieldSheetContextValue, PickerFieldBaseProps } from '@/overlays/sheet/sheet.types';
+import { resolveFieldPresentation, shouldCollapseOnPress } from '@/overlays/sheet/sheet.utils';
+import { useAnchor } from './useAnchor';
+
+/** Whether the field's picker is open, and where; opening does nothing while `disabled`. `toggle` is the field's tap. */
+export const usePickerField = ({
+  disabled,
+  presentation: presentationProp = FIELD_PRESENTATION.auto,
+  onOpen,
+  onClose,
+}: Pick<PickerFieldBaseProps, 'disabled' | 'onOpen' | 'onClose'> & { presentation?: FieldPresentation }) => {
+  const [open, setOpen] = useState(false);
+  const anchor = useAnchor();
+  const presentation = resolveFieldPresentation(presentationProp, usePlatform());
+  const dropdown = presentation === FIELD_PRESENTATION.dropdown;
+
+  const show = useCallback(() => {
+    if (disabled) return;
+    if (dropdown) anchor.measure();
+    setOpen(true);
+    onOpen?.();
+  }, [anchor.measure, disabled, dropdown, onOpen]);
+
+  const hide = useCallback(() => {
+    setOpen(false);
+    onClose?.();
+  }, [onClose]);
+
+  const toggle = shouldCollapseOnPress(presentation, open) ? hide : show;
+
+  const sheet = useMemo<FieldSheetContextValue>(
+    () => ({
+      presentation,
+      anchor: anchor.rect,
+    }),
+    [anchor.rect, presentation]
+  );
+
+  return {
+    open,
+    show,
+    hide,
+    toggle,
+    anchor,
+    sheet,
+  };
+};
