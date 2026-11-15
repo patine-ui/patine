@@ -1,0 +1,9 @@
+language js
+
+// House style: arrow functions only. Biome's useArrowFunction covers function expressions; this covers declarations.
+or {
+  JsFunctionDeclaration(),
+  JsFunctionExportDefaultDeclaration()
+} as $fn where {
+  register_diagnostic(span=$fn, message="Use an arrow function: `const name = () => …` (or `const Name = () => …; export default Name;`), not `function`.", severity="error")
+}

@@ -1,0 +1,19 @@
+language js
+
+// Animations are built only in packages/ui/src/core/animation: components ask for one by name (usePulse, useBlink,
+// useAnimatedTo, usePresence, timing…) and never put together their own.
+`Animated.$method($args)` where {
+  $method <: or {
+    `timing`,
+    `spring`,
+    `decay`,
+    `loop`,
+    `sequence`,
+    `parallel`,
+    `stagger`,
+    `delay`
+  },
+  $filename <: r".*packages/ui/src/.*",
+  $filename <: not r".*packages/ui/src/core/animation/.*",
+  register_diagnostic(span=$method, message="Build animations in core/animation only: use its hooks (usePulse, useBlink, useAnimatedTo, useAnimatedToggle, usePresence) or timing/spring, or add a new one there.", severity="error")
+}

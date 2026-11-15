@@ -1,0 +1,9 @@
+language js
+
+// The library imports across folders with `@/` (packages/ui/src): `@/core/theme/ThemeProvider`, never `../../core/...`.
+// Same-folder imports (`./x`) stay relative.
+JsModuleSource() as $source where {
+  $source <: r"['\"]\.\./.*['\"]",
+  $filename <: r".*packages/ui/src/.*",
+  register_diagnostic(span=$source, message="Import across folders with the `@/` alias (e.g. `@/core/theme/ThemeProvider`), not `../`.", severity="error")
+}
