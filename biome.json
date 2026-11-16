@@ -1,0 +1,101 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
+  "plugins": [
+    "./lint/expand-returned-objects.grit",
+    "./lint/arrow-functions-only.grit",
+    "./lint/animations-in-core.grit",
+    "./lint/alias-imports.grit"
+  ],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": ["**", "!packages/ui/src/pickers/emoji/data.ts", "!**/*.md", "!**/*.mdx", "!**/*.yaml", "!**/*.yml"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 140
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5"
+    }
+  },
+  "linter": {
+    "rules": {
+      "preset": "recommended",
+      "complexity": {
+        "useArrowFunction": "error"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ["react", "react/**", "react-native", "react-native/**"],
+              ":BLANK_LINE:",
+              [":NODE:", ":BUN:", ":PACKAGE_WITH_PROTOCOL:", ":PACKAGE:", "!@patine-ui/**"],
+              ":BLANK_LINE:"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["packages/ui/src/**", "apps/example/src/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noReactNativeRawText": {
+              "level": "on",
+              "options": {
+                "skip": [
+                  "PickerText",
+                  "Text",
+                  "UIText",
+                  "Heading",
+                  "Button",
+                  "Badge",
+                  "CardTitle",
+                  "CardDescription",
+                  "AlertTitle",
+                  "AlertDescription",
+                  "DialogTitle",
+                  "DialogDescription",
+                  "AlertDialogTitle",
+                  "AlertDialogDescription",
+                  "AlertDialogAction",
+                  "AlertDialogCancel",
+                  "TabsTrigger",
+                  "AccordionTrigger",
+                  "CollapsibleTrigger",
+                  "ModalTitle",
+                  "ModalDescription",
+                  "DrawerTitle",
+                  "DrawerDescription",
+                  "MessageBubble",
+                  "Num",
+                  "VisuallyHidden",
+                  "Kbd",
+                  "ToggleButton",
+                  "Link",
+                  "ToggleGroupItem"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
