@@ -1,0 +1,454 @@
+{
+  "name": "patine-ui",
+  "version": "0.0.0",
+  "description": "Patine: looks finished, feels native. Polished, accessible React Native components for iOS, Android and the web from one codebase, in the Patine design or each platform's native look (iOS, Material 3, web) with one prop. Zero native code and zero config, with a shadcn-style API. Buttons, text fields, lists, headers, chat bubbles, progress bars, dialogs, modals, drawers, tabs, steps, accordions, collapsibles, carousels and pagers, QR codes, sortable and swipeable lists, an image viewer, a signature pad, toasts, popovers, tooltips, cards with hover lift, theme-wide shadows, sheets, menus, tables, stats, pagination, breadcrumbs, bottom tab bars, toggle groups, number and search fields, layout primitives, and date, time, select, country and phone pickers, calendars and more.",
+  "license": "MIT",
+  "author": "Eliyahu Kriel <elik56a@gmail.com>",
+  "homepage": "https://github.com/patine-ui/patine#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patine-ui/patine.git",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/patine-ui/patine/issues"
+  },
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "lib/index.js",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./accordion": {
+      "types": "./lib/display/accordion/index.d.ts",
+      "default": "./lib/display/accordion/index.js"
+    },
+    "./action": {
+      "types": "./lib/overlays/action/index.d.ts",
+      "default": "./lib/overlays/action/index.js"
+    },
+    "./alert": {
+      "types": "./lib/feedback/alert/index.d.ts",
+      "default": "./lib/feedback/alert/index.js"
+    },
+    "./avatar": {
+      "types": "./lib/display/avatar/index.d.ts",
+      "default": "./lib/display/avatar/index.js"
+    },
+    "./badge": {
+      "types": "./lib/display/badge/index.d.ts",
+      "default": "./lib/display/badge/index.js"
+    },
+    "./breadcrumbs": {
+      "types": "./lib/navigation/breadcrumbs/index.d.ts",
+      "default": "./lib/navigation/breadcrumbs/index.js"
+    },
+    "./button": {
+      "types": "./lib/actions/button/index.d.ts",
+      "default": "./lib/actions/button/index.js"
+    },
+    "./calendar": {
+      "types": "./lib/pickers/calendar/index.d.ts",
+      "default": "./lib/pickers/calendar/index.js"
+    },
+    "./card": {
+      "types": "./lib/display/card/index.d.ts",
+      "default": "./lib/display/card/index.js"
+    },
+    "./carousel": {
+      "types": "./lib/display/carousel/index.d.ts",
+      "default": "./lib/display/carousel/index.js"
+    },
+    "./chat": {
+      "types": "./lib/ai/chat/index.d.ts",
+      "default": "./lib/ai/chat/index.js"
+    },
+    "./checkbox": {
+      "types": "./lib/inputs/checkbox/index.d.ts",
+      "default": "./lib/inputs/checkbox/index.js"
+    },
+    "./collapsible": {
+      "types": "./lib/display/collapsible/index.d.ts",
+      "default": "./lib/display/collapsible/index.js"
+    },
+    "./color": {
+      "types": "./lib/pickers/color/index.d.ts",
+      "default": "./lib/pickers/color/index.js"
+    },
+    "./core": {
+      "types": "./lib/core/index.d.ts",
+      "default": "./lib/core/index.js"
+    },
+    "./country": {
+      "types": "./lib/pickers/country/index.d.ts",
+      "default": "./lib/pickers/country/index.js"
+    },
+    "./date": {
+      "types": "./lib/pickers/date/index.d.ts",
+      "default": "./lib/pickers/date/index.js"
+    },
+    "./datetime": {
+      "types": "./lib/pickers/datetime/index.d.ts",
+      "default": "./lib/pickers/datetime/index.js"
+    },
+    "./descriptions": {
+      "types": "./lib/display/descriptions/index.d.ts",
+      "default": "./lib/display/descriptions/index.js"
+    },
+    "./dialog": {
+      "types": "./lib/overlays/dialog/index.d.ts",
+      "default": "./lib/overlays/dialog/index.js"
+    },
+    "./duration": {
+      "types": "./lib/pickers/duration/index.d.ts",
+      "default": "./lib/pickers/duration/index.js"
+    },
+    "./emoji": {
+      "types": "./lib/pickers/emoji/index.d.ts",
+      "default": "./lib/pickers/emoji/index.js"
+    },
+    "./empty": {
+      "types": "./lib/feedback/empty/index.d.ts",
+      "default": "./lib/feedback/empty/index.js"
+    },
+    "./field": {
+      "types": "./lib/inputs/field/index.d.ts",
+      "default": "./lib/inputs/field/index.js"
+    },
+    "./header": {
+      "types": "./lib/navigation/header/index.d.ts",
+      "default": "./lib/navigation/header/index.js"
+    },
+    "./kbd": {
+      "types": "./lib/display/kbd/index.d.ts",
+      "default": "./lib/display/kbd/index.js"
+    },
+    "./language": {
+      "types": "./lib/pickers/language/index.d.ts",
+      "default": "./lib/pickers/language/index.js"
+    },
+    "./layout": {
+      "types": "./lib/foundations/layout/index.d.ts",
+      "default": "./lib/foundations/layout/index.js"
+    },
+    "./lightbox": {
+      "types": "./lib/overlays/lightbox/index.d.ts",
+      "default": "./lib/overlays/lightbox/index.js"
+    },
+    "./list": {
+      "types": "./lib/display/list/index.d.ts",
+      "default": "./lib/display/list/index.js"
+    },
+    "./modal": {
+      "types": "./lib/overlays/modal/index.d.ts",
+      "default": "./lib/overlays/modal/index.js"
+    },
+    "./month": {
+      "types": "./lib/pickers/month/index.d.ts",
+      "default": "./lib/pickers/month/index.js"
+    },
+    "./otp": {
+      "types": "./lib/inputs/otp/index.d.ts",
+      "default": "./lib/inputs/otp/index.js"
+    },
+    "./pagination": {
+      "types": "./lib/navigation/pagination/index.d.ts",
+      "default": "./lib/navigation/pagination/index.js"
+    },
+    "./popover": {
+      "types": "./lib/overlays/popover/index.d.ts",
+      "default": "./lib/overlays/popover/index.js"
+    },
+    "./progress": {
+      "types": "./lib/feedback/progress/index.d.ts",
+      "default": "./lib/feedback/progress/index.js"
+    },
+    "./qrcode": {
+      "types": "./lib/display/qrcode/index.d.ts",
+      "default": "./lib/display/qrcode/index.js"
+    },
+    "./radio": {
+      "types": "./lib/inputs/radio/index.d.ts",
+      "default": "./lib/inputs/radio/index.js"
+    },
+    "./rating": {
+      "types": "./lib/inputs/rating/index.d.ts",
+      "default": "./lib/inputs/rating/index.js"
+    },
+    "./segmented": {
+      "types": "./lib/inputs/segmented/index.d.ts",
+      "default": "./lib/inputs/segmented/index.js"
+    },
+    "./select": {
+      "types": "./lib/inputs/select/index.d.ts",
+      "default": "./lib/inputs/select/index.js"
+    },
+    "./separator": {
+      "types": "./lib/foundations/separator/index.d.ts",
+      "default": "./lib/foundations/separator/index.js"
+    },
+    "./sheet": {
+      "types": "./lib/overlays/sheet/index.d.ts",
+      "default": "./lib/overlays/sheet/index.js"
+    },
+    "./signature": {
+      "types": "./lib/inputs/signature/index.d.ts",
+      "default": "./lib/inputs/signature/index.js"
+    },
+    "./skeleton": {
+      "types": "./lib/feedback/skeleton/index.d.ts",
+      "default": "./lib/feedback/skeleton/index.js"
+    },
+    "./slider": {
+      "types": "./lib/inputs/slider/index.d.ts",
+      "default": "./lib/inputs/slider/index.js"
+    },
+    "./sortable": {
+      "types": "./lib/display/sortable/index.d.ts",
+      "default": "./lib/display/sortable/index.js"
+    },
+    "./stack": {
+      "types": "./lib/foundations/stack/index.d.ts",
+      "default": "./lib/foundations/stack/index.js"
+    },
+    "./stat": {
+      "types": "./lib/display/stat/index.d.ts",
+      "default": "./lib/display/stat/index.js"
+    },
+    "./steps": {
+      "types": "./lib/navigation/steps/index.d.ts",
+      "default": "./lib/navigation/steps/index.js"
+    },
+    "./swipeable": {
+      "types": "./lib/display/swipeable/index.d.ts",
+      "default": "./lib/display/swipeable/index.js"
+    },
+    "./switch": {
+      "types": "./lib/inputs/switch/index.d.ts",
+      "default": "./lib/inputs/switch/index.js"
+    },
+    "./tabbar": {
+      "types": "./lib/navigation/tabbar/index.d.ts",
+      "default": "./lib/navigation/tabbar/index.js"
+    },
+    "./table": {
+      "types": "./lib/display/table/index.d.ts",
+      "default": "./lib/display/table/index.js"
+    },
+    "./tabs": {
+      "types": "./lib/navigation/tabs/index.d.ts",
+      "default": "./lib/navigation/tabs/index.js"
+    },
+    "./text": {
+      "types": "./lib/foundations/text/index.d.ts",
+      "default": "./lib/foundations/text/index.js"
+    },
+    "./textfield": {
+      "types": "./lib/inputs/textfield/index.d.ts",
+      "default": "./lib/inputs/textfield/index.js"
+    },
+    "./time": {
+      "types": "./lib/pickers/time/index.d.ts",
+      "default": "./lib/pickers/time/index.js"
+    },
+    "./timezone": {
+      "types": "./lib/pickers/timezone/index.d.ts",
+      "default": "./lib/pickers/timezone/index.js"
+    },
+    "./toast": {
+      "types": "./lib/feedback/toast/index.d.ts",
+      "default": "./lib/feedback/toast/index.js"
+    },
+    "./tooltip": {
+      "types": "./lib/overlays/tooltip/index.d.ts",
+      "default": "./lib/overlays/tooltip/index.js"
+    },
+    "./wheel": {
+      "types": "./lib/pickers/wheel/index.d.ts",
+      "default": "./lib/pickers/wheel/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/__tests__",
+    "README.md",
+    "LICENSE",
+    "llms-full.txt"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "patine",
+    "react-native",
+    "ui",
+    "ui-kit",
+    "react-native-ui-kit",
+    "polished",
+    "ui-library",
+    "component-library",
+    "design-system",
+    "expo",
+    "react-native-web",
+    "cross-platform",
+    "shadcn",
+    "accessibility",
+    "theming",
+    "dark-mode",
+    "picker",
+    "wheel-picker",
+    "date-picker",
+    "time-picker",
+    "time-range-picker",
+    "calendar",
+    "range-picker",
+    "select",
+    "dropdown",
+    "inline-picker",
+    "emoji-picker",
+    "country-picker",
+    "country-code-picker",
+    "language-picker",
+    "phone-code",
+    "phone-input",
+    "phone-number-input",
+    "timezone-picker",
+    "time-zone-picker",
+    "bottom-sheet",
+    "60fps",
+    "action-sheet",
+    "menu",
+    "context-menu",
+    "dropdown-menu",
+    "modal",
+    "fullscreen-modal",
+    "drawer",
+    "side-sheet",
+    "collapsible",
+    "expand-collapse",
+    "shadow",
+    "elevation",
+    "datepicker",
+    "timepicker",
+    "datetime-picker",
+    "calendar-picker",
+    "date-range-picker",
+    "dropdown-picker",
+    "multi-select",
+    "emoji-keyboard",
+    "color-picker",
+    "slider",
+    "range-slider",
+    "otp-input",
+    "otp",
+    "rating",
+    "star-rating",
+    "verification-code",
+    "colour-picker",
+    "hex-color-picker",
+    "duration-picker",
+    "timer-picker",
+    "month-picker",
+    "month-year-picker",
+    "week-calendar",
+    "week-strip",
+    "expandable-calendar",
+    "ios-picker",
+    "react-native-component",
+    "keyboard-accessible",
+    "pure-js",
+    "no-native-code",
+    "material-design",
+    "material-date-picker",
+    "segmented-control",
+    "chips",
+    "autocomplete",
+    "creatable-select",
+    "tags-input",
+    "combobox",
+    "form-field",
+    "react-hook-form",
+    "typescript",
+    "button",
+    "checkbox",
+    "switch",
+    "radio-group",
+    "card",
+    "badge",
+    "avatar",
+    "alert",
+    "skeleton",
+    "separator",
+    "stack",
+    "chip-group",
+    "input-otp",
+    "shadcn-react-native",
+    "text-field",
+    "textarea",
+    "dialog",
+    "alert-dialog",
+    "tabs",
+    "accordion",
+    "toast",
+    "popover",
+    "tooltip",
+    "react-native-list",
+    "react-native-header",
+    "react-native-progress",
+    "react-native-chat",
+    "empty-state",
+    "carousel",
+    "pager",
+    "qr-code",
+    "sortable",
+    "drag-and-drop",
+    "swipeable",
+    "swipe-to-delete",
+    "image-viewer",
+    "lightbox",
+    "signature-pad",
+    "stepper",
+    "toggle-group",
+    "button-group",
+    "number-input",
+    "search-bar",
+    "checkbox-group",
+    "bottom-tabs",
+    "navigation-rail",
+    "breadcrumbs",
+    "pagination",
+    "table",
+    "data-table",
+    "stat",
+    "kpi",
+    "description-list",
+    "kbd",
+    "avatar-group",
+    "fab",
+    "link",
+    "copy-button",
+    "grid",
+    "layout",
+    "portal"
+  ],
+  "scripts": {
+    "build": "rm -rf lib && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "sync:exports": "node scripts/sync-exports.js",
+    "gen:emoji": "node scripts/build-emoji-data.js",
+    "gen:countries": "node scripts/build-country-data.js",
+    "gen:timezones": "node scripts/build-timezone-data.js"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-native": ">=0.72"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
