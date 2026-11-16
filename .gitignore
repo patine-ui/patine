@@ -1,0 +1,24 @@
+node_modules/
+lib/
+llms-full.txt
+# Copied from the root at release, for npm
+packages/ui/README.md
+*.log
+.DS_Store
+
+# The demo GIF recorder: local only, see reel/README.md
+reel/
+
+# Patine Pro and the docs site are a separate private repo that lives in this folder (private/). They never enter
+# this public repo's history.
+private/
+
+# Local AI assistant setup: the maintainer's own, not part of the project. AGENTS.md is the shared guide.
+.claude/
+CLAUDE.md
+
+# Secrets and local package tarballs never get committed.
+.env
+.env.*
+*.pem
+*.tgz

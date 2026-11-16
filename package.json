@@ -1,0 +1,50 @@
+{
+  "name": "patine-monorepo",
+  "private": true,
+  "description": "Patine monorepo: the patine-ui library, its MCP server and example app.",
+  "license": "MIT",
+  "author": "Eliyahu Kriel <elik56a@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patine-ui/patine.git"
+  },
+  "scripts": {
+    "start": "pnpm --filter @patine-ui/example start",
+    "web": "pnpm --filter @patine-ui/example web",
+    "ios": "pnpm --filter @patine-ui/example ios",
+    "android": "pnpm --filter @patine-ui/example android",
+    "lint": "node packages/ui/scripts/sync-exports.js --check && biome check .",
+    "format": "node scripts/expand-returned-objects.js && biome check --write .",
+    "typecheck": "tsc -p packages/ui/tsconfig.json && pnpm --filter @patine-ui/example typecheck",
+    "test": "jest",
+    "build": "pnpm --filter patine-ui build",
+    "sync:exports": "pnpm --filter patine-ui sync:exports",
+    "build:llms": "curl -fsSL https://patine.dev/llms-full.txt -o packages/ui/llms-full.txt"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^8.0.8",
+    "@biomejs/biome": "2.6.3",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/jest-preset": "0.88.1",
+    "@testing-library/react-native": "14.1.0",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.3.0",
+    "countries-list": "^3.4.1",
+    "emojibase-data": "^18.0.0",
+    "jest": "^30.5.2",
+    "lefthook": "^2.2.2",
+    "react": "19.3.1",
+    "react-native": "^0.88.1",
+    "test-renderer": "^1.3.1",
+    "tsc-alias": "^1.9.10",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
