@@ -22,8 +22,8 @@
     "build:llms": "curl -fsSL https://patine.dev/llms-full.txt -o packages/ui/llms-full.txt"
   },
   "devDependencies": {
-    "@babel/runtime": "^8.0.8",
-    "@biomejs/biome": "2.6.3",
+    "@babel/runtime": "^8.1.2",
+    "@biomejs/biome": "2.6.7",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@react-native/babel-preset": "0.88.1",
