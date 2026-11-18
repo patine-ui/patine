@@ -48,7 +48,6 @@ export const FieldInput = (props: FieldInputProps) => {
     styles: slots,
     theme: themeProp,
     design,
-    ref,
     // Taken out of `rest`: the hook handles these.
     value: _value,
     defaultValue: _defaultValue,
@@ -56,6 +55,8 @@ export const FieldInput = (props: FieldInputProps) => {
     onFocus: _onFocus,
     onBlur: _onBlur,
     onContentSizeChange: _onContentSizeChange,
+    onLayout: _onLayout,
+    ref: _ref,
     rows: _rows,
     minRows: _minRows,
     maxRows: _maxRows,
@@ -118,7 +119,8 @@ export const FieldInput = (props: FieldInputProps) => {
           </PickerText>
         ) : null}
         <TextInput
-          ref={ref}
+          ref={field.ref}
+          onLayout={field.onLayout}
           value={field.value}
           onChangeText={field.changeText}
           onFocus={field.onFocus}

@@ -1,13 +1,15 @@
-import { useId, useState } from 'react';
-import type { TextInputProps } from 'react-native';
+import { type ComponentRef, useId, useLayoutEffect, useRef, useState } from 'react';
+import type { TextInput, TextInputProps } from 'react-native';
 
+import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useFocus } from '@/core/hooks/useFocus';
 import type { Theme } from '@/core/theme/theme.types';
-import type { FieldInputProps } from '@/inputs/textfield/textfield.types';
-import { getLineHeight, getTextAreaHeight, resolveRows } from '@/inputs/textfield/textfield.utils';
+import type { FieldInputProps, WebTextArea } from '@/inputs/textfield/textfield.types';
+import { getLineHeight, getTextAreaHeight, measureTextArea, resolveRows } from '@/inputs/textfield/textfield.utils';
 
-type EventOf<K extends 'onFocus' | 'onBlur' | 'onContentSizeChange'> = Parameters<NonNullable<TextInputProps[K]>>[0];
+type TextInputInstance = ComponentRef<typeof TextInput>;
+type EventOf<K extends 'onFocus' | 'onBlur' | 'onContentSizeChange' | 'onLayout'> = Parameters<NonNullable<TextInputProps[K]>>[0];
 
 /** The text, focus, password reveal and TextArea height behind a field. `onValueChange` fires for the user's typing and clearing only. */
 export const useTextField = (
@@ -19,6 +21,9 @@ export const useTextField = (
     onFocus,
     onBlur,
     onContentSizeChange,
+    onLayout,
+    multiline,
+    ref,
     rows,
     minRows,
     maxRows,
@@ -33,6 +38,13 @@ export const useTextField = (
   const lineHeight = getLineHeight(theme.typography.sizes.md);
   const lines = resolveRows(rows, minRows, maxRows);
   const height = getTextAreaHeight(contentHeight, lineHeight, lines);
+  const node = useRef<TextInputInstance | null>(null);
+  // The web reports a textarea's content as never shorter than the box, so it's measured here when the text or width changes.
+  const measureOnWeb = () => {
+    if (IS_WEB && multiline && node.current) setContentHeight(measureTextArea(node.current as unknown as WebTextArea));
+  };
+  // biome-ignore lint/correctness/useExhaustiveDependencies: measures again when the text changes, from code too (a sent message clears it)
+  useLayoutEffect(measureOnWeb, [value]);
 
   return {
     value,
@@ -50,6 +62,15 @@ export const useTextField = (
     hidden: !!secureTextEntry && !revealed,
     toggleRevealed: () => setRevealed((r) => !r),
     labelId,
+    ref: (instance: TextInputInstance | null) => {
+      node.current = instance;
+      if (typeof ref === 'function') ref(instance);
+      else if (ref) ref.current = instance;
+    },
+    onLayout: (e: EventOf<'onLayout'>) => {
+      measureOnWeb();
+      onLayout?.(e);
+    },
     multiline: {
       lineHeight,
       height,

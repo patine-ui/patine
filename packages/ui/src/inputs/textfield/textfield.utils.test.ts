@@ -1,4 +1,12 @@
-import { formatCount, getLineHeight, getTextAreaHeight, getTextFieldAccessibility, isLabelRaised, resolveRows } from './textfield.utils';
+import {
+  formatCount,
+  getLineHeight,
+  getTextAreaHeight,
+  getTextFieldAccessibility,
+  isLabelRaised,
+  measureTextArea,
+  resolveRows,
+} from './textfield.utils';
 
 describe('resolveRows', () => {
   it('starts at 3 lines and grows without a limit by default', () => {
@@ -24,6 +32,21 @@ describe('getTextAreaHeight', () => {
     expect(getTextAreaHeight(0, lineHeight, rows)).toBe(44);
     expect(getTextAreaHeight(66, lineHeight, rows)).toBe(66);
     expect(getTextAreaHeight(500, lineHeight, rows)).toBe(88);
+  });
+});
+
+describe('measureTextArea', () => {
+  it('reads the text height at no height, then puts the height back', () => {
+    const style = { height: '110px' };
+    // A textarea's scrollHeight is never below its own height.
+    const node = {
+      style,
+      get scrollHeight() {
+        return Math.max(22, Number.parseFloat(style.height));
+      },
+    };
+    expect(measureTextArea(node)).toBe(22);
+    expect(style.height).toBe('110px');
   });
 });
 

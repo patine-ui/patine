@@ -120,3 +120,9 @@ export interface SearchFieldProps
   /** The text input itself */
   inputStyle?: StyleProp<TextStyle>;
 }
+
+/** The few DOM members a TextArea's height needs on the web; the library is typed without the DOM. */
+export interface WebTextArea {
+  style: { height: string };
+  scrollHeight: number;
+}

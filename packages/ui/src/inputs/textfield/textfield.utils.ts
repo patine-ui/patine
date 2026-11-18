@@ -1,6 +1,7 @@
 import type { FieldError } from '@/overlays/sheet/sheet.types';
 import { getFieldAccessibility } from '@/overlays/sheet/sheet.utils';
 import { DEFAULT_MIN_ROWS, LINE_HEIGHT_RATIO } from './textfield.constants';
+import type { WebTextArea } from './textfield.types';
 
 /** The lines a TextArea starts at and grows to: `rows` fixes both; `maxRows` is never below `minRows`. */
 export const resolveRows = (rows?: number, minRows = DEFAULT_MIN_ROWS, maxRows = Number.POSITIVE_INFINITY) => {
@@ -16,6 +17,18 @@ export const getLineHeight = (fontSize: number) => Math.round(fontSize * LINE_HE
 /** A TextArea's height: its text's, kept between its first and last row. */
 export const getTextAreaHeight = (contentHeight: number, lineHeight: number, rows: { min: number; max: number }) =>
   Math.min(Math.max(contentHeight, rows.min * lineHeight), rows.max * lineHeight);
+
+/**
+ * The web: a textarea's text height. Its `scrollHeight` never drops below its own height, so it's read at no height:
+ * otherwise a textarea first laid out narrow, or emptied, would stay as tall as it once was.
+ */
+export const measureTextArea = (node: WebTextArea) => {
+  const { height } = node.style;
+  node.style.height = '0px';
+  const content = node.scrollHeight;
+  node.style.height = height;
+  return content;
+};
 
 /** '12/200' with a `maxLength`, otherwise '12'. */
 export const formatCount = (length: number, maxLength?: number) => (maxLength ? `${length}/${maxLength}` : `${length}`);
