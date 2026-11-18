@@ -7,6 +7,7 @@ import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { Heading } from '@/foundations/text/Heading';
 import { Text } from '@/foundations/text/Text';
 import type { HeadingProps, TextProps } from '@/foundations/text/text.types';
+import { CardThemeContext, useCardTheme } from './CardContext';
 import { CARD_DESIGN } from './card.constants';
 import { styles } from './card.styles';
 import type { CardProps, CardSectionProps } from './card.types';
@@ -51,19 +52,24 @@ export const Card = ({
     },
   ];
   const pressable = !!(onPress || onLongPress);
-  const body = hasShorthand(title, description, footer) ? (
-    <>
-      {title || description ? (
-        <CardHeader theme={themeOverride}>
-          {title ? <CardTitle theme={themeOverride}>{title}</CardTitle> : null}
-          {description ? <CardDescription theme={themeOverride}>{description}</CardDescription> : null}
-        </CardHeader>
-      ) : null}
-      {children ? <CardContent theme={themeOverride}>{children}</CardContent> : null}
-      {footer ? <CardFooter theme={themeOverride}>{footer}</CardFooter> : null}
-    </>
-  ) : (
-    children
+  // Composed parts (CardHeader, CardTitle…) read the Card's theme and design from context.
+  const body = (
+    <CardThemeContext.Provider value={themeOverride}>
+      {hasShorthand(title, description, footer) ? (
+        <>
+          {title || description ? (
+            <CardHeader>
+              {title ? <CardTitle>{title}</CardTitle> : null}
+              {description ? <CardDescription>{description}</CardDescription> : null}
+            </CardHeader>
+          ) : null}
+          {children ? <CardContent>{children}</CardContent> : null}
+          {footer ? <CardFooter>{footer}</CardFooter> : null}
+        </>
+      ) : (
+        children
+      )}
+    </CardThemeContext.Provider>
   );
   if (!pressable && !interactive)
     return (
@@ -101,26 +107,28 @@ export const Card = ({
 
 /** The title and description at the top of a Card. */
 export const CardHeader = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
-  const theme = useTheme(themeProp);
+  const theme = useTheme(useCardTheme(themeProp));
   return <View style={[{ paddingHorizontal: theme.spacing.lg, gap: theme.spacing.xs }, style]} {...rest} />;
 };
 
 /** A Card's heading: level 3 for screen readers. */
-export const CardTitle = ({ level = 3, size = 'lg', ...rest }: HeadingProps) => <Heading level={level} size={size} {...rest} />;
+export const CardTitle = ({ level = 3, size = 'lg', theme, ...rest }: HeadingProps) => (
+  <Heading level={level} size={size} theme={useCardTheme(theme)} {...rest} />
+);
 
 /** Secondary text under a CardTitle. */
-export const CardDescription = ({ size = 'sm', color = 'textSecondary', ...rest }: TextProps) => (
-  <Text size={size} color={color} {...rest} />
+export const CardDescription = ({ size = 'sm', color = 'textSecondary', theme, ...rest }: TextProps) => (
+  <Text size={size} color={color} theme={useCardTheme(theme)} {...rest} />
 );
 
 /** The body of a Card. */
 export const CardContent = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
-  const theme = useTheme(themeProp);
+  const theme = useTheme(useCardTheme(themeProp));
   return <View style={[{ paddingHorizontal: theme.spacing.lg }, style]} {...rest} />;
 };
 
 /** Actions at the bottom of a Card, in a row. */
 export const CardFooter = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
-  const theme = useTheme(themeProp);
+  const theme = useTheme(useCardTheme(themeProp));
   return <View style={[styles.footer, { paddingHorizontal: theme.spacing.lg, gap: theme.spacing.sm }, style]} {...rest} />;
 };

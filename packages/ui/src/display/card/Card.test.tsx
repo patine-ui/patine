@@ -25,6 +25,19 @@ describe('Card', () => {
     });
   });
 
+  it("draws composed parts in the Card's theme", async () => {
+    await render(
+      <Card theme={{ colors: { text: '#123456', textSecondary: '#654321' } }}>
+        <CardHeader>
+          <CardTitle>Plan</CardTitle>
+          <CardDescription>Billed yearly</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+    expect(StyleSheet.flatten(screen.getByText('Plan').props.style)).toMatchObject({ color: '#123456' });
+    expect(StyleSheet.flatten(screen.getByText('Billed yearly').props.style)).toMatchObject({ color: '#654321' });
+  });
+
   it('draws a filled, borderless surface in the iOS design', async () => {
     await render(<Card testID="card" design="ios" />);
     expect(StyleSheet.flatten(screen.getByTestId('card').props.style)).toMatchObject({
