@@ -6,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     '^patine-ui$': '<rootDir>/packages/ui/src/index.ts',
     '^patine-ui/core$': '<rootDir>/packages/ui/src/core/index.ts',
+    '^@patine-ui/icons$': '<rootDir>/packages/icons/src/index.ts',
     // The library's own imports: `@/core/...` is packages/ui/src/core/...
     '^@/(.*)$': '<rootDir>/packages/ui/src/$1',
     '^react$': '<rootDir>/node_modules/react',
