@@ -33,7 +33,7 @@ export const SortableList = <T,>({
   const labels = { ...DEFAULT_SORTABLE_LABELS, ...labelsProp };
   const sortable = useSortable({ data, keyExtractor, onReorder, onDragStart, disabled, theme, labels });
   return (
-    <View ref={sortable.rootRef} style={style} {...sortable.panHandlers}>
+    <View ref={sortable.rootRef} style={[style, sortable.active && styles.dragging]} {...sortable.panHandlers}>
       <ScrollView
         ref={sortable.scrollRef}
         role="list"

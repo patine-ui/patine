@@ -4,6 +4,8 @@ import { MIN_TOUCH_TARGET } from '@/core/core.constants';
 
 export const styles = StyleSheet.create({
   raised: { zIndex: 1 },
+  // Mid-drag the mouse would select the rows' text on the web.
+  dragging: Platform.select({ web: { userSelect: 'none' } as object, default: {} }),
   press: Platform.select({ web: { cursor: 'grab' } as object, default: {} }),
   handle: {
     minWidth: MIN_TOUCH_TARGET,
