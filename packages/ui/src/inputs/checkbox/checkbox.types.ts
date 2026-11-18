@@ -17,8 +17,6 @@ export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style'
   description?: React.ReactNode;
   /** Which side of the label the box sits on: 'end' as settings lists do. Default: 'start' */
   controlPosition?: ControlPosition;
-  /** @deprecated Use `controlPosition="end"` */
-  controlAtEnd?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   /** A string label's text */
@@ -61,6 +59,4 @@ export interface CheckboxGroupProps extends Omit<ViewProps, 'children'>, Themabl
   orientation?: 'vertical' | 'horizontal';
   /** Which side of its label each box sits on: 'end' as settings lists do. Default: 'start' */
   controlPosition?: ControlPosition;
-  /** @deprecated Use `controlPosition="end"` */
-  controlAtEnd?: boolean;
 }

@@ -16,8 +16,6 @@ export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' |
   description?: React.ReactNode;
   /** Which side of the label the switch sits on. Default: 'end', as settings lists do */
   controlPosition?: ControlPosition;
-  /** @deprecated Use `controlPosition="start"` */
-  controlAtStart?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   /** A string label's text */

@@ -5,7 +5,6 @@ import { ChoiceRow } from '@/core/components/ChoiceRow';
 import { CONTROL_POSITION } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { isControlAtEnd } from '@/core/utils/control.utils';
 import { SWITCH_DESIGN, SWITCH_OUTLINE_WIDTH } from './switch.constants';
 import { styles } from './switch.styles';
 import type { SwitchProps } from './switch.types';
@@ -19,8 +18,7 @@ export const Switch = ({
   checked: checkedProp,
   defaultChecked = false,
   onCheckedChange,
-  controlPosition,
-  controlAtStart,
+  controlPosition = CONTROL_POSITION.end,
   theme: themeProp,
   design,
   ...rest
@@ -39,7 +37,7 @@ export const Switch = ({
       theme={theme}
       role="switch"
       checked={checked}
-      controlAtEnd={isControlAtEnd(controlPosition, controlAtStart ? CONTROL_POSITION.start : undefined, CONTROL_POSITION.end)}
+      controlAtEnd={controlPosition === CONTROL_POSITION.end}
       onPress={() => setChecked(!checked)}
       control={
         <View

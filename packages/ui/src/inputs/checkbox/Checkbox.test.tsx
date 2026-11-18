@@ -37,17 +37,15 @@ describe('Checkbox', () => {
     expect(screen.getByRole('checkbox', { name: 'Off' })).toBeDisabled();
   });
 
-  it('sits before its label by default, and after it with controlPosition or the deprecated controlAtEnd', async () => {
+  it('sits before its label by default, and after it with controlPosition="end"', async () => {
     const direction = (name: string) => StyleSheet.flatten(screen.getByRole('checkbox', { name }).props.style).flexDirection;
     await render(
       <>
         <Checkbox label="Default" />
         <Checkbox label="End" controlPosition="end" />
-        <Checkbox label="Legacy" controlAtEnd />
       </>
     );
     expect(direction('Default')).toBe('row');
     expect(direction('End')).toBe('row-reverse');
-    expect(direction('Legacy')).toBe('row-reverse');
   });
 });
