@@ -19,12 +19,13 @@ export type {
   SpringOptions,
   TimingOptions,
 } from './animation.types';
-export { blinkLoop, hoverTransition, pulseLoop, spring, sweepLoop, timing } from './animation.utils';
+export { blinkLoop, cycleLoop, hoverTransition, pulseLoop, spring, sweepLoop, timing } from './animation.utils';
 export { useAnimatedTo } from './hooks/useAnimatedTo';
 export { useAnimatedToggle } from './hooks/useAnimatedToggle';
 export { useAnimatedValue } from './hooks/useAnimatedValue';
 export { useBlink } from './hooks/useBlink';
 export { useCollapse } from './hooks/useCollapse';
+export { useCycle } from './hooks/useCycle';
 export { useHoverTransition } from './hooks/useHoverTransition';
 export { usePop } from './hooks/usePop';
 export { usePresence } from './hooks/usePresence';

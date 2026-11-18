@@ -9,6 +9,7 @@ export {
   useAnimatedValue,
   useBlink,
   useCollapse,
+  useCycle,
   usePop,
   usePresence,
   usePulse,

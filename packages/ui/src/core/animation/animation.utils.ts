@@ -77,3 +77,7 @@ export const afterPaint = (callback: () => void) => {
   });
   return () => cancelAnimationFrame(frame);
 };
+
+/** Runs `value` from 0 to 1 at an even pace over `period` ms, over and over: a marquee scrolling, a border's light going round. */
+export const cycleLoop = (value: Animated.Value, period: number) =>
+  Animated.loop(Animated.sequence([timing(value, 0, { duration: 0 }), timing(value, 1, { duration: period, easing: Easing.linear })]));
