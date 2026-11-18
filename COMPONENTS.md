@@ -20,7 +20,7 @@ right on three platforms (charts, scheduler, data grid, editors, media) and comp
 | ScrollArea, SafeArea, KeyboardAware | ⬜ | layout |
 | Portal | ✅ | core |
 | VisuallyHidden, Slot | ✅ | core |
-| Icon | ⬜ | core |
+| Icon, Glyph (227 starter icons; the full 669 in four variants is Pro) | ✅ | `@patine-ui/icons` package |
 
 ## Actions
 
@@ -92,7 +92,8 @@ right on three platforms (charts, scheduler, data grid, editors, media) and comp
 | Breadcrumbs, Pagination | Free | ✅ | breadcrumbs, pagination |
 | DropdownMenu | Free | ✅ | action |
 | Wizard (steps, validation, sidebar) | Pro | 🚧 | — (Pro preview) |
-| ContextMenu, Menubar, CommandPalette | Pro | ⬜ | — |
+| ContextMenu (long press, right click) | Free | ⬜ | action |
+| Menubar, CommandPalette | Pro | ⬜ | — |
 
 ## Overlays
 
@@ -130,12 +131,12 @@ right on three platforms (charts, scheduler, data grid, editors, media) and comp
 | Accordion | Free | ✅ | accordion |
 | Collapsible (custom icon, position, rotation, asChild) | Free | ✅ | collapsible |
 | TreeView (selection, checkboxes, lazy, virtualized, keyboard) | Pro | 🚧 | — (Pro preview) |
-| Image (placeholder, fallback) | Free | ⬜ | image |
+| Image (placeholder, fade in, fallback, alt) | Free | ✅ | image |
 | Kbd, Stat / KPI tile, DescriptionList | Free | ✅ | kbd, stat, descriptions |
 | Simple Table (sortable) | Free | ✅ | table |
 | SwipeableRow (leading/trailing, full swipe) | Free | ✅ | swipeable |
 | Sparkline | Free | ⬜ | display |
-| Markdown renderer | Free | ⬜ | markdown |
+| Markdown renderer (static; streaming is Pro) | Free | ⬜ | markdown |
 | Carousel, Pager, PageIndicator (peek, loop, autoplay) | Free | ✅ | carousel |
 | SortableList, SortableHandle (drag to reorder) | Free | ✅ | sortable |
 | QRCode (pure-TS encoder, versions 1–40, logo) | Free | ✅ | qrcode |
@@ -147,7 +148,8 @@ right on three platforms (charts, scheduler, data grid, editors, media) and comp
 | Component | Tier | Status |
 |---|---|---|
 | MessageBubble, ChatComposer | Free | ✅ |
-| ChatThread, TypingIndicator, SuggestionChips | Free | ⬜ |
+| TypingIndicator, SuggestionChips | Free | ✅ |
+| ChatThread | Free | ⬜ |
 | Streaming markdown, tool-call and reasoning panels, citations, attachments tray, voice input | Pro | ⬜ |
 
 ## Pro only
