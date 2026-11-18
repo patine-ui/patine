@@ -9,7 +9,7 @@ import { isControlAtEnd } from '@/core/utils/control.utils';
 import { SWITCH_DESIGN, SWITCH_OUTLINE_WIDTH } from './switch.constants';
 import { styles } from './switch.styles';
 import type { SwitchProps } from './switch.types';
-import { getThumbTravel } from './switch.utils';
+import { getThumbMotion } from './switch.utils';
 
 /**
  * An on/off switch drawn in the active design, with an optional label; the whole row flips it. The thumb slides and the
@@ -29,9 +29,8 @@ export const Switch = ({
   const [checked, setChecked] = useControllableState(checkedProp, defaultChecked, onCheckedChange);
   const progress = useAnimatedToggle(checked, theme.animation.duration);
   const look = SWITCH_DESIGN[theme.design];
-  const travel = getThumbTravel(look);
+  const thumb = getThumbMotion(look);
   const c = theme.colors;
-  const thumbSize = (on: boolean) => (on ? look.thumbOn : look.thumbOff);
   // An absolute child is placed inside the border, so the outlined track's border shifts the thumb back by its width.
   const border = look.outlinedOff ? SWITCH_OUTLINE_WIDTH : 0;
 
@@ -58,27 +57,36 @@ export const Switch = ({
           ]}
         >
           <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: c.primary, opacity: progress }]} />
+          {/* Slides and, in Material, grows: both transforms, so the size animates on the native driver too */}
           <Animated.View
             style={[
               styles.thumb,
               {
-                width: thumbSize(checked),
-                height: thumbSize(checked),
-                borderRadius: thumbSize(checked) / 2,
+                width: thumb.size,
+                height: thumb.size,
+                borderRadius: thumb.size / 2,
                 boxShadow: theme.shadows.sm,
-                top: (look.trackHeight - thumbSize(checked)) / 2 - border,
-                backgroundColor: look.outlinedOff && !checked ? c.textSecondary : c.onPrimary,
+                top: (look.trackHeight - thumb.size) / 2 - border,
+                backgroundColor: look.outlinedOff ? c.textSecondary : c.onPrimary,
                 transform: [
                   {
                     translateX: progress.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [travel.off - border, travel.on - border],
+                      outputRange: [thumb.x.off - border, thumb.x.on - border],
                     }),
                   },
+                  { scale: progress.interpolate({ inputRange: [0, 1], outputRange: [thumb.scaleOff, 1] }) },
                 ],
               },
             ]}
-          />
+          >
+            {/* Material's off thumb is grey: the on color fades in over it rather than switching at once */}
+            {look.outlinedOff ? (
+              <Animated.View
+                style={[StyleSheet.absoluteFill, { borderRadius: thumb.size / 2, backgroundColor: c.onPrimary, opacity: progress }]}
+              />
+            ) : null}
+          </Animated.View>
         </View>
       }
       {...rest}
