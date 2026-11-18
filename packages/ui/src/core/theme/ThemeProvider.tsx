@@ -1,16 +1,16 @@
 import { createContext, useContext, useMemo } from 'react';
-import { Platform, type PlatformOSType, useColorScheme } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 
 import type { DeepPartial } from '@/core/core.types';
 import { COLOR_SCHEME, DESIGN, DESIGN_TOKENS, darkTheme, lightTheme } from './theme.constants';
-import type { ColorScheme, Design, DesignPreference, PatineProviderProps, Theme } from './theme.types';
+import type { ColorScheme, DesignPreference, PatineProviderProps, PlatformOS, Theme } from './theme.types';
 import { mergeTheme, resolveDesign } from './theme.utils';
 
 interface ThemeContextValue {
   theme?: DeepPartial<Theme>;
   darkTheme?: DeepPartial<Theme>;
   colorScheme: ColorScheme;
-  platform?: PlatformOSType;
+  platform?: PlatformOS;
   design: DesignPreference;
 }
 
@@ -38,7 +38,7 @@ export const PatineProvider = ({
 };
 
 /** The platform pickers behave as on: the provider's `platform`, or the one they run on. */
-export const usePlatform = (): PlatformOSType => useContext(ThemeContext)?.platform ?? Platform.OS;
+export const usePlatform = (): PlatformOS => useContext(ThemeContext)?.platform ?? Platform.OS;
 
 /**
  * Resolves the active theme: the design's tokens on the light or dark theme, then the provider's overrides, then the component's.
@@ -59,12 +59,18 @@ export const useTheme = (override?: DeepPartial<Theme>): Theme => {
   return useMemo(() => mergeTheme(base, override), [base, override]);
 };
 
-/** Folds a component's `design` prop into its `theme` override, so every part it passes the override to draws the same design. */
-export const useDesignOverride = (theme: DeepPartial<Theme> | undefined, design: Design | undefined) =>
-  useMemo(() => (design ? { ...theme, design } : theme), [theme, design]);
+/**
+ * Folds a component's `design` prop into its `theme` override, so every part it passes the override to draws the same design.
+ * 'native' and 'auto' resolve to the platform's design here.
+ */
+export const useDesignOverride = (theme: DeepPartial<Theme> | undefined, design: DesignPreference | undefined) => {
+  const platform = usePlatform();
+  const resolved = design ? resolveDesign(design, platform) : undefined;
+  return useMemo(() => (resolved ? { ...theme, design: resolved } : theme), [theme, resolved]);
+};
 
 /** A component's theme to draw with, and the override with its `design` folded in, for the parts it passes the theme to. */
-export const useComponentTheme = (theme: DeepPartial<Theme> | undefined, design: Design | undefined) => {
+export const useComponentTheme = (theme: DeepPartial<Theme> | undefined, design: DesignPreference | undefined) => {
   const themeOverride = useDesignOverride(theme, design);
   return {
     theme: useTheme(themeOverride),

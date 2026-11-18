@@ -68,6 +68,9 @@ export type TextWeight = keyof Theme['typography']['weights'];
 /** A step on the theme's elevation scale, from flat to floating */
 export type ShadowLevel = ValueOf<typeof SHADOW_LEVEL>;
 
+/** The platform components behave as on (`Platform.OS`'s values). */
+export type PlatformOS = PlatformOSType;
+
 export interface PatineProviderProps {
   children: React.ReactNode;
   /** 'auto' follows the OS appearance. Default: 'auto' */
@@ -77,7 +80,7 @@ export interface PatineProviderProps {
   /** Overrides applied to the dark theme */
   darkTheme?: DeepPartial<Theme>;
   /** Pickers behave as on this platform: sheets or dropdowns, insets, dragging. For previewing iOS or Android in a browser. Default: `Platform.OS` */
-  platform?: PlatformOSType;
+  platform?: PlatformOS;
   /** The look components follow. 'brand' is Patine's own look on every platform; 'native' matches the platform: 'ios' on iOS, 'web' on the web, 'material' elsewhere. Default: 'brand' */
   design?: DesignPreference;
 }

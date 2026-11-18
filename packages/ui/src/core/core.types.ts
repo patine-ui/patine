@@ -16,7 +16,7 @@ import type {
 } from 'react-native';
 
 import type { CONTROL_POSITION, DIRECTION, ICON_POSITION, KEY, PICKER_DISPLAY, PRESS_FEEDBACK } from './core.constants';
-import type { Design, TextSize, TextWeight, Theme } from './theme/theme.types';
+import type { DesignPreference, TextSize, TextWeight, Theme } from './theme/theme.types';
 
 // React Native 0.88's types can't be named from outside the package, so a hook returning them couldn't emit its
 // declaration. These are the same types under names of our own.
@@ -92,8 +92,11 @@ export interface DisclosureLabelProps {
 export interface ThemableProps {
   /** Component-level theme override, merged on top of the provider theme */
   theme?: DeepPartial<Theme>;
-  /** Draw this design instead of the provider's or the platform's: 'ios', 'material' or 'web' */
-  design?: Design;
+  /**
+   * Draw this design instead of the provider's: 'brand' (Patine's look), 'ios', 'material', 'web', or 'native' for the
+   * platform's own ('ios' on iOS, 'material' on Android, 'web' in the browser). Default: the provider's, which defaults to 'brand'
+   */
+  design?: DesignPreference;
 }
 
 export interface SearchInputProps {

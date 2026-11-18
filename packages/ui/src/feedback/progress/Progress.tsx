@@ -1,6 +1,6 @@
 import { ActivityIndicator, Animated, View } from 'react-native';
 
-import { useComponentTheme, useTheme } from '@/core/theme/ThemeProvider';
+import { useComponentTheme } from '@/core/theme/ThemeProvider';
 import { useProgress } from './hooks/useProgress';
 import { PROGRESS_DESIGN } from './progress.constants';
 import { styles } from './progress.styles';
@@ -52,7 +52,7 @@ export const Spinner = ({
   design,
   ...rest
 }: SpinnerProps) => {
-  const theme = useTheme(design ? { ...themeProp, design } : themeProp);
+  const { theme } = useComponentTheme(themeProp, design);
   return (
     <ActivityIndicator
       role="progressbar"

@@ -1,13 +1,21 @@
 import type { ReactNode } from 'react';
+import { Platform } from 'react-native';
 
 import { renderHook } from '@testing-library/react-native';
 
-import { PatineProvider, useComponentTheme, useDesignOverride, useTheme } from './ThemeProvider';
+import { PatineProvider, useComponentTheme, useDesignOverride, usePlatform, useTheme } from './ThemeProvider';
 import { DESIGN_SHADOWS } from './theme.constants';
 import type { PatineProviderProps } from './theme.types';
 
 const inProvider = (props: Omit<PatineProviderProps, 'children'>) => ({
   wrapper: ({ children }: { children: ReactNode }) => <PatineProvider {...props}>{children}</PatineProvider>,
+});
+
+describe('usePlatform', () => {
+  it("returns the provider's platform, or the one it runs on", async () => {
+    expect((await renderHook(() => usePlatform())).result.current).toBe(Platform.OS);
+    expect((await renderHook(() => usePlatform(), inProvider({ platform: 'android' }))).result.current).toBe('android');
+  });
 });
 
 describe('useTheme', () => {
@@ -66,6 +74,12 @@ describe('useDesignOverride', () => {
 });
 
 describe('useComponentTheme', () => {
+  it("resolves a component's 'native' design to the platform's", async () => {
+    const { result } = await renderHook(() => useComponentTheme(undefined, 'native'), inProvider({ platform: 'ios' }));
+    expect(result.current.theme.design).toBe('ios');
+    expect(result.current.themeOverride).toEqual({ design: 'ios' });
+  });
+
   it("draws with the component's design and gives its parts the override with that design", async () => {
     const theme = { radius: { sm: 2 } };
     const { result } = await renderHook(() => useComponentTheme(theme, 'web'), inProvider({ design: 'material' }));
