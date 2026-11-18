@@ -1,5 +1,6 @@
 export * from './actions/button';
 export * from './ai/chat';
+export * from './ai/typing';
 export * from './core';
 export * from './display/accordion';
 export * from './display/avatar';
