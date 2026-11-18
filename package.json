@@ -1,7 +1,7 @@
 {
   "name": "patine-monorepo",
   "private": true,
-  "description": "Patine monorepo: the patine-ui library, its MCP server and example app.",
+  "description": "Patine monorepo: the patine-ui library, its icons, its MCP server and example app.",
   "license": "MIT",
   "author": "Eliyahu Kriel <elik56a@gmail.com>",
   "repository": {
@@ -15,7 +15,7 @@
     "android": "pnpm --filter @patine-ui/example android",
     "lint": "node packages/ui/scripts/sync-exports.js --check && biome check .",
     "format": "node scripts/expand-returned-objects.js && biome check --write .",
-    "typecheck": "tsc -p packages/ui/tsconfig.json && pnpm --filter @patine-ui/example typecheck",
+    "typecheck": "tsc -p packages/ui/tsconfig.json && tsc -p packages/icons/tsconfig.json && pnpm --filter @patine-ui/example typecheck",
     "test": "jest",
     "build": "pnpm --filter patine-ui build",
     "sync:exports": "pnpm --filter patine-ui sync:exports",

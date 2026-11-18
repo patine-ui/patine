@@ -1,0 +1,11 @@
+{
+  "extends": "../ui/tsconfig.json",
+  "compilerOptions": {
+    // patine-ui from its source, as Jest and the docs site resolve it; `@/` is the library's own alias inside it.
+    "paths": {
+      "patine-ui": ["../ui/src/index.ts"],
+      "@/*": ["../ui/src/*"]
+    }
+  },
+  "include": ["src"]
+}

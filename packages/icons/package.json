@@ -1,0 +1,62 @@
+{
+  "name": "@patine-ui/icons",
+  "version": "0.0.0",
+  "description": "Patine Icons: free outline icons for React Native, Expo and React Native Web. 227 hand-drawn 24pt icons (arrows, chevrons, actions, communication, media, files, commerce, time, users, devices, security, charts) that follow your patine-ui theme, flip in right-to-left layouts and import one by one. The same names and props as Patine Pro's full set.",
+  "license": "MIT",
+  "author": "Eliyahu Kriel <elik56a@gmail.com>",
+  "homepage": "https://patine.dev/icons",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patine-ui/patine.git",
+    "directory": "packages/icons"
+  },
+  "bugs": {
+    "url": "https://github.com/patine-ui/patine/issues"
+  },
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "lib/index.js",
+  "source": "src/index.ts",
+  "files": [
+    "lib",
+    "src",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "patine",
+    "icons",
+    "react-native-icons",
+    "react-native",
+    "expo",
+    "react-native-web",
+    "svg-icons",
+    "outline-icons",
+    "icon-set",
+    "lucide-alternative",
+    "ui"
+  ],
+  "scripts": {
+    "build": "rm -rf lib && tsc -p tsconfig.build.json",
+    "icons": "node scripts/icons.js"
+  },
+  "peerDependencies": {
+    "patine-ui": "*",
+    "react": ">=18",
+    "react-native": ">=0.72",
+    "react-native-svg": ">=15"
+  },
+  "devDependencies": {
+    "patine-ui": "workspace:*",
+    "react": "19.3.1",
+    "react-native": "^0.88.1",
+    "react-native-svg": "^15.16.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

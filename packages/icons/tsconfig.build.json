@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "types": [],
+    // Built against patine-ui's compiled types (run `pnpm build` first), so none of its source lands in lib/.
+    "paths": {
+      "patine-ui": ["../ui/lib/index.d.ts"]
+    }
+  },
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+}

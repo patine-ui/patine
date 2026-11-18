@@ -1,6 +1,6 @@
 module.exports = {
   preset: '@react-native/jest-preset',
-  roots: ['<rootDir>/packages/ui/src', '<rootDir>/packages/mcp/src', '<rootDir>/apps/example/src'],
+  roots: ['<rootDir>/packages/ui/src', '<rootDir>/packages/icons/src', '<rootDir>/packages/mcp/src', '<rootDir>/apps/example/src'],
   // The website imports the library by its package name; Docusaurus aliases it to the source, so Jest does too.
   // React resolves from the root too: the example app pins its own copy, and hooks there must share the renderer's.
   moduleNameMapper: {

@@ -9,6 +9,7 @@ Guidance for AI coding agents working in this repository. (To *use* the library 
 pnpm monorepo:
 
 - `packages/ui/`: the library, published as `patine-ui`
+- `packages/icons/`: the free starter icons, published as `@patine-ui/icons`. Its own package because it needs `react-native-svg` (a peer); the glyphs are copied from Pro by `pnpm --filter @patine-ui/icons icons`, never edited by hand
 - `packages/mcp/`: the MCP server, published as `@patine-ui/mcp`
 - `apps/example/`: Expo app for contributors that renders the library source. `apps/example/src/catalog/` lists every component page and its prop playgrounds.
 
