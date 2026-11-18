@@ -56,7 +56,9 @@ export interface TableProps<T> extends Omit<ViewProps, 'children'>, ThemableProp
   emptyText?: React.ReactNode;
   /** Below this width the table scrolls sideways instead of squeezing its columns */
   minWidth?: number;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<TableSlot>;
 }
 

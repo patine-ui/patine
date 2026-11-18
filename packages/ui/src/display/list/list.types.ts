@@ -20,6 +20,7 @@ export interface ListProps extends ViewProps, ThemableProps {
 }
 
 export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProps {
+  /** The main line */
   title: string;
   /** A second line under the title */
   description?: string;
@@ -33,9 +34,11 @@ export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProp
   showChevron?: boolean;
   /** Draws the title in the danger color, for rows like "Delete account" */
   destructive?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Makes the row a button */
   onPress?: (event: GestureResponderEvent) => void;
+  /** The title's text */
   titleStyle?: StyleProp<TextStyle>;
 }
 

@@ -47,6 +47,7 @@ export interface QRCodeProps extends ThemableProps {
   accessibilityLabel?: string;
   /** The value is too long for a QR code at this level; nothing is drawn */
   onError?: (error: Error) => void;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

@@ -24,7 +24,9 @@ export interface BreadcrumbsProps extends Omit<ViewProps, 'children'>, ThemableP
   accessibilityLabel?: string;
   /** The folded items' button, for screen readers. Default: 'Show path' */
   expandLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<BreadcrumbsSlot>;
 }
 

@@ -15,6 +15,7 @@ export interface AvatarProps extends Omit<ViewProps, 'children'>, ThemableProps 
   size?: AvatarSize;
   /** Default: 'circle' */
   shape?: AvatarShape;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }
 
@@ -30,5 +31,6 @@ export interface AvatarGroupProps extends Omit<ViewProps, 'children'>, ThemableP
   overlap?: number;
   /** Names the group for screen readers. Default: the names, and how many more */
   accessibilityLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }

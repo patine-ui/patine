@@ -25,7 +25,9 @@ export interface DialogAction extends Omit<ButtonProps, 'children'> {
 export interface DialogShorthandProps {
   /** One pressable element, such as a Button, that opens it */
   trigger?: DialogPressSlotProps['children'];
+  /** Shorthand: the DialogTitle, also the dialog's name for screen readers */
   title?: React.ReactNode;
+  /** Shorthand: the DialogDescription under the title */
   description?: React.ReactNode;
 }
 

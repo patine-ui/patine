@@ -31,6 +31,7 @@ export interface ChatComposerLabels {
 }
 
 export interface ChatComposerProps extends ThemableProps {
+  /** The value, when you control it */
   value?: string;
   /** Initial text when uncontrolled. Default: '' */
   defaultValue?: string;
@@ -49,7 +50,9 @@ export interface ChatComposerProps extends ThemableProps {
   leading?: React.ReactNode;
   /** The most lines the input grows to before it scrolls. Default: 5 */
   maxRows?: number;
+  /** Its built-in text, for translation */
   labels?: Partial<ChatComposerLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }
 

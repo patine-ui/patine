@@ -8,6 +8,7 @@ import type { HEADER_SIZE } from './header.constants';
 export type HeaderSize = ValueOf<typeof HEADER_SIZE>;
 
 export interface HeaderProps extends ViewProps, ThemableProps {
+  /** The screen's title, read as a heading */
   title?: string;
   /** A line under the title, e.g. "Last seen 5 min ago" */
   subtitle?: string;
@@ -21,6 +22,7 @@ export interface HeaderProps extends ViewProps, ThemableProps {
   actions?: React.ReactNode;
   /** 'large' puts a big title under the bar. Default: 'default' */
   size?: HeaderSize;
+  /** The title's text */
   titleStyle?: StyleProp<TextStyle>;
 }
 

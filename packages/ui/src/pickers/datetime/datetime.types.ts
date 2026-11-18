@@ -15,14 +15,17 @@ export type TimePosition = ValueOf<typeof TIME_POSITION>;
 export type DateTimeCalendarProps = Omit<CalendarBaseProps, 'locale' | 'minDate' | 'maxDate' | 'theme' | 'testID'>;
 
 export interface DateTimePickerProps extends ThemableProps, Omit<TimeOptions, 'minTime' | 'maxTime' | 'testID'> {
+  /** The value, when you control it */
   value?: Date;
+  /** The value at first, when it keeps its own state */
   defaultValue?: Date;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (date: Date) => void;
   /** 'wheel': one row of day + time wheels (the iOS default). 'calendar': a month grid and the time, as the design shows time (the Material and web default) */
   display?: DateTimeDisplay;
-  /** Calendar display: the time beside the calendar (under it when there's no room) or below it. Default: 'beside' on the web, 'below' in iOS and Material */
+  /** Calendar display: the time beside the calendar (under it when there's no room) or below it. Default: 'beside' on the web, 'below' in brand, iOS and Material */
   timePosition?: TimePosition;
-  /** Calendar display: how the time is picked: 'wheel', 'dial', 'input' or 'list'. Default: wheels in iOS, 'input' in Material, 'list' on the web */
+  /** Calendar display: how the time is picked: 'wheel', 'dial', 'input' or 'list'. Default: 'list' in brand and on the web, wheels in iOS, 'input' in Material */
   timeDisplay?: TimeDisplay;
   /** Earliest selectable moment (date and time) */
   minDate?: Date;
@@ -32,10 +35,13 @@ export interface DateTimePickerProps extends ThemableProps, Omit<TimeOptions, 'm
   formatDay?: (date: Date, locale?: Locale) => string;
   /** Calendar display: passed through to the Calendar */
   calendarProps?: DateTimeCalendarProps;
+  /** Wheel row height, in points */
   itemHeight?: number;
   /** Default: 5 for the wheel display; 3 wheels or 5 web time rows under the calendar, 9 rows beside it */
   visibleItems?: number;
+  /** '3d' cylinder or 'flat' list. Default: '3d' */
   variant?: WheelVariant;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   /** Slot styles of the wheels */
   styles?: SlotStyles<MultiWheelSlot>;
@@ -44,6 +50,7 @@ export interface DateTimePickerProps extends ThemableProps, Omit<TimeOptions, 'm
 
 export type DateTimePickerSheetProps = SheetChromeProps &
   Omit<DateTimePickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: Date;
     onConfirm: (date: Date) => void;
   };

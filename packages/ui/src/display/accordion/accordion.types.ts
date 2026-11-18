@@ -32,6 +32,7 @@ export interface AccordionSingleProps extends AccordionBaseProps {
   type?: 'single';
   /** The open item's value, controlled. `''` when none is open */
   value?: string;
+  /** The value at first, when it keeps its own state */
   defaultValue?: string;
   /** Called with the open item's value when the user opens or closes one; `''` when they close it */
   onValueChange?: (value: string) => void;
@@ -44,6 +45,7 @@ export interface AccordionMultipleProps extends AccordionBaseProps {
   type: 'multiple';
   /** The open items' values, controlled */
   value?: string[];
+  /** The value at first, when it keeps its own state */
   defaultValue?: string[];
   /** Called with the open items' values when the user opens or closes one */
   onValueChange?: (value: string[]) => void;
@@ -52,7 +54,9 @@ export interface AccordionMultipleProps extends AccordionBaseProps {
 export type AccordionProps = AccordionSingleProps | AccordionMultipleProps;
 
 export interface AccordionItemProps extends ViewProps {
+  /** Identifies the item: in the Accordion's `value` while it's open */
   value: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   children: React.ReactNode;
 }
@@ -60,7 +64,9 @@ export interface AccordionItemProps extends ViewProps {
 export interface AccordionTriggerProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'>, DisclosureIconOptions {
   /** The heading. A string is drawn in the theme's text style */
   children: React.ReactNode;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 

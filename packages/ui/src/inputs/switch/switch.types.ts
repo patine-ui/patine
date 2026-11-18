@@ -16,7 +16,9 @@ export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' |
   description?: React.ReactNode;
   /** Put the switch before the label. Default: after, as settings lists do */
   controlAtStart?: boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 

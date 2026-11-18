@@ -14,6 +14,7 @@ export interface RatingIconInfo {
 export type RatingSlot = 'container' | 'item' | 'icon';
 
 export interface RatingProps extends ThemableProps {
+  /** The value, when you control it */
   value?: number;
   /** Default: 0, no stars */
   defaultValue?: number;
@@ -25,6 +26,7 @@ export interface RatingProps extends ThemableProps {
   step?: number;
   /** Shows the value, any fraction such as 4.3, and takes no touches or keys. Default: false */
   readOnly?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Each star's width and height. Default: 32 */
   size?: number;
@@ -38,7 +40,9 @@ export interface RatingProps extends ThemableProps {
   formatValue?: (value: number, max: number) => string;
   /** What screen readers call the rating. Default: 'Rating' */
   accessibilityLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<RatingSlot>;
   /** On the row; star `i` gets `${testID}-star-${i}` */
   testID?: string;

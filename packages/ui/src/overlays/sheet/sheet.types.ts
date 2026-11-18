@@ -42,10 +42,13 @@ export interface BottomSheetProps extends ThemableProps {
   visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  /** The header's title. A string is also the sheet's name for screen readers */
   title?: React.ReactNode;
   /** Rendered on the right side of the header (e.g. a Done button) */
   headerRight?: React.ReactNode;
+  /** Rendered on the left side of the header (e.g. a Cancel button) */
   headerLeft?: React.ReactNode;
+  /** Pinned under the content, e.g. a row of buttons */
   footer?: React.ReactNode;
   /** Drag the sheet down (wheel down on the web) to dismiss. Default: true */
   enableSwipeToClose?: boolean;
@@ -65,10 +68,12 @@ export interface BottomSheetProps extends ThemableProps {
   height?: number;
   /** Extra bottom padding for home indicators. Default: 24 on iOS, 12 elsewhere */
   bottomInset?: number;
-  /** Default: 'auto' */
+  /** 'bottomSheet', 'modal' (a centered card), or 'auto': a card on wide web windows, a sheet elsewhere. Default: 'auto' */
   presentation?: SheetPresentation;
   styles?: SlotStyles<BottomSheetSlot>;
+  /** Called once the open animation ends */
   onOpened?: () => void;
+  /** Called once the close animation ends and the sheet unmounts */
   onClosed?: () => void;
   testID?: string;
 }
@@ -92,7 +97,9 @@ export interface SheetChromeProps extends ThemableProps {
 export interface PickerSheetProps extends Omit<SheetChromeProps, 'presentation'> {
   /** Default: the field's presentation, else 'auto' */
   presentation?: FieldPresentation;
+  /** Called when the user presses Done (OK in Material) */
   onConfirm?: () => void;
+  /** Dims Done and blocks it, e.g. until a choice is valid. Default: false */
   confirmDisabled?: boolean;
   children: React.ReactNode;
 }
@@ -331,6 +338,7 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
   placeholder?: string;
   /** Text shown in the field. Default: the value, formatted for `locale` */
   displayValue?: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Show a clear (×) button while the field has a value; reset your value in `onClear` */
   clearable?: boolean;
@@ -346,7 +354,9 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
    * change (no Cancel / Done) and collapsing on a second tap, or `auto`: a dropdown on the web, a bottom sheet on native. Default: 'auto'
    */
   presentation?: FieldPresentation;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<PickerFieldSlot | S>;
   /** On the default trigger */
   testID?: string;

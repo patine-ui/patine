@@ -57,10 +57,13 @@ export interface WheelPickerProps<T> extends ThemableProps {
   showIndicator?: boolean;
   renderIndicator?: (theme: Theme) => React.ReactNode;
   textAlign?: TextStyle['textAlign'];
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Custom equality for object values. Default: Object.is */
   isEqual?: (a: T, b: T) => boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<WheelPickerSlot>;
   accessibilityLabel?: string;
   testID?: string;
@@ -83,16 +86,22 @@ export interface MultiWheelPickerProps extends ThemableProps {
   columns: WheelColumn[];
   /** Text/node rendered between columns, e.g. ':' for time */
   separator?: React.ReactNode | ((leftIndex: number) => React.ReactNode);
+  /** Wheel row height, in points */
   itemHeight?: number;
+  /** Visible wheel rows, an odd number */
   visibleItems?: number;
+  /** '3d' cylinder or 'flat' list. Default: '3d' */
   variant?: WheelVariant;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<MultiWheelSlot>;
   testID?: string;
 }
 
 export type WheelPickerSheetProps<T> = SheetChromeProps &
   Omit<WheelPickerProps<T>, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: T;
     onConfirm: (value: NoInferValue<T>) => void;
   };

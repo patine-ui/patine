@@ -11,6 +11,7 @@ export interface BadgeProps extends ViewProps, ThemableProps {
   children?: React.ReactNode;
   /** Default: 'default' */
   variant?: BadgeVariant;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 

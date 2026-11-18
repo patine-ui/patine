@@ -26,12 +26,17 @@ export interface RadioGroupProps extends ViewProps, ThemableProps {
 export type RadioGroupOption = Pick<RadioGroupItemProps, 'value' | 'label' | 'description' | 'disabled'>;
 
 export interface RadioGroupItemProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'> {
+  /** Identifies the choice: the RadioGroup's `value` while it's selected */
   value: string;
+  /** Text (or any node) next to the radio. Pressing it selects too */
   label?: React.ReactNode;
   /** A line of secondary text under the label */
   description?: React.ReactNode;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 

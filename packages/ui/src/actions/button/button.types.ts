@@ -12,11 +12,11 @@ type TextButtonSize = Exclude<ButtonSize, typeof BUTTON_SIZE.icon>;
 export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>, ThemableProps {
   /** The label. A string is drawn in the variant's text color; anything else is drawn as is */
   children?: React.ReactNode;
-  /** Default: 'default' (filled with the primary color) */
+  /** 'default' (filled with the primary color), 'secondary', 'outline', 'ghost', 'destructive' or 'link'. Default: 'default' */
   variant?: ButtonVariant;
-  /** Default: 'default'. 'icon' is square: give it an `accessibilityLabel` */
+  /** 'sm', 'default', 'lg', or 'icon' (square: give it an `accessibilityLabel`). Default: 'default' */
   size?: ButtonSize;
-  /** Shows a spinner in place of the start icon, and blocks presses while true */
+  /** Shows a spinner in place of the start icon, and blocks presses while true. Default: false */
   loading?: boolean;
   /** Before the label, e.g. an icon */
   startIcon?: React.ReactNode;

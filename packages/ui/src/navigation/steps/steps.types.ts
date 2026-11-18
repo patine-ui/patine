@@ -33,7 +33,9 @@ export interface StepsProps extends ThemableProps {
   variant?: StepsVariant;
   /** Default: 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
+  /** Its built-in text, for translation */
   labels?: Partial<StepsLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

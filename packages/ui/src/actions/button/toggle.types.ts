@@ -58,7 +58,9 @@ interface ToggleGroupBase extends Omit<ViewProps, 'children'>, ThemableProps {
 export interface ToggleGroupSingleProps extends ToggleGroupBase {
   /** 'single': at most one pressed, like a radio group that can be cleared. 'multiple': any number */
   type: 'single';
+  /** The value, when you control it */
   value?: string | null;
+  /** The value at first, when it keeps its own state */
   defaultValue?: string | null;
   /** The pressed value, or null when the user un-presses it */
   onValueChange?: (value: string | null) => void;
@@ -66,8 +68,11 @@ export interface ToggleGroupSingleProps extends ToggleGroupBase {
 
 export interface ToggleGroupMultipleProps extends ToggleGroupBase {
   type: 'multiple';
+  /** The value, when you control it */
   value?: readonly string[];
+  /** The value at first, when it keeps its own state */
   defaultValue?: readonly string[];
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (value: string[]) => void;
 }
 

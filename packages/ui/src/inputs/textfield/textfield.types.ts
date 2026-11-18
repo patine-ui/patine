@@ -99,6 +99,7 @@ export interface SearchFieldLabels {
 export interface SearchFieldProps
   extends Omit<TextInputProps, 'style' | 'value' | 'defaultValue' | 'onChangeText' | 'editable' | 'onSubmitEditing'>,
     ThemableProps {
+  /** The value, when you control it */
   value?: string;
   /** Initial text when uncontrolled. Default: '' */
   defaultValue?: string;
@@ -110,7 +111,9 @@ export interface SearchFieldProps
   onCancel?: () => void;
   /** Default: 'Search' */
   placeholder?: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<SearchFieldLabels>;
   /** The row around the field, for layout */
   style?: StyleProp<ViewStyle>;

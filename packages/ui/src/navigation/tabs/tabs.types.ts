@@ -38,6 +38,7 @@ export interface TabsProps extends ViewProps, ThemableProps {
 
 /** One tab for the shorthand `items`: its trigger and its panel. */
 export interface TabsItem {
+  /** Identifies the tab: the Tabs' `value` while it's active */
   value: string;
   /** The tab's label */
   label: React.ReactNode;
@@ -45,6 +46,7 @@ export interface TabsItem {
   content: React.ReactNode;
   /** An icon before the label */
   icon?: React.ReactNode;
+  /** Can't be selected, and arrow keys skip it. Default: false */
   disabled?: boolean;
 }
 
@@ -53,17 +55,22 @@ export interface TabsListProps extends ViewProps {
 }
 
 export interface TabsTriggerProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'> {
+  /** Identifies the tab; its TabsContent has the same `value` */
   value: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** An icon before the label */
   icon?: React.ReactNode;
   /** The label. A string is drawn in the tab's text color */
   children: React.ReactNode;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 
 export interface TabsContentProps extends ViewProps {
+  /** The TabsTrigger whose panel this is */
   value: string;
   /** Keep it mounted, hidden, while another tab is active, so its state survives. Default: false */
   forceMount?: boolean;

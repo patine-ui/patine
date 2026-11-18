@@ -12,6 +12,7 @@ export interface KbdProps extends Omit<ViewProps, 'children'>, ThemableProps {
   separator?: string;
   /** Default: 'md' */
   size?: 'sm' | 'md';
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 }

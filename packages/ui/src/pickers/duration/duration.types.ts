@@ -18,11 +18,13 @@ export type DurationDisplay = Exclude<TimeDisplay, 'dial'>;
 export interface DurationPickerProps extends ThemableProps {
   /** Selected duration, in seconds. */
   value?: number;
+  /** The value at first, when it keeps its own state */
   defaultValue?: number;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (seconds: number) => void;
   /** Fires on every tick while scrolling (for haptics). */
   onValueChanging?: (seconds: number) => void;
-  /** Wheels, boxes to type the numbers into, or columns of cells to click. Default: wheels on iOS, boxes in Material, the columns on the web */
+  /** Wheels, boxes to type the numbers into, or columns of cells to click. Default: the design's: the columns in brand and on the web, wheels on iOS, boxes in Material */
   display?: DurationDisplay;
   /** Show an hours wheel. Without it, minutes count past 59. Default: true */
   showHours?: boolean;
@@ -40,10 +42,15 @@ export interface DurationPickerProps extends ThemableProps {
   labels?: Partial<DurationLabels>;
   /** Infinite minute and second wheels. Default: true */
   loop?: boolean;
+  /** Wheel row height, in points */
   itemHeight?: number;
+  /** Visible wheel rows, an odd number */
   visibleItems?: number;
+  /** '3d' cylinder or 'flat' list. Default: '3d' */
   variant?: WheelVariant;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<MultiWheelSlot>;
   testID?: string;
 }
@@ -78,6 +85,7 @@ export interface DurationInputProps {
 
 export type DurationPickerSheetProps = SheetChromeProps &
   Omit<DurationPickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: number;
     onConfirm: (seconds: number) => void;
   };

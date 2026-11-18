@@ -53,7 +53,6 @@ export const useTextField = (
     multiline: {
       lineHeight,
       height,
-      // ponytail: the web measures a textarea by its scrollHeight, which never drops below its current height, so a TextArea grows there but doesn't shrink back
       scrollEnabled: contentHeight > height,
       onContentSizeChange: (e: EventOf<'onContentSizeChange'>) => {
         setContentHeight(e.nativeEvent.contentSize.height);

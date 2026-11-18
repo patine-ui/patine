@@ -23,6 +23,7 @@ export interface NumberRange {
 }
 
 export interface StepperProps extends NumberRange, ThemableProps {
+  /** The value, when you control it */
   value?: number;
   /** Initial value when uncontrolled. Default: `min`, or 0 */
   defaultValue?: number;
@@ -34,8 +35,11 @@ export interface StepperProps extends NumberRange, ThemableProps {
   formatValue?: (value: number) => string;
   /** Names it for screen readers, e.g. 'Guests' */
   accessibilityLabel?: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<StepLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

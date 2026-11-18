@@ -17,10 +17,13 @@ export type MonthPickerSlot =
 export interface MonthPickerProps extends ThemableProps {
   /** Selected month: a `Date` on its first day. */
   value?: Date;
+  /** The value at first, when it keeps its own state */
   defaultValue?: Date;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (month: Date) => void;
-  /** Month and year wheels, or a grid of months under the year. Default: wheels on iOS, the grid in Material and on the web */
+  /** Month and year wheels, or a grid of months under the year. Default: the design's: wheels on iOS, the grid in brand, Material and on the web */
   display?: MonthDisplay;
+  /** A BCP 47 language tag for names and formats, e.g. 'en-US'. Default: the device's */
   locale?: Locale;
   /** Earliest selectable month (pass a day in it). */
   minDate?: Date;
@@ -32,10 +35,15 @@ export interface MonthPickerProps extends ThemableProps {
   monthFormat?: MonthFormat;
   /** Loop the month wheel. Default: true */
   loop?: boolean;
+  /** Wheel row height, in points */
   itemHeight?: number;
+  /** Visible wheel rows, an odd number */
   visibleItems?: number;
+  /** '3d' cylinder or 'flat' list. Default: '3d' */
   variant?: WheelVariant;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<MonthPickerSlot>;
   testID?: string;
 }
@@ -48,6 +56,7 @@ export type MonthGridProps = Pick<MonthPickerProps, 'locale' | 'minDate' | 'maxD
 
 export type MonthPickerSheetProps = SheetChromeProps &
   Omit<MonthPickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: Date;
     onConfirm: (month: Date) => void;
   };

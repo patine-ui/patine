@@ -26,6 +26,7 @@ export interface SignatureLabels {
 export interface SignaturePadProps extends ThemableProps {
   /** The strokes drawn. Pair with `onValueChange` to control it; `[]` clears it */
   value?: readonly SignatureStroke[];
+  /** The value at first, when it keeps its own state */
   defaultValue?: readonly SignatureStroke[];
   /** A stroke is finished, or the pad is cleared. Not called when you change `value` */
   onValueChange?: (strokes: SignatureStroke[]) => void;
@@ -41,8 +42,11 @@ export interface SignaturePadProps extends ThemableProps {
   height?: number;
   /** A Clear button in the corner once something's drawn. Default: true */
   showClear?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<SignatureLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

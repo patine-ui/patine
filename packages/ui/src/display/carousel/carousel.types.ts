@@ -42,8 +42,11 @@ export interface PagerProps extends ThemableProps {
   showArrows?: boolean;
   /** Names the carousel for screen readers, e.g. "Featured products" */
   accessibilityLabel?: string;
+  /** Its built-in text, for translation */
   labels?: Partial<CarouselLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<CarouselSlot>;
   testID?: string;
 }
@@ -67,6 +70,7 @@ export interface PageIndicatorProps extends ThemableProps {
   onValueChange?: (index: number) => void;
   /** Read with the page, e.g. "Slide 2 of 5". Default: 'Slide {page} of {count}' */
   label?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

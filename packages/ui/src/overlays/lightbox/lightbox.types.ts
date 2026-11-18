@@ -33,6 +33,7 @@ export interface ImageViewerProps extends ThemableProps {
   onValueChange?: (index: number) => void;
   /** Close by dragging an image down. Default: true */
   swipeToClose?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<LightboxLabels>;
   testID?: string;
 }

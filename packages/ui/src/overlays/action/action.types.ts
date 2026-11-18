@@ -39,17 +39,19 @@ export interface ActionSheetProps extends ThemableProps {
   /** Called on Cancel, a backdrop tap, a swipe down or Back, and before any action runs */
   onClose: () => void;
   actions: ActionSheetAction[];
+  /** A heading over the actions */
   title?: string;
   /** A line under the title, such as what a Delete removes */
   message?: string;
   /** Default: 'Cancel' */
   cancelLabel?: string;
-  /** A Cancel button after the actions. Default: true in the iOS design; Material and web sheets close on a backdrop tap */
+  /** A Cancel button after the actions. Default: true in the brand and iOS designs; Material and web sheets close on a backdrop tap */
   showCancel?: boolean;
   /** Bottom sheet or centered modal. Default: 'auto' (modal on wide web windows) */
   presentation?: SheetPresentation;
   /** Passed through to the underlying BottomSheet */
   sheetProps?: Partial<Omit<BottomSheetProps, 'visible' | 'onClose' | 'children'>>;
+  /** Per-part style overrides */
   styles?: SlotStyles<ActionSheetSlot>;
   testID?: string;
 }
@@ -130,6 +132,7 @@ export interface DropdownMenuProps extends ThemableProps {
   presentation?: DropdownMenuPresentation;
   /** Open on a long press instead of a tap, as a context menu. Default: false */
   openOnLongPress?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   onOpen?: () => void;
   /** On a tap outside, Back or Escape, and before any action runs */
@@ -138,6 +141,7 @@ export interface DropdownMenuProps extends ThemableProps {
   accessibilityLabel?: string;
   /** The box around the trigger */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<DropdownMenuSlot>;
   /** On the trigger; the menu gets `${testID}-menu` */
   testID?: string;

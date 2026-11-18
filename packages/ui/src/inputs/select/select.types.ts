@@ -59,6 +59,7 @@ export type SelectListBaseProps<T> = ThemableProps & {
   options?: ReadonlyArray<SelectOption<T>>;
   /** Show a search field. Default: true when there are more than 8 options */
   searchable?: boolean;
+  /** Default: 'Search' */
   searchPlaceholder?: string;
   /** Controlled search query, for filtering from your own input. Hides the built-in search field */
   query?: string;
@@ -88,16 +89,23 @@ export type SelectListBaseProps<T> = ThemableProps & {
   loadingText?: string;
   /** Custom loader, in place of the spinner and `loadingText` */
   renderLoading?: (theme: Theme) => React.ReactNode;
+  /** Draws an option's row content yourself; the row keeps its press handling, selection state and accessibility */
   renderOption?: (info: SelectRenderOptionInfo<T>) => React.ReactNode;
+  /** Draws a group's section header yourself */
   renderGroupHeader?: (group: string, theme: Theme) => React.ReactNode;
+  /** Shown when no option matches the search. Default: 'No results' */
   emptyText?: string;
   /** Show check marks on selected rows. Default: true */
   showCheckmarks?: boolean;
+  /** Compares values, for object values. Default: `Object.is` */
   isEqual?: (a: T, b: T) => boolean;
   /** Height of the list area. Default: grows with content */
   listHeight?: number;
+  /** Focuses the search field when the list opens. Default: false */
   autoFocusSearch?: boolean;
+  /** The list's outer view */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<SelectSlot>;
   testID?: string;
 };
@@ -138,9 +146,11 @@ export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | '
     placeholder?: string;
     /** Label rendered above the field */
     label?: string;
+    /** Dims the field and keeps it from opening. Default: false */
     disabled?: boolean;
-    /** Show a clear (×) button when something is selected */
+    /** Show a clear (×) button when something is selected. Default: false */
     clearable?: boolean;
+    /** Called when the clear button is pressed. In single mode with `value`, set it to `null` here */
     onClear?: () => void;
     /** Show selected values as chips in multiple mode. Default: true */
     chips?: boolean;
@@ -154,10 +164,12 @@ export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | '
     sheetTitle?: string;
     /** Bottom sheet, centered modal, or a dropdown under the field. Default: 'auto' (dropdown on the web, bottom sheet on native). As a dropdown, `searchable` (default: true) lets the user type in the field itself, or in a search field atop the list with `renderTrigger` */
     presentation?: SelectPresentation;
+    /** Props for the sheet the list opens in, such as `confirmLabel` or `sheetProps` */
     sheet?: Partial<Omit<SheetChromeProps, 'visible' | 'onClose' | 'theme' | 'presentation'>>;
     onOpen?: () => void;
     onClose?: () => void;
     style?: StyleProp<ViewStyle>;
+    /** Per-part style overrides, for the field and the list */
     styles?: SlotStyles<SelectSlot | SelectTriggerSlot>;
   };
 

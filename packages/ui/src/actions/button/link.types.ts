@@ -18,6 +18,7 @@ export interface LinkProps extends Omit<TextProps, 'onPress' | 'role'> {
   external?: boolean;
   /** 'always', 'hover' (on pointer devices) or 'none'. Default: the design's */
   underline?: LinkUnderline;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
 }
 
@@ -39,7 +40,9 @@ export interface FabProps extends Omit<PressableProps, 'children' | 'style'>, Th
   placement?: 'bottomEnd' | 'bottomStart' | 'bottomCenter';
   /** Space from the screen's edges when placed, e.g. the safe area's bottom inset plus 16. Default: 16 */
   offset?: number;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** The label's text */
   labelStyle?: StyleProp<TextStyle>;
 }
 
@@ -68,6 +71,8 @@ export interface CopyButtonProps extends Omit<PressableProps, 'children' | 'styl
   timeout?: number;
   /** As Button. Default: 'ghost' */
   variant?: ButtonVariant;
+  /** As Button. Default: 'icon' without a `label`, else 'sm' */
   size?: ButtonSize;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }

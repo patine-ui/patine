@@ -14,7 +14,9 @@ export type InputOTPSlot = 'container' | 'cell' | 'focusedCell' | 'filledCell' |
 export interface InputOTPProps extends ThemableProps, Omit<FieldStatusProps, 'required'> {
   /** How many characters the code has. Default: 6 */
   length?: number;
+  /** The value, when you control it */
   value?: string;
+  /** The value at first, when it keeps its own state */
   defaultValue?: string;
   /** As the user types, deletes or pastes, with the code so far */
   onValueChange?: (code: string) => void;
@@ -25,10 +27,13 @@ export interface InputOTPProps extends ThemableProps, Omit<FieldStatusProps, 're
   /** Each character shows as a dot, for a PIN. Default: false */
   secureTextEntry?: boolean;
   autoFocus?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** What screen readers call the field. Default: 'Verification code' */
   accessibilityLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<InputOTPSlot>;
   /** On the text input; cell `i` gets `${testID}-cell-${i}` */
   testID?: string;

@@ -17,7 +17,9 @@ export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style'
   description?: React.ReactNode;
   /** Put the box after the label, as settings lists do. Default: false */
   controlAtEnd?: boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** A string label's text */
   labelStyle?: StyleProp<TextStyle>;
   /** The box itself */
   boxStyle?: StyleProp<ViewStyle>;

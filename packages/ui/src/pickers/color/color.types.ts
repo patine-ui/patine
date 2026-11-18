@@ -37,6 +37,7 @@ export interface ColorDesign {
 export interface ColorPickerProps extends ThemableProps {
   /** Selected colour, as hex: '#E4572E', or '#E4572E80' with opacity. */
   value?: string;
+  /** The value at first, when it keeps its own state */
   defaultValue?: string;
   /** Fires with the colour as '#RRGGBB' ('#RRGGBBAA' below full opacity) on a tap, a slider or pad move, or a typed code. */
   onValueChange?: (color: string) => void;
@@ -52,7 +53,9 @@ export interface ColorPickerProps extends ThemableProps {
   onCopy?: (hex: string) => unknown;
   /** Names of the tabs, sliders and buttons, also read by screen readers. Default: English */
   labels?: Partial<ColorLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<ColorPickerSlot>;
   testID?: string;
 }
@@ -156,6 +159,7 @@ export interface HexInputProps {
 
 export type ColorPickerSheetProps = SheetChromeProps &
   Omit<ColorPickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: string;
     onConfirm: (color: string) => void;
   };

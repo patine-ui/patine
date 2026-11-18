@@ -78,8 +78,11 @@ export interface Weekday {
 }
 
 export interface CalendarBaseProps extends ThemableProps {
+  /** A BCP 47 language tag for names and formats, e.g. 'en-US'. Default: the device's */
   locale?: Locale;
+  /** The earliest day that can be picked; earlier days are dimmed */
   minDate?: Date;
+  /** The latest day that can be picked; later days are dimmed */
   maxDate?: Date;
   /** Return true to disable a day */
   isDateDisabled?: (date: Date) => boolean;
@@ -89,7 +92,9 @@ export interface CalendarBaseProps extends ThemableProps {
   markedDates?: Record<string, MarkedDate>;
   /** Month shown initially. Default: the selected date or today */
   initialMonth?: Date;
+  /** Called with the first day of the month shown, when the user pages to another month */
   onMonthChange?: (month: Date) => void;
+  /** The days of the previous and next months that fill the first and last weeks. Default: true */
   showOutsideDays?: boolean;
   /** Always render 6 weeks to keep the height stable. Default: true */
   fixedWeeks?: boolean;
@@ -97,8 +102,9 @@ export interface CalendarBaseProps extends ThemableProps {
   enableSwipe?: boolean;
   /** Tap the title to jump by month / year. Default: true */
   enableQuickJump?: boolean;
-  /** Default: from the design: 'short' on iOS and the web, 'narrow' (S M T) in Material */
+  /** Default: from the design: 'short' in brand, iOS and the web, 'narrow' (S M T) in Material */
   weekdayFormat?: ValueOf<typeof WEEKDAY_FORMAT>;
+  /** The row of weekday names over the days. Default: true */
   showWeekdays?: boolean;
   /** Override the title text */
   formatTitle?: (month: Date, locale?: Locale) => string;
@@ -110,7 +116,9 @@ export interface CalendarBaseProps extends ThemableProps {
   yearRange?: [number, number];
   /** Day cell height. Default: 44 */
   dayHeight?: number;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<CalendarSlot>;
   testID?: string;
 }
@@ -156,8 +164,11 @@ export type WeekStripProps = Omit<
   CalendarBaseProps,
   'initialMonth' | 'onMonthChange' | 'showOutsideDays' | 'fixedWeeks' | 'enableQuickJump' | 'formatTitle' | 'yearRange'
 > & {
+  /** The value, when you control it */
   value?: Date | null;
+  /** The value at first, when it keeps its own state */
   defaultValue?: Date | null;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (date: Date) => void;
   /** A day in the week shown first. Default: the selected day or today */
   initialWeek?: Date;

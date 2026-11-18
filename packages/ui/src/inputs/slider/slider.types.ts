@@ -90,6 +90,7 @@ interface SliderBaseProps extends ThemableProps {
 
 export interface SingleSliderProps extends SliderBaseProps {
   range?: false;
+  /** The value, when you control it */
   value?: number;
   /** Default: `min` */
   defaultValue?: number;
@@ -102,9 +103,11 @@ export interface SingleSliderProps extends SliderBaseProps {
 export interface RangeSliderProps extends SliderBaseProps {
   /** Two thumbs: the value is `[start, end]` */
   range: true;
+  /** The value, when you control it */
   value?: SliderRange;
   /** Default: `[min, max]` */
   defaultValue?: SliderRange;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (value: SliderRange) => void;
   onValueChanging?: (value: SliderRange) => void;
   /** What screen readers call the two thumbs. Default: ['Minimum', 'Maximum'] */

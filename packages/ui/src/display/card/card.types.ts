@@ -9,6 +9,7 @@ export interface CardProps extends ViewProps, ThemableProps {
   shadow?: ShadowLevel;
   /** Makes the whole card pressable: a button for screen readers and the keyboard, with hover lift and press feedback */
   onPress?: (event: GestureResponderEvent) => void;
+  /** Makes the whole card pressable on a long press */
   onLongPress?: (event: GestureResponderEvent) => void;
   /** Hover lift and focus ring without `onPress`, for a card a parent link or gesture handles. Default: true when `onPress` is set */
   interactive?: boolean;
@@ -23,6 +24,7 @@ export interface CardProps extends ViewProps, ThemableProps {
 }
 
 export interface CardSectionProps extends ViewProps {
+  /** Theme override. Default: the Card's */
   theme?: ThemableProps['theme'];
 }
 

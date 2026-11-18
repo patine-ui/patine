@@ -18,7 +18,9 @@ export interface DescriptionListProps extends Omit<ViewProps, 'children'>, Thema
   orientation?: 'horizontal' | 'vertical';
   /** Hairlines between rows. Default: true */
   dividers?: boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<DescriptionListSlot>;
 }
 

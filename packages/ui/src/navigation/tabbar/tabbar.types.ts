@@ -32,6 +32,7 @@ export interface TabBarProps<T extends string = string> extends Omit<ViewProps, 
   bottomInset?: number;
   /** Names the bar for screen readers. Default: 'Tabs' */
   accessibilityLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }
 

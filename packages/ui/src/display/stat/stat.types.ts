@@ -26,7 +26,9 @@ export interface StatProps extends Omit<ViewProps, 'children'>, ThemableProps {
   icon?: React.ReactNode;
   /** Below everything, such as a Sparkline */
   children?: React.ReactNode;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<StatSlot>;
 }
 

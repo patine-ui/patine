@@ -17,18 +17,23 @@ export type ClockMode = ValueOf<typeof CLOCK_MODE>;
 export interface TimePickerProps extends ThemableProps {
   /** Selected time (the date part is preserved). */
   value?: Date;
+  /** The value at first, when it keeps its own state */
   defaultValue?: Date;
+  /** Called when the user changes the value; never when `value` changes from your code */
   onValueChange?: (date: Date) => void;
   /** Fires on every tick while scrolling (for haptics). */
   onValueChanging?: (date: Date) => void;
-  /** Wheels, a clock dial, hour and minute fields to type into, or columns of clickable hours and minutes. Default: wheels on iOS, a dial in Material, the columns on the web. With `showSeconds`, a dial or input falls back to wheels */
+  /** Wheels, a clock dial, hour and minute fields to type into, or columns of clickable hours and minutes. Default: the design's: the columns in brand and on the web, wheels on iOS, a dial in Material. With `showSeconds`, a dial or input falls back to wheels */
   display?: TimeDisplay;
   /** Default: 'auto' (from locale) */
   format?: TimeFormat;
+  /** A BCP 47 language tag for names and formats, e.g. 'en-US'. Default: the device's */
   locale?: Locale;
   /** Minute step: 1, 5, 15... Default: 1 */
   minuteInterval?: number;
+  /** A seconds column. Default: false */
   showSeconds?: boolean;
+  /** Second step: 1, 5, 15... Default: 1 */
   secondInterval?: number;
   /** Earliest selectable time of day */
   minTime?: Date;
@@ -44,10 +49,15 @@ export interface TimePickerProps extends ThemableProps {
   dayPeriodFirst?: boolean;
   /** Separator between columns. Default: ':' */
   separator?: React.ReactNode;
+  /** Wheel row height, in points */
   itemHeight?: number;
+  /** Visible wheel rows, an odd number */
   visibleItems?: number;
+  /** '3d' cylinder or 'flat' list. Default: '3d' */
   variant?: WheelVariant;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<MultiWheelSlot>;
   testID?: string;
 }
@@ -65,6 +75,7 @@ export type TimeColumnsOptions = TimeOptions & {
 
 export type TimePickerSheetProps = SheetChromeProps &
   Omit<TimePickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: Date;
     onConfirm: (date: Date) => void;
   };
@@ -90,9 +101,11 @@ export interface TimeRangeRules {
 
 export type TimeRangePickerProps = Omit<TimePickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'onValueChanging'> &
   TimeRangeRules & {
+    /** The value, when you control it */
     value?: TimeRange;
     /** Default: from now, for an hour */
     defaultValue?: TimeRange;
+    /** Called when the user changes the value; never when `value` changes from your code */
     onValueChange?: (range: TimeRange) => void;
     /** Default: 'Start' */
     startLabel?: string;
@@ -102,6 +115,7 @@ export type TimeRangePickerProps = Omit<TimePickerProps, 'value' | 'defaultValue
 
 export type TimeRangePickerSheetProps = SheetChromeProps &
   Omit<TimeRangePickerProps, 'value' | 'defaultValue' | 'onValueChange' | 'theme'> & {
+    /** The value, when you control it */
     value?: TimeRange;
     onConfirm: (range: TimeRange) => void;
   };

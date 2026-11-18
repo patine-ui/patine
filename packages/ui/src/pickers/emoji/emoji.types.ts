@@ -95,7 +95,9 @@ export interface EmojiPickerProps extends ThemableProps {
   showRecent?: boolean;
   maxRecent?: number;
   renderEmoji?: EmojiRenderer;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<EmojiPickerSlot>;
   testID?: string;
 }

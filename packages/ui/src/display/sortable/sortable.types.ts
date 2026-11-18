@@ -45,6 +45,7 @@ export interface SortableListProps<T> extends ThemableProps, Omit<ScrollViewProp
   getItemLabel?: (item: T) => string;
   /** Turn reordering off */
   disabled?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<SortableLabels>;
   /** A row is lifted */
   onDragStart?: (index: number) => void;
@@ -53,6 +54,7 @@ export interface SortableListProps<T> extends ThemableProps, Omit<ScrollViewProp
 export interface SortableHandleProps extends ThemableProps {
   /** Default: 'Drag to reorder' */
   accessibilityLabel?: string;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }

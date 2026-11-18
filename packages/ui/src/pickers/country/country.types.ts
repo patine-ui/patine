@@ -73,6 +73,7 @@ export type PhoneFieldSlot = 'label' | 'field' | 'input' | 'countryButton' | 'di
 export interface PhoneFieldProps extends ThemableProps, FieldStatusProps, Omit<CountryListOptions, 'showDialCode'> {
   /** The number in E.164, e.g. '+972541234567'; '' when empty */
   value?: string;
+  /** The value at first, when it keeps its own state */
   defaultValue?: string;
   /** Called as the user types or changes country, with the E.164 number */
   onValueChange?: (value: string, details: PhoneDetails) => void;
@@ -85,6 +86,7 @@ export interface PhoneFieldProps extends ThemableProps, FieldStatusProps, Omit<C
   label?: string;
   /** Default: an example in the country's format, e.g. '(123) 456-7890' */
   placeholder?: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Where the country list opens. Default: 'auto' (dropdown on the web, bottom sheet on native) */
   presentation?: CountryPickerProps['presentation'];
@@ -92,7 +94,9 @@ export interface PhoneFieldProps extends ThemableProps, FieldStatusProps, Omit<C
   countrySheetTitle?: string;
   /** Options for the country sheet, as `CountryPicker`'s `sheet` */
   sheet?: CountryPickerProps['sheet'];
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
+  /** Per-part style overrides */
   styles?: SlotStyles<PhoneFieldSlot>;
   /** On the text input; the country button gets `${testID}-country` */
   testID?: string;

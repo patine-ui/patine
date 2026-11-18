@@ -30,6 +30,7 @@ export interface CollapsibleTriggerProps extends Omit<PressableProps, 'children'
    * `aria-expanded` and `aria-controls`. For a Button, a card or any pressable of your own. Default: false
    */
   asChild?: boolean;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
 }

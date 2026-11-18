@@ -34,8 +34,11 @@ export interface PaginationProps extends Omit<ViewProps, 'children'>, ThemablePr
   variant?: 'numbers' | 'compact';
   /** Hides the words on Previous and Next, keeping the arrows. Default: false */
   iconOnly?: boolean;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
+  /** Its built-in text, for translation */
   labels?: Partial<PaginationLabels>;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }
 

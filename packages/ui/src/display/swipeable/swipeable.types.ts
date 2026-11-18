@@ -28,9 +28,11 @@ export interface SwipeableRowProps extends ThemableProps {
   fullSwipe?: boolean;
   /** The row's own fill, which covers the actions. Default: the List's fill for the design */
   backgroundColor?: string;
+  /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Opened or closed by a swipe, a key or an action */
   onOpenChange?: (side: SwipeSide | null) => void;
+  /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
