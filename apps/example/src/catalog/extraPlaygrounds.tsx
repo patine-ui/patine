@@ -13,6 +13,7 @@ import {
   DescriptionList,
   Fab,
   Grid,
+  Image,
   Kbd,
   Link,
   NumberField,
@@ -20,15 +21,35 @@ import {
   SearchField,
   Stat,
   Stepper,
+  SuggestionChips,
   Table,
   ToggleButton,
   ToggleGroup,
+  TypingIndicator,
 } from 'patine-ui';
 
-import type { PlaygroundConfig, PlaygroundKey } from './catalog.types';
+import type { IconName } from '@patine-ui/icons';
+import { Icon } from '@patine-ui/icons';
+import type { PlaygroundConfig, PlaygroundControl, PlaygroundKey } from './catalog.types';
+
+/** An icon drawn in the color its owner hands it: a tab's label color, a FAB's on-fill color. */
+const tabIcon =
+  (name: IconName) =>
+  ({ color }: { color: string }) => <Icon name={name} color={color} />;
 
 const DESIGN = { prop: 'design', options: ['native', 'brand', 'ios', 'material', 'web'], unset: 'native' } as const;
 const DISABLED = { prop: 'disabled', options: [false, true] } as const;
+// Typed on its own: two controls with differently keyed `values` in one array widen to a union TypeScript rejects.
+const ASPECT_RATIO: PlaygroundControl = {
+  prop: 'aspectRatio',
+  options: ['4:3', '1:1', '16:9'],
+  default: null,
+  values: {
+    '4:3': { live: 4 / 3, code: '4 / 3' },
+    '1:1': { live: 1, code: '1' },
+    '16:9': { live: 16 / 9, code: '16 / 9' },
+  },
+};
 
 /** Playgrounds of the layout, primitive and newer components, merged into PLAYGROUNDS. */
 export const EXTRA_PLAYGROUNDS = {
@@ -201,10 +222,10 @@ export const EXTRA_PLAYGROUNDS = {
     props: {
       style: { width: 360 },
       items: [
-        { value: 'home', label: 'Home', icon: <Text style={{ fontSize: 20 }}>🏠</Text> },
-        { value: 'search', label: 'Search', icon: <Text style={{ fontSize: 20 }}>🔍</Text> },
-        { value: 'inbox', label: 'Inbox', badge: 3, icon: <Text style={{ fontSize: 20 }}>📥</Text> },
-        { value: 'profile', label: 'Profile', badge: true, icon: <Text style={{ fontSize: 20 }}>👤</Text> },
+        { value: 'home', label: 'Home', icon: tabIcon('home') },
+        { value: 'search', label: 'Search', icon: tabIcon('search') },
+        { value: 'inbox', label: 'Inbox', badge: 3, icon: tabIcon('inbox') },
+        { value: 'profile', label: 'Profile', badge: true, icon: tabIcon('user') },
       ],
     },
     value: 'home',
@@ -297,8 +318,8 @@ export const EXTRA_PLAYGROUNDS = {
   fab: {
     name: 'Fab',
     component: Fab,
-    props: { icon: <Text style={{ fontSize: 22 }}>✎</Text>, accessibilityLabel: 'Compose' },
-    code: 'icon={<PencilIcon />} accessibilityLabel="Compose"',
+    props: { icon: tabIcon('edit'), accessibilityLabel: 'Compose', style: { alignSelf: 'center' } },
+    code: 'icon={({ color }) => <Icon name="edit" color={color} />} accessibilityLabel="Compose"',
     controls: [
       { prop: 'label', options: ['none', 'Compose'], unset: 'none', default: null },
       { prop: 'size', options: ['md', 'sm', 'lg'] },
@@ -316,5 +337,39 @@ export const EXTRA_PLAYGROUNDS = {
       { prop: 'variant', options: ['ghost', 'outline', 'secondary', 'default'] },
       DESIGN,
     ],
+  },
+  image: {
+    name: 'Image',
+    component: Image,
+    props: { alt: 'A mountain lake at dawn', style: { width: 320 } },
+    code: 'alt="A mountain lake at dawn"',
+    controls: [
+      {
+        prop: 'src',
+        options: ['photo', 'broken', 'none'],
+        default: null,
+        unset: 'none',
+        values: {
+          photo: { live: 'https://picsum.photos/id/1036/640/480', code: 'post.imageUrl' },
+          broken: { live: 'https://invalid.example/404.png', code: "'https://invalid.example/404.png'" },
+        },
+      },
+      ASPECT_RATIO,
+      { prop: 'fit', options: ['cover', 'contain'] },
+      { prop: 'radius', options: ['auto', 'sm', 'lg', 'full', 0], unset: 'auto' },
+      DESIGN,
+    ],
+  },
+  typingIndicator: {
+    name: 'TypingIndicator',
+    component: TypingIndicator,
+    controls: [{ prop: 'name', options: ['none', 'Maya'], unset: 'none', default: null }, DESIGN],
+  },
+  suggestionChips: {
+    name: 'SuggestionChips',
+    component: SuggestionChips,
+    props: { suggestions: ['Track my order', 'Change the address', 'Talk to a person'], onPress: () => {}, style: { width: 360 } },
+    code: 'suggestions={replies} onPress={send}',
+    controls: [DISABLED, DESIGN],
   },
 } satisfies Partial<Record<PlaygroundKey, PlaygroundConfig>>;

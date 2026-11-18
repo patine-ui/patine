@@ -30,7 +30,7 @@ export interface PlaygroundValue {
 export interface PlaygroundConfig {
   /** A desktop-wide preview on the Web tab, for a picker that spreads out there (DateTimePicker's time beside its calendar). */
   wide?: boolean;
-  /** Shows the iOS / Android / Web switch. Off for a component that looks and works the same everywhere, like the wheels. */
+  /** `false` hides the docs' iOS / Android / Web switch, which shows by itself for a component that behaves differently by platform (a field's sheet or dropdown). */
   platforms?: boolean;
   /** Component name used in the generated code. */
   name: string;
@@ -63,6 +63,8 @@ export interface CatalogPage<K extends string = PlaygroundKey> {
 
 export interface CatalogGroup<K extends string = PlaygroundKey> {
   label: string;
+  /** A Patine Icons name, e.g. `calendar`: the docs sidebar draws it beside the group's label */
+  icon: string;
   pages: readonly CatalogPage<K>[];
 }
 

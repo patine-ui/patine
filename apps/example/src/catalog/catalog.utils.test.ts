@@ -74,7 +74,7 @@ describe('catalog', () => {
   it('keeps each page with its group and depth', () => {
     const pages = flattenCatalog(CATALOG);
     expect(pages.find(({ page }) => page.doc === 'components/date-range-picker')).toMatchObject({ group: 'Date & time', depth: 1 });
-    expect(pages.find(({ page }) => page.doc === 'components/color-picker')).toMatchObject({ group: 'Pickers', depth: 0 });
+    expect(pages.find(({ page }) => page.doc === 'components/color-picker')).toMatchObject({ group: 'Selection', depth: 0 });
   });
 
   it('shows every playground on a page', () => {

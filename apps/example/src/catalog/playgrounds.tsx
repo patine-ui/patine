@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 
+import type { ThemeColor } from 'patine-ui';
 import {
   Accordion,
   AccordionContent,
@@ -98,6 +99,8 @@ import {
   WheelPickerField,
 } from 'patine-ui';
 
+import type { IconName } from '@patine-ui/icons';
+import { Icon } from '@patine-ui/icons';
 import { styles } from './catalog.styles';
 import type { PlaygroundConfig, PlaygroundKey, PlaygroundSelection } from './catalog.types';
 import { CollapsibleDemo } from './components/CollapsibleDemo';
@@ -118,9 +121,9 @@ const ERROR = { prop: 'error', options: ['none', 'This field is required'], unse
 const DESIGN = { prop: 'design', options: ['native', 'brand', 'ios', 'material', 'web'], unset: 'native' } as const;
 const DISABLED = { prop: 'disabled', options: [false, true] } as const;
 /** An icon for a node-valued prop, shown as `code` in the generated code. */
-const icon = (glyph: string, code: string) => ({
-  live: <Text>{glyph}</Text>,
-  code,
+const icon = (name: IconName, color?: ThemeColor) => ({
+  live: <Icon name={name} size="sm" color={color} />,
+  code: `<Icon name="${name}"${color ? ` color="${color}"` : ''} />`,
 });
 const PHOTO = 'https://picsum.photos/id/64/160/160';
 
@@ -180,9 +183,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         prop: 'startIcon',
         options: ['none', 'save', 'mail'],
         unset: 'none',
-        values: { save: icon('💾', '<SaveIcon />'), mail: icon('✉️', '<MailIcon />') },
+        values: { save: icon('save', 'onPrimary'), mail: icon('mail', 'onPrimary') },
       },
-      { prop: 'endIcon', options: ['none', 'next'], unset: 'none', values: { next: icon('➡️', '<ArrowRightIcon />') } },
+      { prop: 'endIcon', options: ['none', 'next'], unset: 'none', values: { next: icon('arrowRight', 'onPrimary') } },
       { prop: 'loading', options: [false, true] },
       DISABLED,
       DESIGN,
@@ -305,7 +308,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         prop: 'icon',
         options: ['none', 'card', 'info'],
         unset: 'none',
-        values: { card: icon('💳', '<CreditCardIcon />'), info: icon('ℹ️', '<InfoIcon />') },
+        values: { card: icon('card'), info: icon('info') },
       },
       { prop: 'live', options: ['auto', true, false], unset: 'auto' },
       DESIGN,
@@ -319,12 +322,12 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       <ListItem
         key="notifications"
         title="Notifications"
-        leading={<Text>🔔</Text>}
+        leading={<Icon name="bell" />}
         trailing={<Switch accessibilityLabel="Notifications" defaultChecked />}
       />,
-      <ListItem key="language" title="Language" leading={<Text>🌐</Text>} value="English" onPress={() => {}} />,
-      <ListItem key="storage" title="Storage" description="2.4 GB of 5 GB used" leading={<Text>💾</Text>} onPress={() => {}} />,
-      <ListItem key="beta" title="Beta features" leading={<Text>🧪</Text>} trailing={<Badge variant="secondary">New</Badge>} />,
+      <ListItem key="language" title="Language" leading={<Icon name="globe" />} value="English" onPress={() => {}} />,
+      <ListItem key="storage" title="Storage" description="2.4 GB of 5 GB used" leading={<Icon name="database" />} onPress={() => {}} />,
+      <ListItem key="beta" title="Beta features" leading={<Icon name="sparkles" />} trailing={<Badge variant="secondary">New</Badge>} />,
       <ListItem key="sign-out" title="Sign out" destructive showChevron={false} onPress={() => {}} />,
     ],
     controls: [
@@ -391,7 +394,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         options: ['inbox', 'search', 'none'],
         unset: 'none',
         default: null,
-        values: { inbox: { live: '📭', code: '"📭"' }, search: { live: '🔍', code: '"🔍"' } },
+        values: {
+          inbox: { live: <Icon name="inbox" size={28} />, code: '<Icon name="inbox" size={28} />' },
+          search: { live: <Icon name="search" size={28} />, code: '<Icon name="search" size={28} />' },
+        },
       },
       {
         prop: 'action',
@@ -784,14 +790,14 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: SegmentedControl,
     props: {
       items: [
-        { label: 'Walk', value: 'walk', icon: <Text>🚶</Text> },
-        { label: 'Bike', value: 'bike', icon: <Text>🚲</Text> },
-        { label: 'Bus', value: 'bus', icon: <Text>🚌</Text> },
-        { label: 'Car', value: 'car', icon: <Text>🚗</Text> },
+        { label: 'List', value: 'list', icon: <Icon name="layoutList" size="sm" /> },
+        { label: 'Grid', value: 'grid', icon: <Icon name="layoutGrid3" size="sm" /> },
+        { label: 'Map', value: 'map', icon: <Icon name="map" size="sm" /> },
+        { label: 'Calendar', value: 'calendar', icon: <Icon name="calendar" size="sm" /> },
       ],
     },
-    value: 'bike',
-    code: 'items={modes} value={mode} onValueChange={setMode}',
+    value: 'grid',
+    code: 'items={views} value={view} onValueChange={setView}',
     controls: [
       { prop: 'iconPosition', options: ['left', 'right', 'top', 'bottom'] },
       { prop: 'showArrows', options: [false, true] },
@@ -803,14 +809,14 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: ChipGroup,
     props: {
       items: [
-        { label: 'Walk', value: 'walk', icon: <Text>🚶</Text> },
-        { label: 'Bike', value: 'bike', icon: <Text>🚲</Text> },
-        { label: 'Bus', value: 'bus', icon: <Text>🚌</Text> },
-        { label: 'Car', value: 'car', icon: <Text>🚗</Text> },
+        { label: 'List', value: 'list', icon: <Icon name="layoutList" size="sm" /> },
+        { label: 'Grid', value: 'grid', icon: <Icon name="layoutGrid3" size="sm" /> },
+        { label: 'Map', value: 'map', icon: <Icon name="map" size="sm" /> },
+        { label: 'Calendar', value: 'calendar', icon: <Icon name="calendar" size="sm" /> },
       ],
     },
-    value: 'bike',
-    code: 'items={modes} value={mode} onValueChange={setMode}',
+    value: 'grid',
+    code: 'items={views} value={view} onValueChange={setView}',
     controls: [
       { prop: 'iconPosition', options: ['left', 'right', 'top', 'bottom'] },
       { prop: 'showArrows', options: [false, true] },
@@ -918,8 +924,8 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       },
       { prop: 'snapToMarks', options: [false, true] },
       { prop: 'valueLabel', options: ['auto', 'never', 'drag', 'always'], unset: 'auto' },
-      { prop: 'minimumIcon', options: ['none', 'speaker'], unset: 'none', values: { speaker: icon('🔈', '<VolumeLowIcon />') } },
-      { prop: 'maximumIcon', options: ['none', 'speaker'], unset: 'none', values: { speaker: icon('🔊', '<VolumeHighIcon />') } },
+      { prop: 'minimumIcon', options: ['none', 'speaker'], unset: 'none', values: { speaker: icon('volumeOff') } },
+      { prop: 'maximumIcon', options: ['none', 'speaker'], unset: 'none', values: { speaker: icon('volume') } },
       DISABLED,
       DESIGN,
     ],
@@ -993,7 +999,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     changeProp: 'onConfirm',
     props: { title: 'Dates' },
     value: dateValue,
-    code: 'visible={open} onClose={() => setOpen(false)} value={value} onConfirm={setValue}',
+    code: 'open={open} onOpenChange={setOpen} value={value} onConfirm={setValue}',
     controls: [
       { prop: 'presentation', options: ['auto', 'bottomSheet', 'modal'] },
       { prop: 'mode', options: ['single', 'range', 'multiple'] },
@@ -1007,13 +1013,15 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: BottomSheet,
     opener: 'Open sheet',
     props: { title: 'Share' },
-    code: 'visible={open} onClose={() => setOpen(false)} title="Share"',
+    code: 'open={open} onOpenChange={setOpen} title="Share"',
     controls: [
       { prop: 'presentation', options: ['auto', 'bottomSheet', 'modal'] },
       { prop: 'enableSwipeToClose', options: [true, false] },
       { prop: 'draggable', options: [true, false], default: null },
       { prop: 'expandable', options: [true, false] },
       { prop: 'closeOnBackdropPress', options: [true, false] },
+      { prop: 'showHandle', options: [true, false] },
+      DESIGN,
     ],
     children: (
       <View style={styles.sheetActions}>
@@ -1033,7 +1041,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       title: 'Profile photo',
       actions: [{ label: 'Take photo' }, { label: 'Choose from library' }, { label: 'Remove photo', destructive: true }],
     },
-    code: 'visible={open} onClose={() => setOpen(false)} title="Profile photo" actions={actions}',
+    code: 'open={open} onOpenChange={setOpen} title="Profile photo" actions={actions}',
     controls: [
       { prop: 'presentation', options: ['auto', 'bottomSheet', 'modal'] },
       { prop: 'showCancel', options: ['auto', true, false], unset: 'auto' },
@@ -1047,10 +1055,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       style: { alignSelf: 'center' },
       styles: { trigger: styles.pill },
       actions: [
-        { label: 'Edit', icon: <Text>✏️</Text> },
-        { label: 'Duplicate', icon: <Text>📄</Text> },
-        { label: 'Pin to top', icon: <Text>📌</Text>, selected: true },
-        { label: 'Delete', icon: <Text>🗑️</Text>, destructive: true },
+        { label: 'Edit', icon: <Icon name="edit" size="sm" /> },
+        { label: 'Duplicate', icon: <Icon name="copy" size="sm" /> },
+        { label: 'Pin to top', icon: <Icon name="pin" size="sm" />, selected: true },
+        { label: 'Delete', icon: <Icon name="trash" size="sm" />, destructive: true },
       ],
     },
     code: 'actions={actions} accessibilityLabel="Note options"',
@@ -1071,7 +1079,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     code: 'label="Email" placeholder="you@example.com" value={email} onValueChange={setEmail}',
     controls: [
       { prop: 'helperText', options: ['none', "We'll send the receipt here"], unset: 'none', initial: "We'll send the receipt here" },
-      { prop: 'startIcon', options: ['none', 'mail'], unset: 'none', values: { mail: icon('✉️', '<MailIcon />') } },
+      { prop: 'startIcon', options: ['none', 'mail'], unset: 'none', values: { mail: icon('mail') } },
       { prop: 'prefix', options: ['none', '$', 'https://'], unset: 'none' },
       { prop: 'suffix', options: ['none', 'kg', '.com'], unset: 'none' },
       CLEARABLE,
@@ -1187,10 +1195,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     code: 'defaultValue="account"',
     children: [
       <TabsList key="list" aria-label="Settings">
-        <TabsTrigger value="account" icon={<Text>👤</Text>}>
+        <TabsTrigger value="account" icon={<Icon name="user" size="sm" />}>
           Account
         </TabsTrigger>
-        <TabsTrigger value="password" icon={<Text>🔒</Text>}>
+        <TabsTrigger value="password" icon={<Icon name="lock" size="sm" />}>
           Password
         </TabsTrigger>
         <TabsTrigger value="team" disabled>

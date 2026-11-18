@@ -9,7 +9,7 @@ const pageAt = (doc: string) => {
 
 describe('initialOpenSections', () => {
   it('opens the group of the page shown', () => {
-    expect(initialOpenSections({ page: pageAt('components/select-list') }, CATALOG_PAGES)).toEqual([COMPONENTS_LABEL, 'Inputs']);
+    expect(initialOpenSections({ page: pageAt('components/select-list') }, CATALOG_PAGES)).toEqual([COMPONENTS_LABEL, 'Selection']);
   });
 
   it('opens no group for the basics screen', () => {

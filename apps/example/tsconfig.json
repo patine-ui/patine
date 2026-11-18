@@ -6,6 +6,7 @@
     "paths": {
       "patine-ui": ["../../packages/ui/src"],
       "patine-ui/core": ["../../packages/ui/src/core"],
+      "@patine-ui/icons": ["../../packages/icons/src"],
       "@/*": ["../../packages/ui/src/*"]
     }
   }
