@@ -7,16 +7,15 @@ import { PatineProvider } from '@/core';
 import { usePickerField } from './usePickerField';
 
 describe('usePickerField', () => {
-  it('opens and closes, calling onOpen and onClose', async () => {
-    const onOpen = jest.fn();
-    const onClose = jest.fn();
-    const { result } = await renderHook(() => usePickerField({ onOpen, onClose }));
+  it('opens and closes, calling onOpenChange', async () => {
+    const onOpenChange = jest.fn();
+    const { result } = await renderHook(() => usePickerField({ onOpenChange }));
     await act(() => result.current.show());
     expect(result.current.open).toBe(true);
-    expect(onOpen).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
     await act(() => result.current.hide());
     expect(result.current.open).toBe(false);
-    expect(onClose).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
   });
 
   it('measures the field on open for a dropdown', async () => {
@@ -63,10 +62,10 @@ describe('usePickerField', () => {
   });
 
   it('stays closed while disabled', async () => {
-    const onOpen = jest.fn();
-    const { result } = await renderHook(() => usePickerField({ disabled: true, onOpen }));
+    const onOpenChange = jest.fn();
+    const { result } = await renderHook(() => usePickerField({ disabled: true, onOpenChange }));
     await act(() => result.current.show());
     expect(result.current.open).toBe(false);
-    expect(onOpen).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });

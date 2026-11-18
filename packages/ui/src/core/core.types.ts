@@ -89,6 +89,30 @@ export interface DisclosureLabelProps {
   labelStyle?: StyleProp<TextStyle>;
 }
 
+/** The open state of an overlay you control: `open` + `onOpenChange`, as Radix names them. */
+export interface OpenStateProps {
+  /** Shows it. It animates in and out; keep it mounted and flip this. Pair with `onOpenChange`. Default: false */
+  open?: boolean;
+  /**
+   * Called with `false` when the user closes it: a swipe down, a backdrop tap, Cancel, the back button or Escape. Set `open`
+   * to false here. Never called when `open` changes from your code
+   */
+  onOpenChange?: (open: boolean) => void;
+}
+
+/**
+ * The open state of an overlay that opens itself from its trigger, such as a Select or a DropdownMenu: it keeps its own,
+ * or you control it with `open` + `onOpenChange`.
+ */
+export interface TriggeredOpenProps {
+  /** Open, when you control it. Pair with `onOpenChange` */
+  open?: boolean;
+  /** Open at first, when it keeps its own state. Default: false */
+  defaultOpen?: boolean;
+  /** Called when the user opens or closes it. Never called when `open` changes from your code */
+  onOpenChange?: (open: boolean) => void;
+}
+
 export interface ThemableProps {
   /** Component-level theme override, merged on top of the provider theme */
   theme?: DeepPartial<Theme>;

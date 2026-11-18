@@ -14,8 +14,8 @@ import type { BottomSheetProps } from './sheet.types';
 import { getSheetDefaults, resolvePresentation, resolveSheetHeight } from './sheet.utils';
 
 export const BottomSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   children,
   title,
   headerLeft,
@@ -39,6 +39,7 @@ export const BottomSheet = ({
   testID,
 }: BottomSheetProps) => {
   const { theme } = useComponentTheme(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const platform = usePlatform();
   const defaults = getSheetDefaults(platform);

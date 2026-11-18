@@ -16,8 +16,8 @@ import type { PickerSheetProps } from './sheet.types';
  * below; inside one set to `inline`, the content alone, expanded under it.
  */
 export const PickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   onConfirm,
   confirmDisabled,
   title,
@@ -31,6 +31,7 @@ export const PickerSheet = ({
   children,
 }: PickerSheetProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const sheetDesign = SHEET_DESIGN[theme.design];
   const confirmLabel = confirmLabelProp ?? sheetDesign.confirmLabel;
   const field = useFieldSheet();
@@ -93,8 +94,8 @@ export const PickerSheet = ({
 
   return (
     <BottomSheet
-      visible={visible}
-      onClose={onClose}
+      open={visible}
+      onOpenChange={onClose}
       title={title}
       presentation={presentation}
       theme={themeOverride}

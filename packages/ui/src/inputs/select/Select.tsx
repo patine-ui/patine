@@ -30,8 +30,9 @@ export const Select = <T,>(props: SelectProps<T>) => {
     sheetTitle,
     sheet,
     presentation: _presentation,
-    onOpen: _onOpen,
-    onClose: _onClose,
+    open: _open,
+    defaultOpen: _defaultOpen,
+    onOpenChange: _onOpenChange,
     style,
     styles: slots,
     theme: themeProp,
@@ -117,8 +118,8 @@ export const Select = <T,>(props: SelectProps<T>) => {
         </Dropdown>
       ) : (
         <PickerSheet
-          visible={picker.open}
-          onClose={picker.hide}
+          open={picker.open}
+          onOpenChange={picker.hide}
           title={sheetTitle ?? label}
           theme={themeOverride}
           presentation={picker.presentation}

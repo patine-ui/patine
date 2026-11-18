@@ -13,8 +13,8 @@ import { formatDateHeadline, getEmptyDraft, getSheetDisplay, isDraftReady } from
 
 export const DatePickerSheet = (props: DatePickerSheetProps) => {
   const {
-    visible,
-    onClose,
+    open: visible = false,
+    onOpenChange,
     title,
     confirmLabel,
     cancelLabel,
@@ -32,6 +32,7 @@ export const DatePickerSheet = (props: DatePickerSheetProps) => {
     ...calendarProps
   } = props;
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const display = getSheetDisplay(mode, displayProp);
   // The sheet holds whichever value shape the mode uses; `mode` ties value, draft and onConfirm together, so a new mode starts a new draft.
   const confirmDraft = onConfirm as (draft: DateDraft) => void;
@@ -71,7 +72,7 @@ export const DatePickerSheet = (props: DatePickerSheetProps) => {
 
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={confirmsOnSelect ? undefined : confirm}
       confirmDisabled={!ready}
     >

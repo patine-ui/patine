@@ -2,7 +2,7 @@ import type React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
-import type { ValueOf } from '@/core/core.types';
+import type { OpenStateProps, TriggeredOpenProps, ValueOf } from '@/core/core.types';
 import type { BottomSheetProps, FieldAnchor, SheetPresentation } from '@/overlays/sheet/sheet.types';
 import type { MENU_ALIGN, MENU_PRESENTATION } from './action.constants';
 
@@ -34,10 +34,9 @@ export type ActionSheetSlot =
   | 'cancel'
   | 'cancelLabel';
 
-export interface ActionSheetProps extends ThemableProps {
-  visible: boolean;
-  /** Called on Cancel, a backdrop tap, a swipe down or Back, and before any action runs */
-  onClose: () => void;
+/** `onOpenChange(false)` is called on Cancel, a backdrop tap, a swipe down or Back, and before any action runs. */
+export interface ActionSheetProps extends ThemableProps, OpenStateProps {
+  /** The rows, in order. A press closes the sheet, then runs the action's `onPress` */
   actions: ActionSheetAction[];
   /** A heading over the actions */
   title?: string;
@@ -50,7 +49,7 @@ export interface ActionSheetProps extends ThemableProps {
   /** Bottom sheet or centered modal. Default: 'auto' (modal on wide web windows) */
   presentation?: SheetPresentation;
   /** Passed through to the underlying BottomSheet */
-  sheetProps?: Partial<Omit<BottomSheetProps, 'visible' | 'onClose' | 'children'>>;
+  sheetProps?: Partial<Omit<BottomSheetProps, 'open' | 'onOpenChange' | 'children'>>;
   /** Per-part style overrides */
   styles?: SlotStyles<ActionSheetSlot>;
   testID?: string;
@@ -86,8 +85,8 @@ export interface ActionSheetRowProps {
   slots?: SlotStyles<ActionSheetSlot>;
 }
 
-/** `show()` takes the sheet's props without `visible`; `onClose` is optional. */
-export type ActionSheetOptions = Omit<ActionSheetProps, 'visible' | 'onClose'> & { onClose?: () => void };
+/** `show()` takes the sheet's props without `open`; `onOpenChange` is optional. */
+export type ActionSheetOptions = Omit<ActionSheetProps, 'open'>;
 
 /** What `useActionSheet` returns: render `actionSheet` once, then call `show` from anywhere in the component. */
 export interface ActionSheetController {
@@ -118,7 +117,8 @@ export interface DropdownMenuTriggerInfo {
 
 export type DropdownMenuSlot = 'trigger' | 'menu' | 'header' | 'title' | 'action' | 'actionLabel' | 'actionDescription' | 'check';
 
-export interface DropdownMenuProps extends ThemableProps {
+export interface DropdownMenuProps extends ThemableProps, TriggeredOpenProps {
+  /** The items, in order. A press closes the menu and runs the item */
   actions: DropdownMenuAction[];
   /** The trigger: a node that opens the menu on press, or a function that gets `open` for your own button */
   children: React.ReactNode | ((info: DropdownMenuTriggerInfo) => React.ReactNode);
@@ -134,9 +134,6 @@ export interface DropdownMenuProps extends ThemableProps {
   openOnLongPress?: boolean;
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;
-  onOpen?: () => void;
-  /** On a tap outside, Back or Escape, and before any action runs */
-  onClose?: () => void;
   /** What screen readers call the trigger, such as 'More options' */
   accessibilityLabel?: string;
   /** The box around the trigger */

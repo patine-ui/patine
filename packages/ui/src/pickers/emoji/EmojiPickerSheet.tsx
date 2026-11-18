@@ -6,8 +6,8 @@ import type { EmojiPickerSheetProps } from './emoji.types';
 import { useSheetRecent } from './hooks/useSheetRecent';
 
 export const EmojiPickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -25,9 +25,12 @@ export const EmojiPickerSheet = ({
   ...rest
 }: EmojiPickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const recent = useSheetRecent({ visible, closeOnSelect, recent: recentProp, defaultRecent, onRecentChange });
   return (
-    <PickerSheet {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}>
+    <PickerSheet
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+    >
       <EmojiPicker
         {...rest}
         {...recent}

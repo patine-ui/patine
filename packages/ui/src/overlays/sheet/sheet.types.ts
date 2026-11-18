@@ -13,7 +13,7 @@ import type {
 } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
-import type { DistributiveOmit, ValueOf } from '@/core/core.types';
+import type { DistributiveOmit, OpenStateProps, TriggeredOpenProps, ValueOf } from '@/core/core.types';
 import type {
   FIELD_ARROW,
   FIELD_LABEL,
@@ -38,9 +38,7 @@ export interface FieldSheetContextValue {
 
 export type BottomSheetSlot = 'backdrop' | 'sheet' | 'handle' | 'header' | 'title' | 'content' | 'footer';
 
-export interface BottomSheetProps extends ThemableProps {
-  visible: boolean;
-  onClose: () => void;
+export interface BottomSheetProps extends ThemableProps, OpenStateProps {
   children: React.ReactNode;
   /** The header's title. A string is also the sheet's name for screen readers */
   title?: React.ReactNode;
@@ -70,6 +68,7 @@ export interface BottomSheetProps extends ThemableProps {
   bottomInset?: number;
   /** 'bottomSheet', 'modal' (a centered card), or 'auto': a card on wide web windows, a sheet elsewhere. Default: 'auto' */
   presentation?: SheetPresentation;
+  /** Per-part style overrides */
   styles?: SlotStyles<BottomSheetSlot>;
   /** Called once the open animation ends */
   onOpened?: () => void;
@@ -78,9 +77,8 @@ export interface BottomSheetProps extends ThemableProps {
   testID?: string;
 }
 
-export interface SheetChromeProps extends ThemableProps {
-  visible: boolean;
-  onClose: () => void;
+export interface SheetChromeProps extends ThemableProps, OpenStateProps {
+  /** The header title */
   title?: React.ReactNode;
   /** Default: 'OK' in the Material design, else 'Done' */
   confirmLabel?: string;
@@ -91,7 +89,7 @@ export interface SheetChromeProps extends ThemableProps {
   /** Bottom sheet or centered modal. Default: 'auto' (modal on wide web windows) */
   presentation?: SheetPresentation;
   /** Passed through to the underlying BottomSheet */
-  sheetProps?: Partial<Omit<BottomSheetProps, 'visible' | 'onClose' | 'children'>>;
+  sheetProps?: Partial<Omit<BottomSheetProps, keyof OpenStateProps | 'children'>>;
 }
 
 export interface PickerSheetProps extends Omit<SheetChromeProps, 'presentation'> {
@@ -331,7 +329,7 @@ export interface PickerFieldTriggerInfo {
 }
 
 /** The props every `*PickerField` shares; `styles` also reaches the picker inside the sheet, so it takes the picker's slots `S` too. */
-export interface PickerFieldBaseProps<S extends string = never> extends ThemableProps, FieldStatusProps {
+export interface PickerFieldBaseProps<S extends string = never> extends ThemableProps, FieldStatusProps, TriggeredOpenProps {
   /** Label rendered above the field, and the sheet title unless `title` is set */
   label?: string;
   /** Default: 'Select…' */
@@ -347,8 +345,6 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
   renderTrigger?: (info: PickerFieldTriggerInfo) => React.ReactNode;
   /** Custom chevron icon; it still rotates as the field opens and closes */
   renderChevron?: (info: ChevronInfo) => React.ReactNode;
-  onOpen?: () => void;
-  onClose?: () => void;
   /**
    * Where the picker opens: `dropdown` under the field, `bottomSheet`, `modal`, `inline`: expanded in place under the field, committing each
    * change (no Cancel / Done) and collapsing on a second tap, or `auto`: a dropdown on the web, a bottom sheet on native. Default: 'auto'
@@ -365,12 +361,19 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
 export interface PickerFieldProps extends PickerFieldBaseProps {
   /** Shown before the value, such as a colour swatch or a flag */
   icon?: React.ReactNode;
-  /** Render the sheet the field opens, passing it `visible` and `onClose` */
-  children: (sheet: Pick<SheetChromeProps, 'visible' | 'onClose'>) => React.ReactNode;
+  /** Render the sheet the field opens: spread the state on it */
+  children: (sheet: FieldSheetState) => React.ReactNode;
 }
 
-/** A sheet's props turned into a field's: no `visible`, and the field props in place of the picker's own `style`, `testID`... */
-export type WithPickerField<SheetProps, S extends string> = DistributiveOmit<SheetProps, 'visible' | keyof PickerFieldBaseProps> &
+/** What a PickerField hands the sheet it renders. */
+export interface FieldSheetState {
+  open: boolean;
+  /** Closes the field's sheet; it's only ever called with `false` */
+  onOpenChange: (open: boolean) => void;
+}
+
+/** A sheet's props turned into a field's: no `open` (the field owns the open state), and the field props in place of the picker's own `style`, `testID`... */
+export type WithPickerField<SheetProps, S extends string> = DistributiveOmit<SheetProps, keyof PickerFieldBaseProps> &
   PickerFieldBaseProps<S>;
 
 export interface FieldLabelProps {

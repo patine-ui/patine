@@ -172,7 +172,7 @@ describe('EmojiPickerSheet', () => {
   it('closes after picking by default', async () => {
     const onSelect = jest.fn();
     const onClose = jest.fn();
-    await render(<EmojiPickerSheet visible onClose={onClose} onSelect={onSelect} testID="emoji" />);
+    await render(<EmojiPickerSheet open onOpenChange={onClose} onSelect={onSelect} testID="emoji" />);
     await layoutGrid();
     await fireEvent.press(screen.getByLabelText('grinning face'));
     expect(onSelect).toHaveBeenCalledWith('😀', findEmoji('😀'));
@@ -180,7 +180,7 @@ describe('EmojiPickerSheet', () => {
   });
 
   it('keeps the grid still while closing, and shows the pick under Recently used next time', async () => {
-    const sheet = (visible: boolean) => <EmojiPickerSheet visible={visible} onClose={jest.fn()} onSelect={jest.fn()} testID="emoji" />;
+    const sheet = (visible: boolean) => <EmojiPickerSheet open={visible} onOpenChange={jest.fn()} onSelect={jest.fn()} testID="emoji" />;
     const { rerender } = await render(sheet(true));
     await layoutGrid();
     await fireEvent.press(screen.getByLabelText('grinning face'));

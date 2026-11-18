@@ -15,7 +15,7 @@ export const PlaygroundCard = ({ config, wide }: { config: PlaygroundConfig; wid
   const { selection, choose, live } = usePlayground(config);
   const [open, setOpen] = useState(false);
   const { name, component: Component, controls, opener, children } = config;
-  const sheet = opener ? { visible: open, onClose: () => setOpen(false) } : {};
+  const sheet = opener ? { open, onOpenChange: setOpen } : {};
   return (
     <View style={[styles.card, { backgroundColor: colors.background }]}>
       <Text style={[styles.cardTitle, { color: colors.text }]}>{name}</Text>

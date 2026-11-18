@@ -11,7 +11,7 @@ describe('WheelPickerSheet', () => {
   it('confirms the scrolled value on Done', async () => {
     const onConfirm = jest.fn();
     const onClose = jest.fn();
-    await render(<WheelPickerSheet visible items={[1, 2, 3]} onClose={onClose} onConfirm={onConfirm} testID="wheel" />);
+    await render(<WheelPickerSheet open items={[1, 2, 3]} onOpenChange={onClose} onConfirm={onConfirm} testID="wheel" />);
     await fireEvent.scroll(screen.getByTestId('wheel-list'), { nativeEvent: { contentOffset: { y: 2 * H } } });
     await act(() => jest.advanceTimersByTime(500));
     expect(onConfirm).not.toHaveBeenCalled();
@@ -22,7 +22,7 @@ describe('WheelPickerSheet', () => {
 
   it('confirms the first item when nothing was scrolled', async () => {
     const onConfirm = jest.fn();
-    await render(<WheelPickerSheet visible items={['a', 'b']} onClose={jest.fn()} onConfirm={onConfirm} />);
+    await render(<WheelPickerSheet open items={['a', 'b']} onOpenChange={jest.fn()} onConfirm={onConfirm} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
     expect(onConfirm).toHaveBeenCalledWith('a');
   });
@@ -30,7 +30,7 @@ describe('WheelPickerSheet', () => {
   it('cancels without confirming', async () => {
     const onConfirm = jest.fn();
     const onClose = jest.fn();
-    await render(<WheelPickerSheet visible items={[1, 2]} value={2} onClose={onClose} onConfirm={onConfirm} />);
+    await render(<WheelPickerSheet open items={[1, 2]} value={2} onOpenChange={onClose} onConfirm={onConfirm} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
     expect(onClose).toHaveBeenCalled();
     expect(onConfirm).not.toHaveBeenCalled();

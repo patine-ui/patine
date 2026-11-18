@@ -3,21 +3,21 @@ import type { ReactNode } from 'react';
 import { AlertDialog, AlertDialogContent, Dialog, DialogContent, Modal, ModalContent } from 'patine-ui';
 
 interface OpenerProps {
-  visible: boolean;
-  onClose: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   children?: ReactNode;
   dismissible?: boolean;
 }
 
-/** The playground's opener passes `visible` and `onClose`; these map them onto `open` and `onOpenChange`. */
-export const DialogDemo = ({ visible, onClose, children, ...props }: OpenerProps) => (
-  <Dialog {...props} open={visible} onOpenChange={(open) => !open && onClose()}>
+/** The playground's opener passes `open` and `onOpenChange`; these put the body in the dialog's content. */
+export const DialogDemo = ({ children, ...props }: OpenerProps) => (
+  <Dialog {...props}>
     <DialogContent>{children}</DialogContent>
   </Dialog>
 );
 
-export const AlertDialogDemo = ({ visible, onClose, children, ...props }: OpenerProps) => (
-  <AlertDialog {...props} open={visible} onOpenChange={(open) => !open && onClose()}>
+export const AlertDialogDemo = ({ children, ...props }: OpenerProps) => (
+  <AlertDialog {...props}>
     <AlertDialogContent>{children}</AlertDialogContent>
   </AlertDialog>
 );
@@ -28,8 +28,8 @@ interface ModalOpenerProps extends OpenerProps {
   showCloseButton?: boolean;
 }
 
-export const ModalDemo = ({ visible, onClose, children, dismissible, ...content }: ModalOpenerProps) => (
-  <Modal dismissible={dismissible} open={visible} onOpenChange={(open) => !open && onClose()}>
+export const ModalDemo = ({ open, onOpenChange, children, dismissible, ...content }: ModalOpenerProps) => (
+  <Modal dismissible={dismissible} open={open} onOpenChange={onOpenChange}>
     <ModalContent {...content}>{children}</ModalContent>
   </Modal>
 );

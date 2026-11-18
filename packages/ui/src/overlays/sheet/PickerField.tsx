@@ -19,8 +19,9 @@ export const PickerField = ({
   onClear,
   renderTrigger,
   renderChevron,
-  onOpen,
-  onClose,
+  open,
+  defaultOpen,
+  onOpenChange,
   presentation,
   error,
   helperText,
@@ -33,7 +34,7 @@ export const PickerField = ({
   children,
 }: PickerFieldProps) => {
   const { theme } = useComponentTheme(themeProp, design);
-  const field = usePickerField({ disabled, presentation, onOpen, onClose });
+  const field = usePickerField({ disabled, presentation, open, defaultOpen, onOpenChange });
 
   return (
     <View style={style}>
@@ -70,7 +71,9 @@ export const PickerField = ({
           )}
         </View>
       </FieldFrame>
-      <FieldSheetContext.Provider value={field.sheet}>{children({ visible: field.open, onClose: field.hide })}</FieldSheetContext.Provider>
+      <FieldSheetContext.Provider value={field.sheet}>
+        {children({ open: field.open, onOpenChange: field.hide })}
+      </FieldSheetContext.Provider>
     </View>
   );
 };

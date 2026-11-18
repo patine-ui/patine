@@ -103,8 +103,7 @@ export const PhoneField = (props: PhoneFieldProps) => {
               presentation={presentation}
               sheetTitle={countrySheetTitle}
               sheet={sheet}
-              onOpen={phone.openPicker}
-              onClose={phone.closePicker}
+              onOpenChange={(open) => (open ? phone.openPicker() : phone.closePicker())}
               disabled={disabled}
               theme={themeOverride}
               renderTrigger={({ open }) =>

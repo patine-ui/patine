@@ -6,8 +6,8 @@ import type { DurationPickerSheetProps } from './duration.types';
 import { snapDuration } from './duration.utils';
 
 export const DurationPickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -21,10 +21,11 @@ export const DurationPickerSheet = ({
   ...rest
 }: DurationPickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const [draft, setDraft] = useDraft(snapDuration(value ?? 0, rest), visible, { commit: onConfirm });
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         onConfirm(draft);
         onClose();

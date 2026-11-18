@@ -20,13 +20,13 @@ const inDropdownField: FieldSheetContextValue = {
 describe('BottomSheet', () => {
   it('renders nothing until visible', async () => {
     const { rerender } = await render(
-      <BottomSheet visible={false} onClose={jest.fn()} title="Pick">
+      <BottomSheet open={false} onOpenChange={jest.fn()} title="Pick">
         <Text>Body</Text>
       </BottomSheet>
     );
     expect(screen.queryByText('Body')).toBeNull();
     await rerender(
-      <BottomSheet visible onClose={jest.fn()} title="Pick">
+      <BottomSheet open onOpenChange={jest.fn()} title="Pick">
         <Text>Body</Text>
       </BottomSheet>
     );
@@ -37,14 +37,14 @@ describe('BottomSheet', () => {
   it('closes on backdrop press unless disabled', async () => {
     const onClose = jest.fn();
     const { rerender } = await render(
-      <BottomSheet visible onClose={onClose}>
+      <BottomSheet open onOpenChange={onClose}>
         <Text>Body</Text>
       </BottomSheet>
     );
     await fireEvent.press(screen.getByLabelText('Close'));
     expect(onClose).toHaveBeenCalledTimes(1);
     await rerender(
-      <BottomSheet visible onClose={onClose} closeOnBackdropPress={false}>
+      <BottomSheet open onOpenChange={onClose} closeOnBackdropPress={false}>
         <Text>Body</Text>
       </BottomSheet>
     );
@@ -56,7 +56,7 @@ describe('BottomSheet', () => {
 describe('PickerSheet', () => {
   it('puts Cancel and Done beside the title on iOS, and Cancel and OK after the content in Material', async () => {
     const sheet = (design: 'ios' | 'material') => (
-      <PickerSheet visible onClose={jest.fn()} onConfirm={jest.fn()} title="Pick" design={design}>
+      <PickerSheet open onOpenChange={jest.fn()} onConfirm={jest.fn()} title="Pick" design={design}>
         <Text>Body</Text>
       </PickerSheet>
     );
@@ -74,7 +74,7 @@ describe('PickerSheet', () => {
     const onClose = jest.fn();
     const onConfirm = jest.fn();
     await render(
-      <PickerSheet visible onClose={onClose} onConfirm={onConfirm} confirmLabel="Save">
+      <PickerSheet open onOpenChange={onClose} onConfirm={onConfirm} confirmLabel="Save">
         <Text>Body</Text>
       </PickerSheet>
     );
@@ -87,7 +87,7 @@ describe('PickerSheet', () => {
   it('ignores a disabled confirm and can hide cancel', async () => {
     const onConfirm = jest.fn();
     await render(
-      <PickerSheet visible onClose={jest.fn()} onConfirm={onConfirm} confirmDisabled showCancel={false}>
+      <PickerSheet open onOpenChange={jest.fn()} onConfirm={onConfirm} confirmDisabled showCancel={false}>
         <Text>Body</Text>
       </PickerSheet>
     );
@@ -103,7 +103,7 @@ describe('PickerSheet in a field', () => {
     const onConfirm = jest.fn();
     await render(
       <FieldSheetContext.Provider value={inDropdownField}>
-        <PickerSheet visible onClose={onClose} onConfirm={onConfirm} title="Due">
+        <PickerSheet open onOpenChange={onClose} onConfirm={onConfirm} title="Due">
           <Text>Body</Text>
         </PickerSheet>
       </FieldSheetContext.Provider>
@@ -119,7 +119,7 @@ describe('PickerSheet in a field', () => {
   it('follows a field set to a sheet presentation', async () => {
     await render(
       <FieldSheetContext.Provider value={{ ...inDropdownField, presentation: 'bottomSheet' }}>
-        <PickerSheet visible onClose={jest.fn()} title="Due">
+        <PickerSheet open onOpenChange={jest.fn()} title="Due">
           <Text>Body</Text>
         </PickerSheet>
       </FieldSheetContext.Provider>
@@ -130,7 +130,7 @@ describe('PickerSheet in a field', () => {
   it('keeps its own presentation over the field', async () => {
     await render(
       <FieldSheetContext.Provider value={inDropdownField}>
-        <PickerSheet visible onClose={jest.fn()} title="Due" presentation="bottomSheet">
+        <PickerSheet open onOpenChange={jest.fn()} title="Due" presentation="bottomSheet">
           <Text>Body</Text>
         </PickerSheet>
       </FieldSheetContext.Provider>
@@ -141,8 +141,8 @@ describe('PickerSheet in a field', () => {
   it('does not pass the field on to a sheet opened inside it', async () => {
     await render(
       <FieldSheetContext.Provider value={inDropdownField}>
-        <PickerSheet visible onClose={jest.fn()}>
-          <PickerSheet visible onClose={jest.fn()} title="Nested">
+        <PickerSheet open onOpenChange={jest.fn()}>
+          <PickerSheet open onOpenChange={jest.fn()} title="Nested">
             <Text>Inner</Text>
           </PickerSheet>
         </PickerSheet>

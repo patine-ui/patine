@@ -14,12 +14,12 @@ export const useActionSheet = (): ActionSheetController => {
   const hide = useCallback(() => setVisible(false), []);
   const onClose = () => {
     hide();
-    options?.onClose?.();
+    options?.onOpenChange?.(false);
   };
 
   return {
     show,
     hide,
-    actionSheet: options ? <ActionSheet {...options} visible={visible} onClose={onClose} /> : null,
+    actionSheet: options ? <ActionSheet {...options} open={visible} onOpenChange={onClose} /> : null,
   };
 };

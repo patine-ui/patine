@@ -23,7 +23,7 @@ describe('MonthPickerField', () => {
         value={new Date(2026, 9, 1)}
         presentation="inline"
         onConfirm={onConfirm}
-        onClose={onClose}
+        onOpenChange={onClose}
         design="web"
       />
     );
@@ -32,6 +32,6 @@ describe('MonthPickerField', () => {
     await fireEvent.press(screen.getByText('Dec'));
     expect(onConfirm).toHaveBeenCalledWith(new Date(2026, 11, 1));
     await fireEvent.press(screen.getByRole('button', { name: 'Report' }));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenLastCalledWith(false);
   });
 });

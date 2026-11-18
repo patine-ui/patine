@@ -6,8 +6,8 @@ import type { WheelPickerSheetProps } from './wheel.types';
 import { firstItemValue } from './wheel.utils';
 
 export const WheelPickerSheet = <T,>({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -21,10 +21,11 @@ export const WheelPickerSheet = <T,>({
   ...rest
 }: WheelPickerSheetProps<T>) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const [draft, setDraft] = useDraft<T>(value ?? (firstItemValue(rest.items) as T), visible, { commit: onConfirm });
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         onConfirm(draft);
         onClose();

@@ -24,7 +24,7 @@ const CreatablePicker = ({ onClose }: { onClose: () => void }) => {
         label: text,
         value: text.toLowerCase(),
       })}
-      onClose={onClose}
+      onOpenChange={onClose}
     />
   );
 };
@@ -45,14 +45,13 @@ describe('Select', () => {
 
   it('opens the sheet, selects and closes in single mode', async () => {
     const onValueChange = jest.fn();
-    const onOpen = jest.fn();
-    const onClose = jest.fn();
-    await render(<Select label="Stack" options={options} onValueChange={onValueChange} onOpen={onOpen} onClose={onClose} />);
+    const onOpenChange = jest.fn();
+    await render(<Select label="Stack" options={options} onValueChange={onValueChange} onOpenChange={onOpenChange} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Stack' }));
-    expect(onOpen).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
     await fireEvent.press(screen.getByLabelText('TypeScript'));
     expect(onValueChange).toHaveBeenCalledWith('typescript', options[1]);
-    await waitFor(() => expect(onClose).toHaveBeenCalled());
+    await waitFor(() => expect(onOpenChange).toHaveBeenLastCalledWith(false));
   });
 
   it('creates an option from the search, selects it and shows it before options include it', async () => {
@@ -72,10 +71,21 @@ describe('Select', () => {
   });
 
   it('does not open when disabled', async () => {
-    const onOpen = jest.fn();
-    await render(<Select label="Stack" options={options} disabled onOpen={onOpen} />);
+    const onOpenChange = jest.fn();
+    await render(<Select label="Stack" options={options} disabled onOpenChange={onOpenChange} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Stack' }));
-    expect(onOpen).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it('opens from `open` when controlled, and reports the user closing it', async () => {
+    const onOpenChange = jest.fn();
+    const { rerender } = await render(<Select label="Stack" options={options} open={false} onOpenChange={onOpenChange} />);
+    expect(screen.queryByLabelText('React')).toBeNull();
+    await rerender(<Select label="Stack" options={options} open onOpenChange={onOpenChange} />);
+    expect(screen.getByLabelText('React')).toBeTruthy();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    await fireEvent.press(screen.getByLabelText('React'));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it('removes a chip in multiple mode', async () => {
@@ -95,17 +105,17 @@ describe('Select', () => {
   });
 
   it('renders a custom trigger that can open the sheet', async () => {
-    const onOpen = jest.fn();
+    const onOpenChange = jest.fn();
     await render(
       <Select
         options={options}
-        onOpen={onOpen}
+        onOpenChange={onOpenChange}
         renderTrigger={({ open, selected }) => <Text onPress={open}>{selected.length} selected</Text>}
         value="react"
       />
     );
     await fireEvent.press(screen.getByText('1 selected'));
-    expect(onOpen).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
   });
 
   it('passes the open state to a custom chevron', async () => {
@@ -128,7 +138,7 @@ describe('Select', () => {
     it('opens under the field, selects and closes', async () => {
       const onValueChange = jest.fn();
       const onClose = jest.fn();
-      await render(<Select label="Stack" presentation="dropdown" options={options} onValueChange={onValueChange} onClose={onClose} />);
+      await render(<Select label="Stack" presentation="dropdown" options={options} onValueChange={onValueChange} onOpenChange={onClose} />);
       expect(screen.queryByLabelText('Expo')).toBeNull();
       await fireEvent.press(screen.getByRole('button', { name: 'Stack' }));
       await fireEvent.press(screen.getByLabelText('Expo'));

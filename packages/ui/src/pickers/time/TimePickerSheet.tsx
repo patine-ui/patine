@@ -6,8 +6,8 @@ import type { TimePickerSheetProps } from './time.types';
 import { snapTime } from './time.utils';
 
 export const TimePickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -21,11 +21,12 @@ export const TimePickerSheet = ({
   ...rest
 }: TimePickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const commit = (next: Date) => onConfirm(snapTime(next, rest));
   const [draft, setDraft] = useDraft(value ?? new Date(), visible, { commit });
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         commit(draft);
         onClose();

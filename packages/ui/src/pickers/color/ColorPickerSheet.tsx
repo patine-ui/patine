@@ -7,8 +7,8 @@ import type { ColorPickerSheetProps } from './color.types';
 import { normalizeHex } from './color.utils';
 
 export const ColorPickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -22,10 +22,11 @@ export const ColorPickerSheet = ({
   ...rest
 }: ColorPickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const [draft, setDraft] = useDraft((value && normalizeHex(value)) ?? DEFAULT_COLOR, visible, { commit: onConfirm });
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         onConfirm(draft);
         onClose();

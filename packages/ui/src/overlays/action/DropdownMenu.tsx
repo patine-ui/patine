@@ -61,8 +61,8 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
       </View>
       {presentation === MENU_PRESENTATION.sheet ? (
         <ActionSheet
-          visible={menu.visible}
-          onClose={menu.close}
+          open={menu.visible}
+          onOpenChange={menu.close}
           actions={actions}
           title={title}
           styles={slots}

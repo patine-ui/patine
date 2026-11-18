@@ -6,8 +6,8 @@ import type { TimeRange, TimeRangePickerSheetProps } from './time.types';
 import { getDefaultTimeRange, snapTime } from './time.utils';
 
 export const TimeRangePickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -21,6 +21,7 @@ export const TimeRangePickerSheet = ({
   ...rest
 }: TimeRangePickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const commit = (next: TimeRange) =>
     onConfirm({
       start: snapTime(next.start, rest),
@@ -29,7 +30,7 @@ export const TimeRangePickerSheet = ({
   const [draft, setDraft] = useDraft(value ?? getDefaultTimeRange(new Date(), rest), visible, { commit });
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         commit(draft);
         onClose();

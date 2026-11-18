@@ -26,17 +26,19 @@ describe('DropdownMenu', () => {
 
   it('opens from its trigger and runs the action after closing', async () => {
     const onPress = jest.fn();
-    const onClose = jest.fn();
+    const onOpenChange = jest.fn();
     await render(
-      <DropdownMenu actions={[{ label: 'Rename', onPress }]} onClose={onClose} accessibilityLabel="More options">
+      <DropdownMenu actions={[{ label: 'Rename', onPress }]} onOpenChange={onOpenChange} accessibilityLabel="More options">
         <Text>⋯</Text>
       </DropdownMenu>
     );
     expect(screen.queryByRole('button', { name: 'Rename' })).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'More options' }));
     expect(screen.getByRole('button', { name: 'More options', expanded: true })).toBeTruthy();
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
     await fireEvent.press(screen.getByRole('button', { name: 'Rename' }));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
     expect(onPress).not.toHaveBeenCalled();
     await finishAnimations();
     expect(onPress).toHaveBeenCalledTimes(1);
@@ -70,15 +72,30 @@ describe('DropdownMenu', () => {
     expect(screen.getByRole('button', { name: 'Share' })).toBeTruthy();
   });
 
+  it('opens from `open` when controlled', async () => {
+    const { rerender } = await render(
+      <DropdownMenu actions={[{ label: 'Share' }]} open={false} accessibilityLabel="More">
+        <Text>⋯</Text>
+      </DropdownMenu>
+    );
+    expect(screen.queryByRole('button', { name: 'Share' })).toBeNull();
+    await rerender(
+      <DropdownMenu actions={[{ label: 'Share' }]} open accessibilityLabel="More">
+        <Text>⋯</Text>
+      </DropdownMenu>
+    );
+    expect(screen.getByRole('button', { name: 'More', expanded: true })).toBeTruthy();
+  });
+
   it('stays shut while disabled', async () => {
-    const onOpen = jest.fn();
+    const onOpenChange = jest.fn();
     await render(
-      <DropdownMenu actions={[{ label: 'Share' }]} disabled onOpen={onOpen} accessibilityLabel="More">
+      <DropdownMenu actions={[{ label: 'Share' }]} disabled onOpenChange={onOpenChange} accessibilityLabel="More">
         <Text>⋯</Text>
       </DropdownMenu>
     );
     await fireEvent.press(screen.getByRole('button', { name: 'More' }));
-    expect(onOpen).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it('opens as an action sheet', async () => {

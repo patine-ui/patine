@@ -21,7 +21,7 @@ export type { SlotProps } from './components/Slot';
 export { Slot } from './components/Slot';
 export type { VisuallyHiddenProps } from './components/VisuallyHidden';
 export { VisuallyHidden } from './components/VisuallyHidden';
-export type { DeepPartial, Locale, SlotStyles, ThemableProps } from './core.types';
+export type { DeepPartial, Locale, OpenStateProps, SlotStyles, ThemableProps, TriggeredOpenProps } from './core.types';
 export { useControllableState } from './hooks/useControllableState';
 export { PatineProvider, useComponentTheme, useDesignOverride, usePlatform, useTheme } from './theme/ThemeProvider';
 export { DESIGN, DESIGN_SHADOWS, DESIGN_TOKENS, darkTheme, lightTheme, SHADOW_LEVEL } from './theme/theme.constants';

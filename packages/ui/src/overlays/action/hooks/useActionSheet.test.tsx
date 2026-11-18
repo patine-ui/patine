@@ -28,7 +28,7 @@ describe('useActionSheet', () => {
   it('shows the sheet on show(), and runs the action after it closes', async () => {
     const onPress = jest.fn();
     const onClose = jest.fn();
-    await render(<Screen options={{ title: 'Photo', actions: [{ label: 'Share', onPress }], onClose }} />);
+    await render(<Screen options={{ title: 'Photo', actions: [{ label: 'Share', onPress }], onOpenChange: onClose }} />);
     expect(screen.queryByRole('button', { name: 'Share' })).toBeNull();
     await fireEvent.press(screen.getByText('Open'));
     await fireEvent.press(screen.getByRole('button', { name: 'Share' }));

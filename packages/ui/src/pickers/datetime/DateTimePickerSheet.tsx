@@ -8,8 +8,8 @@ import { DATETIME_DESIGN } from './datetime.constants';
 import type { DateTimePickerSheetProps } from './datetime.types';
 
 export const DateTimePickerSheet = ({
-  visible,
-  onClose,
+  open: visible = false,
+  onOpenChange,
   title,
   confirmLabel,
   cancelLabel,
@@ -23,13 +23,14 @@ export const DateTimePickerSheet = ({
   ...rest
 }: DateTimePickerSheetProps) => {
   const theme = useDesignOverride(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const commit = (next: Date) => onConfirm(snapTime(next, rest));
   const [draft, setDraft] = useDraft(value ?? new Date(), visible, { commit });
   const { design: resolvedDesign } = useTheme(theme);
   const display = rest.display ?? DATETIME_DESIGN[resolvedDesign].display;
   return (
     <PickerSheet
-      {...{ visible, onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
+      {...{ open: visible, onOpenChange: onClose, title, confirmLabel, cancelLabel, showCancel, presentation, sheetProps, theme }}
       onConfirm={() => {
         commit(draft);
         onClose();

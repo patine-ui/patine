@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useControllableState } from '@/core/hooks/useControllableState';
 import { usePlatform } from '@/core/theme/ThemeProvider';
 import { NO_OPTIONS, SELECT_PRESENTATION } from '@/inputs/select/select.constants';
 import type { SelectOption, SelectProps, SelectValueProps } from '@/inputs/select/select.types';
@@ -9,8 +10,8 @@ import { resolveFieldPresentation, shouldCollapseOnPress } from '@/overlays/shee
 
 /** Open state (plus the field's position for a dropdown), the selected options, and the value props the inner SelectList gets. */
 export const useSelect = <T>(props: SelectProps<T>, isEqual: (a: T, b: T) => boolean) => {
-  const { options = NO_OPTIONS, disabled = false, closeOnSelect = true, onOpen, onClose, onClear } = props;
-  const [open, setOpen] = useState(false);
+  const { options = NO_OPTIONS, disabled = false, closeOnSelect = true, onClear } = props;
+  const [open, setOpen] = useControllableState(props.open, props.defaultOpen ?? false, props.onOpenChange);
   const anchor = useAnchor();
   const [query, setQuery] = useState('');
   const known = useRef<SelectOption<T>[]>([]);
@@ -25,18 +26,22 @@ export const useSelect = <T>(props: SelectProps<T>, isEqual: (a: T, b: T) => boo
     return found;
   }, [isEqual, options, props.multiple, props.value]);
 
+  // A dropdown needs the field's position, also when `open` comes from your code.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: measures on opening only.
+  useEffect(() => {
+    if (open && dropdown) anchor.measure();
+  }, [open, dropdown]);
+
   const show = useCallback(() => {
     if (disabled) return;
     if (dropdown) anchor.measure();
     setOpen(true);
-    onOpen?.();
-  }, [anchor.measure, disabled, dropdown, onOpen]);
+  }, [anchor.measure, disabled, dropdown, setOpen]);
 
   const hide = useCallback(() => {
     setOpen(false);
     setQuery('');
-    onClose?.();
-  }, [onClose]);
+  }, [setOpen]);
 
   const toggle = shouldCollapseOnPress(presentation, open) ? hide : show;
 

@@ -17,7 +17,7 @@ export interface SheetScenarioProps {
 const noop = () => {};
 
 const OursSheet = ({ open, onClose }: SheetScenarioProps) => (
-  <BottomSheet visible={open} onClose={onClose} title={SHEET_TITLE} presentation="bottomSheet" height={0.5}>
+  <BottomSheet open={open} onOpenChange={onClose} title={SHEET_TITLE} presentation="bottomSheet" height={0.5}>
     <Text style={styles.body}>Drag the handle</Text>
   </BottomSheet>
 );

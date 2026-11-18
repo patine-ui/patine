@@ -46,7 +46,7 @@ export interface PlaygroundConfig {
   changeProp?: string;
   /** A callback that resets the value, e.g. `onClear`. */
   resetProp?: string;
-  /** Renders a button that opens the component, which gets `visible` and `onClose`. */
+  /** Renders a button that opens the component, which gets `open` and `onOpenChange`. */
   opener?: string;
   children?: ReactNode;
 }

@@ -12,8 +12,8 @@ import { useActionPress } from './hooks/useActionPress';
 
 /** A list of actions in a bottom sheet: iOS cards with a separate Cancel, or Material and web rows with icons. `useActionSheet` shows one from a call. */
 export const ActionSheet = ({
-  visible,
-  onClose,
+  open = false,
+  onOpenChange,
   actions,
   title,
   message,
@@ -27,6 +27,7 @@ export const ActionSheet = ({
   testID,
 }: ActionSheetProps) => {
   const { theme } = useComponentTheme(themeProp, design);
+  const onClose = () => onOpenChange?.(false);
   const look = ACTION_SHEET_DESIGN[theme.design];
   const { grouped } = look;
   const { press, onClosed } = useActionPress(onClose, sheetProps?.onClosed);
@@ -40,8 +41,8 @@ export const ActionSheet = ({
       presentation={presentation}
       {...sheetProps}
       styles={grouped ? { ...sheetProps?.styles, sheet: [styles.groupedSheet, sheetProps?.styles?.sheet] } : sheetProps?.styles}
-      visible={visible}
-      onClose={onClose}
+      open={open}
+      onOpenChange={onClose}
       onClosed={onClosed}
       theme={themeProp}
       design={design}

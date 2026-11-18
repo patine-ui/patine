@@ -3,10 +3,11 @@ import { Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { PickerField } from './PickerField';
+import type { FieldSheetState } from './sheet.types';
 
-const renderSheet = ({ visible, onClose }: { visible: boolean; onClose: () => void }) =>
-  visible ? (
-    <Text accessibilityRole="button" onPress={onClose}>
+const renderSheet = ({ open, onOpenChange }: FieldSheetState) =>
+  open ? (
+    <Text accessibilityRole="button" onPress={() => onOpenChange(false)}>
       Close sheet
     </Text>
   ) : null;
@@ -24,19 +25,33 @@ describe('PickerField', () => {
   });
 
   it('opens the sheet on press and closes it from inside', async () => {
-    const onOpen = jest.fn();
-    const onClose = jest.fn();
+    const onOpenChange = jest.fn();
     await render(
-      <PickerField label="Due" onOpen={onOpen} onClose={onClose}>
+      <PickerField label="Due" onOpenChange={onOpenChange}>
         {renderSheet}
       </PickerField>
     );
     expect(screen.queryByText('Close sheet')).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Due' }));
-    expect(onOpen).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenLastCalledWith(true);
     await fireEvent.press(screen.getByText('Close sheet'));
-    expect(onClose).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
     expect(screen.queryByText('Close sheet')).toBeNull();
+  });
+
+  it('shows the sheet from `open` when controlled', async () => {
+    const { rerender } = await render(
+      <PickerField label="Due" open={false}>
+        {renderSheet}
+      </PickerField>
+    );
+    expect(screen.queryByText('Close sheet')).toBeNull();
+    await rerender(
+      <PickerField label="Due" open>
+        {renderSheet}
+      </PickerField>
+    );
+    expect(screen.getByText('Close sheet')).toBeTruthy();
   });
 
   it('does not open when disabled', async () => {

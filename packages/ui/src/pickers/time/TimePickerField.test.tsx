@@ -13,7 +13,7 @@ describe('TimePickerField', () => {
         locale="en-US"
         value={new Date(2026, 9, 26, 7, 30)}
         onConfirm={onConfirm}
-        onClose={onClose}
+        onOpenChange={onClose}
       />
     );
     expect(screen.getByText('07:30')).toBeTruthy();
@@ -21,5 +21,14 @@ describe('TimePickerField', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
     expect(onConfirm).toHaveBeenCalledWith(new Date(2026, 9, 26, 7, 30));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('opens from `open` when controlled', async () => {
+    const { rerender } = await render(
+      <TimePickerField label="Alarm" value={new Date(2026, 9, 26, 7, 30)} onConfirm={jest.fn()} open={false} />
+    );
+    expect(screen.queryByRole('button', { name: 'Done' })).toBeNull();
+    await rerender(<TimePickerField label="Alarm" value={new Date(2026, 9, 26, 7, 30)} onConfirm={jest.fn()} open />);
+    expect(screen.getByRole('button', { name: 'Done' })).toBeTruthy();
   });
 });

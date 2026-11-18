@@ -7,7 +7,7 @@ import type { ActionSheetAction, ActionSheetProps } from './action.types';
 
 const Harness = (props: Partial<ActionSheetProps>) => {
   const [visible, setVisible] = useState(true);
-  return <ActionSheet visible={visible} onClose={() => setVisible(false)} actions={[]} {...props} />;
+  return <ActionSheet open={visible} onOpenChange={() => setVisible(false)} actions={[]} {...props} />;
 };
 
 const finishAnimations = async () => {
@@ -44,22 +44,22 @@ describe('ActionSheet', () => {
   });
 
   it('shows Cancel by default in the iOS design only', async () => {
-    const { rerender } = await render(<ActionSheet visible onClose={jest.fn()} actions={[]} design="material" />);
+    const { rerender } = await render(<ActionSheet open onOpenChange={jest.fn()} actions={[]} design="material" />);
     expect(screen.queryByRole('button', { name: 'Cancel' })).toBeNull();
-    await rerender(<ActionSheet visible onClose={jest.fn()} actions={[]} design="material" showCancel cancelLabel="Dismiss" />);
+    await rerender(<ActionSheet open onOpenChange={jest.fn()} actions={[]} design="material" showCancel cancelLabel="Dismiss" />);
     expect(screen.getByRole('button', { name: 'Dismiss' })).toBeTruthy();
   });
 
   it('ignores a disabled action', async () => {
     const onClose = jest.fn();
     const action: ActionSheetAction = { label: 'Edit', disabled: true, onPress: jest.fn() };
-    await render(<ActionSheet visible onClose={onClose} actions={[action]} />);
+    await render(<ActionSheet open onOpenChange={onClose} actions={[action]} />);
     await fireEvent.press(screen.getByRole('button', { name: 'Edit' }));
     expect(onClose).not.toHaveBeenCalled();
   });
 
   it('shows the title as a header and the message', async () => {
-    await render(<ActionSheet visible onClose={jest.fn()} actions={[]} title="Delete photo?" message="It goes from all your devices." />);
+    await render(<ActionSheet open onOpenChange={jest.fn()} actions={[]} title="Delete photo?" message="It goes from all your devices." />);
     expect(screen.getByRole('header', { name: 'Delete photo?' })).toBeTruthy();
     expect(screen.getByText('It goes from all your devices.')).toBeTruthy();
   });
@@ -67,8 +67,8 @@ describe('ActionSheet', () => {
   it('marks the selected action and reads its description', async () => {
     await render(
       <ActionSheet
-        visible
-        onClose={jest.fn()}
+        open
+        onOpenChange={jest.fn()}
         actions={[
           { label: 'Newest', selected: true },
           { label: 'Price', description: 'Lowest first' },

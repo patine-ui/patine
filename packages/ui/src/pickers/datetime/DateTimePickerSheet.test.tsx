@@ -15,12 +15,12 @@ describe('DateTimePickerSheet', () => {
     await render(
       <DateTimePickerSheet
         design="ios"
-        visible
+        open
         value={new Date(2026, 9, 25, 10, 30)}
         minDate={new Date(2026, 9, 1)}
         format="24h"
         loop={false}
-        onClose={onClose}
+        onOpenChange={onClose}
         onConfirm={onConfirm}
         testID="dt"
       />
@@ -40,10 +40,10 @@ describe('DateTimePickerSheet', () => {
     await render(
       <DateTimePickerSheet
         design="ios"
-        visible
+        open
         value={new Date(2026, 9, 25, 10, 7, 42)}
         minuteInterval={5}
-        onClose={jest.fn()}
+        onOpenChange={jest.fn()}
         onConfirm={onConfirm}
       />
     );

@@ -222,12 +222,13 @@ describe('getDropdownFrame', () => {
 
 describe('splitFieldProps', () => {
   it('keeps the field props for the field and the rest for the sheet, and gives both the theme and design', () => {
-    const onClose = jest.fn();
+    const onOpenChange = jest.fn();
     const theme = { radius: { md: 4 } };
     const styles = { trigger: { padding: 1 } };
     const { field, sheet } = splitFieldProps({
       label: 'Due',
-      onClose,
+      onOpenChange,
+      open: true,
       testID: 'due',
       theme,
       design: 'material',
@@ -237,7 +238,8 @@ describe('splitFieldProps', () => {
     });
     expect(field).toMatchObject({
       label: 'Due',
-      onClose,
+      onOpenChange,
+      open: true,
       testID: 'due',
       theme,
       design: 'material',

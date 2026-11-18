@@ -2,7 +2,7 @@ import type React from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
-import type { DistributiveOmit, NoInferValue, ValueOf } from '@/core/core.types';
+import type { DistributiveOmit, NoInferValue, TriggeredOpenProps, ValueOf } from '@/core/core.types';
 import type { ChevronInfo, FieldError, FieldStatusProps, PickerFieldSlot, SheetChromeProps } from '@/overlays/sheet';
 import type { FieldTriggerProps } from '@/overlays/sheet/sheet.types';
 import type { SELECT_PRESENTATION, SELECT_ROW_TYPE, SINGLE_INDICATOR } from './select.constants';
@@ -142,7 +142,9 @@ export type BuiltInSelectProps<T> = DistributiveOmit<SelectProps<T>, ServerSearc
 
 export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | 'query'> &
   SelectValueProps<T> &
-  FieldStatusProps & {
+  FieldStatusProps &
+  TriggeredOpenProps & {
+    /** Shown in the field while nothing is selected. Default: 'Select…' */
     placeholder?: string;
     /** Label rendered above the field */
     label?: string;
@@ -165,9 +167,8 @@ export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | '
     /** Bottom sheet, centered modal, or a dropdown under the field. Default: 'auto' (dropdown on the web, bottom sheet on native). As a dropdown, `searchable` (default: true) lets the user type in the field itself, or in a search field atop the list with `renderTrigger` */
     presentation?: SelectPresentation;
     /** Props for the sheet the list opens in, such as `confirmLabel` or `sheetProps` */
-    sheet?: Partial<Omit<SheetChromeProps, 'visible' | 'onClose' | 'theme' | 'presentation'>>;
-    onOpen?: () => void;
-    onClose?: () => void;
+    sheet?: Partial<Omit<SheetChromeProps, 'open' | 'onOpenChange' | 'theme' | 'presentation'>>;
+    /** The outer view, for layout */
     style?: StyleProp<ViewStyle>;
     /** Per-part style overrides, for the field and the list */
     styles?: SlotStyles<SelectSlot | SelectTriggerSlot>;
