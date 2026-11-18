@@ -1,7 +1,7 @@
 {
   "name": "patine-ui",
   "version": "0.0.0",
-  "description": "Patine: looks finished, feels native. Polished, accessible React Native components for iOS, Android and the web from one codebase, in the Patine design or each platform's native look (iOS, Material 3, web) with one prop. Zero native code and zero config, with a shadcn-style API. Buttons, text fields, lists, headers, chat bubbles, progress bars, dialogs, modals, drawers, tabs, steps, accordions, collapsibles, carousels and pagers, QR codes, sortable and swipeable lists, an image viewer, a signature pad, toasts, popovers, tooltips, cards with hover lift, theme-wide shadows, sheets, menus, tables, stats, pagination, breadcrumbs, bottom tab bars, toggle groups, number and search fields, layout primitives, and date, time, select, country and phone pickers, calendars and more.",
+  "description": "Patine: looks finished, feels native. Polished, accessible React Native components for iOS, Android and the web from one codebase, in the Patine design or each platform's native look (iOS, Material 3, web) with one prop. Zero native code and zero config, with a shadcn-style API. Buttons, text fields, lists, headers, chat bubbles, images with placeholders and fallbacks, progress bars, dialogs, modals, drawers, tabs, steps, accordions, collapsibles, carousels and pagers, QR codes, sortable and swipeable lists, an image viewer, a signature pad, toasts, popovers, tooltips, cards with hover lift, theme-wide shadows, sheets, menus, tables, stats, pagination, breadcrumbs, bottom tab bars, toggle groups, number and search fields, layout primitives, and date, time, select, country and phone pickers, calendars and more.",
   "license": "MIT",
   "author": "Eliyahu Kriel <elik56a@gmail.com>",
   "homepage": "https://github.com/patine-ui/patine#readme",
@@ -122,6 +122,10 @@
     "./header": {
       "types": "./lib/navigation/header/index.d.ts",
       "default": "./lib/navigation/header/index.js"
+    },
+    "./image": {
+      "types": "./lib/display/image/index.d.ts",
+      "default": "./lib/display/image/index.js"
     },
     "./kbd": {
       "types": "./lib/display/kbd/index.d.ts",
@@ -382,6 +386,7 @@
     "card",
     "badge",
     "avatar",
+    "image",
     "alert",
     "skeleton",
     "separator",

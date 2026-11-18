@@ -8,6 +8,7 @@ export * from './display/card';
 export * from './display/carousel';
 export * from './display/collapsible';
 export * from './display/descriptions';
+export * from './display/image';
 export * from './display/kbd';
 export * from './display/list';
 export * from './display/qrcode';
