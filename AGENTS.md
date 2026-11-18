@@ -21,7 +21,7 @@ The docs site (patine.dev) and Patine Pro are a separate private repo. On the ma
 
 Patine is one finished design that runs everywhere. **The look follows `design`; the behaviour always follows the platform.**
 
-- **Look.** Every component has a `design`. The default, `'brand'`, is the Patine design: the same on every platform, and the one the docs, screenshots and Pro screens lead with. `'native'` is the option for apps that want each platform's own look: `'ios'` on iOS, `'material'` on Android, `'web'` in the browser (`'auto'` is an alias kept from react-native-pickers). A component's `design` prop wins over `PatineProvider`'s.
+- **Look.** Every component has a `design`. The default, `'brand'`, is the Patine design: the same on every platform, and the one the docs, screenshots and Pro screens lead with. `'native'` is the option for apps that want each platform's own look: `'ios'` on iOS, `'material'` on Android, `'web'` in the browser. A component's `design` prop wins over `PatineProvider`'s.
 - **Behaviour** (sheet or dropdown, insets, dragging, keyboard and focus on the web) follows the *platform* (`usePlatform`), never the design. That's what lets the Patine design feel native without looking native.
 
 The designs:

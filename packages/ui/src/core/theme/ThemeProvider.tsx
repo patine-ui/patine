@@ -61,7 +61,7 @@ export const useTheme = (override?: DeepPartial<Theme>): Theme => {
 
 /**
  * Folds a component's `design` prop into its `theme` override, so every part it passes the override to draws the same design.
- * 'native' and 'auto' resolve to the platform's design here.
+ * 'native' resolves to the platform's design here.
  */
 export const useDesignOverride = (theme: DeepPartial<Theme> | undefined, design: DesignPreference | undefined) => {
   const platform = usePlatform();

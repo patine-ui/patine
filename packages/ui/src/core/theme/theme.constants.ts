@@ -13,8 +13,6 @@ export const DESIGN = {
   brand: 'brand',
   /** The look of the platform it runs on: 'ios' on iOS, 'material' on Android, 'web' on the web */
   native: 'native',
-  /** Same as 'native'. Kept from react-native-pickers */
-  auto: 'auto',
   ios: 'ios',
   material: 'material',
   web: 'web',
@@ -138,9 +136,6 @@ export const darkTheme: Theme = {
   },
   ...SHARED_TOKENS,
 };
-
-/** The design a preference resolves to on its own, before the platform is known. */
-export const PLATFORM_DESIGNS = [DESIGN.native, DESIGN.auto] as const;
 
 /** What each design changes on top of the light or dark theme. iOS is the base look. */
 export const DESIGN_TOKENS: Record<Design, DeepPartial<Theme>> = {

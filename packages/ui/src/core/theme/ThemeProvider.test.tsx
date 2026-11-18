@@ -45,11 +45,6 @@ describe('useTheme', () => {
     expect(result.current.radius.sheet).toBe(sheet);
   });
 
-  it("treats 'auto' as 'native'", async () => {
-    const { result } = await renderHook(() => useTheme(), inProvider({ platform: 'android', design: 'auto' }));
-    expect(result.current.design).toBe('material');
-  });
-
   it('lets the provider choose a design for every platform', async () => {
     const { result } = await renderHook(() => useTheme(), inProvider({ platform: 'android', design: 'ios' }));
     expect(result.current.design).toBe('ios');

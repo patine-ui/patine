@@ -37,9 +37,9 @@ export const textStyle = (theme: Theme, size: TextSize, weight: TextWeight = 're
   };
 };
 
-/** The design to draw: the one chosen, or for 'native' (and its alias 'auto') the one that matches the platform. */
+/** The design to draw: the one chosen, or for 'native' the one that matches the platform. */
 export const resolveDesign = (preference: DesignPreference, platform: PlatformOSType): Design => {
-  if (preference !== DESIGN.native && preference !== DESIGN.auto) return preference;
+  if (preference !== DESIGN.native) return preference;
   if (platform === PLATFORM.ios) return DESIGN.ios;
   return platform === PLATFORM.web ? DESIGN.web : DESIGN.material;
 };

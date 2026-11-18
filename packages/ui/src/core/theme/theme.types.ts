@@ -2,7 +2,7 @@ import type React from 'react';
 import type { PlatformOSType, TextStyle } from 'react-native';
 
 import type { DeepPartial, ValueOf } from '@/core/core.types';
-import type { COLOR_SCHEME, DESIGN, PLATFORM_DESIGNS, SHADOW_LEVEL } from './theme.constants';
+import type { COLOR_SCHEME, DESIGN, SHADOW_LEVEL } from './theme.constants';
 
 export interface Theme {
   dark: boolean;
@@ -60,9 +60,9 @@ export interface Theme {
 }
 
 export type ColorScheme = ValueOf<typeof COLOR_SCHEME>;
-/** A design, or 'native' (alias 'auto') for the one that matches the platform */
+/** A design, or 'native' for the one that matches the platform */
 export type DesignPreference = ValueOf<typeof DESIGN>;
-export type Design = Exclude<DesignPreference, (typeof PLATFORM_DESIGNS)[number]>;
+export type Design = Exclude<DesignPreference, typeof DESIGN.native>;
 export type TextSize = keyof Theme['typography']['sizes'];
 export type TextWeight = keyof Theme['typography']['weights'];
 /** A step on the theme's elevation scale, from flat to floating */

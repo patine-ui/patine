@@ -2,11 +2,11 @@ import { lightTheme } from './theme.constants';
 import { mergeTheme, resolveDesign, stepShadow } from './theme.utils';
 
 describe('resolveDesign', () => {
-  it('matches the platform for auto: iOS, the web, and Material everywhere else', () => {
-    expect(resolveDesign('auto', 'ios')).toBe('ios');
-    expect(resolveDesign('auto', 'web')).toBe('web');
-    expect(resolveDesign('auto', 'android')).toBe('material');
-    expect(resolveDesign('auto', 'windows')).toBe('material');
+  it('matches the platform for native: iOS, the web, and Material everywhere else', () => {
+    expect(resolveDesign('native', 'ios')).toBe('ios');
+    expect(resolveDesign('native', 'web')).toBe('web');
+    expect(resolveDesign('native', 'android')).toBe('material');
+    expect(resolveDesign('native', 'windows')).toBe('material');
   });
 
   it('keeps a chosen design on every platform', () => {
