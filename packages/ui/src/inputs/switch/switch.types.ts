@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
-import type { ThemableProps } from '@/core/core.types';
+import type { ControlPosition, ThemableProps } from '@/core/core.types';
 
 export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'>, ThemableProps {
   /** Controlled state */
@@ -14,7 +14,9 @@ export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' |
   label?: React.ReactNode;
   /** A line of secondary text under the label */
   description?: React.ReactNode;
-  /** Put the switch before the label. Default: after, as settings lists do */
+  /** Which side of the label the switch sits on. Default: 'end', as settings lists do */
+  controlPosition?: ControlPosition;
+  /** @deprecated Use `controlPosition="start"` */
   controlAtStart?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;

@@ -2,8 +2,10 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 import { useAnimatedToggle } from '@/core/animation/hooks/useAnimatedToggle';
 import { ChoiceRow } from '@/core/components/ChoiceRow';
+import { CONTROL_POSITION } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { isControlAtEnd } from '@/core/utils/control.utils';
 import { SWITCH_DESIGN, SWITCH_OUTLINE_WIDTH } from './switch.constants';
 import { styles } from './switch.styles';
 import type { SwitchProps } from './switch.types';
@@ -17,7 +19,8 @@ export const Switch = ({
   checked: checkedProp,
   defaultChecked = false,
   onCheckedChange,
-  controlAtStart = false,
+  controlPosition,
+  controlAtStart,
   theme: themeProp,
   design,
   ...rest
@@ -37,7 +40,7 @@ export const Switch = ({
       theme={theme}
       role="switch"
       checked={checked}
-      controlAtEnd={!controlAtStart}
+      controlAtEnd={isControlAtEnd(controlPosition, controlAtStart ? CONTROL_POSITION.start : undefined, CONTROL_POSITION.end)}
       onPress={() => setChecked(!checked)}
       control={
         <View

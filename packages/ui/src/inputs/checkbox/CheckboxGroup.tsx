@@ -18,6 +18,7 @@ export const CheckboxGroup = ({
   selectAllLabel,
   disabled = false,
   orientation = 'vertical',
+  controlPosition,
   controlAtEnd,
   theme: themeProp,
   design,
@@ -36,6 +37,7 @@ export const CheckboxGroup = ({
           checked={getAllChecked(options, checked)}
           onCheckedChange={() => setChecked(toggleAll(options, checked))}
           disabled={disabled}
+          controlPosition={controlPosition}
           controlAtEnd={controlAtEnd}
         />
       ) : null}
@@ -54,6 +56,7 @@ export const CheckboxGroup = ({
             disabled={disabled || option.disabled}
             checked={checked.includes(option.value)}
             onCheckedChange={() => setChecked(toggleChecked(options, checked, option.value))}
+            controlPosition={controlPosition}
             controlAtEnd={controlAtEnd}
           />
         ))}

@@ -2,10 +2,11 @@ import { Animated, StyleSheet, Text, View } from 'react-native';
 
 import { usePop } from '@/core/animation/hooks/usePop';
 import { ChoiceRow } from '@/core/components/ChoiceRow';
-import { CHECK_MARK } from '@/core/core.constants';
+import { CHECK_MARK, CONTROL_POSITION } from '@/core/core.constants';
 import type { CheckedState } from '@/core/core.types';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { isControlAtEnd } from '@/core/utils/control.utils';
 import { CHECKBOX_DESIGN, DASH, MIXED } from './checkbox.constants';
 import { styles } from './checkbox.styles';
 import type { CheckboxProps } from './checkbox.types';
@@ -19,6 +20,8 @@ export const Checkbox = ({
   theme: themeProp,
   design,
   boxStyle,
+  controlPosition,
+  controlAtEnd,
   ...rest
 }: CheckboxProps) => {
   const { theme } = useComponentTheme(themeProp, design);
@@ -33,6 +36,7 @@ export const Checkbox = ({
       theme={theme}
       role="checkbox"
       checked={checked}
+      controlAtEnd={isControlAtEnd(controlPosition, controlAtEnd ? CONTROL_POSITION.end : undefined, CONTROL_POSITION.start)}
       onPress={() => setChecked(nextChecked(checked))}
       control={
         <View

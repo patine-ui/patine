@@ -15,7 +15,7 @@ import type {
   ViewStyle,
 } from 'react-native';
 
-import type { DIRECTION, ICON_POSITION, KEY, PICKER_DISPLAY, PRESS_FEEDBACK } from './core.constants';
+import type { CONTROL_POSITION, DIRECTION, ICON_POSITION, KEY, PICKER_DISPLAY, PRESS_FEEDBACK } from './core.constants';
 import type { Design, TextSize, TextWeight, Theme } from './theme/theme.types';
 
 // React Native 0.88's types can't be named from outside the package, so a hook returning them couldn't emit its
@@ -45,6 +45,7 @@ export type Locale = string;
 export type SlotStyles<K extends string> = Partial<Record<K, StyleProp<TextStyle>>>;
 
 export type IconPosition = ValueOf<typeof ICON_POSITION>;
+export type ControlPosition = ValueOf<typeof CONTROL_POSITION>;
 
 /** A disclosure icon's turn, in degrees, closed and open. The default chevron points down at 0. */
 export interface DisclosureRotation {

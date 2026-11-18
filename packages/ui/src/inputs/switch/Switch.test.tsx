@@ -1,3 +1,5 @@
+import { StyleSheet } from 'react-native';
+
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Switch } from './Switch';
@@ -20,5 +22,19 @@ describe('Switch', () => {
     await fireEvent.press(screen.getByRole('switch', { name: 'Bluetooth' }));
     expect(onCheckedChange).toHaveBeenCalledWith(false);
     expect(screen.getByRole('switch', { name: 'Bluetooth' })).toBeChecked();
+  });
+
+  it('sits after its label by default, and before it with controlPosition or the deprecated controlAtStart', async () => {
+    const direction = (name: string) => StyleSheet.flatten(screen.getByRole('switch', { name }).props.style).flexDirection;
+    await render(
+      <>
+        <Switch label="Default" />
+        <Switch label="Start" controlPosition="start" />
+        <Switch label="Legacy" controlAtStart />
+      </>
+    );
+    expect(direction('Default')).toBe('row-reverse');
+    expect(direction('Start')).toBe('row');
+    expect(direction('Legacy')).toBe('row');
   });
 });

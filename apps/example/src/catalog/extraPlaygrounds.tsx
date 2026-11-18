@@ -160,7 +160,7 @@ export const EXTRA_PLAYGROUNDS = {
     controls: [
       { prop: 'selectAllLabel', options: ['none', 'All toppings'], unset: 'none', default: null },
       { prop: 'orientation', options: ['vertical', 'horizontal'] },
-      { prop: 'controlAtEnd', options: [false, true] },
+      { prop: 'controlPosition', options: ['start', 'end'] },
       DISABLED,
       DESIGN,
     ],

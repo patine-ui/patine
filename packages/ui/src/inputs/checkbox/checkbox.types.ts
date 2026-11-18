@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { PressableProps, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
 
-import type { CheckedState, ThemableProps } from '@/core/core.types';
+import type { CheckedState, ControlPosition, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'>, ThemableProps {
@@ -15,7 +15,9 @@ export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style'
   label?: React.ReactNode;
   /** A line of secondary text under the label */
   description?: React.ReactNode;
-  /** Put the box after the label, as settings lists do. Default: false */
+  /** Which side of the label the box sits on: 'end' as settings lists do. Default: 'start' */
+  controlPosition?: ControlPosition;
+  /** @deprecated Use `controlPosition="end"` */
   controlAtEnd?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
@@ -57,6 +59,8 @@ export interface CheckboxGroupProps extends Omit<ViewProps, 'children'>, Themabl
   disabled?: boolean;
   /** Lays the options out in a row. Default: 'vertical' */
   orientation?: 'vertical' | 'horizontal';
-  /** Put each box after its label, as settings lists do. Default: false */
+  /** Which side of its label each box sits on: 'end' as settings lists do. Default: 'start' */
+  controlPosition?: ControlPosition;
+  /** @deprecated Use `controlPosition="end"` */
   controlAtEnd?: boolean;
 }

@@ -37,6 +37,12 @@ export const DISABLED_OPACITY = 0.5;
 /** The drawn chevron of Accordion, Collapsible and tree rows: its arm length and stroke, in points. */
 export const DISCLOSURE_CHEVRON = { size: 8, stroke: 1.75 } as const;
 
+/** Which side of its label a checkbox or switch sits on. */
+export const CONTROL_POSITION = {
+  start: 'start',
+  end: 'end',
+} as const;
+
 /** Where a disclosure trigger draws its icon: before the label, after it, or not at all. */
 export const ICON_POSITION = {
   start: 'start',
