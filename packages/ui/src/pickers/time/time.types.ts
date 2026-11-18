@@ -7,11 +7,12 @@ import type { Theme } from '@/core/theme/theme.types';
 import type { SheetChromeProps, WithPickerField } from '@/overlays/sheet';
 import type { MultiWheelSlot, WheelColumn, WheelVariant } from '@/pickers/wheel/wheel.types';
 import type { useClockDial } from './hooks/useClockDial';
-import type { CLOCK_MODE, TIME_COLUMN, TIME_DISPLAY, TIME_FORMAT, TIME_RANGE_END } from './time.constants';
+import type { CLOCK_MODE, RANGE_ENDS_LAYOUT, TIME_COLUMN, TIME_DISPLAY, TIME_FORMAT, TIME_RANGE_END } from './time.constants';
 import type { getTimeRangeEndItems } from './time.utils';
 
 export type TimeFormat = ValueOf<typeof TIME_FORMAT>;
 export type TimeDisplay = ValueOf<typeof TIME_DISPLAY>;
+export type RangeEndsLayout = ValueOf<typeof RANGE_ENDS_LAYOUT>;
 export type ClockMode = ValueOf<typeof CLOCK_MODE>;
 
 export interface TimePickerProps extends ThemableProps {

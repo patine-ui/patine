@@ -1,5 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { TimeDisplay } from './time.types';
+import type { RangeEndsLayout, TimeDisplay } from './time.types';
 
 export const SECONDS_PER_MINUTE = 60;
 export const SECONDS_PER_HOUR = 3600;
@@ -43,6 +43,23 @@ export const TIME_DISPLAY_DESIGN: Record<Design, TimeDisplay> = {
   ios: TIME_DISPLAY.wheel,
   material: TIME_DISPLAY.dial,
   web: TIME_DISPLAY.list,
+};
+
+export const RANGE_ENDS_LAYOUT = {
+  /** Calendar's rows, each opening its own picker under it */
+  rows: 'rows',
+  /** Large time boxes side by side, labelled above */
+  boxes: 'boxes',
+  /** Outlined cards side by side, labelled inside */
+  cards: 'cards',
+} as const;
+
+/** How a time range shows its Start and End: Calendar's rows on iOS, Material's time boxes, cards on the web. */
+export const RANGE_ENDS_DESIGN: Record<Design, RangeEndsLayout> = {
+  brand: RANGE_ENDS_LAYOUT.boxes,
+  ios: RANGE_ENDS_LAYOUT.rows,
+  material: RANGE_ENDS_LAYOUT.boxes,
+  web: RANGE_ENDS_LAYOUT.cards,
 };
 
 export const TIME_RANGE_END = {

@@ -53,6 +53,7 @@ export const CALENDAR_DESIGN: Record<Design, CalendarDesign> = {
     weekdayFormat: WEEKDAY_FORMAT.short,
     uppercaseWeekdays: false,
     arrowColor: 'textSecondary',
+    expandHandle: 'chevron',
   },
   ios: {
     selection: DAY_SELECTION.tint,
@@ -61,6 +62,7 @@ export const CALENDAR_DESIGN: Record<Design, CalendarDesign> = {
     weekdayFormat: WEEKDAY_FORMAT.short,
     uppercaseWeekdays: true,
     arrowColor: 'primary',
+    expandHandle: 'grabber',
   },
   material: {
     selection: DAY_SELECTION.fill,
@@ -69,6 +71,7 @@ export const CALENDAR_DESIGN: Record<Design, CalendarDesign> = {
     weekdayFormat: WEEKDAY_FORMAT.narrow,
     uppercaseWeekdays: false,
     arrowColor: 'textSecondary',
+    expandHandle: 'chevron',
   },
   web: {
     selection: DAY_SELECTION.fill,
@@ -77,6 +80,7 @@ export const CALENDAR_DESIGN: Record<Design, CalendarDesign> = {
     weekdayFormat: WEEKDAY_FORMAT.short,
     uppercaseWeekdays: false,
     arrowColor: 'textSecondary',
+    expandHandle: 'chevron',
   },
 };
 

@@ -3,9 +3,8 @@ import { View } from 'react-native';
 
 import { PickerText } from '@/core/components/PickerText';
 import { Touchable } from '@/core/components/Touchable';
-import { DESIGN } from '@/core/theme/theme.constants';
 import { InlinePanel } from '@/overlays/sheet/components/InlinePanel';
-import { TIME_RANGE_ACCESSIBILITY_LABEL, TIME_RANGE_ARROW } from '@/pickers/time/time.constants';
+import { RANGE_ENDS_DESIGN, RANGE_ENDS_LAYOUT, TIME_RANGE_ACCESSIBILITY_LABEL, TIME_RANGE_ARROW } from '@/pickers/time/time.constants';
 import { styles } from '@/pickers/time/time.styles';
 import type { RangeEndsProps } from '@/pickers/time/time.types';
 
@@ -14,6 +13,7 @@ type RangeEndItem = RangeEndsProps['items'][number];
 /** Start and End as each platform shows them: Calendar's rows on iOS, large time boxes on Material, side-by-side cards on the web. */
 export const RangeEnds = ({ items, active, onSelect, duration, theme, renderPicker, testID }: RangeEndsProps) => {
   const c = theme.colors;
+  const layout = RANGE_ENDS_DESIGN[theme.design];
   const radio = (item: RangeEndItem) => ({
     onPress: () => onSelect(item.end),
     accessibilityRole: 'radio' as const,
@@ -22,7 +22,7 @@ export const RangeEnds = ({ items, active, onSelect, duration, theme, renderPick
     testID: testID && `${testID}-${item.end}`,
   });
 
-  if (theme.design === DESIGN.ios) {
+  if (layout === RANGE_ENDS_LAYOUT.rows) {
     return (
       <View accessibilityRole="radiogroup" accessibilityLabel={TIME_RANGE_ACCESSIBILITY_LABEL} testID={testID}>
         {items.map((item, index) => (
@@ -45,7 +45,7 @@ export const RangeEnds = ({ items, active, onSelect, duration, theme, renderPick
     );
   }
 
-  const web = theme.design === DESIGN.web;
+  const web = layout === RANGE_ENDS_LAYOUT.cards;
   const box = (item: RangeEndItem) => {
     const on = item.end === active;
     const label = (

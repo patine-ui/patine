@@ -316,4 +316,6 @@ export interface CalendarDesign {
   weekdayFormat: ValueOf<typeof WEEKDAY_FORMAT>;
   uppercaseWeekdays: boolean;
   arrowColor: keyof Theme['colors'];
+  /** What the expand handle under the days draws: a grabber, as a sheet has, or a chevron that flips */
+  expandHandle: 'grabber' | 'chevron';
 }

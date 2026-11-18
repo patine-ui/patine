@@ -1,9 +1,8 @@
 import { View } from 'react-native';
 
 import { Touchable } from '@/core/components/Touchable';
-import { DESIGN } from '@/core/theme/theme.constants';
 import { Chevron } from '@/overlays/sheet/components/Chevron';
-import { EXPAND_LABEL } from '@/pickers/calendar/calendar.constants';
+import { CALENDAR_DESIGN, EXPAND_LABEL } from '@/pickers/calendar/calendar.constants';
 import { styles } from '@/pickers/calendar/calendar.styles';
 import type { ExpandHandleProps } from '@/pickers/calendar/calendar.types';
 
@@ -18,7 +17,7 @@ export const ExpandHandle = ({ expanded, onPress, theme, slots }: ExpandHandlePr
     accessibilityState={{ expanded }}
     style={[styles.expandHandle, slots?.expandHandle]}
   >
-    {theme.design === DESIGN.ios ? (
+    {CALENDAR_DESIGN[theme.design].expandHandle === 'grabber' ? (
       <View style={[styles.grabber, { backgroundColor: theme.colors.handle }]} />
     ) : (
       <Chevron open={expanded} theme={theme} />
