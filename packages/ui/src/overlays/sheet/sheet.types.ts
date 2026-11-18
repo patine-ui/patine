@@ -68,6 +68,8 @@ export interface BottomSheetProps extends ThemableProps, OpenStateProps {
   bottomInset?: number;
   /** 'bottomSheet', 'modal' (a centered card), or 'auto': a card on wide web windows, a sheet elsewhere. Default: 'auto' */
   presentation?: SheetPresentation;
+  /** What a screen reader says for the backdrop, which closes the sheet. Default: 'Close' */
+  closeLabel?: string;
   /** Per-part style overrides */
   styles?: SlotStyles<BottomSheetSlot>;
   /** Called once the open animation ends */

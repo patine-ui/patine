@@ -48,8 +48,33 @@ describe('BottomSheet', () => {
         <Text>Body</Text>
       </BottomSheet>
     );
+    // A backdrop that doesn't close isn't announced as a Close button.
+    expect(screen.queryByLabelText('Close')).toBeNull();
+  });
+
+  it('calls onOpenChange with false when the user closes it', async () => {
+    const onOpenChange = jest.fn();
+    await render(
+      <BottomSheet open onOpenChange={onOpenChange}>
+        <Text>Body</Text>
+      </BottomSheet>
+    );
     await fireEvent.press(screen.getByLabelText('Close'));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('is a modal dialog named by its title, closes on the escape gesture, and takes a translated backdrop label', async () => {
+    const onClose = jest.fn();
+    await render(
+      <BottomSheet open onOpenChange={onClose} title="Pick" closeLabel="Fermer">
+        <Text>Body</Text>
+      </BottomSheet>
+    );
+    const sheet = screen.getByLabelText('Pick');
+    expect(sheet.props.role).toBe('dialog');
+    await fireEvent(sheet, 'accessibilityEscape');
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'Fermer' })).toBeTruthy();
   });
 });
 

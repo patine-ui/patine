@@ -73,6 +73,8 @@ export const FLOATING_LABEL_RAISED_SIZE = 'xs';
 
 export const DEFAULT_CANCEL_LABEL = 'Cancel';
 export const DEFAULT_MAX_HEIGHT_RATIO = 0.9;
+/** What a screen reader says for a sheet's backdrop. */
+export const DEFAULT_CLOSE_LABEL = 'Close';
 /** Room under a bottom sheet for the iOS home indicator, and a smaller margin elsewhere. */
 export const IOS_BOTTOM_INSET = 24;
 export const DEFAULT_BOTTOM_INSET = 12;

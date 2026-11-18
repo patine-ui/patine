@@ -8,7 +8,7 @@ import { SheetDragArea } from './components/SheetDragArea';
 import { SheetHeader } from './components/SheetHeader';
 import { useSheetAnimation } from './hooks/useSheetAnimation';
 import { useSheetResize } from './hooks/useSheetResize';
-import { DEFAULT_MAX_HEIGHT_RATIO, DIALOG_RISE, SHEET_PRESENTATION } from './sheet.constants';
+import { DEFAULT_CLOSE_LABEL, DEFAULT_MAX_HEIGHT_RATIO, DIALOG_RISE, SHEET_PRESENTATION } from './sheet.constants';
 import { styles } from './sheet.styles';
 import type { BottomSheetProps } from './sheet.types';
 import { getSheetDefaults, resolvePresentation, resolveSheetHeight } from './sheet.utils';
@@ -31,6 +31,7 @@ export const BottomSheet = ({
   height,
   bottomInset: bottomInsetProp,
   presentation = SHEET_PRESENTATION.auto,
+  closeLabel = DEFAULT_CLOSE_LABEL,
   styles: slots,
   theme: themeProp,
   design,
@@ -73,11 +74,13 @@ export const BottomSheet = ({
     <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose} testID={testID}>
       <KeyboardAvoidingView behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined} style={StyleSheet.absoluteFill}>
         <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.backdrop, opacity: progress }, slots?.backdrop]}>
+          {/* Only a button when it closes the sheet, so a screen reader never lands on a "Close" that does nothing */}
           <Pressable
             style={StyleSheet.absoluteFill}
             onPress={closeOnBackdropPress ? onClose : undefined}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
+            accessible={closeOnBackdropPress}
+            accessibilityRole={closeOnBackdropPress ? 'button' : undefined}
+            accessibilityLabel={closeOnBackdropPress ? closeLabel : undefined}
           />
         </Animated.View>
         <View style={dialog ? styles.dialogContainer : styles.container} pointerEvents="box-none">
@@ -99,7 +102,11 @@ export const BottomSheet = ({
                   : { borderTopLeftRadius: radius, borderTopRightRadius: radius, paddingBottom: bottomInset },
                 slots?.sheet,
               ]}
+              role="dialog"
+              aria-modal
+              aria-label={typeof title === 'string' ? title : undefined}
               accessibilityViewIsModal
+              onAccessibilityEscape={onClose}
             >
               {resize.dragArea ? <SheetDragArea {...resize.dragArea} /> : null}
               {/* collapsable={false}: not flattened away, so a touch anywhere on the strip reaches the drag handlers */}
