@@ -25,8 +25,20 @@ describe('handle', () => {
     expect(handle(pages, '1.0.0', { jsonrpc: '2.0', method: 'notifications/initialized' })).toBeNull();
   });
 
-  it('lists the three tools', () => {
-    expect(call('tools/list').result.tools.map((t) => t.name)).toEqual(['list_components', 'get_component_docs', 'search_docs']);
+  it('lists the four tools', () => {
+    expect(call('tools/list').result.tools.map((t) => t.name)).toEqual([
+      'list_components',
+      'get_component_docs',
+      'search_docs',
+      'search_icons',
+    ]);
+  });
+
+  it('finds icons and says how to use them', () => {
+    const found = call('tools/call', { name: 'search_icons', arguments: { query: 'notification' } }).result.content[0].text;
+    expect(found).toContain('- bell (communication)');
+    expect(found).toContain("from '@patine-ui/icons'");
+    expect(call('tools/call', { name: 'search_icons', arguments: { query: 'zzzz' } }).result.content[0].text).toContain('No icon matched');
   });
 
   it('serves a page, a list and search results', () => {
@@ -37,6 +49,15 @@ describe('handle', () => {
       '- Button: A pressable button.\n- Theming: Colors and dark mode.'
     );
     expect(call('tools/call', { name: 'search_docs', arguments: { query: 'dark mode' } }).result.content[0].text).toContain('## Theming');
+  });
+
+  it('lists free results first, then Pro ones tagged Pro with how to get them', () => {
+    const docs = call('tools/call', { name: 'search_docs', arguments: { query: 'dark mode kanban' } }).result.content[0].text;
+    expect(docs.indexOf('## Theming')).toBeLessThan(docs.indexOf('## Patine Pro'));
+    expect(docs).toContain('[Pro block] Kanban');
+    expect(docs).toContain('https://patine.dev/pricing');
+    const icons = call('tools/call', { name: 'search_icons', arguments: { query: 'github' } }).result.content[0].text;
+    expect(icons).toContain('[Pro brand logo] github');
   });
 
   it('reports a missing page and unknown methods', () => {

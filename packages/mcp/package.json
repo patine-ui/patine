@@ -1,7 +1,7 @@
 {
   "name": "@patine-ui/mcp",
   "version": "0.0.0",
-  "description": "MCP server for Patine UI: lets Claude Code, Cursor, Windsurf and other coding agents list, read and search the patine-ui docs, matched to the version installed in your project. Zero dependencies.",
+  "description": "MCP server for Patine UI: lets Claude Code, Cursor, Windsurf and other coding agents list, read and search the patine-ui docs and find icons, matched to the version installed in your project. Zero dependencies.",
   "license": "MIT",
   "author": "Eliyahu Kriel <elik56a@gmail.com>",
   "repository": {
@@ -16,12 +16,16 @@
     "patine",
     "ai agents",
     "claude code",
-    "cursor"
+    "cursor",
+    "icons"
   ],
   "bin": {
     "patine-mcp": "src/index.js"
   },
   "main": "src/docs.js",
+  "scripts": {
+    "pro": "node scripts/pro.js"
+  },
   "files": [
     "src",
     "!src/**/*.test.js",
