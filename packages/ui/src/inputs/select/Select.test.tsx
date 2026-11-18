@@ -54,6 +54,27 @@ describe('Select', () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenLastCalledWith(false));
   });
 
+  it('keeps its own value when uncontrolled, starting from defaultValue, and clears it', async () => {
+    const onValueChange = jest.fn();
+    await render(<Select label="Stack" options={options} defaultValue="expo" onValueChange={onValueChange} clearable />);
+    expect(screen.getByText('Expo')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Stack' }));
+    await fireEvent.press(screen.getByLabelText('React'));
+    expect(onValueChange).toHaveBeenCalledWith('react', options[0]);
+    await waitFor(() => expect(screen.getByText('React')).toBeTruthy());
+    await fireEvent.press(screen.getByRole('button', { name: 'Clear' }));
+    expect(screen.queryByText('React')).toBeNull();
+  });
+
+  it('keeps its own values in multiple mode', async () => {
+    await render(<Select label="Stack" multiple options={options} defaultValue={['react']} />);
+    const field = () => screen.getByRole('button', { name: 'Stack' });
+    expect(field().props.accessibilityHint).toBe('React');
+    await fireEvent.press(field());
+    await fireEvent.press(screen.getByLabelText('Expo'));
+    expect(field().props.accessibilityHint).toBe('React, Expo');
+  });
+
   it('creates an option from the search, selects it and shows it before options include it', async () => {
     const onClose = jest.fn();
     await render(<CreatablePicker onClose={onClose} />);

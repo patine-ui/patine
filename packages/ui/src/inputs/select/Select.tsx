@@ -8,12 +8,14 @@ import { DEFAULT_PLACEHOLDER } from '@/overlays/sheet/sheet.constants';
 import { SelectSearchField } from './components/SelectSearchField';
 import { SelectTrigger } from './components/SelectTrigger';
 import { useSelect } from './hooks/useSelect';
+import { useSelectValue } from './hooks/useSelectValue';
 import { SelectList } from './SelectList';
 import { DEFAULT_SEARCH_PLACEHOLDER, SELECT_DROPDOWN_MIN_WIDTH, SELECT_PRESENTATION } from './select.constants';
 import { LIST_STYLE } from './select.styles';
 import type { SelectListBaseProps, SelectProps } from './select.types';
 
-export const Select = <T,>(props: SelectProps<T>) => {
+export const Select = <T,>(selectProps: SelectProps<T>) => {
+  const { props, reset } = useSelectValue<T, SelectProps<T>>(selectProps);
   const {
     placeholder = DEFAULT_PLACEHOLDER,
     label,
@@ -40,6 +42,7 @@ export const Select = <T,>(props: SelectProps<T>) => {
     isEqual = Object.is,
     multiple: _multiple,
     value: _value,
+    defaultValue: _defaultValue,
     onValueChange: _onChange,
     ...listProps
   } = props;
@@ -86,7 +89,10 @@ export const Select = <T,>(props: SelectProps<T>) => {
               required={required}
               onOpen={picker.toggle}
               onRemove={picker.removeOption}
-              onClear={picker.clear}
+              onClear={() => {
+                picker.clear();
+                reset();
+              }}
               renderChevron={renderChevron}
               theme={theme}
               slots={slots}

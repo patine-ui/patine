@@ -10,6 +10,7 @@ import { GroupHeader } from './components/GroupHeader';
 import { LoadingState } from './components/LoadingState';
 import { OptionRow } from './components/OptionRow';
 import { useSelectList } from './hooks/useSelectList';
+import { useSelectValue } from './hooks/useSelectValue';
 import {
   DEFAULT_CREATE_LABEL,
   DEFAULT_EMPTY_TEXT,
@@ -23,7 +24,8 @@ import { styles } from './select.styles';
 import type { SelectListProps, SelectRow } from './select.types';
 import { defaultFilter, getEmptyMessage, getRowKey, isOptionDisabled, keepAll, shouldShowSearch } from './select.utils';
 
-export const SelectList = <T,>(props: SelectListProps<T>) => {
+export const SelectList = <T,>(listProps: SelectListProps<T>) => {
+  const { props } = useSelectValue<T, SelectListProps<T>>(listProps);
   const {
     options = NO_OPTIONS,
     searchable,

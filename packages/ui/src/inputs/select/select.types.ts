@@ -50,9 +50,32 @@ export interface SelectRenderOptionInfo<T> {
   theme: Theme;
 }
 
+/**
+ * One value, or with `multiple` an array. Controlled with `value` (`null` for none), or uncontrolled from `defaultValue`.
+ * `onValueChange` fires when the user picks, never when `value` changes from your code.
+ */
 export type SelectValueProps<T> =
-  | { multiple?: false; value?: T | null; onValueChange?: (value: NoInferValue<T>, option: SelectOption<T>) => void }
-  | { multiple: true; value?: T[]; onValueChange?: (value: NoInferValue<T>[], options: SelectOption<T>[]) => void; maxSelected?: number };
+  | {
+      /** Pick several options. Default: false */
+      multiple?: false;
+      /** The selected option's value, or `null` for none. Leave it out to let the select keep its own */
+      value?: T | null;
+      /** The value selected at first when `value` is left out. Default: none */
+      defaultValue?: T | null;
+      /** Called with the picked value and its option */
+      onValueChange?: (value: NoInferValue<T>, option: SelectOption<T>) => void;
+    }
+  | {
+      multiple: true;
+      /** The selected values. Leave it out to let the select keep its own */
+      value?: T[];
+      /** The values selected at first when `value` is left out. Default: [] */
+      defaultValue?: T[];
+      /** Called with every selected value and their options */
+      onValueChange?: (value: NoInferValue<T>[], options: SelectOption<T>[]) => void;
+      /** The most options that can be selected. Default: no limit */
+      maxSelected?: number;
+    };
 
 export type SelectListBaseProps<T> = ThemableProps & {
   /** The options; with `loadOptions`, the ones shown before the user types. Default: [] */
