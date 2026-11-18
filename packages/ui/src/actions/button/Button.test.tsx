@@ -33,6 +33,24 @@ describe('Button', () => {
     expect(boxOf('Cancel')).toMatchObject({ backgroundColor: 'transparent', borderColor: lightTheme.colors.border, height: 36 });
   });
 
+  it("lifts a filled button on the brand design's shadow, and keeps a ghost button flat", async () => {
+    await render(
+      <>
+        <Button>Save</Button>
+        <Button variant="ghost">Skip</Button>
+      </>
+    );
+    expect(boxOf('Save').boxShadow).toBe(DESIGN_TOKENS.brand.shadows?.xs);
+    expect(boxOf('Skip').boxShadow).toBeUndefined();
+  });
+
+  it("takes the platform's design with design='native'", async () => {
+    await render(<Button design="native">Next</Button>);
+    // The test platform is iOS.
+    expect(boxOf('Next').borderRadius).toBe(lightTheme.radius.md);
+    expect(boxOf('Next').boxShadow).toBe('none');
+  });
+
   it('follows its design prop', async () => {
     await render(<Button design="material">Next</Button>);
     expect(boxOf('Next')).toMatchObject({ height: 40, borderRadius: lightTheme.radius.full });

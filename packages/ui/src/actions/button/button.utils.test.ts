@@ -1,6 +1,6 @@
 import { lightTheme } from '@/core/theme/theme.constants';
 import { BUTTON_DESIGN } from './button.constants';
-import { getButtonBox, getButtonColors, getHitSlop } from './button.utils';
+import { getButtonBox, getButtonColors, getHitSlop, isRaisedVariant } from './button.utils';
 
 const { colors } = lightTheme;
 
@@ -36,5 +36,13 @@ describe('getHitSlop', () => {
   it('adds nothing when the button is big enough, or on the web', () => {
     expect(getHitSlop(undefined, 44, false)).toBeUndefined();
     expect(getHitSlop(32, 32, true)).toBeUndefined();
+  });
+});
+
+describe('isRaisedVariant', () => {
+  it('lifts filled and outlined buttons, and keeps ghost and link flat', () => {
+    expect(['default', 'secondary', 'outline', 'destructive'].every((v) => isRaisedVariant(v as never))).toBe(true);
+    expect(isRaisedVariant('ghost')).toBe(false);
+    expect(isRaisedVariant('link')).toBe(false);
   });
 });

@@ -49,6 +49,9 @@ export const getButtonColors = (colors: Theme['colors'], variant: ButtonVariant)
   }
 };
 
+/** Ghost and link buttons sit flat on the surface; the others take the design's lift. */
+export const isRaisedVariant = (variant: ButtonVariant) => variant !== BUTTON_VARIANT.ghost && variant !== BUTTON_VARIANT.link;
+
 /** Height and side padding for a size. An icon button is a square of the default height. */
 export const getButtonBox = (design: ButtonDesign, size: ButtonSize) => {
   if (size === BUTTON_SIZE.icon) {

@@ -27,6 +27,7 @@ export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
     radius: 'md',
     textSize: { sm: 'sm', default: 'md', lg: 'md' },
     weight: 'medium',
+    shadow: 'xs',
   },
   ios: {
     heights: { sm: 34, default: 44, lg: 50 },
@@ -34,6 +35,7 @@ export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
     radius: 'md',
     textSize: { sm: 'sm', default: 'md', lg: 'lg' },
     weight: 'bold',
+    shadow: 'none',
   },
   material: {
     heights: { sm: 32, default: 40, lg: 56 },
@@ -41,6 +43,7 @@ export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
     radius: 'full',
     textSize: { sm: 'sm', default: 'sm', lg: 'md' },
     weight: 'medium',
+    shadow: 'none',
   },
   web: {
     heights: { sm: 32, default: 36, lg: 40 },
@@ -48,5 +51,6 @@ export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
     radius: 'sm',
     textSize: { sm: 'sm', default: 'sm', lg: 'md' },
     weight: 'medium',
+    shadow: 'xs',
   },
 };

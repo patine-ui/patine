@@ -9,7 +9,7 @@ import { Text } from '@/foundations/text/Text';
 import { BUTTON_DESIGN, BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
 import { styles } from './button.styles';
 import type { ButtonProps } from './button.types';
-import { getButtonBox, getButtonColors, getHitSlop } from './button.utils';
+import { getButtonBox, getButtonColors, getHitSlop, isRaisedVariant } from './button.utils';
 
 /**
  * A button in shadcn/ui's variants and sizes, drawn in the active design, with hover, press feedback, a keyboard focus ring,
@@ -79,6 +79,7 @@ export const Button = ({
           borderRadius: theme.radius[look.radius],
           backgroundColor: colors.background,
           borderColor: colors.border,
+          boxShadow: isRaisedVariant(variant) && !blocked ? theme.shadows[look.shadow] : undefined,
         },
         blocked && { opacity: DISABLED_OPACITY },
         focus.focusVisible && focusOutline(theme.colors.primary),

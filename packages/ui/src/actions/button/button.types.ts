@@ -2,7 +2,7 @@ import type React from 'react';
 import type { PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import type { ThemableProps, ValueOf } from '@/core/core.types';
-import type { TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
+import type { ShadowLevel, TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
 import type { BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
 
 export type ButtonVariant = ValueOf<typeof BUTTON_VARIANT>;
@@ -18,6 +18,8 @@ export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>,
   size?: ButtonSize;
   /** Shows a spinner in place of the start icon, and blocks presses while true. Default: false */
   loading?: boolean;
+  /** Dims the button and blocks presses. Default: false */
+  disabled?: boolean;
   /** Before the label, e.g. an icon */
   startIcon?: React.ReactNode;
   /** After the label */
@@ -40,4 +42,6 @@ export interface ButtonDesign {
   radius: keyof Theme['radius'];
   textSize: Record<TextButtonSize, TextSize>;
   weight: TextWeight;
+  /** The lift under a filled or outlined button, as shadcn's `shadow-xs`. Ghost and link buttons stay flat */
+  shadow: ShadowLevel;
 }
