@@ -1,17 +1,14 @@
 import { cloneElement, isValidElement } from 'react';
-import { Animated, View } from 'react-native';
 
 import { useCollapse } from '@/core/animation';
 import { DisclosureLabel } from '@/core/components/DisclosureLabel';
-import { Touchable } from '@/core/components/Touchable';
-import { DISABLED_OPACITY } from '@/core/core.constants';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { focusOutline } from '@/core/utils/focus.utils';
+import { Touchable } from '@/core/primitives/Touchable';
+import { AnimatedView, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { CollapsibleContext, useCollapsibleContext } from './CollapsibleContext';
 import { COLLAPSIBLE_DESIGN } from './collapsible.constants';
-import { styles } from './collapsible.styles';
+import { styles, themed } from './collapsible.styles';
 import type { CollapsibleContentProps, CollapsibleProps, CollapsibleTriggerProps, SlotProps } from './collapsible.types';
 import { useCollapsible } from './hooks/useCollapsible';
 
@@ -31,21 +28,23 @@ export const Collapsible = (props: CollapsibleProps) => {
     children,
     ...rest
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const ctx = useCollapsible(props, theme);
   return (
-    <CollapsibleContext.Provider value={ctx}>
-      <View {...rest}>
-        {hasShorthand(trigger) ? (
-          <>
-            <CollapsibleTrigger asChild={isValidElement(trigger)}>{trigger}</CollapsibleTrigger>
-            <CollapsibleContent>{children}</CollapsibleContent>
-          </>
-        ) : (
-          children
-        )}
-      </View>
-    </CollapsibleContext.Provider>
+    <ThemeScope theme={themeOverride}>
+      <CollapsibleContext.Provider value={ctx}>
+        <View {...rest}>
+          {hasShorthand(trigger) ? (
+            <>
+              <CollapsibleTrigger asChild={isValidElement(trigger)}>{trigger}</CollapsibleTrigger>
+              <CollapsibleContent>{children}</CollapsibleContent>
+            </>
+          ) : (
+            children
+          )}
+        </View>
+      </CollapsibleContext.Provider>
+    </ThemeScope>
   );
 };
 
@@ -57,17 +56,14 @@ export const CollapsibleTrigger = ({
   children,
   asChild = false,
   style,
-  labelStyle,
+  styles: slots,
   icon,
   renderIcon,
   iconPosition,
   rotation,
-  onFocus,
-  onBlur,
   ...rest
 }: CollapsibleTriggerProps) => {
   const ctx = useCollapsibleContext();
-  const focus = useFocusVisible();
   const { theme } = ctx;
   const look = COLLAPSIBLE_DESIGN[theme.design];
 
@@ -91,32 +87,17 @@ export const CollapsibleTrigger = ({
       id={ctx.triggerId}
       aria-controls={ctx.contentId}
       aria-expanded={ctx.open}
-      aria-disabled={ctx.disabled}
       disabled={ctx.disabled}
       onPress={ctx.toggle}
-      onFocus={(e) => {
-        focus.onFocus();
-        onFocus?.(e);
-      }}
-      onBlur={(e) => {
-        focus.onBlur();
-        onBlur?.(e);
-      }}
       {...rest}
-      style={[
-        styles.trigger,
-        { minHeight: look.minHeight, gap: theme.spacing.sm, paddingVertical: theme.spacing.sm, borderRadius: theme.radius.sm },
-        ctx.disabled && { opacity: DISABLED_OPACITY },
-        focus.focusVisible && focusOutline(theme.colors.primary),
-        style,
-      ]}
+      style={[styles.trigger, themed(theme).trigger, style]}
     >
       <DisclosureLabel
         open={ctx.open}
         theme={theme}
         look={look}
         options={{ icon, renderIcon, iconPosition, rotation }}
-        labelStyle={labelStyle}
+        labelStyle={slots?.label}
       >
         {children}
       </DisclosureLabel>
@@ -130,16 +111,10 @@ export const CollapsibleContent = ({ style, children, ...rest }: CollapsibleCont
   const collapse = useCollapse(open, theme.animation.duration);
   if (!collapse.mounted) return null;
   return (
-    <Animated.View
-      role="region"
-      id={contentId}
-      aria-labelledby={triggerId}
-      aria-hidden={!open}
-      style={[styles.collapse, { height: collapse.height }]}
-    >
+    <AnimatedView role="region" id={contentId} aria-labelledby={triggerId} aria-hidden={!open} style={[styles.collapse, collapse.style]}>
       <View onLayout={collapse.onContentLayout} style={style} {...rest}>
         {children}
       </View>
-    </Animated.View>
+    </AnimatedView>
   );
 };

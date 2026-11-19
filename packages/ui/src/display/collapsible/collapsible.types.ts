@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { HostInstance, PressableProps, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { HostInstance, PressableProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { DisclosureIconOptions, DisclosureLook, ThemableProps } from '@/core/core.types';
+import type { DisclosureIconOptions, DisclosureLook, SlotStyles, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface CollapsibleProps extends ViewProps, ThemableProps {
@@ -32,7 +32,8 @@ export interface CollapsibleTriggerProps extends Omit<PressableProps, 'children'
   asChild?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface CollapsibleContentProps extends ViewProps {
