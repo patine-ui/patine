@@ -39,7 +39,7 @@ export const StepRow = ({ step, index, count, current, vertical, labels, theme, 
     <View style={vertical ? [styles.textVertical, lines.textDown] : [styles.text, lines.textAcross]}>
       <Text
         size="sm"
-        weight={status === STEP_STATUS.current ? 'bold' : 'medium'}
+        weight={status === STEP_STATUS.current ? 'semibold' : 'medium'}
         color={status === STEP_STATUS.upcoming ? 'textSecondary' : status === STEP_STATUS.error ? 'danger' : 'text'}
         numberOfLines={2}
         style={!vertical && styles.center}

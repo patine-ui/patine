@@ -16,7 +16,15 @@ export const SheetHeader = ({ title, headerLeft, headerRight, theme, slots }: Sh
       )}
       <View style={[styles.headerCenter, start && styles.headerStart]} pointerEvents={typeof title === 'string' ? 'none' : 'box-none'}>
         {typeof title === 'string' ? (
-          <Text role="heading" aria-level={2} theme={theme} size={start ? 'lg' : 'md'} weight="bold" style={slots?.title} numberOfLines={1}>
+          <Text
+            role="heading"
+            aria-level={2}
+            theme={theme}
+            size={start ? 'lg' : 'md'}
+            weight="semibold"
+            style={slots?.title}
+            numberOfLines={1}
+          >
             {title}
           </Text>
         ) : (

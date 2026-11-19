@@ -6,6 +6,12 @@ export const AnimatedText = Animated.Text;
 export const AnimatedImage = Animated.Image;
 export const AnimatedScrollView = Animated.ScrollView;
 
+/** A value to animate, made outside a component (a store or a per-item factory); in a component use `useAnimatedValue`. */
+export const createAnimatedValue = (value: number) => new Animated.Value(value);
+
+/** Makes any other view animatable, such as an SVG shape: `const AnimatedCircle = createAnimatedComponent(Circle)`. */
+export const createAnimatedComponent = Animated.createAnimatedComponent;
+
 /** Values built from other animated values: a sum, a difference, a product. */
 export const animatedAdd = Animated.add;
 export const animatedSubtract = Animated.subtract;

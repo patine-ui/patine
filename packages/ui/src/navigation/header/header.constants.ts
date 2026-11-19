@@ -12,8 +12,8 @@ export const HEADER_SIZE = {
  * title at the start in title-large. The web: a 56px bar with a bottom border. Brand: 56pt, title at the start, bold.
  */
 export const HEADER_DESIGN: Record<Design, HeaderDesign> = {
-  brand: { height: 56, centerTitle: false, titleSize: 'lg', titleWeight: 'bold', largeSize: '3xl', border: false, backLabel: false },
-  ios: { height: 44, centerTitle: true, titleSize: 'md', titleWeight: 'bold', largeSize: '3xl', border: true, backLabel: true },
+  brand: { height: 56, centerTitle: false, titleSize: 'lg', titleWeight: 'semibold', largeSize: '3xl', border: false, backLabel: false },
+  ios: { height: 44, centerTitle: true, titleSize: 'md', titleWeight: 'semibold', largeSize: '3xl', border: true, backLabel: true },
   material: { height: 64, centerTitle: false, titleSize: 'xl', titleWeight: 'regular', largeSize: '2xl', border: false, backLabel: false },
   web: { height: 56, centerTitle: false, titleSize: 'lg', titleWeight: 'medium', largeSize: '2xl', border: true, backLabel: false },
 };

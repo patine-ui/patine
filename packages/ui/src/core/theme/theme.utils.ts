@@ -1,10 +1,10 @@
 import { I18nManager, type ImageStyle, type PlatformOSType, StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
 
-import { IS_WEB, PLATFORM } from '@/core/core.constants';
+import { FONT_PADDING, IS_WEB, PLATFORM } from '@/core/core.constants';
 import type { DeepPartial } from '@/core/core.types';
 import { clamp } from '@/core/utils/track.utils';
-import { DESIGN, darkTheme, lightTheme, SHADOW_LEVELS } from './theme.constants';
-import type { Design, DesignPreference, LayoutDirection, ShadowLevel, TextSize, TextWeight, Theme } from './theme.types';
+import { DESIGN, darkTheme, lightTheme, SHADOW_LEVELS, TABULAR } from './theme.constants';
+import type { Design, DesignPreference, FontRole, LayoutDirection, ShadowLevel, TextSize, TextWeight, Theme } from './theme.types';
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> => {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -28,12 +28,29 @@ export const createTheme = (overrides: DeepPartial<Theme>, base?: Theme): Theme 
   return mergeTheme(base ?? (overrides.dark ? darkTheme : lightTheme), overrides);
 };
 
-/** Text style helper used across components. */
-export const textStyle = (theme: Theme, size: TextSize, weight: TextWeight = 'regular'): TextStyle => {
+/**
+ * The family and weight for a role: the role's face for that weight, else `body`'s, else the system font. A family named for
+ * the exact weight (`Inter_600SemiBold`) is drawn without `fontWeight`, so Android doesn't fake bold on top of it.
+ */
+export const fontFace = (theme: Theme, weight: TextWeight = 'regular', font: FontRole = 'body'): TextStyle => {
+  const { fonts, weights } = theme.typography;
+  const faces = fonts?.[font] ?? fonts?.body;
+  if (!faces) return { fontWeight: weights[weight] };
+  const exact = faces[weight];
+  return exact ? { fontFamily: exact, ...FONT_PADDING } : { fontFamily: faces.regular, fontWeight: weights[weight], ...FONT_PADDING };
+};
+
+/** Text style helper used across components: size, line height, tracking, family and weight for a role, and the text color. */
+export const textStyle = (theme: Theme, size: TextSize, weight: TextWeight = 'regular', font: FontRole = 'body'): TextStyle => {
+  const { sizes, lineHeights, tracking } = theme.typography;
+  const lineHeight = lineHeights?.[size];
+  const letterSpacing = tracking?.[size];
   return {
-    fontSize: theme.typography.sizes[size],
-    fontWeight: theme.typography.weights[weight],
-    fontFamily: weight === 'regular' ? theme.typography.fontFamily : (theme.typography.fontFamilyMedium ?? theme.typography.fontFamily),
+    fontSize: sizes[size],
+    ...(lineHeight !== undefined && { lineHeight }),
+    ...(letterSpacing !== undefined && { letterSpacing }),
+    ...fontFace(theme, weight, font),
+    ...(font === 'numeric' && TABULAR),
     color: theme.colors.text,
   };
 };

@@ -37,7 +37,7 @@ export const SwatchGrid = ({ colors, shape, size, scroll = false, selected, onSe
         ]}
       >
         {chosen ? (
-          <Text theme={theme} size={size < 28 ? 'xs' : 'md'} weight="bold" style={inkOf(getCheckColor(value))}>
+          <Text theme={theme} size={size < 28 ? 'xs' : 'md'} weight="semibold" style={inkOf(getCheckColor(value))}>
             {SWATCH_CHECK}
           </Text>
         ) : isCustom ? (

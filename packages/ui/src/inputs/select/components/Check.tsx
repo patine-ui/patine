@@ -16,7 +16,7 @@ export const Check = ({ selected, multiple, radio, theme, style }: CheckProps) =
   }
   if (!multiple) {
     return (
-      <Text weight="bold" color="primary" style={[sheet.trailing, style]}>
+      <Text weight="semibold" color="primary" style={[sheet.trailing, style]}>
         {CHECK_MARK}
       </Text>
     );

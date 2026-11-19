@@ -66,7 +66,7 @@ const WheelRowImpl = <T,>({
           <Text
             theme={theme}
             size="lg"
-            weight={selected ? 'bold' : 'regular'}
+            weight={selected ? 'semibold' : 'regular'}
             numberOfLines={1}
             style={[
               getTextAlign(textAlign),

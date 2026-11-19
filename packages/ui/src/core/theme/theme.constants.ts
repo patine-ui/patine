@@ -1,3 +1,5 @@
+import type { TextStyle } from 'react-native';
+
 import { DURATION } from '@/core/animation/animation.constants';
 import type { DeepPartial } from '@/core/core.types';
 import type { Design, Theme } from './theme.types';
@@ -16,6 +18,42 @@ export const DESIGN = {
   ios: 'ios',
   material: 'material',
   web: 'web',
+} as const;
+
+/** The type scale's steps, small to large. `display` is a KPI or balance, `hero` the one number a screen is about. */
+export const TEXT_SIZE = {
+  xs: 'xs',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+  xl: 'xl',
+  '2xl': '2xl',
+  '3xl': '3xl',
+  display: 'display',
+  hero: 'hero',
+} as const;
+
+export const TEXT_WEIGHT = {
+  regular: 'regular',
+  medium: 'medium',
+  semibold: 'semibold',
+  bold: 'bold',
+} as const;
+
+export const FONT_ROLE = {
+  body: 'body',
+  heading: 'heading',
+  display: 'display',
+  numeric: 'numeric',
+  mono: 'mono',
+} as const;
+
+/** Digits of one width, so amounts line up in columns and a ticking timer doesn't jitter. */
+export const TABULAR: TextStyle = { fontVariant: ['tabular-nums'] };
+
+export const DENSITY = {
+  comfortable: 'comfortable',
+  compact: 'compact',
 } as const;
 
 /** The elevation scale, flat to floating. Cards rest on `xs`, menus and popovers float on `lg`, dialogs on `xl`. */
@@ -76,9 +114,11 @@ const SHARED_TOKENS: Omit<Theme, 'dark' | 'colors' | 'chart'> = {
   radius: { sm: 8, md: 12, lg: 16, full: 999, sheet: 24 },
   spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
   typography: {
-    sizes: { xs: 11, sm: 13, md: 16, lg: 19, xl: 22, '2xl': 26, '3xl': 32 },
-    weights: { regular: '400', medium: '500', bold: '600' },
+    sizes: { xs: 11, sm: 13, md: 16, lg: 19, xl: 22, '2xl': 26, '3xl': 32, display: 44, hero: 64 },
+    tracking: { display: -1, hero: -1.6 },
+    weights: { regular: '400', medium: '500', semibold: '600', bold: '700' },
   },
+  density: DENSITY.comfortable,
   animation: { duration: DURATION.base },
   shadows: DESIGN_SHADOWS.ios,
 };

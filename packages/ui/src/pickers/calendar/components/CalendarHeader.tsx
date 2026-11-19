@@ -31,16 +31,16 @@ export const CalendarHeader = ({
           role="button"
           aria-label={spokenLabel}
         >
-          <Text theme={theme} weight="bold" style={slots?.headerTitle}>
+          <Text theme={theme} weight="semibold" style={slots?.headerTitle}>
             {label}
           </Text>
-          <Text theme={theme} size="sm" weight="bold" color="primary" style={styles.caret}>
+          <Text theme={theme} size="sm" weight="semibold" color="primary" style={styles.caret}>
             {view === CALENDAR_VIEW.days ? '▾' : '▴'}
           </Text>
         </Touchable>
       ) : (
         <View style={styles.titleButton} role="heading" aria-label={spokenLabel}>
-          <Text theme={theme} weight="bold" style={slots?.headerTitle}>
+          <Text theme={theme} weight="semibold" style={slots?.headerTitle}>
             {label}
           </Text>
         </View>
@@ -64,7 +64,7 @@ export const CalendarHeader = ({
                 <Text
                   theme={theme}
                   size="lg"
-                  weight="bold"
+                  weight="semibold"
                   color={CALENDAR_DESIGN[theme.design].arrowColor}
                   style={[styles.arrowText, slots?.arrowText]}
                 >

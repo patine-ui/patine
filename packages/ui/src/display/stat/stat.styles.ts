@@ -5,7 +5,6 @@ import { TONE_COLOR } from './stat.utils';
 
 export const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  value: { fontVariant: ['tabular-nums'] },
   footer: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
   pill: { paddingHorizontal: 6, paddingVertical: 1, overflow: 'hidden' },
   pillTint: { ...StyleSheet.absoluteFill, opacity: 0.12 },

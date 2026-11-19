@@ -9,7 +9,7 @@ import type {
 } from 'react-native';
 
 import type { DeepPartial, ThemableProps } from '@/core/core.types';
-import type { TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
+import type { FontRole, TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
 
 export type ThemeColor = keyof Theme['colors'];
 
@@ -18,6 +18,8 @@ export interface TextProps extends RNTextProps, ThemableProps {
   size?: TextSize;
   /** Default: 'regular' */
   weight?: TextWeight;
+  /** Which of the theme's font roles draws it: 'numeric' also lines digits up (tabular figures). Default: 'body' */
+  font?: FontRole;
   /** One of the theme's colors. Default: 'text' */
   color?: ThemeColor;
 }

@@ -58,7 +58,7 @@ export const HexInput = ({
             testID={testID ? `${testID}-copy` : undefined}
           >
             {clipboard.copied ? (
-              <Text theme={theme} weight="bold" color="primary">
+              <Text theme={theme} weight="semibold" color="primary">
                 {SWATCH_CHECK}
               </Text>
             ) : (

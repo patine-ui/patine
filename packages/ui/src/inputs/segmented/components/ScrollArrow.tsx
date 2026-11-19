@@ -21,7 +21,7 @@ export const ScrollArrow = ({ side, disabled, overlay, renderArrow, onPress, the
       {renderArrow ? (
         renderArrow(side, disabled)
       ) : (
-        <Text size="lg" weight="bold" color="text" style={[styles.arrowText, slots?.arrowText]}>
+        <Text size="lg" weight="semibold" color="text" style={[styles.arrowText, slots?.arrowText]}>
           {SCROLL_ARROW_GLYPHS[side]}
         </Text>
       )}

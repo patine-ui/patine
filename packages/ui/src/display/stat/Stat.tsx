@@ -40,7 +40,7 @@ export const Stat = ({
           </Text>
           {icon}
         </View>
-        <Text size={look.valueSize} weight={look.valueWeight} style={[styles.value, slots?.value]}>
+        <Text size={look.valueSize} weight={look.valueWeight} font="numeric" style={slots?.value}>
           {value}
         </Text>
         {changeText !== null || description ? (

@@ -1,4 +1,4 @@
-import { type KeyboardAvoidingViewProps, Platform, type PlatformOSType } from 'react-native';
+import { type KeyboardAvoidingViewProps, Platform, type PlatformOSType, type TextStyle } from 'react-native';
 
 import type { PressFeedback, SearchDesign } from './core.types';
 import type { Design } from './theme/theme.types';
@@ -14,6 +14,9 @@ export const PLATFORM = {
 export const SHOWS_SCROLL_INDICATOR = Platform.select({ web: false, default: true });
 
 export const IS_WEB = Platform.OS === PLATFORM.web;
+
+/** Android pads custom fonts for accents above the line, which pushes labels off-centre in buttons. */
+export const FONT_PADDING: TextStyle = Platform.OS === PLATFORM.android ? { includeFontPadding: false } : {};
 
 /** iOS lifts a modal's content above the keyboard with padding; Android resizes the window itself. */
 export const KEYBOARD_AVOID_BEHAVIOR: KeyboardAvoidingViewProps['behavior'] = Platform.OS === PLATFORM.ios ? 'padding' : undefined;

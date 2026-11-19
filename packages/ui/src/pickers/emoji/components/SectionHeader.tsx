@@ -9,7 +9,7 @@ export const SectionHeader = ({ label, theme, slots }: SectionHeaderProps) => (
     <Text
       theme={theme}
       size="xs"
-      weight="bold"
+      weight="semibold"
       color="textSecondary"
       style={[EMOJI_DESIGN[theme.design].uppercaseSectionHeaders && styles.uppercase, slots?.sectionHeaderText]}
     >

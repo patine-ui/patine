@@ -3,7 +3,7 @@ import type { PlatformOSType, TextStyle } from 'react-native';
 
 import type { DeepPartial, ValueOf } from '@/core/core.types';
 import type { Labels } from './labels.types';
-import type { COLOR_SCHEME, DESIGN, SHADOW_LEVEL } from './theme.constants';
+import type { COLOR_SCHEME, DENSITY, DESIGN, FONT_ROLE, SHADOW_LEVEL, TEXT_SIZE, TEXT_WEIGHT } from './theme.constants';
 
 export interface Theme {
   dark: boolean;
@@ -67,11 +67,21 @@ export interface Theme {
   radius: { sm: number; md: number; lg: number; full: number; sheet: number };
   spacing: { xs: number; sm: number; md: number; lg: number; xl: number };
   typography: {
-    fontFamily?: string;
-    fontFamilyMedium?: string;
-    sizes: { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number; '3xl': number };
-    weights: { regular: TextStyle['fontWeight']; medium: TextStyle['fontWeight']; bold: TextStyle['fontWeight'] };
+    /**
+     * Font families by role, one family name per weight (static fonts name each weight: `Inter_600SemiBold`). A role left
+     * out uses `body`; with no `body`, the system font. Load the files yourself (Expo's `useFonts`, `@font-face`) and pass
+     * their names here: Patine ships no fonts.
+     */
+    fonts?: Partial<Record<FontRole, FontFaces>>;
+    sizes: Record<TextSize, number>;
+    /** Line height per step, in points. Leave out to keep the font's own. Set them when you set `fonts`: families differ */
+    lineHeights?: Partial<Record<TextSize, number>>;
+    /** Letter spacing per step, in points: tighter on large steps */
+    tracking?: Partial<Record<TextSize, number>>;
+    weights: Record<TextWeight, TextStyle['fontWeight']>;
   };
+  /** How tightly lists, tables and controls pack. `compact` is for dense desktop screens with a pointer; touch keeps 44pt targets */
+  density: Density;
   animation: { duration: number };
   /**
    * Elevation, as CSS `box-shadow` strings that React Native draws on iOS, Android and the web. Each design fills its own:
@@ -85,8 +95,14 @@ export type ColorScheme = ValueOf<typeof COLOR_SCHEME>;
 /** A design, or 'native' for the one that matches the platform */
 export type DesignPreference = ValueOf<typeof DESIGN>;
 export type Design = Exclude<DesignPreference, typeof DESIGN.native>;
-export type TextSize = keyof Theme['typography']['sizes'];
-export type TextWeight = keyof Theme['typography']['weights'];
+/** A step of the type scale, from captions to one hero number per screen. */
+export type TextSize = ValueOf<typeof TEXT_SIZE>;
+export type TextWeight = ValueOf<typeof TEXT_WEIGHT>;
+/** What a piece of text is for, which picks its family: `heading` for titles, `numeric` for amounts and times, `mono` for code. */
+export type FontRole = ValueOf<typeof FONT_ROLE>;
+/** A family's name for each weight. A weight left out draws `regular`'s family at that weight. */
+export type FontFaces = { regular: string } & Partial<Record<Exclude<TextWeight, 'regular'>, string>>;
+export type Density = ValueOf<typeof DENSITY>;
 /** A step on the theme's elevation scale, from flat to floating */
 export type ShadowLevel = ValueOf<typeof SHADOW_LEVEL>;
 

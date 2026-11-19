@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { render, screen } from '@testing-library/react-native';
@@ -42,5 +43,29 @@ describe('Text', () => {
     );
     expect(screen.getByText('Capped').props.maxFontSizeMultiplier).toBe(MAX_FONT_SCALE);
     expect(screen.getByText('Free').props.maxFontSizeMultiplier).toBe(3);
+  });
+
+  it('starts at the layout start on the web whatever the script, with style on top', async () => {
+    // The web branch is picked when core.styles loads, so load Text afresh as if on the web.
+    let WebText: typeof Text = Text;
+    let WebProvider: typeof PatineProvider = PatineProvider;
+    const react = jest.requireActual('react');
+    jest.isolateModules(() => {
+      jest.doMock('react', () => react);
+      const rn: typeof import('react-native') = require('react-native');
+      jest
+        .spyOn(rn.Platform, 'select')
+        .mockImplementation((spec: { web?: unknown; default?: unknown }) => ('web' in spec ? spec.web : spec.default));
+      WebText = require('./Text').Text;
+      WebProvider = require('@/core/theme/ThemeProvider').PatineProvider;
+    });
+    await render(
+      <WebProvider dir="rtl">
+        {createElement(WebText, null, 'Revolut')}
+        {createElement(WebText, { style: { textAlign: 'center' } }, 'Centred')}
+      </WebProvider>
+    );
+    expect(styleOf('Revolut').textAlign).toBe('right');
+    expect(styleOf('Centred').textAlign).toBe('center');
   });
 });

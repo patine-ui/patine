@@ -1,4 +1,4 @@
-import { compareValues, getAriaSort, getColumnBox, getRowKey, getTableWidth, nextSort, sortRows } from './table.utils';
+import { compareValues, getAriaSort, getCellFont, getColumnBox, getRowKey, getTableWidth, nextSort, sortRows } from './table.utils';
 
 type Row = { name: string; amount: number | null };
 const rows: Row[] = [
@@ -69,5 +69,13 @@ describe('getColumnBox, getRowKey and getTableWidth', () => {
   it('only widens a table given minWidth', () => {
     expect(getTableWidth(undefined)).toBeNull();
     expect(getTableWidth(600)).toEqual({ minWidth: 600, flexGrow: 1 });
+  });
+});
+
+describe('getCellFont', () => {
+  it('draws numbers and right-aligned cells in the numeric font', () => {
+    expect(getCellFont(12, undefined)).toBe('numeric');
+    expect(getCellFont('$1,200', 'right')).toBe('numeric');
+    expect(getCellFont('Ana', 'left')).toBe('body');
   });
 });

@@ -83,7 +83,7 @@ export const DayCell = memo(({ state, hidden, hasRangeEnd, height, locale, rende
               <TouchFeedback {...touch.feedback} borderRadius={radius} />
               <Text
                 theme={theme}
-                weight={selected || today ? 'bold' : 'regular'}
+                weight={selected || today ? 'semibold' : 'regular'}
                 style={[
                   getDayTextStyle(state, c, look.tinted),
                   slots?.dayText,

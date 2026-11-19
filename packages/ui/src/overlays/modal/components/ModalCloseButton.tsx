@@ -25,7 +25,7 @@ export const ModalCloseButton = ({ label, top }: ModalCloseButtonProps) => {
       style={[styles.close, themed(theme).close, getClosePlace(top, look.padding, look.closeFill)]}
       hitSlop={look.closeFill ? (CLOSE_BUTTON_ROOM - CLOSE_FILL_SIZE) / 2 : undefined}
     >
-      <Text size="sm" weight="bold" color="textSecondary">
+      <Text size="sm" weight="semibold" color="textSecondary">
         ✕
       </Text>
     </Button>

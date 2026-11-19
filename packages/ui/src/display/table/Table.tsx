@@ -9,7 +9,17 @@ import { HeaderTitle } from './components/HeaderTitle';
 import { TABLE_DESIGN } from './table.constants';
 import { styles, themed } from './table.styles';
 import type { TableColumn, TableProps, TableSort } from './table.types';
-import { ALIGN_KEYS, getAriaSort, getCellValue, getColumnBox, getRowKey, getTableWidth, nextSort, sortRows } from './table.utils';
+import {
+  ALIGN_KEYS,
+  getAriaSort,
+  getCellFont,
+  getCellValue,
+  getColumnBox,
+  getRowKey,
+  getTableWidth,
+  nextSort,
+  sortRows,
+} from './table.utils';
 
 /**
  * Rows and columns of data: orders, invoices, users. Columns come as data, cells draw as text or any node, headers sort
@@ -87,7 +97,11 @@ export const Table = <T,>({
           {column.render ? (
             column.render(row, index)
           ) : (
-            <Text size={look.cellSize} style={[styles[ALIGN_KEYS[column.align ?? 'left'].text], styles.numbers, slots?.cell]}>
+            <Text
+              size={look.cellSize}
+              font={getCellFont(value, column.align)}
+              style={[styles[ALIGN_KEYS[column.align ?? 'left'].text], styles.numbers, slots?.cell]}
+            >
               {value === null || value === undefined ? '' : String(value)}
             </Text>
           )}

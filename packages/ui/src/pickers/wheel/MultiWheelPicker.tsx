@@ -38,7 +38,7 @@ export const MultiWheelPicker = ({
                 {sep !== null && (
                   <View style={styles.separator} pointerEvents="none">
                     {typeof sep === 'string' ? (
-                      <Text theme={theme} size="lg" weight="bold" style={slots?.separator}>
+                      <Text theme={theme} size="lg" weight="semibold" style={slots?.separator}>
                         {sep}
                       </Text>
                     ) : (

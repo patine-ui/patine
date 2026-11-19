@@ -32,14 +32,14 @@ export const TabBarButton = ({ item, selected, tab, onPress, rail }: TabBarButto
         {badge !== null ? (
           <View aria-hidden style={[badge === '' ? styles.dot : styles.badge, sheet.badge]}>
             {badge === '' ? null : (
-              <Text size="xs" weight="bold" style={[styles.badgeText, sheet.badgeText]}>
+              <Text size="xs" weight="semibold" font="numeric" style={[styles.badgeText, sheet.badgeText]}>
                 {badge}
               </Text>
             )}
           </View>
         ) : null}
       </View>
-      <Text size={look.labelSize} weight={selected && look.indicator ? 'bold' : 'medium'} numberOfLines={1} style={tone}>
+      <Text size={look.labelSize} weight={selected && look.indicator ? 'semibold' : 'medium'} numberOfLines={1} style={tone}>
         {item.label}
       </Text>
     </Touchable>

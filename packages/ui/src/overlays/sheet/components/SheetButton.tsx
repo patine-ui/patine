@@ -14,7 +14,7 @@ export const SheetButton = ({ label, onPress, primary = false, disabled, theme }
       role="button"
       style={[styles.button, sheetStyles(theme).button]}
     >
-      <Text weight={primary ? 'bold' : 'regular'} color={primary ? 'primary' : 'textSecondary'}>
+      <Text weight={primary ? 'semibold' : 'regular'} color={primary ? 'primary' : 'textSecondary'}>
         {label}
       </Text>
     </Touchable>

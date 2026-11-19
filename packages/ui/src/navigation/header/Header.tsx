@@ -80,7 +80,7 @@ export const Header = ({
         </View>
         {size === HEADER_SIZE.large && title ? (
           <View style={sheet.large}>
-            <Heading level={1} size={look.largeSize} weight="bold" style={[styles.heading, slots?.title]}>
+            <Heading level={1} size={look.largeSize} weight="semibold" style={[styles.heading, slots?.title]}>
               {title}
             </Heading>
             {subtitle ? (

@@ -11,10 +11,10 @@ export const TREND_ARROW = { up: '↑', down: '↓', neutral: '→' } as const;
 
 /** brand and web: a bold figure with colored change text, as shadcn's dashboard cards. iOS and Material: the change in a tinted pill. */
 export const STAT_DESIGN: Record<Design, StatDesign> = {
-  brand: { valueSize: '2xl', valueWeight: 'bold', changePill: false },
-  ios: { valueSize: '3xl', valueWeight: 'bold', changePill: true },
+  brand: { valueSize: '2xl', valueWeight: 'semibold', changePill: false },
+  ios: { valueSize: '3xl', valueWeight: 'semibold', changePill: true },
   material: { valueSize: '2xl', valueWeight: 'regular', changePill: true },
-  web: { valueSize: '2xl', valueWeight: 'bold', changePill: false },
+  web: { valueSize: '2xl', valueWeight: 'semibold', changePill: false },
 };
 
 /** The spoken word for each trend. */

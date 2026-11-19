@@ -1,10 +1,15 @@
 import type { ViewStyle } from 'react-native';
 
+import type { FontRole } from '@/core/theme/theme.types';
 import type { TableAlign, TableColumn, TableSort } from './table.types';
 
 /** A cell's value: the column's accessor, or the row's field named by the column's key. */
 export const getCellValue = <T>(row: T, column: TableColumn<T>) =>
   column.accessor ? column.accessor(row) : (row as Record<string, unknown>)[column.key];
+
+/** Numbers, and anything right-aligned (amounts already formatted as text), draw in the theme's numeric font. */
+export const getCellFont = (value: unknown, align: TableAlign | undefined): FontRole =>
+  typeof value === 'number' || align === 'right' ? 'numeric' : 'body';
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 

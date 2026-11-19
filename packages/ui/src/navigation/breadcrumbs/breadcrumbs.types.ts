@@ -39,7 +39,7 @@ export type BreadcrumbEntry = { kind: 'item'; item: BreadcrumbItem; index: numbe
 export interface BreadcrumbsDesign {
   separator: string;
   /** The current page's weight */
-  currentWeight: 'regular' | 'medium' | 'bold';
+  currentWeight: 'regular' | 'medium' | 'semibold';
   /** Links in the primary color, as iOS and Material draw them, rather than gray */
   primaryLinks: boolean;
   textStyle?: TextStyle;

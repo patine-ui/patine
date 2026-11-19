@@ -15,7 +15,7 @@ export const GroupHeader = ({ group, renderGroupHeader, theme, slots }: GroupHea
       <Text
         theme={theme}
         size="xs"
-        weight="bold"
+        weight="semibold"
         color="textSecondary"
         style={[startAlign[dir], styles.groupHeaderText, slots?.groupHeaderText]}
       >

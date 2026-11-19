@@ -13,7 +13,7 @@ describe('Heading', () => {
     expect(screen.getByRole('heading', { name: 'Title' })).toBeTruthy();
     expect(styleOf('Title')).toMatchObject({
       fontSize: lightTheme.typography.sizes['3xl'],
-      fontWeight: lightTheme.typography.weights.bold,
+      fontWeight: lightTheme.typography.weights.semibold,
     });
   });
 

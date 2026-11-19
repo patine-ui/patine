@@ -34,7 +34,7 @@ export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
     paddingX: { sm: 12, default: 16, lg: 20 },
     radius: 'md',
     textSize: { sm: 'sm', default: 'md', lg: 'lg' },
-    weight: 'bold',
+    weight: 'semibold',
     shadow: 'none',
   },
   material: {

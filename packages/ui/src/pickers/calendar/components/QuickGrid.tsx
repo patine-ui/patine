@@ -22,7 +22,7 @@ export const QuickGrid = ({ cells, height, onSelect, theme, slots }: QuickGridPr
           >
             <Text
               theme={theme}
-              weight={cell.selected ? 'bold' : 'regular'}
+              weight={cell.selected ? 'semibold' : 'regular'}
               color={cell.selected ? 'onPrimary' : 'text'}
               style={slots?.gridCellText}
             >

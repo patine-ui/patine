@@ -39,7 +39,7 @@ export const TimePanelColumn = ({ column, visibleRows, theme }: TimePanelColumnP
               aria-disabled={item.disabled}
               style={[styles.cell, themed(theme).cell, selected && themed(theme).cellOn]}
             >
-              <Text theme={theme} weight={selected ? 'bold' : 'regular'} color={selected ? 'onPrimary' : 'text'}>
+              <Text theme={theme} weight={selected ? 'semibold' : 'regular'} color={selected ? 'onPrimary' : 'text'}>
                 {item.label}
               </Text>
             </Touchable>

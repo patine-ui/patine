@@ -12,7 +12,7 @@ export const StepCircle = ({ index, status }: { index: number; status: StepStatu
   const mark = status === STEP_STATUS.complete ? CHECK_MARK : status === STEP_STATUS.error ? '!' : String(index + 1);
   return (
     <View aria-hidden style={[styles.circle, sheet[status]]}>
-      <Text size="xs" weight="bold" style={sheet[`${status}Mark`]}>
+      <Text size="xs" weight="semibold" style={sheet[`${status}Mark`]}>
         {mark}
       </Text>
     </View>

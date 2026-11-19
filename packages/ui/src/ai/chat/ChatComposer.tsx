@@ -61,7 +61,7 @@ export const ChatComposer = ({
           </Button>
         ) : (
           <Button size="icon" aria-label={labels.send} disabled={!composer.canSend} loading={sending} onPress={composer.send}>
-            <Text aria-hidden weight="bold" style={[styles.sendGlyph, sheet.onPrimary]}>
+            <Text aria-hidden weight="semibold" style={[styles.sendGlyph, sheet.onPrimary]}>
               ↑
             </Text>
           </Button>

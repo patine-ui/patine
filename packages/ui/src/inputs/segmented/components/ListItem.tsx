@@ -57,7 +57,7 @@ export const ListItem = <T,>({
         ) : (
           <>
             {outlined && selected ? (
-              <Text size="sm" weight="bold" style={label}>
+              <Text size="sm" weight="semibold" style={label}>
                 {CHECK_MARK}
               </Text>
             ) : (
@@ -65,7 +65,7 @@ export const ListItem = <T,>({
             )}
             <Text
               size="sm"
-              weight={selected && !segmented ? 'bold' : 'medium'}
+              weight={selected && !segmented ? 'semibold' : 'medium'}
               numberOfLines={1}
               style={[label, slots?.itemLabel, selected && slots?.selectedItemLabel]}
             >
