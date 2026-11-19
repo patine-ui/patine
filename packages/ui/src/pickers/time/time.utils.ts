@@ -2,6 +2,7 @@ import type React from 'react';
 
 import type { Design } from '@/core/theme/theme.types';
 import { formatDate, uses12HourClock } from '@/core/utils/date.utils';
+import { clamp } from '@/core/utils/track.utils';
 import type { WheelItem } from '@/pickers/wheel/wheel.types';
 import {
   CLOCK_MODE,
@@ -10,6 +11,7 @@ import {
   DEGREES_PER_MINUTE,
   DIAL_INNER_RADIUS,
   DIAL_MINUTE_LABEL_STEP,
+  DIAL_NUMBER_SIZE,
   DIAL_OUTER_RADIUS,
   DIAL_SIZE,
   LAST_SECOND_OF_DAY,
@@ -18,6 +20,7 @@ import {
   SECONDS_PER_DAY,
   SECONDS_PER_HOUR,
   SECONDS_PER_MINUTE,
+  TIME_CELL_HEIGHT,
   TIME_COLUMN,
   TIME_COLUMN_LABEL,
   TIME_DISPLAY,
@@ -334,7 +337,7 @@ const addSeconds = (start: Date, seconds: number) =>
 const clampLength = (start: Date, seconds: number, rules: TimeRangeRules) => {
   const untilMidnight = rules.allowOvernight === false ? LAST_SECOND_OF_DAY - secondsOfDay(start) : Number.POSITIVE_INFINITY;
   const longest = Math.min((rules.maxDuration ?? Number.POSITIVE_INFINITY) * SECONDS_PER_MINUTE, untilMidnight);
-  return Math.min(Math.max(seconds, (rules.minDuration ?? 0) * SECONDS_PER_MINUTE), longest);
+  return clamp(seconds, (rules.minDuration ?? 0) * SECONDS_PER_MINUTE, longest);
 };
 
 /**
@@ -382,3 +385,24 @@ export const getTimeRangeEndItems = (range: TimeRange, labels: { start: string; 
       time: `${formatTimeValue(range.end, options)}${isOvernight(range) ? NEXT_DAY_MARK : ''}`,
     },
   ] as const;
+
+/** The dial's hand, from the centre out to `radius`. */
+export const getHandBox = (radius: number) => ({
+  top: DIAL_SIZE / 2 - radius,
+  height: radius,
+});
+
+/** The selector circle at the hand's tip. */
+export const getSelectorPlace = (radius: number) => ({ top: DIAL_SIZE / 2 - radius - DIAL_NUMBER_SIZE / 2 });
+
+/** A dial number centred on its point. */
+export const getNumberPlace = (x: number, y: number) => ({
+  left: x - DIAL_NUMBER_SIZE / 2,
+  top: y - DIAL_NUMBER_SIZE / 2,
+});
+
+/** A time panel column as tall as its visible rows. */
+export const getColumnHeight = (rows: number) => ({ height: TIME_CELL_HEIGHT * rows });
+
+/** The dial's turn, an animated angle. */
+export const getTurn = <T>(rotate: T) => ({ transform: [{ rotate }] });

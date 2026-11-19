@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+import { createStyles } from '@/core/theme/theme.utils';
 import {
   CLOCK_FIELD,
   CLOCK_PERIOD_WIDTH,
@@ -16,6 +17,7 @@ import {
 const CENTER = DIAL_SIZE / 2;
 
 export const styles = StyleSheet.create({
+  fillArea: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   rangeRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 48, paddingHorizontal: 16 },
   rangeSeparator: { height: StyleSheet.hairlineWidth, marginStart: 16 },
   rangePill: { paddingHorizontal: 12, paddingVertical: 6 },
@@ -80,3 +82,30 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+/** The clock, dial, fields, period toggle, panels and range ends in the theme's colours and spacing. */
+export const themed = createStyles((t) => ({
+  clock: { gap: t.spacing.lg, paddingVertical: t.spacing.md },
+  gapXs: { gap: t.spacing.xs },
+  gapSm: { gap: t.spacing.sm },
+  field: { borderRadius: t.radius.sm, backgroundColor: t.colors.surface, borderColor: 'transparent' },
+  fieldOn: { borderColor: t.colors.primary },
+  fieldButton: { borderRadius: t.radius.sm, backgroundColor: t.colors.surface },
+  fieldButtonOn: { backgroundColor: t.colors.primaryMuted },
+  halfOn: { backgroundColor: t.colors.primaryMuted },
+  period: { marginStart: t.spacing.sm, borderColor: t.colors.textSecondary, borderRadius: t.radius.sm },
+  dial: { backgroundColor: t.colors.surface },
+  accent: { backgroundColor: t.colors.primary },
+  round: { borderRadius: t.radius.full },
+  iconStroke: { borderColor: t.colors.textSecondary },
+  iconFill: { backgroundColor: t.colors.textSecondary },
+  separator: { backgroundColor: t.colors.border },
+  pill: { backgroundColor: t.colors.surface, borderRadius: t.radius.sm },
+  card: { borderWidth: 1, borderColor: t.colors.border, borderRadius: t.radius.md },
+  cardOn: { borderColor: t.colors.primary },
+  box: { backgroundColor: t.colors.surface, borderRadius: t.radius.sm },
+  boxOn: { backgroundColor: t.colors.primaryMuted },
+  panel: { borderColor: t.colors.border, borderRadius: t.radius.md, backgroundColor: t.colors.background },
+  cell: { borderRadius: t.radius.sm },
+  cellOn: { backgroundColor: t.colors.primary },
+}));

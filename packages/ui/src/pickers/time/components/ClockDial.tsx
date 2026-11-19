@@ -1,8 +1,7 @@
-import { View } from 'react-native';
-
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { View } from '@/core/primitives/View';
 import { useClockDial } from '@/pickers/time/hooks/useClockDial';
-import { styles } from '@/pickers/time/time.styles';
+import { styles, themed } from '@/pickers/time/time.styles';
 import type { ClockDialProps } from '@/pickers/time/time.types';
 import { ClockHeader } from './ClockHeader';
 import { DialFace } from './DialFace';
@@ -12,7 +11,7 @@ import { EntryToggle } from './EntryToggle';
 export const ClockDial = ({ inputOnly = false, date, onValueChange, options, theme, style, testID }: ClockDialProps) => {
   const dial = useClockDial(date, onValueChange, options, theme.animation.duration, inputOnly);
   return (
-    <View style={[styles.clock, { gap: theme.spacing.lg, paddingVertical: theme.spacing.md }, style]} {...ARROW_FOCUS} testID={testID}>
+    <View style={[styles.clock, themed(theme).clock, style]} {...ARROW_FOCUS} testID={testID}>
       <ClockHeader dial={dial} theme={theme} testID={testID} />
       {dial.typing ? null : <DialFace dial={dial} theme={theme} testID={testID ? `${testID}-dial` : undefined} />}
       {inputOnly ? null : <EntryToggle dial={dial} theme={theme} testID={testID} />}

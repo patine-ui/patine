@@ -1,39 +1,40 @@
 import { Fragment } from 'react';
-import { View } from 'react-native';
 
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { InlinePanel } from '@/overlays/sheet/components/InlinePanel';
-import { RANGE_ENDS_DESIGN, RANGE_ENDS_LAYOUT, TIME_RANGE_ACCESSIBILITY_LABEL, TIME_RANGE_ARROW } from '@/pickers/time/time.constants';
-import { styles } from '@/pickers/time/time.styles';
+import { RANGE_ENDS_DESIGN, RANGE_ENDS_LAYOUT, TIME_RANGE_ARROW } from '@/pickers/time/time.constants';
+import { styles, themed } from '@/pickers/time/time.styles';
 import type { RangeEndsProps } from '@/pickers/time/time.types';
 
 type RangeEndItem = RangeEndsProps['items'][number];
 
 /** Start and End as each platform shows them: Calendar's rows on iOS, large time boxes on Material, side-by-side cards on the web. */
 export const RangeEnds = ({ items, active, onSelect, duration, theme, renderPicker, testID }: RangeEndsProps) => {
-  const c = theme.colors;
+  const words = useLabels();
   const layout = RANGE_ENDS_DESIGN[theme.design];
   const radio = (item: RangeEndItem) => ({
     onPress: () => onSelect(item.end),
-    accessibilityRole: 'radio' as const,
-    accessibilityLabel: `${item.label} ${item.time}`,
-    accessibilityState: { checked: item.end === active },
+    role: 'radio' as const,
+    'aria-label': `${item.label} ${item.time}`,
+    'aria-checked': item.end === active,
     testID: testID && `${testID}-${item.end}`,
   });
 
   if (layout === RANGE_ENDS_LAYOUT.rows) {
     return (
-      <View accessibilityRole="radiogroup" accessibilityLabel={TIME_RANGE_ACCESSIBILITY_LABEL} testID={testID}>
+      <View role="radiogroup" aria-label={words.time.range} testID={testID}>
         {items.map((item, index) => (
           <Fragment key={item.end}>
-            {index > 0 ? <View style={[styles.rangeSeparator, { backgroundColor: c.border }]} /> : null}
+            {index > 0 ? <View style={[styles.rangeSeparator, themed(theme).separator]} /> : null}
             <Touchable theme={theme} {...radio(item)} style={styles.rangeRow}>
-              <PickerText theme={theme}>{item.label}</PickerText>
-              <View style={[styles.rangePill, { backgroundColor: c.surface, borderRadius: theme.radius.sm }]}>
-                <PickerText theme={theme} color={item.end === active ? 'primary' : 'text'}>
+              <Text theme={theme}>{item.label}</Text>
+              <View style={[styles.rangePill, themed(theme).pill]}>
+                <Text theme={theme} color={item.end === active ? 'primary' : 'text'}>
                   {item.time}
-                </PickerText>
+                </Text>
               </View>
             </Touchable>
             <InlinePanel visible={item.end === active} theme={theme}>
@@ -49,42 +50,37 @@ export const RangeEnds = ({ items, active, onSelect, duration, theme, renderPick
   const box = (item: RangeEndItem) => {
     const on = item.end === active;
     const label = (
-      <PickerText theme={theme} size="xs" weight="medium" color={on ? 'primary' : 'textSecondary'}>
+      <Text theme={theme} size="xs" weight="medium" color={on ? 'primary' : 'textSecondary'}>
         {item.label}
-      </PickerText>
+      </Text>
     );
     return (
-      <View style={{ gap: theme.spacing.xs }}>
+      <View style={themed(theme).gapXs}>
         {web ? null : label}
         <Touchable
           theme={theme}
           {...radio(item)}
-          style={[
-            styles.rangeBox,
-            web
-              ? { borderWidth: 1, borderColor: on ? c.primary : c.border, borderRadius: theme.radius.md }
-              : { backgroundColor: on ? c.primaryMuted : c.surface, borderRadius: theme.radius.sm },
-          ]}
+          style={[styles.rangeBox, web ? [themed(theme).card, on && themed(theme).cardOn] : [themed(theme).box, on && themed(theme).boxOn]]}
         >
           {web ? label : null}
-          <PickerText theme={theme} size={web ? 'md' : 'lg'} weight="medium" color={on && !web ? 'primary' : 'text'}>
+          <Text theme={theme} size={web ? 'md' : 'lg'} weight="medium" color={on && !web ? 'primary' : 'text'}>
             {item.time}
-          </PickerText>
+          </Text>
         </Touchable>
       </View>
     );
   };
   return (
     <View>
-      <View accessibilityRole="radiogroup" accessibilityLabel={TIME_RANGE_ACCESSIBILITY_LABEL} style={styles.rangeBoxes} testID={testID}>
+      <View role="radiogroup" aria-label={words.time.range} style={styles.rangeBoxes} testID={testID}>
         {box(items[0])}
         <View style={styles.rangeArrow}>
-          <PickerText theme={theme} color="textSecondary">
+          <Text theme={theme} color="textSecondary">
             {TIME_RANGE_ARROW}
-          </PickerText>
-          <PickerText theme={theme} size="xs" color="textSecondary">
+          </Text>
+          <Text theme={theme} size="xs" color="textSecondary">
             {duration}
-          </PickerText>
+          </Text>
         </View>
         {box(items[1])}
       </View>

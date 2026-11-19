@@ -67,9 +67,6 @@ export const TIME_RANGE_END = {
   end: 'end',
 } as const;
 
-export const DEFAULT_START_LABEL = 'Start';
-export const DEFAULT_END_LABEL = 'End';
-export const TIME_RANGE_ACCESSIBILITY_LABEL = 'Start or end';
 export const TIME_RANGE_SEPARATOR = ' – ';
 export const TIME_RANGE_ARROW = '→';
 /** After the end of a range that runs into the next day. */
@@ -95,8 +92,6 @@ export const DEGREES_PER_HOUR = 30;
 export const DEGREES_PER_MINUTE = 6;
 export const CLOCK_FIELD = { width: 88, height: 72, fontSize: 44 } as const;
 export const CLOCK_PERIOD_WIDTH = 52;
-export const CLOCK_MODE_LABEL = { hour: 'Hour', minute: 'Minute' } as const;
-export const ENTRY_TOGGLE_LABEL = { toKeyboard: 'Type the time', toDial: 'Pick the time on the dial' } as const;
 export const ENTRY_ICON_SIZE = 22;
 export const ENTRY_TOGGLE_SIZE = 40;
 

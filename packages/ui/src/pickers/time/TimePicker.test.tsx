@@ -65,7 +65,7 @@ describe('TimePicker', () => {
           testID="time"
         />
       );
-      expect(screen.getByTestId('time-hour').props.accessibilityValue.text).toBe('9');
+      expect(screen.getByTestId('time-hour').props['aria-valuetext']).toBe('9');
       await tap(128 + 104, 128);
       expect(hhmm(onValueChange.mock.calls[0][0])).toBe('3:00');
       await rerender(
@@ -78,7 +78,7 @@ describe('TimePicker', () => {
           testID="time"
         />
       );
-      expect(screen.getByTestId('time-dial').props.accessibilityLabel).toBe('Minute');
+      expect(screen.getByTestId('time-dial').props['aria-label']).toBe('Minute');
       await tap(128, 128 + 104);
       expect(onValueChange).toHaveBeenCalledTimes(2);
       expect(hhmm(onValueChange.mock.calls[1][0])).toBe('3:30');
@@ -141,15 +141,15 @@ describe('TimePicker', () => {
 
   it('shows 24h columns with padded hours', async () => {
     await render(<TimePicker design="ios" value={at(9, 5)} format="24h" loop={false} testID="time" />);
-    expect(screen.getByTestId('time-hour').props.accessibilityValue.text).toBe('09');
-    expect(screen.getByTestId('time-minute').props.accessibilityValue.text).toBe('05');
+    expect(screen.getByTestId('time-hour').props['aria-valuetext']).toBe('09');
+    expect(screen.getByTestId('time-minute').props['aria-valuetext']).toBe('05');
     expect(screen.queryByTestId('time-period')).toBeNull();
   });
 
   it('shows 12h columns with AM/PM', async () => {
     await render(<TimePicker design="ios" value={at(14, 30)} format="12h" dayPeriodLabels={['AM', 'PM']} loop={false} testID="time" />);
-    expect(screen.getByTestId('time-hour').props.accessibilityValue.text).toBe('2');
-    expect(screen.getByTestId('time-period').props.accessibilityValue.text).toBe('PM');
+    expect(screen.getByTestId('time-hour').props['aria-valuetext']).toBe('2');
+    expect(screen.getByTestId('time-period').props['aria-valuetext']).toBe('PM');
   });
 
   it('commits a new minute and keeps the date', async () => {

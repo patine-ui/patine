@@ -1,39 +1,30 @@
-import { FlatList, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { VirtualList } from '@/core/primitives/VirtualList';
 import { useTimePanelColumn } from '@/pickers/time/hooks/useTimePanelColumn';
-import { TIME_CELL_HEIGHT } from '@/pickers/time/time.constants';
-import { styles } from '@/pickers/time/time.styles';
+import { styles, themed } from '@/pickers/time/time.styles';
 import type { TimePanelColumnProps } from '@/pickers/time/time.types';
-import { getPanelCellLabel } from '@/pickers/time/time.utils';
+import { getColumnHeight, getPanelCellLabel } from '@/pickers/time/time.utils';
 
 /** One column of a time panel: hours, minutes, seconds or AM/PM, each a cell to click, under its unit when it has one. */
 export const TimePanelColumn = ({ column, visibleRows, theme }: TimePanelColumnProps) => {
-  const c = theme.colors;
   const list = useTimePanelColumn(column, visibleRows);
   return (
     <View style={styles.panelColumn}>
       {column.suffix ? (
-        <PickerText
-          theme={theme}
-          size="sm"
-          color="textSecondary"
-          style={styles.panelHeader}
-          accessibilityElementsHidden
-          importantForAccessibility="no"
-        >
+        <Text theme={theme} size="sm" color="textSecondary" style={styles.panelHeader} aria-hidden>
           {column.suffix}
-        </PickerText>
+        </Text>
       ) : null}
-      <FlatList
+      <VirtualList
         ref={list.ref}
         data={list.items}
         keyExtractor={(item) => String(item.value)}
         getItemLayout={list.getItemLayout}
         initialScrollIndex={list.initialIndex}
         showsVerticalScrollIndicator={false}
-        style={[styles.panelList, { height: TIME_CELL_HEIGHT * visibleRows }]}
+        style={[styles.panelList, getColumnHeight(visibleRows)]}
         testID={column.testID}
         renderItem={({ item }) => {
           const selected = item.value === list.selected;
@@ -42,18 +33,15 @@ export const TimePanelColumn = ({ column, visibleRows, theme }: TimePanelColumnP
               theme={theme}
               disabled={item.disabled}
               onPress={() => column.onValueChange(item.value)}
-              accessibilityRole="button"
-              accessibilityLabel={getPanelCellLabel(column, item.label)}
-              accessibilityState={{ selected, disabled: item.disabled }}
-              style={[styles.cell, { borderRadius: theme.radius.sm, backgroundColor: selected ? c.primary : 'transparent' }]}
+              role="button"
+              aria-label={getPanelCellLabel(column, item.label)}
+              aria-selected={selected}
+              aria-disabled={item.disabled}
+              style={[styles.cell, themed(theme).cell, selected && themed(theme).cellOn]}
             >
-              <PickerText
-                theme={theme}
-                weight={selected ? 'bold' : 'regular'}
-                color={selected ? 'onPrimary' : item.disabled ? 'textDisabled' : 'text'}
-              >
+              <Text theme={theme} weight={selected ? 'bold' : 'regular'} color={selected ? 'onPrimary' : 'text'}>
                 {item.label}
-              </PickerText>
+              </Text>
             </Touchable>
           );
         }}

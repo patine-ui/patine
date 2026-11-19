@@ -1,23 +1,24 @@
-import { TextInput, View } from 'react-native';
-
-import { textStyle } from '@/core';
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { CLOCK_MODE_LABEL } from '@/pickers/time/time.constants';
-import { styles } from '@/pickers/time/time.styles';
+import { Input } from '@/core/primitives/Input';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
+import { styles, themed } from '@/pickers/time/time.styles';
 import type { ClockFieldProps } from '@/pickers/time/time.types';
 import { NUMERIC_KEYBOARD_TYPE } from '@/pickers/wheel/wheel.constants';
 
 /** The hours or the minutes in large type: a box that points the dial at them, or a field to type them into. */
 export const ClockField = ({ field, dial, theme, testID }: ClockFieldProps) => {
-  const c = theme.colors;
+  const words = useLabels();
   const active = dial.mode === field;
   const id = testID ? `${testID}-${field}` : undefined;
 
   if (dial.typing) {
     return (
-      <View style={[styles.fieldColumn, { gap: theme.spacing.xs }]}>
-        <TextInput
+      <View style={[styles.fieldColumn, themed(theme).gapXs]}>
+        <Input
+          theme={theme}
+          size="xl"
           value={dial.fieldText(field)}
           onChangeText={(text) => dial.type(field, text)}
           onFocus={() => dial.setMode(field)}
@@ -25,21 +26,13 @@ export const ClockField = ({ field, dial, theme, testID }: ClockFieldProps) => {
           keyboardType={NUMERIC_KEYBOARD_TYPE}
           maxLength={2}
           selectTextOnFocus
-          accessibilityLabel={CLOCK_MODE_LABEL[field]}
-          style={[
-            textStyle(theme, 'xl'),
-            styles.fieldInput,
-            {
-              borderRadius: theme.radius.sm,
-              backgroundColor: c.surface,
-              borderColor: active ? c.primary : 'transparent',
-            },
-          ]}
+          aria-label={words.time[field]}
+          style={[styles.fieldInput, themed(theme).field, active && themed(theme).fieldOn]}
           testID={id}
         />
-        <PickerText theme={theme} size="xs" color="textSecondary">
-          {CLOCK_MODE_LABEL[field]}
-        </PickerText>
+        <Text theme={theme} size="xs" color="textSecondary">
+          {words.time[field]}
+        </Text>
       </View>
     );
   }
@@ -47,16 +40,16 @@ export const ClockField = ({ field, dial, theme, testID }: ClockFieldProps) => {
     <Touchable
       theme={theme}
       onPress={() => dial.setMode(field)}
-      accessibilityRole="button"
-      accessibilityLabel={CLOCK_MODE_LABEL[field]}
-      accessibilityValue={{ text: dial.fieldText(field) }}
-      accessibilityState={{ selected: active }}
-      style={[styles.field, { borderRadius: theme.radius.sm, backgroundColor: active ? c.primaryMuted : c.surface }]}
+      role="button"
+      aria-label={words.time[field]}
+      aria-valuetext={dial.fieldText(field)}
+      aria-selected={active}
+      style={[styles.field, themed(theme).fieldButton, active && themed(theme).fieldButtonOn]}
       testID={id}
     >
-      <PickerText theme={theme} size="xl" color={active ? 'primary' : 'text'} style={styles.fieldText}>
+      <Text theme={theme} size="xl" color={active ? 'primary' : 'text'} style={styles.fieldText}>
         {dial.fieldText(field)}
-      </PickerText>
+      </Text>
     </Touchable>
   );
 };
