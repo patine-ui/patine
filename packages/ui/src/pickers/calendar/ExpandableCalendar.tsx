@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { Animated, View } from 'react-native';
 
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { formatMonthYear, startOfMonth } from '@/core/utils/date.utils';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
 import { CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
 import { styles } from './calendar.styles';
 import type { ExpandableCalendarProps } from './calendar.types';
@@ -83,7 +83,7 @@ export const ExpandableCalendar = (props: ExpandableCalendarProps) => {
       {showHeader ? (
         <CalendarHeader
           label={title}
-          accessibilityLabel={title}
+          spokenLabel={title}
           view={CALENDAR_VIEW.days}
           enableQuickJump={false}
           isArrowDisabled={nav.isArrowDisabled}
@@ -97,9 +97,9 @@ export const ExpandableCalendar = (props: ExpandableCalendarProps) => {
       ) : null}
       <View {...(enableSwipe ? expansion.panHandlers : {})}>
         {showWeekdays ? <WeekdayRow weekdays={weekdays} theme={theme} slots={slots} /> : null}
-        <Animated.View style={[styles.expandClip, expansion.clipStyle]}>
-          <Animated.View style={expansion.gridStyle}>
-            <Animated.View style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
+        <AnimatedView style={[styles.expandClip, expansion.clipStyle]}>
+          <AnimatedView style={expansion.gridStyle}>
+            <AnimatedView style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
               <DayGrid
                 weeks={weeks}
                 weekdays={weekdays}
@@ -113,9 +113,9 @@ export const ExpandableCalendar = (props: ExpandableCalendarProps) => {
                 theme={theme}
                 slots={slots}
               />
-            </Animated.View>
-          </Animated.View>
-        </Animated.View>
+            </AnimatedView>
+          </AnimatedView>
+        </AnimatedView>
         <ExpandHandle expanded={expanded} onPress={() => setExpanded(!expanded)} theme={theme} slots={slots} />
       </View>
     </View>

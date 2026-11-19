@@ -1,5 +1,7 @@
 import type { Theme } from '@/core';
 import { SWIPE } from '@/core/core.constants';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
+import type { Labels } from '@/core/theme/labels.types';
 import {
   addDays,
   addMonths,
@@ -12,6 +14,7 @@ import {
   startOfMonth,
   toDateKey,
 } from '@/core/utils/date.utils';
+import { clamp01 } from '@/core/utils/track.utils';
 import {
   ARROW_DIRECTION,
   CALENDAR_MODE,
@@ -24,7 +27,6 @@ import {
   EXPAND_DRAG_COMMIT,
   MAX_DAY_SIZE,
   QUICK_GRID_COLUMNS,
-  RANGE_PRESET_LABELS,
   TODAY_MARK,
   WEEKDAY_ROW_HEIGHT,
   YEARS_PER_PAGE,
@@ -79,16 +81,16 @@ export const nextRange = (range: DateRange, day: Date, rules: RangeRules, isDisa
 };
 
 /** Today, yesterday, the last 7 and 30 days, this month so far and last month, counted back from `today`. */
-export const getRangePresets = (today = new Date()): DateRangePreset[] => {
+export const getRangePresets = (today = new Date(), words: Labels['calendar'] = DEFAULT_LABELS.calendar): DateRangePreset[] => {
   const day = startOfDay(today);
   const month = startOfMonth(day);
   return [
-    { label: RANGE_PRESET_LABELS.today, start: day, end: day },
-    { label: RANGE_PRESET_LABELS.yesterday, start: addDays(day, -1), end: addDays(day, -1) },
-    { label: RANGE_PRESET_LABELS.last7Days, start: addDays(day, -6), end: day },
-    { label: RANGE_PRESET_LABELS.last30Days, start: addDays(day, -29), end: day },
-    { label: RANGE_PRESET_LABELS.thisMonth, start: month, end: day },
-    { label: RANGE_PRESET_LABELS.lastMonth, start: addMonths(month, -1), end: addDays(month, -1) },
+    { label: words.today, start: day, end: day },
+    { label: words.yesterday, start: addDays(day, -1), end: addDays(day, -1) },
+    { label: words.last7Days, start: addDays(day, -6), end: day },
+    { label: words.last30Days, start: addDays(day, -29), end: day },
+    { label: words.thisMonth, start: month, end: day },
+    { label: words.lastMonth, start: addMonths(month, -1), end: addDays(month, -1) },
   ];
 };
 
@@ -333,10 +335,38 @@ export const getWeekRow = (grid: Date[][], weekStart: Date) =>
   );
 
 /** How open a month is while dragged: where the drag started, moved by `dy` over the height it opens by. */
-export const getDragProgress = (from: number, dy: number, travel: number) => Math.min(1, Math.max(0, from + (travel ? dy / travel : 0)));
+export const getDragProgress = (from: number, dy: number, travel: number) => clamp01(from + (travel ? dy / travel : 0));
 
 /** Where a drag lands: the way it was flung, else the other end once dragged past `EXPAND_DRAG_COMMIT` of the way from `from`. */
 export const shouldExpand = (progress: number, vy: number, from: number) => {
   if (Math.abs(vy) > SWIPE.minVelocity) return vy > 0;
   return from < 0.5 ? progress > EXPAND_DRAG_COMMIT : progress > 1 - EXPAND_DRAG_COMMIT;
 };
+
+/** A day cell's row height. */
+export const getCellHeight = (height: number) => ({ height });
+
+/** The range band behind a day, as tall as its circle and centred in the row. */
+export const getBandBox = (height: number, size: number) => ({
+  top: (height - size) / 2,
+  height: size,
+});
+
+/** A day's circle (or rounded square). */
+export const getDayBox = (size: number, radius: number) => ({
+  width: size,
+  height: size,
+  borderRadius: radius,
+});
+
+/** A day number's colour, struck through when it can't be picked (and isn't just outside the month). */
+export const getDayTextStyle = (state: DayState, colors: Theme['colors'], tinted: boolean) => ({
+  color: getDayTextColor(state, colors, tinted),
+  textDecorationLine: state.disabled && !state.outside ? ('line-through' as const) : ('none' as const),
+});
+
+/** A marking dot in the app's colour. */
+export const getDotColor = (color: string) => ({ backgroundColor: color });
+
+/** The quick grid's height, the days grid's it replaces. */
+export const getGridHeight = (height: number) => ({ height });

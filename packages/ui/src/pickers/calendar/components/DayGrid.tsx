@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-
+import { View } from '@/core/primitives/View';
 import { styles } from '@/pickers/calendar/calendar.styles';
 import type { DayGridProps } from '@/pickers/calendar/calendar.types';
 import { DayCell } from './DayCell';

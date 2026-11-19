@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { Animated, View } from 'react-native';
 
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { formatMonthYear } from '@/core/utils/date.utils';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
 import { CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
 import type { WeekStripProps } from './calendar.types';
 import { getStripWeek, getWeekMonth } from './calendar.utils';
@@ -59,7 +59,7 @@ export const WeekStrip = (props: WeekStripProps) => {
       {showHeader ? (
         <CalendarHeader
           label={title}
-          accessibilityLabel={title}
+          spokenLabel={title}
           view={CALENDAR_VIEW.days}
           enableQuickJump={false}
           isArrowDisabled={nav.isArrowDisabled}
@@ -71,7 +71,7 @@ export const WeekStrip = (props: WeekStripProps) => {
           slots={slots}
         />
       ) : null}
-      <Animated.View style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
+      <AnimatedView style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
         <DayGrid
           weeks={week}
           weekdays={weekdays}
@@ -85,7 +85,7 @@ export const WeekStrip = (props: WeekStripProps) => {
           theme={theme}
           slots={slots}
         />
-      </Animated.View>
+      </AnimatedView>
     </View>
   );
 };

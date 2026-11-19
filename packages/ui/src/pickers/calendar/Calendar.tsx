@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
-import { Animated, View } from 'react-native';
 
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { AnimatedView, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { buildMonthGrid, formatMonthYear, getFirstDayOfWeek, getMonthNames, getWeekdayNames } from '@/core/utils/date.utils';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
 import { CALENDAR_DESIGN, CALENDAR_MODE, CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
 import type { CalendarProps } from './calendar.types';
 import {
@@ -92,70 +92,72 @@ export const Calendar = (props: CalendarProps) => {
   const quickGridHeight = getQuickGridHeight(dayHeight, fixedWeeks, showWeekdays);
 
   return (
-    <View
-      style={[{ backgroundColor: theme.colors.background, paddingVertical: theme.spacing.sm }, style, slots?.container]}
-      {...ARROW_FOCUS}
-      testID={testID}
-    >
-      {range?.presets?.length ? (
-        <RangePresets
-          presets={range.presets}
-          range={selection.range}
-          rules={range}
-          isDisabled={isDisabled}
-          onSelect={selectRange}
-          theme={themeOverride}
-          listProps={range.presetsProps}
-        />
-      ) : null}
-      <CalendarHeader
-        label={getHeaderLabel(view, month, title)}
-        accessibilityLabel={title}
-        view={view}
-        enableQuickJump={enableQuickJump}
-        isArrowDisabled={nav.isArrowDisabled}
-        onTitlePress={nav.cycleView}
-        onArrowPress={nav.onArrowPress}
-        renderArrow={renderArrow}
-        rtl={nav.rtl}
-        theme={theme}
-        slots={slots}
-      />
-      {view === CALENDAR_VIEW.months && (
-        <QuickGrid
-          cells={getMonthCells(month, getMonthNames(locale, 'short'), minDate, maxDate)}
-          height={quickGridHeight}
-          onSelect={nav.pickMonth}
+    <ThemeScope theme={themeOverride}>
+      <View
+        style={[{ backgroundColor: theme.colors.background, paddingVertical: theme.spacing.sm }, style, slots?.container]}
+        {...ARROW_FOCUS}
+        testID={testID}
+      >
+        {range?.presets?.length ? (
+          <RangePresets
+            presets={range.presets}
+            range={selection.range}
+            rules={range}
+            isDisabled={isDisabled}
+            onSelect={selectRange}
+            theme={themeOverride}
+            listProps={range.presetsProps}
+          />
+        ) : null}
+        <CalendarHeader
+          label={getHeaderLabel(view, month, title)}
+          spokenLabel={title}
+          view={view}
+          enableQuickJump={enableQuickJump}
+          isArrowDisabled={nav.isArrowDisabled}
+          onTitlePress={nav.cycleView}
+          onArrowPress={nav.onArrowPress}
+          renderArrow={renderArrow}
+          rtl={nav.rtl}
           theme={theme}
           slots={slots}
         />
-      )}
-      {view === CALENDAR_VIEW.years && (
-        <QuickGrid
-          cells={getYearCells(month, getYearBounds(today, yearRange, minDate, maxDate))}
-          height={quickGridHeight}
-          onSelect={nav.pickYear}
-          theme={theme}
-          slots={slots}
-        />
-      )}
-      {view === CALENDAR_VIEW.days && (
-        <Animated.View style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
-          <DayGrid
-            weeks={weeks}
-            weekdays={weekdays}
-            showWeekdays={showWeekdays}
-            showOutsideDays={showOutsideDays}
-            hasRangeEnd={hasRangeEnd(selection)}
-            dayHeight={dayHeight}
-            locale={locale}
-            renderDay={renderDay}
-            onDayPress={select}
+        {view === CALENDAR_VIEW.months && (
+          <QuickGrid
+            cells={getMonthCells(month, getMonthNames(locale, 'short'), minDate, maxDate)}
+            height={quickGridHeight}
+            onSelect={nav.pickMonth}
             theme={theme}
             slots={slots}
           />
-        </Animated.View>
-      )}
-    </View>
+        )}
+        {view === CALENDAR_VIEW.years && (
+          <QuickGrid
+            cells={getYearCells(month, getYearBounds(today, yearRange, minDate, maxDate))}
+            height={quickGridHeight}
+            onSelect={nav.pickYear}
+            theme={theme}
+            slots={slots}
+          />
+        )}
+        {view === CALENDAR_VIEW.days && (
+          <AnimatedView style={nav.slideStyle} {...(enableSwipe ? nav.panHandlers : {})}>
+            <DayGrid
+              weeks={weeks}
+              weekdays={weekdays}
+              showWeekdays={showWeekdays}
+              showOutsideDays={showOutsideDays}
+              hasRangeEnd={hasRangeEnd(selection)}
+              dayHeight={dayHeight}
+              locale={locale}
+              renderDay={renderDay}
+              onDayPress={select}
+              theme={theme}
+              slots={slots}
+            />
+          </AnimatedView>
+        )}
+      </View>
+    </ThemeScope>
   );
 };

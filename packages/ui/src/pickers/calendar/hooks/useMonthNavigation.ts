@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { I18nManager } from 'react-native';
 
 import { useSlideIn } from '@/core/animation/hooks/useSlideIn';
 import { useSwipe } from '@/core/hooks/useSwipe';
+import { useDirection } from '@/core/theme/ThemeProvider';
 import { addMonths, isSameMonth, startOfMonth, toDateKey } from '@/core/utils/date.utils';
 import { ARROW_DIRECTION, CALENDAR_VIEW, NEXT_VIEW } from '@/pickers/calendar/calendar.constants';
 import type { ArrowDirection, CalendarView } from '@/pickers/calendar/calendar.types';
@@ -27,7 +27,7 @@ export const useMonthNavigation = ({
   onMonthChange,
   animationDuration,
 }: UseMonthNavigationParams) => {
-  const rtl = !!I18nManager.isRTL;
+  const rtl = useDirection() === 'rtl';
   const [month, setMonth] = useState(anchor);
   const [view, setView] = useState<CalendarView>(CALENDAR_VIEW.days);
   const slide = useSlideIn(animationDuration);

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { I18nManager } from 'react-native';
 
 import { useSlideIn } from '@/core/animation/hooks/useSlideIn';
 import { useSwipe } from '@/core/hooks/useSwipe';
+import { useDirection } from '@/core/theme/ThemeProvider';
 import { addDays, isSameDay, toDateKey } from '@/core/utils/date.utils';
 import { ARROW_DIRECTION, DAYS_PER_WEEK } from '@/pickers/calendar/calendar.constants';
 import type { ArrowDirection } from '@/pickers/calendar/calendar.types';
@@ -29,6 +29,7 @@ export const useWeekNavigation = ({
   onWeekChange,
   animationDuration,
 }: UseWeekNavigationParams) => {
+  const rtl = useDirection() === 'rtl';
   const [weekStart, setWeekStart] = useState(() => getWeekStart(anchor, firstDayOfWeek));
   const slide = useSlideIn(animationDuration);
   const canPrev = canGoToWeek(weekStart, -1, minDate, maxDate);
@@ -59,7 +60,7 @@ export const useWeekNavigation = ({
     weekStart,
     /** Shows the week holding `date`, without the slide or `onWeekChange`: for a calendar folding into it. */
     showWeek: (date: Date) => setWeekStart(getWeekStart(date, firstDayOfWeek)),
-    rtl: !!I18nManager.isRTL,
+    rtl: rtl,
     slideStyle: slide.style,
     panHandlers,
     isArrowDisabled: (direction: ArrowDirection) => (direction === ARROW_DIRECTION.prev ? !canPrev : !canNext),

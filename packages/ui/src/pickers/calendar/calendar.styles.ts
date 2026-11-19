@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native';
 
+import { MIN_TOUCH_TARGET } from '@/core/a11y/a11y.constants';
+import { createStyles } from '@/core/theme/theme.utils';
+
 export const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   titleButton: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6, paddingHorizontal: 8 },
@@ -25,5 +28,23 @@ export const styles = StyleSheet.create({
   expandClip: { overflow: 'hidden' },
   expandHandle: { alignItems: 'center', justifyContent: 'center', height: 28 },
   grabber: { width: 36, height: 5, borderRadius: 3 },
-  quickCell: { flex: 1, marginHorizontal: 6, height: 44, alignItems: 'center', justifyContent: 'center' },
+  quickCell: { flex: 1, marginHorizontal: 6, height: MIN_TOUCH_TARGET, alignItems: 'center', justifyContent: 'center' },
 });
+
+/** The calendar's header, grid cells and days in the theme's colours. */
+export const themed = createStyles((t) => ({
+  header: { paddingHorizontal: t.spacing.sm, marginBottom: t.spacing.sm },
+  title: { borderRadius: t.radius.sm },
+  round: { borderRadius: t.radius.full },
+  handle: { backgroundColor: t.colors.handle },
+  quickGrid: { paddingHorizontal: t.spacing.sm },
+  quickOn: { backgroundColor: t.colors.primary },
+  band: { backgroundColor: t.colors.primaryMuted },
+  filled: { backgroundColor: t.colors.primary },
+  tinted: { backgroundColor: t.colors.primaryMuted },
+  todayRing: { borderColor: t.colors.primary },
+  todaySurface: { backgroundColor: t.colors.surface },
+  labelOnFill: { color: t.colors.onPrimary },
+  label: { color: t.colors.textSecondary },
+  dotOnFill: { backgroundColor: t.colors.onPrimary },
+}));

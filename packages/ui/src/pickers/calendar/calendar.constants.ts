@@ -96,11 +96,6 @@ export const DAYS_PER_WEEK = 7;
 /** How far a drag has to open or fold the month, as a fraction of the way, to carry on when let go. */
 export const EXPAND_DRAG_COMMIT = 0.15;
 
-/** The expand handle, read by screen readers. */
-export const EXPAND_LABEL = {
-  expand: 'Show month',
-  collapse: 'Show week',
-} as const;
 export const QUICK_GRID_COLUMNS = 3;
 /** Year grid bounds when neither yearRange nor min/max dates are given. */
 export const DEFAULT_YEAR_SPAN = 100;
@@ -111,14 +106,3 @@ export const ARROW_DIRECTION = {
 } as const;
 
 export const ARROW_DIRECTIONS: readonly ArrowDirection[] = [ARROW_DIRECTION.prev, ARROW_DIRECTION.next];
-export const ARROW_LABELS: Record<ArrowDirection, string> = { prev: 'Previous', next: 'Next' };
-
-export const RANGE_PRESET_LABELS = {
-  today: 'Today',
-  yesterday: 'Yesterday',
-  last7Days: 'Last 7 days',
-  last30Days: 'Last 30 days',
-  thisMonth: 'This month',
-  lastMonth: 'Last month',
-} as const;
-export const RANGE_PRESETS_ACCESSIBILITY_LABEL = 'Date ranges';

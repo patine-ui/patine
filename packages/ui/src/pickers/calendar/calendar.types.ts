@@ -245,7 +245,7 @@ export interface QuickCell {
 
 export interface CalendarHeaderProps {
   label: string;
-  accessibilityLabel: string;
+  spokenLabel: string;
   view: CalendarView;
   enableQuickJump: boolean;
   isArrowDisabled: (direction: ArrowDirection) => boolean;

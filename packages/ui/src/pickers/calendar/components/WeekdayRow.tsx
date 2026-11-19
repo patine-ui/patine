@@ -1,6 +1,5 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
 import { CALENDAR_DESIGN } from '@/pickers/calendar/calendar.constants';
 import { styles } from '@/pickers/calendar/calendar.styles';
 import type { WeekdayRowProps } from '@/pickers/calendar/calendar.types';
@@ -10,7 +9,7 @@ export const WeekdayRow = ({ weekdays, theme, slots }: WeekdayRowProps) => (
   <View style={[styles.week, styles.weekdays, slots?.weekdays]}>
     {weekdays.map((weekday) => (
       <View key={weekday.key} style={styles.cell}>
-        <PickerText
+        <Text
           theme={theme}
           size="xs"
           weight="medium"
@@ -18,7 +17,7 @@ export const WeekdayRow = ({ weekdays, theme, slots }: WeekdayRowProps) => (
           style={[styles.weekdayText, CALENDAR_DESIGN[theme.design].uppercaseWeekdays && styles.uppercase, slots?.weekdayText]}
         >
           {weekday.label}
-        </PickerText>
+        </Text>
       </View>
     ))}
   </View>
