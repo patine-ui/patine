@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from './Alert';
 
 describe('Alert', () => {
   it('announces a destructive alert and colors its title', async () => {
-    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions');
     await render(
       <Alert variant="destructive" testID="alert">
         <AlertTitle>Payment failed</AlertTitle>
@@ -15,12 +15,12 @@ describe('Alert', () => {
       </Alert>
     );
     expect(screen.getByTestId('alert').props.role).toBe('alert');
-    expect(announce).toHaveBeenCalledWith('Payment failed. Check your card details.');
+    expect(announce).toHaveBeenCalledWith('Payment failed. Check your card details.', { queue: true });
     expect(StyleSheet.flatten(screen.getByText('Payment failed').props.style).color).toBe(lightTheme.colors.danger);
   });
 
   it('stays quiet by default', async () => {
-    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility').mockClear();
+    const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions').mockClear();
     await render(
       <Alert testID="alert">
         <AlertTitle>Heads up</AlertTitle>

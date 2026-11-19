@@ -1,14 +1,13 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
 
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { Text } from '@/foundations/text/Text';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import type { TextProps } from '@/foundations/text/text.types';
-import { AlertContext, useAlertAccent, useAlertText } from './AlertContext';
+import { AlertContext, useAlertText, useAlertTitleStyle } from './AlertContext';
 import { ALERT_VARIANT } from './alert.constants';
-import { styles } from './alert.styles';
+import { styles, themed } from './alert.styles';
 import type { AlertProps } from './alert.types';
-import { getAlertAccent } from './alert.utils';
 import { useAlertAnnouncement } from './hooks/useAlertAnnouncement';
 
 /**
@@ -27,51 +26,44 @@ export const Alert = ({
   children,
   ...rest
 }: AlertProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
-  const accent = getAlertAccent(theme.colors, variant);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
+  const sheet = themed(theme);
+  const titleStyle = sheet[`${variant}Title`];
   const announce = live ?? variant === ALERT_VARIANT.destructive;
   const register = useAlertAnnouncement(announce);
   const ctx = useMemo(
     () => ({
-      accent,
+      titleStyle,
       register,
     }),
-    [accent, register]
+    [titleStyle, register]
   );
   return (
-    <AlertContext.Provider value={ctx}>
-      <View
-        role={announce ? 'alert' : undefined}
-        aria-live={announce ? 'assertive' : undefined}
-        style={[
-          styles.alert,
-          {
-            gap: theme.spacing.md,
-            padding: theme.spacing.lg,
-            borderRadius: theme.radius.lg,
-            borderColor: variant === ALERT_VARIANT.default ? theme.colors.border : accent,
-            backgroundColor: theme.colors.background,
-          },
-          style,
-        ]}
-        {...rest}
-      >
-        {icon}
-        <View style={styles.body}>
-          {title ? <AlertTitle>{title}</AlertTitle> : null}
-          {description ? <AlertDescription>{description}</AlertDescription> : null}
-          {children}
+    <ThemeScope theme={themeOverride}>
+      <AlertContext.Provider value={ctx}>
+        <View
+          role={announce ? 'alert' : undefined}
+          aria-live={announce ? 'assertive' : undefined}
+          style={[styles.alert, sheet.alert, sheet[variant], style]}
+          {...rest}
+        >
+          {icon}
+          <View style={styles.body}>
+            {title ? <AlertTitle>{title}</AlertTitle> : null}
+            {description ? <AlertDescription>{description}</AlertDescription> : null}
+            {children}
+          </View>
         </View>
-      </View>
-    </AlertContext.Provider>
+      </AlertContext.Provider>
+    </ThemeScope>
   );
 };
 
 /** The alert's first line, in its variant's color. */
 export const AlertTitle = ({ weight = 'medium', style, ...rest }: TextProps) => {
-  const accent = useAlertAccent();
+  const titleStyle = useAlertTitleStyle();
   useAlertText(rest.children);
-  return <Text weight={weight} style={[accent ? { color: accent } : null, style]} {...rest} />;
+  return <Text weight={weight} style={[titleStyle, style]} {...rest} />;
 };
 
 /** The detail under the title. */
