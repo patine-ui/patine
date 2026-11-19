@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { GestureResponderEvent, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { GestureResponderEvent, ViewProps } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { ThemeColor } from '@/foundations/text/text.types';
 import type { LIST_SEPARATOR } from './list.constants';
@@ -15,8 +15,8 @@ export interface ListProps extends ViewProps, ThemableProps {
   footer?: string;
   /** ListItem rows */
   children?: React.ReactNode;
-  /** The box around the rows, for its fill, border and corners */
-  contentStyle?: StyleProp<ViewStyle>;
+  /** Styles for its parts: `content` */
+  styles?: SlotStyles<'content'>;
 }
 
 export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProps {
@@ -38,8 +38,12 @@ export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProp
   disabled?: boolean;
   /** Makes the row a button */
   onPress?: (event: GestureResponderEvent) => void;
-  /** The title's text */
-  titleStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `title` */
+  styles?: SlotStyles<'title'>;
+  /** Where it goes: a real link (`<a href>`) on the web that crawlers follow, opened with `Linking` on iOS and Android. Call `event.preventDefault()` in `onPress` to keep it from opening */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
 }
 
 export interface ListDesign {

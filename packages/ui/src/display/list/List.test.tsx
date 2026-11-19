@@ -13,7 +13,7 @@ describe('List', () => {
         <ListItem title="Email" description="Weekly digest" />
       </List>
     );
-    expect(screen.getByRole('header', { name: 'Notifications' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Notifications' })).toBeTruthy();
     expect(screen.getByText('On')).toBeTruthy();
     expect(screen.getByText('Weekly digest')).toBeTruthy();
     expect(screen.getByText('We only send what you turn on.')).toBeTruthy();
@@ -50,5 +50,16 @@ describe('List', () => {
     );
     expect(screen.getByText('trail')).toBeTruthy();
     expect(StyleSheet.flatten(screen.getByText('A').props.style).color).toBe(lightTheme.colors.text);
+  });
+});
+
+describe('ListItem with href', () => {
+  it('is a link row with a chevron where the design draws one', async () => {
+    await render(
+      <List>
+        <ListItem title="Billing" href="/settings/billing" />
+      </List>
+    );
+    expect(screen.getByRole('link')).toBeTruthy();
   });
 });

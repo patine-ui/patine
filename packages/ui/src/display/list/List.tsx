@@ -1,79 +1,57 @@
 import { Children, createContext, useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
 
 import { ChevronMark } from '@/core/components/ChevronMark';
-import { Touchable } from '@/core/components/Touchable';
-import { DISABLED_OPACITY } from '@/core/core.constants';
-import type { DeepPartial } from '@/core/core.types';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import type { Theme } from '@/core/theme/theme.types';
-import { Text } from '@/foundations/text/Text';
+import { cs } from '@/core/core.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Heading } from '@/foundations/text/Heading';
 import { LIST_DESIGN } from './list.constants';
-import { styles } from './list.styles';
+import { styles, themed } from './list.styles';
 import type { ListItemProps, ListProps } from './list.types';
 import { getSeparatorEdge, showsChevron } from './list.utils';
 
-interface ListRow {
-  first: boolean;
-  /** The List's theme and design, so its rows draw the same */
-  theme?: DeepPartial<Theme>;
-}
-
-const ListRowContext = createContext<ListRow>({ first: true });
+/** Whether a row is the group's first, which draws no separator above it. */
+const ListRowContext = createContext(true);
 
 /**
  * A group of rows, as in a settings screen: an inset grouped table on iOS, full-width rows in Material, an outlined box on
  * the web. Put ListItem rows inside; give it a `title` for a section heading and a `footer` for a note.
  */
-export const List = ({ title, footer, theme: themeProp, design, style, contentStyle, children, ...rest }: ListProps) => {
+export const List = ({ title, footer, theme: themeProp, design, style, styles: slots, children, ...rest }: ListProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = LIST_DESIGN[theme.design];
-  const edge = look.inset ? theme.spacing.lg : 0;
+  const sheet = themed(theme);
   return (
-    <View style={[{ marginHorizontal: edge, gap: theme.spacing.sm }, style]} {...rest}>
-      {title ? (
-        <Text
-          theme={themeOverride}
-          accessibilityRole="header"
-          size={look.headerUppercase ? 'xs' : 'sm'}
-          weight="medium"
-          color={look.headerColor}
-          style={[styles.heading, { paddingHorizontal: theme.spacing.lg }, look.headerUppercase && styles.uppercase]}
-        >
-          {title}
-        </Text>
-      ) : null}
-      <View
-        style={[
-          styles.group,
-          {
-            backgroundColor: theme.colors[look.fill],
-            borderRadius: look.radius ? theme.radius[look.radius] : 0,
-            borderWidth: look.border ? StyleSheet.hairlineWidth : 0,
-            borderColor: theme.colors.border,
-          },
-          contentStyle,
-        ]}
-      >
-        {Children.toArray(children).map((child, index) => (
-          <ListRowContext.Provider
-            // biome-ignore lint/suspicious/noArrayIndexKey: Children.toArray already keyed each child; the index only marks the first.
-            key={index}
-            value={{
-              first: index === 0,
-              theme: themeOverride,
-            }}
+    <ThemeScope theme={themeOverride}>
+      <View style={[sheet.root, style]} {...rest}>
+        {title ? (
+          <Heading
+            level={3}
+            size={look.headerUppercase ? 'xs' : 'sm'}
+            weight="medium"
+            color={look.headerColor}
+            style={[styles.heading, sheet.padded, look.headerUppercase && styles.uppercase]}
           >
-            {child}
-          </ListRowContext.Provider>
-        ))}
+            {title}
+          </Heading>
+        ) : null}
+        <View style={[styles.group, sheet.group, slots?.content]}>
+          {Children.toArray(children).map((child, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Children.toArray already keyed each child; the index only marks the first.
+            <ListRowContext.Provider key={index} value={index === 0}>
+              {child}
+            </ListRowContext.Provider>
+          ))}
+        </View>
+        {footer ? (
+          <Text size="xs" color="textSecondary" style={sheet.padded}>
+            {footer}
+          </Text>
+        ) : null}
       </View>
-      {footer ? (
-        <Text theme={themeOverride} size="xs" color="textSecondary" style={{ paddingHorizontal: theme.spacing.lg }}>
-          {footer}
-        </Text>
-      ) : null}
-    </View>
+    </ThemeScope>
   );
 };
 
@@ -88,70 +66,57 @@ export const ListItem = ({
   destructive = false,
   disabled = false,
   onPress,
+  href,
+  external,
   theme: themeProp,
   design,
   style,
-  titleStyle,
+  styles: slots,
   ...rest
 }: ListItemProps) => {
-  const row = useContext(ListRowContext);
-  const { theme, themeOverride } = useComponentTheme(themeProp ?? row.theme, design);
+  const first = useContext(ListRowContext);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = LIST_DESIGN[theme.design];
-  const separator = getSeparatorEdge(look, row.first);
-  const line = { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.colors.border };
+  const sheet = themed(theme);
+  const separator = getSeparatorEdge(look, first);
   const content = (
     <>
-      {leading ? <View style={{ marginEnd: theme.spacing.md }}>{leading}</View> : null}
-      <View
-        style={[
-          styles.row,
-          {
-            flex: 1,
-            alignSelf: 'stretch',
-            minHeight: look.minHeight,
-            paddingEnd: theme.spacing.lg,
-            paddingVertical: theme.spacing.sm,
-            gap: theme.spacing.sm,
-          },
-          separator === 'content' && line,
-        ]}
-      >
+      {leading ? <View style={sheet.leading}>{leading}</View> : null}
+      <View style={[styles.row, styles.content, sheet.content, separator === 'content' && sheet.line]}>
         <View style={styles.text}>
-          <Text theme={themeOverride} color={destructive ? 'danger' : 'text'} style={titleStyle}>
+          <Text color={destructive ? 'danger' : 'text'} style={slots?.title}>
             {title}
           </Text>
           {description ? (
-            <Text theme={themeOverride} size="sm" color="textSecondary">
+            <Text size="sm" color="textSecondary">
               {description}
             </Text>
           ) : null}
         </View>
-        <View style={[styles.end, { gap: theme.spacing.sm }]}>
+        <View style={[styles.end, sheet.end]}>
           {value ? (
-            <Text theme={themeOverride} color="textSecondary" numberOfLines={1} style={styles.value}>
+            <Text color="textSecondary" numberOfLines={1} style={styles.value}>
               {value}
             </Text>
           ) : null}
           {trailing}
-          {showsChevron(look, !!onPress, showChevron) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
+          {showsChevron(look, !!(onPress || href), showChevron) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
         </View>
       </View>
     </>
   );
-  const rowStyle = [
-    styles.row,
-    { paddingStart: theme.spacing.lg },
-    separator === 'row' && line,
-    disabled && { opacity: DISABLED_OPACITY },
-    style,
-  ];
-  return onPress ? (
-    <Touchable theme={theme} role="button" disabled={disabled} aria-disabled={disabled} onPress={onPress} style={rowStyle} {...rest}>
-      {content}
-    </Touchable>
-  ) : (
-    <View style={rowStyle} {...rest}>
-      {content}
-    </View>
+  const rowStyle = [styles.row, sheet.item, separator === 'row' && sheet.line, style];
+  return (
+    <ThemeScope theme={themeOverride}>
+      {onPress || href ? (
+        <Touchable role="button" disabled={disabled} onPress={onPress} href={href} external={external} style={rowStyle} {...rest}>
+          {content}
+        </Touchable>
+      ) : (
+        <View style={[rowStyle, disabled && cs.disabled]} {...rest}>
+          {content}
+        </View>
+      )}
+    </ThemeScope>
   );
 };
