@@ -1,40 +1,26 @@
-import { Animated, ScrollView, StyleSheet, View } from 'react-native';
-
+import { Scroll } from '@/core/primitives/Scroll';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { useTabs } from './TabsContext';
 import { TABS_DESIGN, TABS_VARIANT } from './tabs.constants';
-import { styles } from './tabs.styles';
+import { styles, themed } from './tabs.styles';
 import type { TabsListProps } from './tabs.types';
 
 /** The row of tabs. It scrolls sideways when the tabs don't fit; vertical tabs stack in a column. */
 export const TabsList = ({ style, children, ...rest }: TabsListProps) => {
   const { theme, variant, vertical, indicator } = useTabs();
   const look = TABS_DESIGN[theme.design];
-  const c = theme.colors;
+  const sheet = themed(theme);
   const pills = variant === TABS_VARIANT.pills;
-  const frame = pills
-    ? [styles.track, { backgroundColor: c[look.track], borderRadius: theme.radius.md }]
-    : { borderColor: c.border, [vertical ? 'borderStartWidth' : 'borderBottomWidth']: StyleSheet.hairlineWidth };
+  const frame = pills ? [styles.track, sheet.track] : vertical ? sheet.lineDown : sheet.lineAcross;
   const content = [pills && styles.trackContent, !vertical && look.fullWidth && styles.fill];
   const bar = pills ? (
-    <Animated.View
-      style={[
-        styles.pill,
-        vertical ? styles.pillVertical : styles.pillHorizontal,
-        { backgroundColor: c.background, borderRadius: theme.radius.sm, boxShadow: theme.shadows.xs },
-        indicator.style,
-      ]}
-    />
+    <AnimatedView style={[styles.pill, vertical ? styles.pillVertical : styles.pillHorizontal, sheet.pill, indicator.style]} />
   ) : (
-    <Animated.View
+    <AnimatedView
       style={[
         styles.underline,
-        vertical
-          ? [styles.underlineVertical, { width: look.indicatorSize }]
-          : [
-              styles.underlineHorizontal,
-              { height: look.indicatorSize, borderTopLeftRadius: look.indicatorSize, borderTopRightRadius: look.indicatorSize },
-            ],
-        { backgroundColor: c.primary },
+        vertical ? [styles.underlineVertical, sheet.underlineDown] : [styles.underlineHorizontal, sheet.underlineAcross],
+        sheet.underline,
         indicator.style,
       ]}
     />
@@ -54,7 +40,7 @@ export const TabsList = ({ style, children, ...rest }: TabsListProps) => {
     );
   }
   return (
-    <ScrollView
+    <Scroll
       horizontal
       showsHorizontalScrollIndicator={false}
       role="tablist"
@@ -64,6 +50,6 @@ export const TabsList = ({ style, children, ...rest }: TabsListProps) => {
       {...rest}
     >
       {items}
-    </ScrollView>
+    </Scroll>
   );
 };

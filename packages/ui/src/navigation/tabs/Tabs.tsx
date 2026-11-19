@@ -1,13 +1,12 @@
-import { View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { useTabsState } from './hooks/useTabsState';
 import { TabsContent } from './TabsContent';
 import { TabsContext } from './TabsContext';
 import { TabsList } from './TabsList';
 import { TabsTrigger } from './TabsTrigger';
 import { TABS_DESIGN, TABS_ORIENTATION } from './tabs.constants';
-import { styles } from './tabs.styles';
+import { styles, themed } from './tabs.styles';
 import type { TabsProps } from './tabs.types';
 import { firstEnabledValue } from './tabs.utils';
 
@@ -28,7 +27,7 @@ export const Tabs = ({
   children,
   ...rest
 }: TabsProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const vertical = orientation === TABS_ORIENTATION.vertical;
   const ctx = useTabsState({
     value,
@@ -39,27 +38,29 @@ export const Tabs = ({
     vertical,
   });
   return (
-    <TabsContext.Provider value={ctx}>
-      <View style={[vertical && styles.row, { gap: theme.spacing.md }, style]} {...rest}>
-        {items ? (
-          <>
-            <TabsList>
+    <ThemeScope theme={themeOverride}>
+      <TabsContext.Provider value={ctx}>
+        <View style={[vertical && styles.row, themed(theme).root, style]} {...rest}>
+          {items ? (
+            <>
+              <TabsList>
+                {items.map((item) => (
+                  <TabsTrigger key={item.value} value={item.value} icon={item.icon} disabled={item.disabled}>
+                    {item.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
               {items.map((item) => (
-                <TabsTrigger key={item.value} value={item.value} icon={item.icon} disabled={item.disabled}>
-                  {item.label}
-                </TabsTrigger>
+                <TabsContent key={item.value} value={item.value}>
+                  {item.content}
+                </TabsContent>
               ))}
-            </TabsList>
-            {items.map((item) => (
-              <TabsContent key={item.value} value={item.value}>
-                {item.content}
-              </TabsContent>
-            ))}
-          </>
-        ) : (
-          children
-        )}
-      </View>
-    </TabsContext.Provider>
+            </>
+          ) : (
+            children
+          )}
+        </View>
+      </TabsContext.Provider>
+    </ThemeScope>
   );
 };

@@ -6,12 +6,11 @@ import type {
   LayoutChangeEvent,
   PressableProps,
   StyleProp,
-  TextStyle,
   ViewProps,
   ViewStyle,
 } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { INDICATOR_FIT, TABS_ORIENTATION, TABS_VARIANT } from './tabs.constants';
 
@@ -65,8 +64,8 @@ export interface TabsTriggerProps extends Omit<PressableProps, 'children' | 'sty
   children: React.ReactNode;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** A string label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface TabsContentProps extends ViewProps {
@@ -117,7 +116,6 @@ export interface TabsIndicator {
 export interface TabsTriggerState {
   tabs: TabsContextValue;
   ref: React.RefObject<HostInstance | null>;
-  focus: { focusVisible: boolean; onFocus: () => void; onBlur: () => void };
   look: TabsDesign;
   selected: boolean;
   ids: { tab: string; panel: string };

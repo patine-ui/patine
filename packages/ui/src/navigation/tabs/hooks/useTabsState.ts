@@ -1,9 +1,9 @@
 import { useCallback, useId, useRef } from 'react';
 
+import { findNextEnabled } from '@/core/a11y/a11y.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import type { Theme } from '@/core/theme/theme.types';
 import type { TabEntry, TabsContextValue, TabsVariant } from '@/navigation/tabs/tabs.types';
-import { findNextItem } from '@/navigation/tabs/tabs.utils';
 import { useTabsIndicator } from './useTabsIndicator';
 
 interface Params {
@@ -53,12 +53,12 @@ export const useTabsState = ({ value: valueProp, defaultValue, onValueChange, th
     register,
     move: (from, step) =>
       goTo(
-        findNextItem(
+        findNextEnabled(
           items.current,
           items.current.findIndex((item) => item.value === from),
           step
         )
       ),
-    moveToEdge: (last) => goTo(last ? findNextItem(items.current, items.current.length, -1) : findNextItem(items.current, -1, 1)),
+    moveToEdge: (last) => goTo(last ? findNextEnabled(items.current, items.current.length, -1) : findNextEnabled(items.current, -1, 1)),
   };
 };

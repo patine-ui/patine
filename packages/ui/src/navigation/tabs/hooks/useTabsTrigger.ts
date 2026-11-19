@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { HostInstance, LayoutChangeEvent } from 'react-native';
 
-import { KEY } from '@/core/core.constants';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { keyboardProps } from '@/core/utils/keyboard.utils';
+import { KEY } from '@/core/a11y/a11y.constants';
+import { keyboardProps } from '@/core/a11y/keyboard.utils';
 import { useTabs } from '@/navigation/tabs/TabsContext';
 import { INDICATOR_FIT, TABS_DESIGN, TABS_VARIANT } from '@/navigation/tabs/tabs.constants';
 import type { TabEntry, TabLayout, TabsTriggerState } from '@/navigation/tabs/tabs.types';
@@ -13,7 +12,6 @@ import { indicatorBox, tabIds } from '@/navigation/tabs/tabs.utils';
 export const useTabsTrigger = (value: string, disabled: boolean): TabsTriggerState => {
   const tabs = useTabs();
   const ref = useRef<HostInstance>(null);
-  const focus = useFocusVisible();
   const boxes = useRef<{ tab?: TabLayout; content?: TabLayout }>({});
   const look = TABS_DESIGN[tabs.theme.design];
   // Material 3 puts the line under the label only; the pill and vertical bars cover the whole tab.
@@ -35,7 +33,6 @@ export const useTabsTrigger = (value: string, disabled: boolean): TabsTriggerSta
   return {
     tabs,
     ref,
-    focus,
     look,
     selected: tabs.value === value,
     ids: tabIds(tabs.baseId, value),
