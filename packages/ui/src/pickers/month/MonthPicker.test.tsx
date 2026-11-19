@@ -12,7 +12,7 @@ describe('MonthPicker', () => {
     const onValueChange = jest.fn();
     await render(<MonthPicker value={oct2026} onValueChange={onValueChange} locale="en-US" loop={false} design="ios" testID="month" />);
     expect(screen.queryByTestId('month-day')).toBeNull();
-    expect(screen.getByTestId('month-month').props.accessibilityValue.text).toBe('October');
+    expect(screen.getByTestId('month-month').props['aria-valuetext']).toBe('October');
     await fireEvent.scroll(screen.getByTestId('month-month-list'), { nativeEvent: { contentOffset: { y: 2 * 40 } } });
     await act(() => jest.advanceTimersByTime(500));
     expect(onValueChange).toHaveBeenCalledWith(new Date(2026, 2, 1));

@@ -1,5 +1,5 @@
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { clampDate, startOfMonth } from '@/core/utils/date.utils';
 import { DateWheelPicker } from '@/pickers/date/DateWheelPicker';
 import { MonthGrid } from './components/MonthGrid';
@@ -53,23 +53,25 @@ export const MonthPicker = ({
     );
   }
   return (
-    <DateWheelPicker
-      value={startOfMonth(month)}
-      onValueChange={(date) => setMonth(startOfMonth(date))}
-      order={getMonthOrder(locale)}
-      locale={locale}
-      minDate={minDate}
-      maxDate={maxDate}
-      yearRange={yearRange}
-      monthFormat={monthFormat}
-      loop={loop}
-      itemHeight={itemHeight}
-      visibleItems={visibleItems}
-      variant={variant}
-      style={style}
-      styles={styles}
-      theme={themeOverride}
-      testID={testID}
-    />
+    <ThemeScope theme={themeOverride}>
+      <DateWheelPicker
+        value={startOfMonth(month)}
+        onValueChange={(date) => setMonth(startOfMonth(date))}
+        order={getMonthOrder(locale)}
+        locale={locale}
+        minDate={minDate}
+        maxDate={maxDate}
+        yearRange={yearRange}
+        monthFormat={monthFormat}
+        loop={loop}
+        itemHeight={itemHeight}
+        visibleItems={visibleItems}
+        variant={variant}
+        style={style}
+        styles={styles}
+        theme={themeOverride}
+        testID={testID}
+      />
+    </ThemeScope>
   );
 };
