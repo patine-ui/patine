@@ -1,8 +1,8 @@
 import { ICON_POSITION } from '@/core/core.constants';
-import { coreStyles } from '@/core/core.styles';
 import type { DisclosureLabelProps } from '@/core/core.types';
+import { Text } from '@/core/primitives/Text';
+import { styles } from './components.styles';
 import { DisclosureIcon } from './DisclosureIcon';
-import { PickerText } from './PickerText';
 
 /** A disclosure trigger's inside: the label, with its icon before or after it (or none), as the design or the options say. */
 export const DisclosureLabel = ({ open, theme, look, options, children, labelStyle }: DisclosureLabelProps) => {
@@ -15,9 +15,9 @@ export const DisclosureLabel = ({ open, theme, look, options, children, labelSty
     <>
       {iconPosition === ICON_POSITION.start ? icon : null}
       {typeof children === 'string' || typeof children === 'number' ? (
-        <PickerText theme={theme} weight={look.labelWeight} style={[coreStyles.disclosureLabel, labelStyle]}>
+        <Text theme={theme} weight={look.labelWeight} style={[styles.disclosureLabel, labelStyle]}>
           {children}
-        </PickerText>
+        </Text>
       ) : (
         children
       )}

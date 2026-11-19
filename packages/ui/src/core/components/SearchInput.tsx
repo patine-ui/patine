@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
 
-import { HOVER_FILL_SPREAD, PLATFORM, SEARCH_DESIGN, SEARCH_ICON_SIZE } from '@/core/core.constants';
-import { coreStyles } from '@/core/core.styles';
+import { useFocus } from '@/core/a11y/hooks/useFocus';
+import { SEARCH_FIELD_ARROWS } from '@/core/a11y/keyboard.utils';
+import { PLATFORM, SEARCH_DESIGN } from '@/core/core.constants';
 import type { SearchInputProps } from '@/core/core.types';
-import { useFocus } from '@/core/hooks/useFocus';
+import { Input } from '@/core/primitives/Input';
+import { View } from '@/core/primitives/View';
 import { usePlatform } from '@/core/theme/ThemeProvider';
-import { textStyle } from '@/core/theme/theme.utils';
-import { SEARCH_FIELD_ARROWS } from '@/core/utils/keyboard.utils';
+import { styles as shared, themed } from './components.styles';
 import { SearchIcon } from './SearchIcon';
 
 /** A search field drawn as the design's own: the iOS search bar, Material's pill, or an outlined web input. */
@@ -27,21 +27,21 @@ export const SearchInput = ({
   const platform = usePlatform();
   const design = SEARCH_DESIGN[theme.design];
   const ring = focused && (design.focusRing || platform === PLATFORM.web);
-  const iconStart = theme.spacing[design.iconInset];
+  const sheet = themed(theme);
   return (
-    <View style={[styles.container, containerStyle]}>
-      <TextInput
+    <View style={[shared.searchContainer, containerStyle]}>
+      <Input
+        theme={theme}
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.textSecondary}
         autoFocus={autoFocus}
         autoCorrect={false}
         autoCapitalize="none"
         clearButtonMode="while-editing"
-        accessibilityLabel={placeholder}
+        aria-label={placeholder}
         {...SEARCH_FIELD_ARROWS}
         {...inputProps}
         onFocus={(e) => {
@@ -52,36 +52,12 @@ export const SearchInput = ({
           onBlur();
           inputProps?.onBlur?.(e);
         }}
-        style={[
-          textStyle(theme, 'md'),
-          styles.input,
-          coreStyles.noOutline,
-          {
-            height: design.height,
-            backgroundColor: design.outlined ? theme.colors.background : theme.colors.surface,
-            borderColor: ring ? theme.colors.primary : design.outlined ? theme.colors.border : 'transparent',
-            borderRadius: theme.radius[design.radius],
-            paddingStart: iconStart + SEARCH_ICON_SIZE + theme.spacing.sm,
-            paddingEnd: theme.spacing.md,
-            boxShadow: ring
-              ? `0 0 0 1px ${theme.colors.primary}`
-              : hovered && !focused
-                ? `inset 0 0 0 ${HOVER_FILL_SPREAD}px ${theme.colors.hover}`
-                : undefined,
-          },
-          style,
-        ]}
+        style={[shared.searchInput, sheet.search, ring ? sheet.searchRing : hovered && !focused && sheet.searchHover, style]}
       />
-      <View pointerEvents="none" style={[styles.icon, { start: iconStart }]}>
+      <View pointerEvents="none" style={[shared.searchIconBox, sheet.searchIcon]}>
         <SearchIcon color={theme.colors.textSecondary} />
       </View>
       {children}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { justifyContent: 'center' },
-  input: { borderWidth: 1 },
-  icon: { position: 'absolute' },
-});

@@ -10,13 +10,13 @@ import type {
   PressableStateCallbackType,
   StyleProp,
   TextInputProps,
-  TextProps,
   TextStyle,
   ViewStyle,
 } from 'react-native';
 
-import type { CONTROL_POSITION, DIRECTION, ICON_POSITION, KEY, PICKER_DISPLAY, PRESS_FEEDBACK } from './core.constants';
-import type { DesignPreference, TextSize, TextWeight, Theme } from './theme/theme.types';
+import type { DIRECTION, KEY } from '@/core/a11y/a11y.constants';
+import type { CONTROL_POSITION, ICON_POSITION, PICKER_DISPLAY, PRESS_FEEDBACK } from './core.constants';
+import type { DesignPreference, TextWeight, Theme } from './theme/theme.types';
 
 // React Native 0.88's types can't be named from outside the package, so a hook returning them couldn't emit its
 // declaration. These are the same types under names of our own.
@@ -188,16 +188,30 @@ export interface TouchFeedbackState {
   feedback: Omit<TouchFeedbackProps, 'borderRadius'>;
 }
 
-export type TouchableProps = Omit<PressableProps, 'style' | 'children'> & {
-  theme: Theme;
+/** Pressable's state, plus whether keyboard focus is on it (the ring is showing). */
+export type TouchableState = PressableStateCallbackType & { focusVisible: boolean };
+
+export type TouchableProps = Omit<PressableProps, 'style' | 'children' | 'role'> & {
+  /** A theme override; leave it out to use the one in scope */
+  theme?: DeepPartial<Theme>;
+  /** What the control is to a screen reader: `button`, `link`, `tab`, `checkbox`… Required */
+  role: NonNullable<PressableProps['role']>;
   /** The pressable's view, e.g. to `focus()` it */
   ref?: React.Ref<HostInstance>;
   /** Show press feedback: a ripple from the touch point, or a dim while held, as the design does it. Default: true */
   ripple?: boolean;
   /** Shrink a little while held and spring back on release, as buttons do in brand, iOS and the web (not Material). Default: false */
   pressScale?: boolean;
-  style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
-  children?: React.ReactNode | ((state: PressableStateCallbackType) => React.ReactNode);
+  /** Draw the theme's ring on keyboard focus; `inset` draws it inside, for controls in a clipping container. Default: true */
+  focusRing?: boolean | 'inset';
+  /** On phones, grow the touch area to 44pt around a smaller `width`/`height` in `style`. Default: true */
+  minTarget?: boolean;
+  /** Where it goes: a real link (`<a href>`) on the web, opened with `Linking` on iOS and Android after `onPress` unless it calls `event.preventDefault()`. Its role becomes `link` */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
+  style?: StyleProp<ViewStyle> | ((state: TouchableState) => StyleProp<ViewStyle>);
+  children?: React.ReactNode | ((state: TouchableState) => React.ReactNode);
 };
 
 /** A page sliding in: its fade and its sideways offset. */
@@ -233,16 +247,6 @@ export interface DragOptions {
   onEnd?: (gesture: PanResponderGestureState) => void;
   /** The gesture is taken away, such as by a scroll view */
   onCancel?: () => void;
-}
-
-export interface PickerTextProps extends TextProps {
-  theme: Theme;
-  /** Default: 'md' */
-  size?: TextSize;
-  /** Default: 'regular' */
-  weight?: TextWeight;
-  /** A theme color. Default: 'text' */
-  color?: keyof Theme['colors'];
 }
 
 export interface TrackPanOptions {

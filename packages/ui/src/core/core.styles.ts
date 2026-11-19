@@ -1,32 +1,51 @@
 import { Platform, StyleSheet } from 'react-native';
 
-import { DISCLOSURE_CHEVRON, MIN_TOUCH_TARGET, SEARCH_ICON_SIZE } from './core.constants';
+import { DISABLED_OPACITY, FOCUS_RING } from '@/core/a11y/a11y.constants';
+import { createStyles } from '@/core/theme/theme.utils';
 
-export const coreStyles = StyleSheet.create({
-  /**
-   * React Native Web renders Text with dir="auto", so each label aligns by its own script (Hebrew right, English left).
-   * ponytail: pinned left because RN Web has no RTL layout flag; RTL web apps override it through the slot styles.
-   */
-  startAligned: Platform.select({ web: { textAlign: 'left' }, default: {} }),
+/** Common static styles: a style goes here once three or more folders use it. */
+export const cs = StyleSheet.create({
+  row: { flexDirection: 'row' },
+  rowReverse: { flexDirection: 'row-reverse' },
+  column: { flexDirection: 'column' },
+  rowCenter: { flexDirection: 'row', alignItems: 'center' },
+  between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  center: { alignItems: 'center', justifyContent: 'center' },
+  flex1: { flex: 1 },
+  grow: { flexGrow: 1 },
+  shrink: { flexShrink: 1 },
+  wrap: { flexWrap: 'wrap' },
+  fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
+  clip: { overflow: 'hidden' },
   /** Drops the browser's focus ring; inputs show focus with a theme-colored border instead. */
   noOutline: Platform.select({ web: { outlineStyle: 'solid', outlineWidth: 0 }, default: {} }),
-  clip: { overflow: 'hidden' },
-  searchIcon: { width: SEARCH_ICON_SIZE, height: SEARCH_ICON_SIZE },
-  searchLens: { width: 11, height: 11, borderRadius: 6, borderWidth: 1.6 },
-  searchHandle: { position: 'absolute', left: 10.4, top: 8.7, width: 1.6, height: 5, borderRadius: 1, transform: [{ rotate: '-45deg' }] },
-  ripple: { position: 'absolute' },
-  choiceRow: { flexDirection: 'row', alignItems: 'center', minHeight: MIN_TOUCH_TARGET },
-  choiceRowReverse: { flexDirection: 'row-reverse', justifyContent: 'space-between' },
-  choiceText: { flexShrink: 1, gap: 2 },
-  disclosureLabel: { flex: 1 },
-  disclosureIcon: { minWidth: 20, minHeight: 20, alignItems: 'center', justifyContent: 'center' },
-  /** Two sides of a square turned 45°: a chevron pointing down, nudged up to sit centred. */
-  disclosureChevron: {
-    width: DISCLOSURE_CHEVRON.size,
-    height: DISCLOSURE_CHEVRON.size,
-    borderRightWidth: DISCLOSURE_CHEVRON.stroke,
-    borderBottomWidth: DISCLOSURE_CHEVRON.stroke,
-    marginTop: -DISCLOSURE_CHEVRON.size / 2,
-    transform: [{ rotate: '45deg' }],
-  },
+  disabled: { opacity: DISABLED_OPACITY },
+  /** The focus ring drawn inside the control, for controls in a container that clips. */
+  insetRing: { outlineOffset: -FOCUS_RING.width },
 });
+
+/** Common theme styles: the spacing scale as gaps, and hairline dividers in the theme's border color. */
+export const commonStyles = createStyles((t) => ({
+  gapXs: { gap: t.spacing.xs },
+  gapSm: { gap: t.spacing.sm },
+  gapMd: { gap: t.spacing.md },
+  gapLg: { gap: t.spacing.lg },
+  gapXl: { gap: t.spacing.xl },
+  hairline: { height: StyleSheet.hairlineWidth, backgroundColor: t.colors.border },
+  hairlineTop: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.colors.border },
+  hairlineBottom: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: t.colors.border },
+}));
+
+/**
+ * Text aligned to the start of the line on the web, by `useDirection()`: React Native Web renders Text with dir="auto", so
+ * each label would otherwise align by its own script (Hebrew right, English left). Native already aligns to the start.
+ */
+export const startAlign = StyleSheet.create({
+  ltr: Platform.select({ web: { textAlign: 'left' }, default: {} }),
+  rtl: Platform.select({ web: { textAlign: 'right' }, default: {} }),
+});
+
+/** Each theme color as a text color: `colorStyles(theme).primary`. */
+export const colorStyles = createStyles((t) =>
+  Object.fromEntries(Object.entries(t.colors).map(([name, color]) => [name, { color: String(color) }]))
+);

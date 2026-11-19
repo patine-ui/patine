@@ -1,12 +1,8 @@
-import { View } from 'react-native';
-
-import { DISABLED_OPACITY } from '@/core/core.constants';
-import { coreStyles } from '@/core/core.styles';
 import type { ChoiceRowProps } from '@/core/core.types';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { focusOutline } from '@/core/utils/focus.utils';
-import { PickerText } from './PickerText';
-import { Touchable } from './Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { styles, themed } from './components.styles';
 
 /**
  * The row a checkbox, switch or radio sits in: the control and its label, pressable as one, at least 44pt tall,
@@ -23,25 +19,22 @@ export const ChoiceRow = ({
   disabled,
   style,
   labelStyle,
-  onFocus,
-  onBlur,
   ...rest
 }: ChoiceRowProps) => {
-  const focus = useFocusVisible();
   const text =
     label === undefined && description === undefined ? null : (
-      <View style={coreStyles.choiceText}>
+      <View style={styles.choiceText}>
         {typeof label === 'string' ? (
-          <PickerText theme={theme} style={labelStyle}>
+          <Text theme={theme} style={labelStyle}>
             {label}
-          </PickerText>
+          </Text>
         ) : (
           label
         )}
         {typeof description === 'string' ? (
-          <PickerText theme={theme} size="sm" color="textSecondary">
+          <Text theme={theme} size="sm" color="textSecondary">
             {description}
-          </PickerText>
+          </Text>
         ) : (
           description
         )}
@@ -56,32 +49,9 @@ export const ChoiceRow = ({
       aria-label={typeof label === 'string' ? label : undefined}
       accessibilityHint={typeof description === 'string' ? description : undefined}
       aria-checked={checked}
-      aria-disabled={!!disabled}
       disabled={disabled}
-      onFocus={(e) => {
-        focus.onFocus();
-        onFocus?.(e);
-      }}
-      onBlur={(e) => {
-        focus.onBlur();
-        onBlur?.(e);
-      }}
       {...rest}
-      style={[
-        coreStyles.choiceRow,
-        // The hover tint gets room around the text, and the negative margin keeps the label in line with the content around it.
-        {
-          gap: theme.spacing.md,
-          borderRadius: theme.radius.md,
-          paddingHorizontal: theme.spacing.sm,
-          paddingVertical: theme.spacing.xs,
-          marginHorizontal: -theme.spacing.sm,
-        },
-        controlAtEnd && coreStyles.choiceRowReverse,
-        disabled && { opacity: DISABLED_OPACITY },
-        focus.focusVisible && focusOutline(theme.colors.primary),
-        style,
-      ]}
+      style={[styles.choiceRow, themed(theme).choiceRow, controlAtEnd && styles.choiceRowReverse, style]}
     >
       {control}
       {text}

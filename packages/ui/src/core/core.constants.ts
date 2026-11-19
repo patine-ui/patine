@@ -1,6 +1,6 @@
-import { Platform, type PlatformOSType } from 'react-native';
+import { type KeyboardAvoidingViewProps, Platform, type PlatformOSType } from 'react-native';
 
-import type { PressFeedback, SearchDesign, ValueOf } from './core.types';
+import type { PressFeedback, SearchDesign } from './core.types';
 import type { Design } from './theme/theme.types';
 
 /** The `Platform.OS` values pickers tell apart. Anything else (windows, macos) behaves like native. */
@@ -15,6 +15,9 @@ export const SHOWS_SCROLL_INDICATOR = Platform.select({ web: false, default: tru
 
 export const IS_WEB = Platform.OS === PLATFORM.web;
 
+/** iOS lifts a modal's content above the keyboard with padding; Android resizes the window itself. */
+export const KEYBOARD_AVOID_BEHAVIOR: KeyboardAvoidingViewProps['behavior'] = Platform.OS === PLATFORM.ios ? 'padding' : undefined;
+
 export const PICKER_DISPLAY = {
   calendar: 'calendar',
   wheel: 'wheel',
@@ -24,15 +27,6 @@ export const PICKER_DISPLAY = {
 export const HOVER_FILL_SPREAD = 999;
 
 export const CHECK_MARK = '✓';
-
-/** The keyboard focus ring drawn by `focusOutline`. */
-export const FOCUS_OUTLINE = { width: 2, offset: 2 } as const;
-
-/** Smallest touch area on phones (Apple HIG 44pt, Android 48dp rounds to it with spacing). */
-export const MIN_TOUCH_TARGET = 44;
-
-/** Opacity of a disabled control. */
-export const DISABLED_OPACITY = 0.5;
 
 /** The drawn chevron of Accordion, Collapsible and tree rows: its arm length and stroke, in points. */
 export const DISCLOSURE_CHEVRON = { size: 8, stroke: 1.75 } as const;
@@ -124,49 +118,5 @@ export const SWIPE = {
 /** How far (px) a new page slides in from. */
 export const SLIDE_DISTANCE = 40;
 
-/** `KeyboardEvent.key` values the pickers answer, on the web and on hardware keyboards. */
-export const KEY = {
-  up: 'ArrowUp',
-  down: 'ArrowDown',
-  left: 'ArrowLeft',
-  right: 'ArrowRight',
-  home: 'Home',
-  end: 'End',
-  pageUp: 'PageUp',
-  pageDown: 'PageDown',
-} as const;
-
-/** The screen-reader actions of an adjustable control, a slider or a wheel. */
-export const A11Y_ACTION = {
-  increment: 'increment',
-  decrement: 'decrement',
-} as const;
-export const ADJUSTABLE_ACTIONS = [{ name: A11Y_ACTION.increment }, { name: A11Y_ACTION.decrement }];
-
-/** A slider's touch area, 44pt as iOS asks, however thin its track. */
-export const TOUCH_TARGET = 44;
 /** iOS's slider knob: white on any colour, with the theme's `sm` shadow. */
 export const KNOB_SIZE = 28;
-export const KNOB_COLOR = '#FFFFFF';
-
-export const DIRECTION = {
-  up: 'up',
-  down: 'down',
-  left: 'left',
-  right: 'right',
-} as const;
-
-export const ARROW_DIRECTION: Record<string, ValueOf<typeof DIRECTION>> = {
-  [KEY.up]: DIRECTION.up,
-  [KEY.down]: DIRECTION.down,
-  [KEY.left]: DIRECTION.left,
-  [KEY.right]: DIRECTION.right,
-};
-
-/** What arrow-key focus moves to: what Tab stops at, text fields included. */
-export const FOCUS_TARGETS = '[tabindex="0"], input:not([disabled]), textarea:not([disabled])';
-export const TEXT_FIELD_TAGS = ['INPUT', 'TEXTAREA'];
-/** How far (px) a box may overlap the one focus leaves and still count as lying that way. */
-export const EDGE_TOLERANCE = 1;
-/** A step across counts double a step along, so moving down keeps to the column and moving right to the row. */
-export const CROSS_WEIGHT = 2;
