@@ -1,9 +1,11 @@
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
+import { clamp } from '@/core/utils/track.utils';
 import { SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from '@/pickers/time/time.constants';
 import type { TimeBounds } from '@/pickers/time/time.types';
 import { spanOutOfBounds, steps } from '@/pickers/time/time.utils';
 import type { WheelItem, WheelItemInput } from '@/pickers/wheel/wheel.types';
 import { normalizeItem } from '@/pickers/wheel/wheel.utils';
-import { DEFAULT_DURATION_LABELS, DURATION_COLUMN_LABEL, DURATION_UNIT, DURATION_UNITS } from './duration.constants';
+import { DURATION_UNIT, DURATION_UNITS } from './duration.constants';
 import type { DurationColumnSpec, DurationOptions, DurationParts, ResolvedDurationOptions } from './duration.types';
 
 /** Up to 23 h 59 min 59 s, like iOS's countdown timer, or 59 min 59 s without an hours wheel. */
@@ -24,9 +26,9 @@ export const resolveDurationOptions = ({
   secondInterval,
   bounds: [min, max ?? getDefaultMaxDuration(showHours)],
   labels: {
-    hours: labels?.hours ?? DEFAULT_DURATION_LABELS.hours,
-    minutes: labels?.minutes ?? DEFAULT_DURATION_LABELS.minutes,
-    seconds: labels?.seconds ?? DEFAULT_DURATION_LABELS.seconds,
+    hours: labels?.hours ?? DEFAULT_LABELS.duration.hours,
+    minutes: labels?.minutes ?? DEFAULT_LABELS.duration.minutes,
+    seconds: labels?.seconds ?? DEFAULT_LABELS.duration.seconds,
   },
 });
 
@@ -46,7 +48,7 @@ export const getDurationParts = (
 
 export const toSeconds = ({ hours, minutes, seconds }: DurationParts) => hours * SECONDS_PER_HOUR + minutes * SECONDS_PER_MINUTE + seconds;
 
-export const clampDuration = (seconds: number, [min, max]: TimeBounds) => Math.min(Math.max(seconds, min), max);
+export const clampDuration = (seconds: number, [min, max]: TimeBounds) => clamp(seconds, min, max);
 
 /** `total` exactly as the wheels show it, within the bounds, so confirming without scrolling returns what the user saw. */
 export const snapDuration = (total: number, options: DurationOptions) => {
@@ -75,7 +77,7 @@ export const getDurationColumnSpecs = (parts: DurationParts, options: ResolvedDu
     flex: 1,
     textAlign: 'right',
     suffix: labels[key],
-    accessibilityLabel: DURATION_COLUMN_LABEL[key],
+    accessibilityLabel: DEFAULT_LABELS.durationColumns[key],
     toPatch: (v) => ({ [key]: v }),
   });
 

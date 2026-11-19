@@ -14,8 +14,8 @@ describe('DurationPicker', () => {
 
   it('shows hours and minutes with their units, and reads them to screen readers', async () => {
     await render(<DurationPicker design="ios" value={5400} testID="duration" />);
-    expect(screen.getByTestId('duration-hours').props.accessibilityValue.text).toBe('1');
-    expect(screen.getByTestId('duration-minutes').props.accessibilityValue.text).toBe('30');
+    expect(screen.getByTestId('duration-hours').props['aria-valuetext']).toBe('1');
+    expect(screen.getByTestId('duration-minutes').props['aria-valuetext']).toBe('30');
     expect(screen.getByLabelText('Hours')).toBeTruthy();
     expect(screen.getByText('h')).toBeTruthy();
     expect(screen.getByText('min')).toBeTruthy();

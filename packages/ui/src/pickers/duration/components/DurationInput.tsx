@@ -1,8 +1,7 @@
-import { TextInput, View } from 'react-native';
-
-import { textStyle } from '@/core';
-import { PickerText } from '@/core/components/PickerText';
-import { styles } from '@/pickers/duration/duration.styles';
+import { Input } from '@/core/primitives/Input';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { styles, themed } from '@/pickers/duration/duration.styles';
 import type { DurationInputProps } from '@/pickers/duration/duration.types';
 import { getMaxDigits } from '@/pickers/duration/duration.utils';
 import { useDurationInput } from '@/pickers/duration/hooks/useDurationInput';
@@ -11,13 +10,14 @@ import { NUMERIC_KEYBOARD_TYPE } from '@/pickers/wheel/wheel.constants';
 
 /** Material's take on a duration: a box per unit to type the number into, the unit beside it, as in its time input. */
 export const DurationInput = ({ columns, theme, style, testID }: DurationInputProps) => {
-  const c = theme.colors;
   const input = useDurationInput();
   return (
-    <View style={[styles.input, { gap: theme.spacing.md, paddingVertical: theme.spacing.md }, style]} testID={testID}>
+    <View style={[styles.input, themed(theme).input, style]} testID={testID}>
       {columns.map((column) => (
-        <View key={column.key} style={[styles.inputUnit, { gap: theme.spacing.xs }]}>
-          <TextInput
+        <View key={column.key} style={[styles.inputUnit, themed(theme).unit]}>
+          <Input
+            theme={theme}
+            size="xl"
             value={input.text(column)}
             onChangeText={(text) => input.type(column, text)}
             onFocus={() => input.focus(column)}
@@ -25,22 +25,13 @@ export const DurationInput = ({ columns, theme, style, testID }: DurationInputPr
             keyboardType={NUMERIC_KEYBOARD_TYPE}
             maxLength={getMaxDigits(column.items)}
             selectTextOnFocus
-            accessibilityLabel={column.accessibilityLabel}
-            style={[
-              textStyle(theme, 'xl'),
-              timeStyles.fieldInput,
-              styles.field,
-              {
-                borderRadius: theme.radius.sm,
-                backgroundColor: c.surface,
-                borderColor: input.focused === column.key ? c.primary : 'transparent',
-              },
-            ]}
+            aria-label={column.accessibilityLabel}
+            style={[timeStyles.fieldInput, styles.field, themed(theme).field, input.focused === column.key && themed(theme).fieldOn]}
             testID={column.testID}
           />
-          <PickerText theme={theme} color="textSecondary">
+          <Text theme={theme} color="textSecondary">
             {column.suffix}
-          </PickerText>
+          </Text>
         </View>
       ))}
     </View>

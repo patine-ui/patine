@@ -1,5 +1,5 @@
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { TimePanel } from '@/pickers/time/components/TimePanel';
 import { TIME_DISPLAY } from '@/pickers/time/time.constants';
 import { MultiWheelPicker } from '@/pickers/wheel';
@@ -36,15 +36,17 @@ export const DurationPicker = ({
     return <TimePanel columns={columns} visibleRows={visibleItems} theme={theme} style={style} testID={testID} />;
   }
   return (
-    <MultiWheelPicker
-      columns={columns}
-      itemHeight={itemHeight}
-      visibleItems={visibleItems}
-      variant={variant}
-      style={style}
-      styles={styles}
-      theme={themeOverride}
-      testID={testID}
-    />
+    <ThemeScope theme={themeOverride}>
+      <MultiWheelPicker
+        columns={columns}
+        itemHeight={itemHeight}
+        visibleItems={visibleItems}
+        variant={variant}
+        style={style}
+        styles={styles}
+        theme={themeOverride}
+        testID={testID}
+      />
+    </ThemeScope>
   );
 };

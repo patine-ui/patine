@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useLabels } from '@/core/theme/ThemeProvider';
 import type { DurationColumnsOptions } from '@/pickers/duration/duration.types';
 import {
   clampDuration,
@@ -24,9 +25,12 @@ export const useDurationColumns = ({
   loop = true,
   testID,
 }: DurationColumnsOptions) => {
-  const hoursLabel = labels?.hours;
-  const minutesLabel = labels?.minutes;
-  const secondsLabel = labels?.seconds;
+  const all = useLabels();
+  const words = all.duration;
+  const columnNames = all.durationColumns;
+  const hoursLabel = labels?.hours ?? words.hours;
+  const minutesLabel = labels?.minutes ?? words.minutes;
+  const secondsLabel = labels?.seconds ?? words.seconds;
 
   return useMemo(() => {
     const options = resolveDurationOptions({
@@ -43,6 +47,7 @@ export const useDurationColumns = ({
       const durationFor = (v: number) => toSeconds({ ...parts, ...toPatch(v) });
       return {
         ...column,
+        accessibilityLabel: columnNames[column.key],
         testID: testID ? `${testID}-${column.key}` : undefined,
         onValueChange: (v: number) => onValueChange(clampDuration(durationFor(v), options.bounds)),
         onValueChanging: onValueChanging ? (v: number) => onValueChanging(durationFor(v)) : undefined,
@@ -63,5 +68,6 @@ export const useDurationColumns = ({
     showSeconds,
     testID,
     value,
+    columnNames,
   ]);
 };
