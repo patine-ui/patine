@@ -1,13 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { SignatureDesign, SignatureLabels } from './signature.types';
-
-export const DEFAULT_SIGNATURE_LABELS: SignatureLabels = {
-  placeholder: 'Sign here',
-  clear: 'Clear',
-  label: 'Signature',
-  signed: 'Signed',
-  empty: 'Empty',
-};
+import type { SignatureDesign } from './signature.types';
 
 export const SIGNATURE_DEFAULTS = { strokeWidth: 3, height: 200 } as const;
 
@@ -27,3 +19,6 @@ export const SIGNATURE_DESIGN: Record<Design, SignatureDesign> = {
   material: { fill: 'background', border: 'solid', borderColor: 'outline', radius: 'sm' },
   web: { fill: 'background', border: 'dashed', borderColor: 'border', radius: 'md' },
 };
+
+/** `signatureToSvg`'s stroke colour when none is given: a saved file is ink on paper, whatever the app's theme. */
+export const DEFAULT_SVG_INK = '#000000';

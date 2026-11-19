@@ -1,4 +1,4 @@
-import { MIN_POINT_DISTANCE } from './signature.constants';
+import { DEFAULT_SVG_INK, MIN_POINT_DISTANCE } from './signature.constants';
 import type { SegmentBox, SignaturePoint, SignatureStroke, SvgOptions } from './signature.types';
 
 const round = (n: number) => Math.round(n * 10) / 10;
@@ -48,7 +48,7 @@ const escapeAttribute = (value: string) => value.replace(/[&<>"]/g, (c) => `&#${
 /** A standalone SVG document of the signature, to save, upload or show in an <img>. */
 export const signatureToSvg = (
   strokes: readonly SignatureStroke[],
-  { width, height, color = '#000000', strokeWidth = 3, backgroundColor }: SvgOptions
+  { width, height, color = DEFAULT_SVG_INK, strokeWidth = 3, backgroundColor }: SvgOptions
 ) => {
   const background = backgroundColor ? `<rect width="100%" height="100%" fill="${escapeAttribute(backgroundColor)}"/>` : '';
   const path = signatureToPath(strokes);
@@ -57,3 +57,21 @@ export const signatureToSvg = (
     : '';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${background}${line}</svg>`;
 };
+
+/** One segment of a stroke as a rounded bar, turned to its angle, in the stroke's colour. */
+export const getSegmentStyle = (
+  s: { left: number; top: number; width: number; height: number; angle: number },
+  width: number,
+  color: string
+) => ({
+  left: s.left,
+  top: s.top,
+  width: s.width,
+  height: s.height,
+  borderRadius: width / 2,
+  backgroundColor: color,
+  transform: [{ rotate: `${s.angle}deg` }],
+});
+
+/** The pad's height, from the prop. */
+export const getPadHeight = (height: number) => ({ height });

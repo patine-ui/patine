@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import { View } from 'react-native';
 
+import { View } from '@/core/primitives/View';
 import { styles } from '@/inputs/signature/signature.styles';
 import type { SignatureStroke } from '@/inputs/signature/signature.types';
-import { strokeSegments } from '@/inputs/signature/signature.utils';
+import { getSegmentStyle, strokeSegments } from '@/inputs/signature/signature.utils';
 
 interface Props {
   stroke: SignatureStroke;
@@ -18,18 +18,7 @@ export const Stroke = memo(({ stroke, color, width }: Props) => (
       <View
         // biome-ignore lint/suspicious/noArrayIndexKey: a stroke's segments only grow at the end.
         key={i}
-        style={[
-          styles.segment,
-          {
-            left: s.left,
-            top: s.top,
-            width: s.width,
-            height: s.height,
-            borderRadius: width / 2,
-            backgroundColor: color,
-            transform: [{ rotate: `${s.angle}deg` }],
-          },
-        ]}
+        style={[styles.segment, getSegmentStyle(s, width, color)]}
       />
     ))}
   </>

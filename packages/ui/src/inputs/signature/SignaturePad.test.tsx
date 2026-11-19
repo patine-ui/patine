@@ -6,7 +6,11 @@ import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SignaturePad } from './SignaturePad';
 
 const at = (x: number, y: number) => ({ nativeEvent: { locationX: x, locationY: y } }) as unknown as GestureResponderEvent;
-const moved = (dx: number, dy: number) => ({ dx, dy }) as PanResponderGestureState;
+const moved = (dx: number, dy: number) =>
+  ({
+    dx,
+    dy,
+  }) as PanResponderGestureState;
 
 describe('SignaturePad', () => {
   afterEach(() => jest.restoreAllMocks());
@@ -17,7 +21,7 @@ describe('SignaturePad', () => {
     const onBegin = jest.fn();
     await render(<SignaturePad onValueChange={onValueChange} onBegin={onBegin} />);
     const pad = screen.getByLabelText('Signature');
-    expect(pad.props.accessibilityValue).toEqual({ text: 'Empty' });
+    expect(pad.props['aria-valuetext']).toBe('Empty');
     expect(screen.getByText('Sign here')).toBeTruthy();
     const responder = create.mock.calls[0]?.[0] as PanResponderCallbacks;
     await act(() => {
@@ -33,7 +37,7 @@ describe('SignaturePad', () => {
         { x: 40, y: 20 },
       ],
     ]);
-    expect(screen.getByLabelText('Signature').props.accessibilityValue).toEqual({ text: 'Signed' });
+    expect(screen.getByLabelText('Signature').props['aria-valuetext']).toBe('Signed');
     await fireEvent(screen.getByLabelText('Signature'), 'accessibilityAction', { nativeEvent: { actionName: 'clear' } });
     expect(onValueChange).toHaveBeenLastCalledWith([]);
   });

@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { ThemableProps } from '@/core/core.types';
+import type { SignatureLabels } from '@/core/theme/labels.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface SignaturePoint {
@@ -10,18 +11,6 @@ export interface SignaturePoint {
 
 /** One pen-down-to-pen-up line, in points from the pad's top left. */
 export type SignatureStroke = readonly SignaturePoint[];
-
-export interface SignatureLabels {
-  /** Shown on the empty pad. Default: 'Sign here' */
-  placeholder: string;
-  /** Default: 'Clear' */
-  clear: string;
-  /** Read by screen readers. Default: 'Signature' */
-  label: string;
-  /** The pad's value for screen readers. Defaults: 'Signed', 'Empty' */
-  signed: string;
-  empty: string;
-}
 
 export interface SignaturePadProps extends ThemableProps {
   /** The strokes drawn. Pair with `onValueChange` to control it; `[]` clears it */
@@ -77,3 +66,5 @@ export interface SvgOptions {
   /** Default: none (transparent) */
   backgroundColor?: string;
 }
+
+export type { SignatureLabels } from '@/core/theme/labels.types';
