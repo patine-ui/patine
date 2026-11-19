@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { HostInstance, PressableProps, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { HostInstance, PressableProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { RADIO_INDICATOR } from './radio.constants';
 
@@ -36,8 +36,8 @@ export interface RadioGroupItemProps extends Omit<PressableProps, 'children' | '
   disabled?: boolean;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** A string label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export type RadioIndicator = ValueOf<typeof RADIO_INDICATOR>;

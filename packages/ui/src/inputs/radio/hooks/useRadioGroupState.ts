@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useRef } from 'react';
 
+import { findNextEnabled } from '@/core/a11y/a11y.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import type { Theme } from '@/core/theme/theme.types';
 import type { RadioGroupContextValue, RadioItemEntry } from '@/inputs/radio/radio.types';
-import { findNextItem } from '@/inputs/radio/radio.utils';
 
 interface Params {
   value: string | undefined;
@@ -29,7 +29,11 @@ export const useRadioGroupState = ({ value: valueProp, defaultValue, onValueChan
 
   const move = useCallback(
     (from: string, step: number) => {
-      const next = findNextItem(items.current, from, step);
+      const next = findNextEnabled(
+        items.current,
+        items.current.findIndex((item) => item.value === from),
+        step
+      );
       if (!next) return;
       setValue(next.value);
       next.ref.current?.focus();
