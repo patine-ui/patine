@@ -1,5 +1,5 @@
 import { lightTheme } from '@/core/theme/theme.constants';
-import { formatChange, getTrend, getTrendColor } from './stat.utils';
+import { formatChange, getStatLabel, getTrend, getTrendColor, getTrendTone } from './stat.utils';
 
 describe('getTrend', () => {
   it('reads the sign of a number or text', () => {
@@ -29,5 +29,18 @@ describe('formatChange', () => {
     expect(formatChange(4)).toBe('+4');
     expect(formatChange(-4)).toBe('-4');
     expect(formatChange('12%')).toBe('12%');
+  });
+});
+
+describe('getTrendTone and getStatLabel', () => {
+  it('reads a trend as good, bad or neutral', () => {
+    expect(getTrendTone('up', false)).toBe('good');
+    expect(getTrendTone('up', true)).toBe('bad');
+    expect(getTrendTone('neutral', true)).toBe('neutral');
+  });
+
+  it('says the stat as one sentence, the change without its sign', () => {
+    expect(getStatLabel('Revenue', '$12k', '+8%', 'up', 'vs last month')).toBe('Revenue, $12k, up 8%, vs last month');
+    expect(getStatLabel('Users', 40, null, 'neutral', undefined)).toBe('Users, 40');
   });
 });

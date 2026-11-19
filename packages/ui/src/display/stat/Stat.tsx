@@ -1,13 +1,10 @@
-import type { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { STAT_DESIGN, TREND_ARROW, TREND_WORD } from './stat.constants';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { STAT_DESIGN, TREND_ARROW } from './stat.constants';
+import { styles, themed } from './stat.styles';
 import type { StatProps } from './stat.types';
-import { formatChange, getTrend, getTrendColor } from './stat.utils';
-
-const textOf = (node: ReactNode) => (typeof node === 'string' || typeof node === 'number' ? String(node) : '');
+import { formatChange, getStatLabel, getTrend, getTrendTone } from './stat.utils';
 
 /**
  * A key figure with its label and how it moved: a KPI tile for a dashboard. The change is green when good and red when
@@ -28,49 +25,43 @@ export const Stat = ({
   styles: slots,
   ...rest
 }: StatProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = STAT_DESIGN[theme.design];
+  const sheet = themed(theme);
   const trend = trendProp ?? getTrend(change);
-  const color = getTrendColor(theme.colors, trend, invertTrend);
+  const tone = getTrendTone(trend, invertTrend);
   const changeText = change === undefined ? null : formatChange(change);
-  const spoken = [label, textOf(value), changeText && `${TREND_WORD[trend]} ${changeText.replace(/^[+\-−]/, '')}`, textOf(description)]
-    .filter(Boolean)
-    .join(', ');
   return (
-    <View accessible accessibilityLabel={spoken} style={[{ gap: theme.spacing.xs }, style]} {...rest}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: theme.spacing.sm }}>
-        <PickerText theme={theme} size="sm" weight="medium" color="textSecondary" style={slots?.label}>
-          {label}
-        </PickerText>
-        {icon}
-      </View>
-      <PickerText theme={theme} size={look.valueSize} weight={look.valueWeight} style={[{ fontVariant: ['tabular-nums'] }, slots?.value]}>
-        {value}
-      </PickerText>
-      {changeText !== null || description ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: theme.spacing.xs }}>
-          {changeText !== null ? (
-            <View
-              style={
-                look.changePill
-                  ? { paddingHorizontal: 6, paddingVertical: 1, borderRadius: theme.radius.full, overflow: 'hidden' }
-                  : undefined
-              }
-            >
-              {look.changePill ? <View style={[StyleSheet.absoluteFill, { backgroundColor: color, opacity: 0.12 }]} /> : null}
-              <PickerText theme={theme} size="sm" weight="medium" style={[{ color }, slots?.change]}>
-                {`${TREND_ARROW[trend]} ${changeText}`}
-              </PickerText>
-            </View>
-          ) : null}
-          {description ? (
-            <PickerText theme={theme} size="sm" color="textSecondary" style={slots?.description}>
-              {description}
-            </PickerText>
-          ) : null}
+    <ThemeScope theme={themeOverride}>
+      <View accessible aria-label={getStatLabel(label, value, changeText, trend, description)} style={[sheet.root, style]} {...rest}>
+        <View style={[styles.header, sheet.header]}>
+          <Text size="sm" weight="medium" color="textSecondary" style={slots?.label}>
+            {label}
+          </Text>
+          {icon}
         </View>
-      ) : null}
-      {children}
-    </View>
+        <Text size={look.valueSize} weight={look.valueWeight} style={[styles.value, slots?.value]}>
+          {value}
+        </Text>
+        {changeText !== null || description ? (
+          <View style={[styles.footer, sheet.footer]}>
+            {changeText !== null ? (
+              <View style={look.changePill ? [styles.pill, sheet.pill] : undefined}>
+                {look.changePill ? <View style={[styles.pillTint, sheet[`${tone}Tint`]]} /> : null}
+                <Text size="sm" weight="medium" style={[sheet[tone], slots?.change]}>
+                  {`${TREND_ARROW[trend]} ${changeText}`}
+                </Text>
+              </View>
+            ) : null}
+            {description ? (
+              <Text size="sm" color="textSecondary" style={slots?.description}>
+                {description}
+              </Text>
+            ) : null}
+          </View>
+        ) : null}
+        {children}
+      </View>
+    </ThemeScope>
   );
 };

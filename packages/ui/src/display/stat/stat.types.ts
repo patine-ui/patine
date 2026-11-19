@@ -38,3 +38,6 @@ export interface StatDesign {
   /** The change in a tinted pill, rather than colored text */
   changePill: boolean;
 }
+
+/** How a trend reads: good, bad or neither. */
+export type TrendTone = 'good' | 'bad' | 'neutral';
