@@ -1,12 +1,4 @@
-import { canStep, clampValue, parseNumber, stepDecimals, stepValue } from './field.utils';
-
-describe('stepDecimals', () => {
-  it('counts the decimals of a step', () => {
-    expect(stepDecimals(1)).toBe(0);
-    expect(stepDecimals(0.25)).toBe(2);
-    expect(stepDecimals(1e-7)).toBe(7);
-  });
-});
+import { canStep, clampValue, parseNumber, stepValue } from './field.utils';
 
 describe('clampValue', () => {
   it('keeps the value in range and drops float noise', () => {

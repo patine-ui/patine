@@ -17,8 +17,8 @@ describe('Stepper', () => {
   it('answers screen-reader adjust actions', async () => {
     const onValueChange = jest.fn();
     await render(<Stepper value={5} onValueChange={onValueChange} accessibilityLabel="Quantity" />);
-    const control = screen.getByRole('adjustable', { name: 'Quantity' });
-    expect(control.props.accessibilityValue).toEqual({ text: '5' });
+    const control = screen.getByRole('slider', { name: 'Quantity' });
+    expect(control.props['aria-valuetext']).toEqual('5');
     await fireEvent(control, 'accessibilityAction', { nativeEvent: { actionName: 'decrement' } });
     expect(onValueChange).toHaveBeenCalledWith(4);
   });

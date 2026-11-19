@@ -1,17 +1,10 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { Insets, StyleProp, ViewStyle } from 'react-native';
 
 import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { StepLabels } from '@/core/theme/labels.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { TextFieldProps } from '@/inputs/textfield/textfield.types';
 import type { NUMBER_BUTTONS } from './field.constants';
-
-/** What the step buttons say to screen readers, for translation. */
-export interface StepLabels {
-  /** Default: 'Decrease' */
-  decrement: string;
-  /** Default: 'Increase' */
-  increment: string;
-}
 
 export interface NumberRange {
   /** Default: no limit */
@@ -90,5 +83,7 @@ export interface StepButtonProps {
   /** Leave it out of the tab order, when the control around it takes the keys */
   focusable?: boolean;
   /** Extra touch area on every side, up to 44pt */
-  hitSlop?: number;
+  hitSlop?: Insets | number;
 }
+
+export type { StepLabels } from '@/core/theme/labels.types';

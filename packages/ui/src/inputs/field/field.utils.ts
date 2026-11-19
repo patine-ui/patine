@@ -1,16 +1,9 @@
+import { clamp, stepDecimals } from '@/core/utils/track.utils';
 import type { NumberRange } from './field.types';
-
-/** How many decimals a step has, so 0.1 + 0.2 lands on 0.3 rather than 0.30000000000000004. */
-export const stepDecimals = (step: number) => {
-  const text = String(step);
-  const exp = /e-(\d+)$/.exec(text);
-  if (exp) return Number(exp[1]);
-  return (text.split('.')[1] ?? '').length;
-};
 
 /** Keeps a value within the range, rounded to the step's decimals. */
 export const clampValue = (value: number, { min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY, step = 1 }: NumberRange) =>
-  Number(Math.min(max, Math.max(min, value)).toFixed(stepDecimals(step)));
+  Number(clamp(value, min, max).toFixed(stepDecimals(step)));
 
 /** The value one step up (1) or down (-1), within the range. An empty field starts from `min`, or 0. */
 export const stepValue = (value: number | null, direction: 1 | -1, range: NumberRange) => {

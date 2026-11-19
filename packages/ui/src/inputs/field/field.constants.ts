@@ -1,10 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { NumberFieldDesign, StepLabels, StepperDesign } from './field.types';
-
-export const DEFAULT_STEP_LABELS: StepLabels = {
-  decrement: 'Decrease',
-  increment: 'Increase',
-};
+import type { NumberFieldDesign, StepperDesign } from './field.types';
 
 export const NUMBER_BUTTONS = {
   split: 'split',
@@ -36,3 +31,6 @@ export const NUMBER_FIELD_DESIGN: Record<Design, NumberFieldDesign> = {
 /** Holding a step button steps once, waits this long, then repeats at the interval, as UIStepper does. */
 export const REPEAT_DELAY = 400;
 export const REPEAT_INTERVAL = 80;
+
+/** NumberField's step buttons: 32pt squares, or three quarters as wide when stacked. */
+export const STEP_SIZE = 32;
