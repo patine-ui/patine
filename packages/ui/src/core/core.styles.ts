@@ -45,6 +45,12 @@ export const startAlign = StyleSheet.create({
   rtl: Platform.select({ web: { textAlign: 'right' }, default: {} }),
 });
 
+/** Text aligned to the end of the line, by `useDirection()`. Native swaps 'right' for right to left itself; the web doesn't. */
+export const endAlign = StyleSheet.create({
+  ltr: { textAlign: 'right' },
+  rtl: Platform.select({ web: { textAlign: 'left' }, default: { textAlign: 'right' } }),
+});
+
 /** Each theme color as a text color: `colorStyles(theme).primary`. */
 export const colorStyles = createStyles((t) =>
   Object.fromEntries(Object.entries(t.colors).map(([name, color]) => [name, { color: String(color) }]))

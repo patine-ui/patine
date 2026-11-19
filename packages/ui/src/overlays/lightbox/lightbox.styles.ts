@@ -15,7 +15,6 @@ export const styles = StyleSheet.create({
   cross: { position: 'absolute', width: 20, height: 2, borderRadius: 1 },
   crossA: { transform: [{ rotate: '45deg' }] },
   crossB: { transform: [{ rotate: '-45deg' }] },
-  startText: { textAlign: 'left' },
   backdropFill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
 });
 

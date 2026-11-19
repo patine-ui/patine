@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
   details: { flex: 1 },
   end: { alignItems: 'flex-end' },
   start: { alignItems: 'flex-start' },
-  endText: { textAlign: 'right' },
 });
 
 export const themed = createStyles((t) => ({

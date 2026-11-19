@@ -1,7 +1,8 @@
 import { Children, isValidElement } from 'react';
-import { KeyboardAvoidingView, Modal } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 
 import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { Modal } from '@/core/primitives/Modal';
 import { Scroll } from '@/core/primitives/Scroll';
 import { Text } from '@/core/primitives/Text';
 import { AnimatedView, View } from '@/core/primitives/View';
@@ -101,7 +102,7 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
             accessibilityViewIsModal
             onAccessibilityEscape={content.onRequestClose}
             {...rest}
-            style={[styles.card, sheet.card, content.pop, style]}
+            style={[styles.card, sheet.card, alert && sheet.alertCard, content.pop, style]}
           >
             <Scroll style={styles.scroll} contentContainerStyle={sheet.body} bounces={false}>
               {children}

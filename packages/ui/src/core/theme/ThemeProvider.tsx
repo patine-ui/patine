@@ -1,10 +1,13 @@
 import { createContext, type ReactNode, useContext, useMemo } from 'react';
-import { Platform, useColorScheme } from 'react-native';
+import { Platform, useColorScheme, type ViewProps } from 'react-native';
 
+import { IS_WEB } from '@/core/core.constants';
 import type { DeepPartial } from '@/core/core.types';
+import { View } from '@/core/primitives/View';
 import { DEFAULT_LABELS } from './labels.constants';
 import type { Labels } from './labels.types';
 import { COLOR_SCHEME, DESIGN, DESIGN_TOKENS, darkTheme, lightTheme } from './theme.constants';
+import { styles } from './theme.styles';
 import type { Design, DesignPreference, LayoutDirection, PatineProviderProps, PlatformOS, Theme } from './theme.types';
 import { getSystemDirection, mergeTheme, resolveDesign } from './theme.utils';
 
@@ -63,7 +66,20 @@ export const PatineProvider = ({
       dir: dir ?? getSystemDirection(),
     };
   }, [isDark, provided, platform, os, design, words, dir]);
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      {IS_WEB ? (
+        // React Native Web turns start / end styles (marginStart, paddingEnd, `start`) into left / right by the direction a
+        // view's `dir` hands down, not the page's: without this, a right-to-left page keeps left-to-right spacing. `dir` is
+        // a React Native Web prop, missing from React Native's types.
+        <View {...({ dir: value.dir } as ViewProps)} style={styles.contents}>
+          {children}
+        </View>
+      ) : (
+        children
+      )}
+    </ThemeContext.Provider>
+  );
 };
 
 /** The default words components show and say: English, or the provider's `labels` on top. */
@@ -127,7 +143,20 @@ export const ThemeScope = ({ theme: override, children }: { theme?: DeepPartial<
     };
   }, [ctx?.platform, ctx?.labels, ctx?.dir, resolved, parentBaseFor, rest]);
   if (!override || resolved === (ctx?.resolved ?? parentBaseFor(DESIGN.brand))) return children;
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      {IS_WEB ? (
+        // React Native Web turns start / end styles (marginStart, paddingEnd, `start`) into left / right by the direction a
+        // view's `dir` hands down, not the page's: without this, a right-to-left page keeps left-to-right spacing. `dir` is
+        // a React Native Web prop, missing from React Native's types.
+        <View {...({ dir: value.dir } as ViewProps)} style={styles.contents}>
+          {children}
+        </View>
+      ) : (
+        children
+      )}
+    </ThemeContext.Provider>
+  );
 };
 
 /**

@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Modal, useWindowDimensions } from 'react-native';
+import { KeyboardAvoidingView, useWindowDimensions } from 'react-native';
 
 import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { Modal } from '@/core/primitives/Modal';
 import { AnimatedView, Pressable, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels, usePlatform } from '@/core/theme/ThemeProvider';
 import { SheetCloseButton } from './components/SheetCloseButton';

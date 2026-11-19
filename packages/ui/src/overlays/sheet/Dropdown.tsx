@@ -1,8 +1,9 @@
-import { Modal, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
 import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { usePresence } from '@/core/animation/hooks/usePresence';
+import { Modal } from '@/core/primitives/Modal';
 import { AnimatedView, Pressable, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { useAnchor } from './hooks/useAnchor';

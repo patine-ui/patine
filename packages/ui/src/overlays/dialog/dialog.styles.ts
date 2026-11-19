@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { createStyles } from '@/core/theme/theme.utils';
-import { DIALOG_DESIGN, DIALOG_SCREEN_MARGIN } from './dialog.constants';
+import { ALERT_DIALOG_MAX_WIDTH, DIALOG_DESIGN, DIALOG_SCREEN_MARGIN } from './dialog.constants';
 import { resolveDialogRadius } from './dialog.utils';
 
 export const styles = StyleSheet.create({
@@ -36,9 +36,11 @@ export const themed = createStyles((t) => {
       backgroundColor: t.colors.sheet,
       boxShadow: t.shadows[look.shadow],
     },
+    alertCard: { maxWidth: ALERT_DIALOG_MAX_WIDTH[t.design] },
     body: { padding: look.padding, gap: look.gap },
     header: { gap: look.headerGap },
-    text: { textAlign: look.textAlign },
+    // Start is Text's own default, which follows the layout direction; a physical 'left' wouldn't flip on the web.
+    text: look.textAlign === 'center' ? { textAlign: 'center' } : {},
     hairline: { borderColor: t.colors.border },
     cells: { margin: -look.padding, marginTop: 0 },
   };

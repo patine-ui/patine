@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { KeyDownEvent } from 'react-native';
-import { Modal } from 'react-native';
 
 import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
 import { usePresence } from '@/core/animation';
@@ -8,6 +7,7 @@ import { animatedMultiply } from '@/core/animation/animated';
 import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useScrollLock } from '@/core/hooks/useScrollLock';
+import { Modal } from '@/core/primitives/Modal';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { AnimatedView, View } from '@/core/primitives/View';
@@ -125,7 +125,6 @@ export const ImageViewer = ({
                 style={[
                   look.counter === 'center' ? [styles.counterCenter, getCounterPlace(top, theme.spacing.md)] : styles.counter,
                   sheet.counter,
-                  look.closeSide === 'end' && look.counter === 'start' && styles.startText,
                 ]}
               >
                 {`${index + 1} / ${images.length}`}

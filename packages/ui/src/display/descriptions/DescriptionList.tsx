@@ -1,6 +1,7 @@
+import { endAlign } from '@/core/core.styles';
 import { Text } from '@/core/primitives/Text';
 import { View } from '@/core/primitives/View';
-import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { ThemeScope, useComponentTheme, useDirection } from '@/core/theme/ThemeProvider';
 import { DESCRIPTION_LIST_DESIGN } from './descriptions.constants';
 import { styles, themed } from './descriptions.styles';
 import type { DescriptionListProps } from './descriptions.types';
@@ -21,6 +22,7 @@ export const DescriptionList = ({
 }: DescriptionListProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = DESCRIPTION_LIST_DESIGN[theme.design];
+  const dir = useDirection();
   const horizontal = (orientation ?? look.orientation) === 'horizontal';
   const sheet = themed(theme);
   return (
@@ -53,7 +55,7 @@ export const DescriptionList = ({
               {typeof details === 'string' || typeof details === 'number' ? (
                 <Text
                   color={look.mutedTerm ? 'text' : 'textSecondary'}
-                  style={[look.detailsAtEnd && horizontal && styles.endText, slots?.details]}
+                  style={[look.detailsAtEnd && horizontal && endAlign[dir], slots?.details]}
                 >
                   {details}
                 </Text>

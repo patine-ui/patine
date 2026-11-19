@@ -11,6 +11,12 @@ export const DIALOG_BUTTONS = {
   text: 'text',
 } as const;
 
+/**
+ * An alert is a short question, so it's narrower than a dialog with a form: over another dialog it reads as its own card.
+ * iOS's UIAlertController is 270pt; Material 3's basic dialog starts at 280dp, and 312dp fits two text buttons.
+ */
+export const ALERT_DIALOG_MAX_WIDTH: Record<Design, number> = { brand: 360, ios: 270, material: 312, web: 384 };
+
 /** iOS stacks its alert buttons when there are more than this many. */
 export const IOS_MAX_SIDE_BY_SIDE = 2;
 
@@ -30,7 +36,7 @@ export const DIALOG_DESIGN: Record<Design, DialogDesign> = {
     padding: 24,
     gap: 16,
     headerGap: 6,
-    textAlign: 'left',
+    textAlign: 'start',
     titleSize: 'lg',
     descriptionSize: 'sm',
     shadow: 'xl',
@@ -58,7 +64,7 @@ export const DIALOG_DESIGN: Record<Design, DialogDesign> = {
     padding: 24,
     gap: 16,
     headerGap: 16,
-    textAlign: 'left',
+    textAlign: 'start',
     titleSize: 'xl',
     descriptionSize: 'sm',
     shadow: 'md',
@@ -72,7 +78,7 @@ export const DIALOG_DESIGN: Record<Design, DialogDesign> = {
     padding: 24,
     gap: 16,
     headerGap: 6,
-    textAlign: 'left',
+    textAlign: 'start',
     titleSize: 'lg',
     descriptionSize: 'sm',
     shadow: 'xl',

@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { RefObject } from 'react';
-import type { HostInstance, TextStyle, ViewProps } from 'react-native';
+import type { HostInstance, ViewProps } from 'react-native';
 
 import type { ButtonProps, ButtonVariant } from '@/actions/button/button.types';
 import type { DeepPartial, ThemableProps, ValueOf } from '@/core/core.types';
@@ -95,7 +95,8 @@ export interface DialogDesign {
   gap: number;
   /** Between the title and the description */
   headerGap: number;
-  textAlign: TextStyle['textAlign'];
+  /** The title and description at the line's start (right in right to left), or centred */
+  textAlign: 'start' | 'center';
   titleSize: TextSize;
   descriptionSize: TextSize;
   /** A step on the theme's elevation scale */

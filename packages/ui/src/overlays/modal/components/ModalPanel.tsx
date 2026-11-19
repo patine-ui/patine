@@ -1,6 +1,7 @@
-import { KeyboardAvoidingView, Modal, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { Modal } from '@/core/primitives/Modal';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { useLabels } from '@/core/theme/ThemeProvider';
 import { useDialogContext } from '@/overlays/dialog/DialogContext';

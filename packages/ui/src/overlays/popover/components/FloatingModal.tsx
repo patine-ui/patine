@@ -1,5 +1,6 @@
-import { Modal, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { Modal } from '@/core/primitives/Modal';
 import { Pressable, View } from '@/core/primitives/View';
 import { useLabels } from '@/core/theme/ThemeProvider';
 import type { FloatingModalProps } from '@/overlays/popover/popover.types';
