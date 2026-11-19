@@ -1,9 +1,9 @@
-import { Animated, StyleSheet, View } from 'react-native';
-
-import { CHAT_DESIGN } from '@/ai/chat/chat.constants';
+import { themed } from '@/ai/chat/chat.styles';
 import { useSweep } from '@/core/animation';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { TYPING_DOTS, TYPING_PADDING } from './typing.constants';
+import { AnimatedView, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { TYPING_DOTS } from './typing.constants';
+import { styles } from './typing.styles';
 import type { TypingIndicatorProps } from './typing.types';
 import { dotWave, typingLabel } from './typing.utils';
 
@@ -15,43 +15,24 @@ const DOTS = Array.from({ length: TYPING_DOTS.count }, (_, i) => i);
  * when the OS asks to reduce motion.
  */
 export const TypingIndicator = ({ name, accessibilityLabel, theme: themeProp, design, style, ...rest }: TypingIndicatorProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
-  const look = CHAT_DESIGN[theme.design];
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const sweep = useSweep(true, TYPING_DOTS.period);
+  const sheet = themed(theme);
+  // Animated values: each dot's opacity follows the sweep.
+  const fades = DOTS.map((i) => ({ opacity: sweep.interpolate(dotWave(i, TYPING_DOTS.count, TYPING_DOTS.min)) }));
   return (
-    <View
-      accessible
-      aria-label={accessibilityLabel ?? typingLabel(name)}
-      aria-live="polite"
-      style={[
-        {
-          alignSelf: 'flex-start',
-          flexDirection: 'row',
-          gap: TYPING_DOTS.gap,
-          paddingHorizontal: TYPING_PADDING.horizontal,
-          paddingVertical: TYPING_PADDING.vertical,
-          borderRadius: look.radius,
-          borderBottomStartRadius: look.tailRadius,
-          backgroundColor: theme.colors[look.theirs],
-          borderWidth: look.theirsBorder ? StyleSheet.hairlineWidth : 0,
-          borderColor: theme.colors.border,
-        },
-        style,
-      ]}
-      {...rest}
-    >
-      {DOTS.map((i) => (
-        <Animated.View
-          key={i}
-          style={{
-            width: TYPING_DOTS.size,
-            height: TYPING_DOTS.size,
-            borderRadius: TYPING_DOTS.size / 2,
-            backgroundColor: theme.colors.textSecondary,
-            opacity: sweep.interpolate(dotWave(i, TYPING_DOTS.count, TYPING_DOTS.min)),
-          }}
-        />
-      ))}
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View
+        accessible
+        aria-label={accessibilityLabel ?? typingLabel(name)}
+        aria-live="polite"
+        style={[styles.bubble, sheet.typing, style]}
+        {...rest}
+      >
+        {DOTS.map((i) => (
+          <AnimatedView key={i} style={[styles.dot, sheet.dot, fades[i]]} />
+        ))}
+      </View>
+    </ThemeScope>
   );
 };
