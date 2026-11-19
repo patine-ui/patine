@@ -1,23 +1,13 @@
 import type { ImageSourcePropType } from 'react-native';
 
 import type { ThemableProps } from '@/core/core.types';
+import type { LightboxLabels } from '@/core/theme/labels.types';
 
 export interface LightboxImage {
   /** A URL, or a `require`d image */
   source: ImageSourcePropType;
   /** Read by screen readers */
   alt?: string;
-}
-
-export interface LightboxLabels {
-  /** Default: 'Close' */
-  close: string;
-  /** Default: 'Previous image' */
-  previous: string;
-  /** Default: 'Next image' */
-  next: string;
-  /** The counter, with `{page}` and `{count}`. Default: 'Image {page} of {count}' */
-  image: string;
 }
 
 export interface ImageViewerProps extends ThemableProps {
@@ -61,3 +51,5 @@ export interface ZoomableImageProps {
   onDismissDrag: (dy: number) => void;
   onDismiss: () => void;
 }
+
+export type { LightboxLabels } from '@/core/theme/labels.types';

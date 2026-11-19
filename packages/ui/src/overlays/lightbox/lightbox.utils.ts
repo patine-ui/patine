@@ -1,3 +1,4 @@
+import { clamp } from '@/core/utils/track.utils';
 import { DISMISS, ZOOM } from './lightbox.constants';
 import type { ZoomState } from './lightbox.types';
 
@@ -11,7 +12,7 @@ interface Point {
   y: number;
 }
 
-export const clampScale = (scale: number) => Math.min(ZOOM.max, Math.max(1, scale));
+export const clampScale = (scale: number) => clamp(scale, 1, ZOOM.max);
 
 /** How far a zoomed image can move from centre before its edge leaves the frame's edge. */
 export const maxPan = (scale: number, size: number) => Math.max(0, (size * scale - size) / 2);
@@ -23,8 +24,8 @@ export const clampPan = (state: ZoomState, size: Size): ZoomState => {
   return {
     scale: state.scale,
     // `+ 0` turns -0 into 0.
-    x: Math.min(mx, Math.max(-mx, state.x)) + 0,
-    y: Math.min(my, Math.max(-my, state.y)) + 0,
+    x: clamp(state.x, -mx, mx) + 0,
+    y: clamp(state.y, -my, my) + 0,
   };
 };
 
@@ -66,3 +67,9 @@ export const shouldDismiss = (dy: number, vy: number) => dy > DISMISS.distance |
 
 /** The backdrop's opacity as an image is dragged away. */
 export const dismissOpacity = (dy: number) => Math.max(0, 1 - Math.abs(dy) / DISMISS.fade);
+
+/** The top bar clears the status bar. */
+export const getBarInset = (top: number) => ({ paddingTop: top });
+
+/** A centred counter sits below the status bar, `gap` down. */
+export const getCounterPlace = (top: number, gap: number) => ({ top: top + gap });
