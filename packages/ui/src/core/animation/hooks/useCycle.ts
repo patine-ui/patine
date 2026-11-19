@@ -3,6 +3,7 @@ import { Easing } from 'react-native';
 
 import type { AnimatedValue } from '@/core/animation/animation.types';
 import { cycleLoop, timing } from '@/core/animation/animation.utils';
+import { isReducedMotion } from '@/core/animation/motion.utils';
 import { useAnimatedValue } from './useAnimatedValue';
 import { useReducedMotion } from './useReducedMotion';
 
@@ -16,7 +17,8 @@ export const useCycle = (active = true, period = 2000): AnimatedValue => {
   const reduced = useReducedMotion();
 
   useEffect(() => {
-    if (!active || reduced) return;
+    // Asked now too, as useLoop does: a zero-length loop would restart synchronously forever.
+    if (!active || reduced || isReducedMotion()) return;
     let stopped = false;
     let loop: ReturnType<typeof cycleLoop> | undefined;
     value.stopAnimation((from) => {
