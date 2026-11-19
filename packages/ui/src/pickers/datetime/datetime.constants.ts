@@ -35,5 +35,3 @@ export const DATETIME_DESIGN: Record<Design, DateTimeDesign> = {
 };
 
 export const DAY_LABEL_FORMAT: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
-
-export const FALLBACK_TODAY_LABEL = 'Today';

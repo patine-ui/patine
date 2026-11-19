@@ -1,3 +1,4 @@
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
 import { addDays, clampDate, formatDate, isSameDay, startOfDay } from '@/core/utils/date.utils';
 import { TIME_DISPLAY, TIME_FORMAT } from '@/pickers/time/time.constants';
 import type { TimeDisplay, TimeOptions } from '@/pickers/time/time.types';
@@ -12,7 +13,6 @@ import {
   CALENDAR_TIME_VISIBLE_ITEMS,
   DAY_LABEL_FORMAT,
   DEFAULT_DAY_SPAN,
-  FALLBACK_TODAY_LABEL,
   TIME_POSITION,
 } from './datetime.constants';
 import type { TimePosition } from './datetime.types';
@@ -43,7 +43,7 @@ export const getTodayLabel = (locale?: string) => {
     const label = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(0, 'day');
     return label.charAt(0).toLocaleUpperCase(locale) + label.slice(1);
   } catch {
-    return FALLBACK_TODAY_LABEL;
+    return DEFAULT_LABELS.today;
   }
 };
 

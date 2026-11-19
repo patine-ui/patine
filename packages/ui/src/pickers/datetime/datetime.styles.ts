@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+import { createStyles } from '@/core/theme/theme.utils';
 import { BESIDE_BORDER, BESIDE_CALENDAR_WIDTH, BESIDE_PADDING } from './datetime.constants';
 
 export const styles = StyleSheet.create({
@@ -15,3 +16,7 @@ export const styles = StyleSheet.create({
   besideCalendar: { width: BESIDE_CALENDAR_WIDTH, maxWidth: '100%' },
   besideTime: { borderWidth: 0 },
 });
+
+export const themed = createStyles((t) => ({
+  beside: { borderColor: t.colors.border, borderRadius: t.radius.lg, backgroundColor: t.colors.background },
+}));

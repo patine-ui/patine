@@ -1,9 +1,8 @@
-import { View } from 'react-native';
-
 import { useTheme } from '@/core';
+import { View } from '@/core/primitives/View';
 import { Calendar } from '@/pickers/calendar/Calendar';
 import { TIME_POSITION } from '@/pickers/datetime/datetime.constants';
-import { styles } from '@/pickers/datetime/datetime.styles';
+import { styles, themed } from '@/pickers/datetime/datetime.styles';
 import type { DateTimeViewProps } from '@/pickers/datetime/datetime.types';
 import { getCalendarTimeRows, getDayTimeBounds, withDay } from '@/pickers/datetime/datetime.utils';
 import { useBesideFit } from '@/pickers/datetime/hooks/useBesideFit';
@@ -32,22 +31,7 @@ export const DateTimeCalendar = ({
     [timeDisplay, timeProps.format, timeProps.showSeconds, locale].join()
   );
   return (
-    <View
-      onLayout={onLayout}
-      style={[
-        styles.calendarLayout,
-        beside && [
-          styles.besideLayout,
-          {
-            borderColor: t.colors.border,
-            borderRadius: t.radius.lg,
-            backgroundColor: t.colors.background,
-          },
-        ],
-        style,
-      ]}
-      testID={testID}
-    >
+    <View onLayout={onLayout} style={[styles.calendarLayout, beside && [styles.besideLayout, themed(t).beside], style]} testID={testID}>
       <Calendar
         {...calendarProps}
         style={[beside && styles.besideCalendar, calendarProps?.style]}

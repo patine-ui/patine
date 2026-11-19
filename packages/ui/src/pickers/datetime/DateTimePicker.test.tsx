@@ -24,8 +24,8 @@ describe('DateTimePicker', () => {
 
     it('shows the day next to the time', async () => {
       await render(<DateTimePicker design="ios" value={at(27, 9, 5)} {...range} locale="en-US" format="24h" loop={false} testID="dt" />);
-      expect(screen.getByTestId('dt-day').props.accessibilityValue.text).toBe('Tue, Oct 27');
-      expect(screen.getByTestId('dt-hour').props.accessibilityValue.text).toBe('09');
+      expect(screen.getByTestId('dt-day').props['aria-valuetext']).toBe('Tue, Oct 27');
+      expect(screen.getByTestId('dt-hour').props['aria-valuetext']).toBe('09');
     });
 
     it('changes the day and keeps the time', async () => {
