@@ -1,5 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { View } from '@/core/primitives/View';
 import type { AspectRatioProps } from './layout.types';
 
 /** A box that keeps a width-to-height ratio as it resizes; its children fill it. For images, video and maps. */

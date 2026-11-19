@@ -32,6 +32,10 @@ export interface BoxStyleProps {
   flex?: number;
   /** Lay children in a row. Default: a column, as a View does */
   row?: boolean;
+  /** 'row' or 'column'; wins over `row`. Default: a column */
+  direction?: 'column' | 'row';
+  /** Wrap onto new lines when the children don't fit */
+  wrap?: boolean;
   align?: ViewStyle['alignItems'];
   justify?: ViewStyle['justifyContent'];
 }

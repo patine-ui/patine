@@ -1,8 +1,11 @@
 import { StyleSheet, type ViewStyle } from 'react-native';
 
 import type { Theme } from '@/core/theme/theme.types';
-import { toSpace } from '@/foundations/stack/stack.utils';
+import type { Space } from '@/foundations/stack/stack.types';
 import type { BoxStyleProps } from './layout.types';
+
+/** A spacing step's points, a number as is, or nothing. */
+export const toSpace = (spacing: Theme['spacing'], space: Space | undefined) => (typeof space === 'string' ? spacing[space] : space);
 
 /** A Box's shorthands as a style. Props left out stay out, so a `style` can still set them. */
 export const getBoxStyle = (theme: Theme, p: BoxStyleProps): ViewStyle => {
@@ -21,7 +24,8 @@ export const getBoxStyle = (theme: Theme, p: BoxStyleProps): ViewStyle => {
     borderColor: p.border ? theme.colors.border : undefined,
     boxShadow: p.shadow && theme.shadows[p.shadow],
     flex: p.flex,
-    flexDirection: p.row ? 'row' : undefined,
+    flexDirection: p.direction ?? (p.row ? 'row' : undefined),
+    flexWrap: p.wrap ? 'wrap' : undefined,
     alignItems: p.align,
     justifyContent: p.justify,
   };
@@ -33,3 +37,31 @@ export const getColumnCount = (width: number, minWidth: number, gap: number) => 
 
 /** One cell's width, so `columns` cells and the gaps between them fill `width` exactly. */
 export const getCellWidth = (width: number, columns: number, gap: number) => (width - gap * (columns - 1)) / columns;
+
+/** A Container's width cap, centred, with its side padding. */
+export const getContainerStyle = (theme: Theme, maxWidth: number | undefined, padding: Space | undefined): ViewStyle => ({
+  maxWidth,
+  paddingHorizontal: toSpace(theme.spacing, padding),
+});
+
+/** A Grid's row: cells wrap, and half a gap on each cell's side is taken back at the edges. */
+export const getGridRowStyle = (colGap: number, rowGap: number | undefined): ViewStyle => ({
+  marginHorizontal: -colGap / 2,
+  rowGap,
+});
+
+/** One Grid cell: an equal share of the row, with half a gap on each side. */
+export const getGridCellStyle = (count: number, colGap: number): ViewStyle => ({
+  width: `${100 / count}%`,
+  paddingHorizontal: colGap / 2,
+});
+
+/** A Spacer: a fixed square of space, or nothing fixed so it grows. */
+export const getSpacerStyle = (fixed: number | undefined): ViewStyle | undefined =>
+  fixed === undefined
+    ? undefined
+    : {
+        width: fixed,
+        height: fixed,
+        flexShrink: 0,
+      };

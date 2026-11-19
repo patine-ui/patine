@@ -1,10 +1,10 @@
 import { Children, useState } from 'react';
-import { View } from 'react-native';
 
+import { View } from '@/core/primitives/View';
 import { useTheme } from '@/core/theme/ThemeProvider';
-import { toSpace } from '@/foundations/stack/stack.utils';
+import { styles } from './layout.styles';
 import type { GridProps } from './layout.types';
-import { getColumnCount } from './layout.utils';
+import { getColumnCount, getGridCellStyle, getGridRowStyle, toSpace } from './layout.utils';
 
 /**
  * Equal columns that wrap into rows: a fixed `columns`, or as many as fit `minColumnWidth`, re-flowing as it resizes.
@@ -35,12 +35,10 @@ export const Grid = ({
       }}
       {...rest}
     >
-      <View
-        style={{ flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -colGap / 2, rowGap: toSpace(theme.spacing, rowGap ?? gap) }}
-      >
+      <View style={[styles.gridRow, getGridRowStyle(colGap, toSpace(theme.spacing, rowGap ?? gap))]}>
         {Children.toArray(children).map((child, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: cells are positional; the child keeps its own key inside.
-          <View key={i} style={{ width: `${100 / count}%`, paddingHorizontal: colGap / 2 }}>
+          <View key={i} style={getGridCellStyle(count, colGap)}>
             {child}
           </View>
         ))}
