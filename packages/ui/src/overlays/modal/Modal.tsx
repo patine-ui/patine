@@ -1,5 +1,7 @@
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
+import { Scroll } from '@/core/primitives/Scroll';
+import { View } from '@/core/primitives/View';
 import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { DialogClose, DialogDescription, DialogTitle, DialogTrigger, renderDialogActions } from '@/overlays/dialog/Dialog';
 import { DialogContext, useDialogContext } from '@/overlays/dialog/DialogContext';
@@ -9,7 +11,7 @@ import { useModal } from './hooks/useModal';
 import { useModalFrame } from './hooks/useModalFrame';
 import { useModalLayout } from './ModalContext';
 import { MODAL_DESIGN, MODAL_LAYOUT } from './modal.constants';
-import { styles } from './modal.styles';
+import { styles, themed } from './modal.styles';
 import type { ModalBodyProps, ModalContentProps, ModalLayoutProps, ModalProps, ModalSectionProps } from './modal.types';
 import { resolveModalLayout } from './modal.utils';
 
@@ -79,31 +81,17 @@ export const ModalContent = ({ size = 'md', fullScreen, ...rest }: ModalContentP
 /** The title and description at the top, clear of the close button. */
 export const ModalHeader = ({ style, ...rest }: ModalSectionProps) => {
   const { theme } = useDialogContext();
-  const look = MODAL_DESIGN[theme.design];
-  return (
-    <View
-      style={[
-        styles.header,
-        { gap: look.headerGap, padding: look.padding, paddingBottom: look.dividers ? look.padding : look.gap / 2 },
-        look.textAlign === 'center' && { paddingStart: look.padding + 44 },
-        look.dividers && { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: theme.colors.border },
-        style,
-      ]}
-      {...rest}
-    />
-  );
+  return <View style={[styles.header, themed(theme).header, style]} {...rest} />;
 };
 
 /** The content between the header and the footer. It scrolls when it's taller than the room left. */
 export const ModalBody = ({ style, contentContainerStyle, ...rest }: ModalBodyProps) => {
   const { theme } = useDialogContext();
-  const look = MODAL_DESIGN[theme.design];
   const fills = useModalLayout() !== MODAL_LAYOUT.centered;
   return (
-    <ScrollView
+    <Scroll
       style={[styles.body, fills && styles.bodyFill, style]}
-      contentContainerStyle={[{ paddingHorizontal: look.padding, paddingVertical: look.gap / 2, gap: look.gap }, contentContainerStyle]}
-      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={[themed(theme).body, contentContainerStyle]}
       {...rest}
     />
   );
@@ -112,18 +100,7 @@ export const ModalBody = ({ style, contentContainerStyle, ...rest }: ModalBodyPr
 /** The actions at the bottom, in a row at the end. */
 export const ModalFooter = ({ style, ...rest }: ModalSectionProps) => {
   const { theme } = useDialogContext();
-  const look = MODAL_DESIGN[theme.design];
-  return (
-    <View
-      style={[
-        styles.footer,
-        { gap: theme.spacing.sm, padding: look.padding, paddingTop: look.dividers ? look.padding : look.gap / 2 },
-        look.dividers && { borderTopWidth: StyleSheet.hairlineWidth, borderColor: theme.colors.border },
-        style,
-      ]}
-      {...rest}
-    />
-  );
+  return <View style={[styles.footer, themed(theme).footer, style]} {...rest} />;
 };
 
 /** The shorthand's layout, built from the parts above: the trigger, then the panel with its header, body and footer. */

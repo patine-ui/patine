@@ -32,7 +32,6 @@ export const FULL_SCREEN_RISE = 48;
 export const CLOSE_BUTTON_ROOM = 44;
 /** iOS's round close button: a 30pt gray circle, touched across 44pt. */
 export const CLOSE_FILL_SIZE = 30;
-export const DEFAULT_CLOSE_LABEL = 'Close';
 
 /**
  * brand: Patine's card, grown from 95%. ios: a form sheet: a centered title, a gray round close button, rising as a page.

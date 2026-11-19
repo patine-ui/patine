@@ -1,10 +1,12 @@
-import { Animated, KeyboardAvoidingView, Modal, Platform, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, StyleSheet } from 'react-native';
 
-import { PLATFORM } from '@/core/core.constants';
+import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { AnimatedView, View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { useDialogContext } from '@/overlays/dialog/DialogContext';
 import type { useDialogContent } from '@/overlays/dialog/hooks/useDialogContent';
 import { ModalLayoutContext } from '@/overlays/modal/ModalContext';
-import { DEFAULT_CLOSE_LABEL } from '@/overlays/modal/modal.constants';
+import { styles, themed } from '@/overlays/modal/modal.styles';
 import type { ModalContentProps, ModalFrame } from '@/overlays/modal/modal.types';
 import { ModalCloseButton } from './ModalCloseButton';
 
@@ -21,13 +23,18 @@ export const ModalPanel = ({
   frame,
   content,
   showCloseButton = true,
-  closeLabel = DEFAULT_CLOSE_LABEL,
+  closeLabel: closeLabelProp,
   children,
   style,
   ...rest
 }: ModalPanelProps) => {
+  const words = useLabels();
+  const closeLabel = closeLabelProp ?? words.close;
   const ctx = useDialogContext();
   const top = (StyleSheet.flatten(frame.panel)?.paddingTop as number | undefined) ?? 0;
+  // Animated values: the backdrop fades and the panel fades and moves in.
+  const fade = { opacity: content.progress };
+  const enter = { opacity: content.progress, transform: frame.transform };
   return (
     <Modal
       visible
@@ -38,16 +45,16 @@ export const ModalPanel = ({
       onShow={content.onShow}
       testID={rest.testID ? `${rest.testID}-modal` : undefined}
     >
-      <KeyboardAvoidingView behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined} style={StyleSheet.absoluteFill}>
+      <KeyboardAvoidingView behavior={KEYBOARD_AVOID_BEHAVIOR} style={styles.fill}>
         {/* A responder, not a Pressable: the web's focus trap skips it, and a drag that starts in the panel doesn't close it */}
-        <Animated.View
+        <AnimatedView
           testID={rest.testID ? `${rest.testID}-backdrop` : undefined}
-          style={[StyleSheet.absoluteFill, { backgroundColor: ctx.theme.colors.backdrop, opacity: content.progress }]}
+          style={[styles.fill, themed(ctx.theme).backdrop, fade]}
           onStartShouldSetResponder={() => !!content.onBackdropPress}
           onResponderRelease={content.onBackdropPress}
         />
         <View style={frame.container} pointerEvents="box-none">
-          <Animated.View
+          <AnimatedView
             role="dialog"
             aria-modal
             aria-labelledby={ctx.titleId}
@@ -55,11 +62,11 @@ export const ModalPanel = ({
             accessibilityViewIsModal
             onAccessibilityEscape={content.onRequestClose}
             {...rest}
-            style={[frame.panel, { opacity: content.progress, transform: frame.transform }, style]}
+            style={[frame.panel, enter, style]}
           >
             <ModalLayoutContext.Provider value={frame.layout}>{children}</ModalLayoutContext.Provider>
             {showCloseButton ? <ModalCloseButton label={closeLabel} top={top} /> : null}
-          </Animated.View>
+          </AnimatedView>
         </View>
       </KeyboardAvoidingView>
     </Modal>
