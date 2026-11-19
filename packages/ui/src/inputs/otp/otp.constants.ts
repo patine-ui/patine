@@ -14,7 +14,6 @@ export const OTP_DROPPED_CHARS = {
 } as const;
 
 export const DEFAULT_OTP_LENGTH = 6;
-export const DEFAULT_OTP_LABEL = 'Verification code';
 /** What a `secureTextEntry` cell shows for each character. */
 export const SECURE_DOT = '•';
 

@@ -2,7 +2,7 @@ import type { Animated, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
 import type { ValueOf } from '@/core/core.types';
-import type { FieldDesign, FieldStatusProps } from '@/overlays/sheet/sheet.types';
+import type { FieldStatusProps } from '@/overlays/sheet/sheet.types';
 import type { OTP_INPUT_MODE } from './otp.constants';
 
 /** 'numeric': digits on a number pad. 'text': letters and digits. */
@@ -65,7 +65,6 @@ export interface OtpCellProps {
   cell: OtpCellState;
   caretOpacity: Animated.Value;
   invalid: boolean;
-  look: FieldDesign;
   theme: Theme;
   slots?: SlotStyles<InputOTPSlot>;
   testID?: string;

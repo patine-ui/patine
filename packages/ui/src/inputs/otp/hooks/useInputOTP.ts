@@ -1,6 +1,6 @@
+import { useFocus } from '@/core/a11y/hooks/useFocus';
 import { useBlink } from '@/core/animation';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useFocus } from '@/core/hooks/useFocus';
 import { DEFAULT_OTP_LENGTH, OTP_INPUT_MODE } from '@/inputs/otp/otp.constants';
 import type { InputOTPProps, InputOTPState } from '@/inputs/otp/otp.types';
 import { getCells, sanitizeCode } from '@/inputs/otp/otp.utils';
