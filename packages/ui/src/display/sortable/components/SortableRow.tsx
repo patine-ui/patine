@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 import type { AccessibilityActionEvent, HostInstance, KeyDownEvent } from 'react-native';
-import { Animated, Pressable } from 'react-native';
 
+import { focusRing } from '@/core/a11y/a11y.utils';
+import { useFocusVisible } from '@/core/a11y/hooks/useFocusVisible';
 import { useAnimatedTo } from '@/core/animation';
 import { IS_WEB } from '@/core/core.constants';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { focusOutline } from '@/core/utils/focus.utils';
+import { AnimatedView, Pressable } from '@/core/primitives/View';
 import { SortableRowCtx } from '@/display/sortable/SortableContext';
 import { LIFT_DELAY_MS, MOVE_ACTION, SORT_ACTIVATION, SORTABLE_DESIGN } from '@/display/sortable/sortable.constants';
-import { styles } from '@/display/sortable/sortable.styles';
+import { styles, themed } from '@/display/sortable/sortable.styles';
 import type { SortableRowProps } from '@/display/sortable/sortable.types';
 
 const KEYS = { space: ' ', enter: 'Enter', escape: 'Escape', up: 'ArrowUp', down: 'ArrowDown' } as const;
@@ -45,6 +45,8 @@ export const SortableRow = ({
   const offset = useAnimatedTo(shift, { duration: theme.animation.duration, instant: !dragging });
   const scale = useAnimatedTo(active ? look.scale : 1, { duration: theme.animation.duration });
   const raised = active || grabbed;
+  // Animated values: the row follows the drag, or slides to its new place, and grows while held.
+  const motion = { transform: [{ translateY: active ? drag : offset }, { scale }] };
 
   // A keyboard move re-renders the row elsewhere in the list: keep focus on it.
   // biome-ignore lint/correctness/useExhaustiveDependencies: refocus when the index changes.
@@ -88,20 +90,16 @@ export const SortableRow = ({
       }
     : {
         accessible: true,
-        accessibilityLabel: label,
+        'aria-label': label,
         accessibilityActions: disabled ? undefined : actions,
         onAccessibilityAction: (e: AccessibilityActionEvent) => onMove(index, e.nativeEvent.actionName === MOVE_ACTION.up ? -1 : 1),
       };
 
   return (
-    <Animated.View
+    <AnimatedView
       ref={ref}
       onLayout={(e) => onLayout(itemKey, { y: e.nativeEvent.layout.y, height: e.nativeEvent.layout.height })}
-      style={[
-        raised && [styles.raised, { backgroundColor: theme.colors[look.fill], boxShadow: theme.shadows[look.shadow] }],
-        focus.focusVisible && focusOutline(theme.colors.primary),
-        { transform: [{ translateY: active ? drag : offset }, { scale }] },
-      ]}
+      style={[raised && [styles.raised, themed(theme).raised], focus.focusVisible && focusRing(theme.colors.primary), motion]}
       {...a11y}
     >
       <SortableRowCtx.Provider value={{ theme, active, disabled, lift: () => onLift(index), release: onRelease }}>
@@ -120,6 +118,6 @@ export const SortableRow = ({
           children
         )}
       </SortableRowCtx.Provider>
-    </Animated.View>
+    </AnimatedView>
   );
 };

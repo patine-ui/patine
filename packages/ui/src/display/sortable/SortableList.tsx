@@ -1,10 +1,9 @@
-import { ScrollView, Text, View } from 'react-native';
-
-import { IS_WEB } from '@/core/core.constants';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Scroll } from '@/core/primitives/Scroll';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { SortableRow } from './components/SortableRow';
 import { useSortable } from './hooks/useSortable';
-import { DEFAULT_SORTABLE_LABELS, SORT_ACTIVATION } from './sortable.constants';
+import { SORT_ACTIVATION } from './sortable.constants';
 import { styles } from './sortable.styles';
 import type { SortableListProps } from './sortable.types';
 
@@ -29,56 +28,54 @@ export const SortableList = <T,>({
   style,
   ...rest
 }: SortableListProps<T>) => {
-  const { theme } = useComponentTheme(themeProp, design);
-  const labels = { ...DEFAULT_SORTABLE_LABELS, ...labelsProp };
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const labels = { ...words.sortable, ...labelsProp };
   const sortable = useSortable({ data, keyExtractor, onReorder, onDragStart, disabled, theme, labels });
   return (
-    <View ref={sortable.rootRef} style={[style, sortable.active && styles.dragging]} {...sortable.panHandlers}>
-      <ScrollView
-        ref={sortable.scrollRef}
-        role="list"
-        scrollEnabled={scrollEnabled && !sortable.active}
-        scrollEventThrottle={16}
-        {...rest}
-        onScroll={sortable.onScroll}
-        onContentSizeChange={sortable.onContentSizeChange}
-        onLayout={sortable.onLayout}
-      >
-        {data.map((item, index) => {
-          const key = sortable.keys[index] as string;
-          const active = sortable.active?.key === key;
-          return (
-            <SortableRow
-              key={key}
-              itemKey={key}
-              index={index}
-              count={data.length}
-              shift={sortable.shiftOf(index)}
-              active={active}
-              dragging={!!sortable.active}
-              grabbed={sortable.grabbed === key}
-              drag={sortable.drag}
-              label={getItemLabel?.(item)}
-              labels={labels}
-              activation={activation}
-              disabled={disabled}
-              theme={theme}
-              onLayout={sortable.onRowLayout}
-              onLift={sortable.lift}
-              onRelease={sortable.release}
-              onMove={sortable.move}
-              onGrab={sortable.grab}
-            >
-              {renderItem({ item, index, isActive: active || sortable.grabbed === key })}
-            </SortableRow>
-          );
-        })}
-      </ScrollView>
-      {IS_WEB ? (
-        <Text aria-live="polite" style={styles.visuallyHidden}>
-          {sortable.announcement}
-        </Text>
-      ) : null}
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View ref={sortable.rootRef} style={[style, sortable.active && styles.dragging]} {...sortable.panHandlers}>
+        <Scroll
+          ref={sortable.scrollRef}
+          role="list"
+          scrollEnabled={scrollEnabled && !sortable.active}
+          scrollEventThrottle={16}
+          {...rest}
+          onScroll={sortable.onScroll}
+          onContentSizeChange={sortable.onContentSizeChange}
+          onLayout={sortable.onLayout}
+        >
+          {data.map((item, index) => {
+            const key = sortable.keys[index] as string;
+            const active = sortable.active?.key === key;
+            return (
+              <SortableRow
+                key={key}
+                itemKey={key}
+                index={index}
+                count={data.length}
+                shift={sortable.shiftOf(index)}
+                active={active}
+                dragging={!!sortable.active}
+                grabbed={sortable.grabbed === key}
+                drag={sortable.drag}
+                label={getItemLabel?.(item)}
+                labels={labels}
+                activation={activation}
+                disabled={disabled}
+                theme={theme}
+                onLayout={sortable.onRowLayout}
+                onLift={sortable.lift}
+                onRelease={sortable.release}
+                onMove={sortable.move}
+                onGrab={sortable.grab}
+              >
+                {renderItem({ item, index, isActive: active || sortable.grabbed === key })}
+              </SortableRow>
+            );
+          })}
+        </Scroll>
+      </View>
+    </ThemeScope>
   );
 };

@@ -1,17 +1,10 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { SortableDesign, SortableLabels } from './sortable.types';
+import type { SortableDesign } from './sortable.types';
 
 export const SORT_ACTIVATION = {
   longPress: 'longPress',
   handle: 'handle',
 } as const;
-
-export const DEFAULT_SORTABLE_LABELS: SortableLabels = {
-  moveUp: 'Move up',
-  moveDown: 'Move down',
-  moved: 'Moved to position {position} of {count}',
-  keyboardHint: 'Press Space to pick up, arrows to move, Space to drop',
-};
 
 /** Hold this long (ms) to lift a row: iOS and Android's long-press time. */
 export const LIFT_DELAY_MS = 350;

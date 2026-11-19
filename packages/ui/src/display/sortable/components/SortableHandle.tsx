@@ -1,9 +1,8 @@
-import { Pressable, View } from 'react-native';
-
+import { Pressable, View } from '@/core/primitives/View';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
 import { useSortableRow } from '@/display/sortable/SortableContext';
 import { SORTABLE_DESIGN } from '@/display/sortable/sortable.constants';
-import { styles } from '@/display/sortable/sortable.styles';
+import { styles, themed } from '@/display/sortable/sortable.styles';
 import type { SortableHandleProps } from '@/display/sortable/sortable.types';
 
 /**
@@ -21,7 +20,7 @@ export const SortableHandle = ({
   const { theme: own } = useComponentTheme(themeProp, design);
   const theme = themeProp || design ? own : (row?.theme ?? own);
   const look = SORTABLE_DESIGN[theme.design];
-  const color = theme.colors.textSecondary;
+  const mark = themed(theme).mark;
   return (
     <Pressable
       accessible={false}
@@ -38,13 +37,13 @@ export const SortableHandle = ({
       {look.handle === 'lines' ? (
         <View style={styles.lines}>
           {[0, 1, 2].map((i) => (
-            <View key={i} style={[styles.line, { backgroundColor: color }]} />
+            <View key={i} style={[styles.line, mark]} />
           ))}
         </View>
       ) : (
         <View style={styles.dots}>
           {[0, 1, 2, 3, 4, 5].map((i) => (
-            <View key={i} style={[styles.dot, { backgroundColor: color }]} />
+            <View key={i} style={[styles.dot, mark]} />
           ))}
         </View>
       )}

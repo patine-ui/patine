@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, ScrollViewInstance } from 'react-native';
-import { AccessibilityInfo, PanResponder } from 'react-native';
+import { PanResponder } from 'react-native';
 
+import { announce } from '@/core/a11y/a11y.utils';
 import { EASE_OUT, timing, useAnimatedValue } from '@/core/animation';
 import { IS_WEB } from '@/core/core.constants';
 import type { HostRef, PanHandlers } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
+import { clamp } from '@/core/utils/track.utils';
 import { AUTO_SCROLL } from '@/display/sortable/sortable.constants';
 import type { RowLayout, SortableLabels, SortableListProps } from '@/display/sortable/sortable.types';
 import { autoScrollSpeed, dropIndex, formatPosition, moveItem, rowSpan, settleOffset, shiftFor } from '@/display/sortable/sortable.utils';
@@ -32,7 +34,6 @@ export const useSortable = <T>({ data, keyExtractor, onReorder, onDragStart, dis
   const [active, setActive] = useState<{ key: string; from: number } | null>(null);
   const [hover, setHover] = useState(-1);
   const [grabbed, setGrabbed] = useState<string | null>(null);
-  const [announcement, setAnnouncement] = useState('');
   const g = useRef({
     dy: 0,
     fingerY: 0,
@@ -63,18 +64,14 @@ export const useSortable = <T>({ data, keyExtractor, onReorder, onDragStart, dis
     }
   };
 
-  const announce = (index: number) => {
-    const text = formatPosition(labels.moved, index + 1, latest.current.data.length);
-    if (IS_WEB) setAnnouncement(text);
-    else AccessibilityInfo.announceForAccessibility(text);
-  };
+  const announceMove = (index: number) => announce(formatPosition(labels.moved, index + 1, latest.current.data.length));
 
   const stopScrolling = () => cancelAnimationFrame(g.frame);
   // Near the top or bottom while dragging, scroll a little every frame, and keep the row under the finger.
   const autoScroll = () => {
     if (!latest.current.active) return;
     const speed = g.granted ? autoScrollSpeed(g.fingerY - g.viewportTop, g.viewportHeight, AUTO_SCROLL.edge, AUTO_SCROLL.speed) : 0;
-    const next = Math.min(Math.max(0, g.content - g.viewportHeight), Math.max(0, g.scroll + speed));
+    const next = clamp(g.scroll + speed, 0, Math.max(0, g.content - g.viewportHeight));
     if (next !== g.scroll) {
       g.scroll = next;
       scrollRef.current?.scrollTo({ y: next, animated: false });
@@ -113,7 +110,7 @@ export const useSortable = <T>({ data, keyExtractor, onReorder, onDragStart, dis
       g.dropping = false;
       if (to !== from) {
         latest.current.onReorder(moveItem(latest.current.data, from, to), { from, to });
-        announce(to);
+        announceMove(to);
       }
       latest.current.active = null;
       setActive(null);
@@ -153,7 +150,7 @@ export const useSortable = <T>({ data, keyExtractor, onReorder, onDragStart, dis
     const to = index + delta;
     if (disabled || to < 0 || to >= latest.current.data.length) return;
     latest.current.onReorder(moveItem(latest.current.data, index, to), { from: index, to });
-    announce(to);
+    announceMove(to);
   };
 
   const span = active ? rowSpan(ordered(), active.from) : 0;
@@ -165,7 +162,6 @@ export const useSortable = <T>({ data, keyExtractor, onReorder, onDragStart, dis
     drag,
     active,
     grabbed,
-    announcement,
     panHandlers: responder.panHandlers as PanHandlers,
     shiftOf: (index: number) => (active ? shiftFor(index, active.from, hover, span) : 0),
     lift,
