@@ -187,6 +187,23 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       },
       { prop: 'endIcon', options: ['none', 'next'], unset: 'none', values: { next: icon('arrowRight', 'onPrimary') } },
       { prop: 'loading', options: [false, true] },
+      {
+        prop: 'href',
+        options: ['none', 'set'],
+        unset: 'none',
+        values: { set: { live: 'https://patine.dev', code: '"https://patine.dev"' } },
+      },
+      {
+        prop: 'styles',
+        options: ['none', 'label'],
+        unset: 'none',
+        values: {
+          label: {
+            live: { label: { letterSpacing: 1, textTransform: 'uppercase' } },
+            code: "{{ label: { letterSpacing: 1, textTransform: 'uppercase' } }}",
+          },
+        },
+      },
       DISABLED,
       DESIGN,
     ],

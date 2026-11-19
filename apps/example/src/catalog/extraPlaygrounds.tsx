@@ -212,6 +212,17 @@ export const EXTRA_PLAYGROUNDS = {
       { prop: 'variant', options: ['numbers', 'compact'] },
       { prop: 'siblingCount', options: [1, 0, 2] },
       { prop: 'iconOnly', options: [false, true] },
+      {
+        prop: 'labels',
+        options: ['none', 'french'],
+        unset: 'none',
+        values: {
+          french: {
+            live: { previous: 'Précédent', next: 'Suivant' },
+            code: "{{ previous: 'Précédent', next: 'Suivant' }}",
+          },
+        },
+      },
       DISABLED,
       DESIGN,
     ],
