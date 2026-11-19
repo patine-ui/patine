@@ -1,45 +1,29 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { SCROLL_ARROW_GLYPHS, SCROLL_ARROW_LABELS, SCROLL_ARROW_SIDE } from '@/inputs/segmented/segmented.constants';
-import { styles } from '@/inputs/segmented/segmented.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
+import { SCROLL_ARROW_GLYPHS, SCROLL_ARROW_SIDE } from '@/inputs/segmented/segmented.constants';
+import { styles, themed } from '@/inputs/segmented/segmented.styles';
 import type { ScrollArrowProps } from '@/inputs/segmented/segmented.types';
 
 export const ScrollArrow = ({ side, disabled, overlay, renderArrow, onPress, theme, slots, testID }: ScrollArrowProps) => {
+  const words = useLabels();
   const button = (
     <Touchable
       theme={theme}
       disabled={disabled}
       onPress={onPress}
-      hitSlop={8}
-      accessibilityRole="button"
-      accessibilityLabel={SCROLL_ARROW_LABELS[side]}
-      accessibilityState={{ disabled }}
-      style={[
-        styles.arrow,
-        {
-          backgroundColor: theme.colors.background,
-          borderColor: theme.colors.border,
-          borderRadius: theme.radius.full,
-          boxShadow: theme.shadows.xs,
-        },
-        slots?.arrow,
-      ]}
+      role="button"
+      aria-label={words.scroll[side]}
+      style={[styles.arrow, themed(theme).arrow, slots?.arrow]}
       testID={testID}
     >
       {renderArrow ? (
         renderArrow(side, disabled)
       ) : (
-        <PickerText
-          theme={theme}
-          size="lg"
-          weight="bold"
-          color={disabled ? 'textDisabled' : 'text'}
-          style={[styles.arrowText, slots?.arrowText]}
-        >
+        <Text size="lg" weight="bold" color="text" style={[styles.arrowText, slots?.arrowText]}>
           {SCROLL_ARROW_GLYPHS[side]}
-        </PickerText>
+        </Text>
       )}
     </Touchable>
   );

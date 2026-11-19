@@ -3,7 +3,7 @@ import type { Animated, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
 import type { NoInferValue, ValueOf } from '@/core/core.types';
-import type { ARROW_POSITION, CHOICE_VARIANT, ICON_POSITION, SCROLL_ARROW_SIDE } from './segmented.constants';
+import type { ARROW_POSITION, CHOICE_ICON_POSITION, CHOICE_VARIANT, SCROLL_ARROW_SIDE } from './segmented.constants';
 
 /** What an item's icon can match: its state and its label's color. */
 export interface ChoiceIconInfo {
@@ -22,7 +22,7 @@ export interface ChoiceItem<T> {
 
 export type ChoiceVariant = ValueOf<typeof CHOICE_VARIANT>;
 
-export type ChoiceIconPosition = ValueOf<typeof ICON_POSITION>;
+export type ChoiceIconPosition = ValueOf<typeof CHOICE_ICON_POSITION>;
 
 export type ChoiceSlot =
   | 'container'

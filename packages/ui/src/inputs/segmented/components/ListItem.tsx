@@ -1,16 +1,9 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
 import { CHECK_MARK } from '@/core/core.constants';
-import {
-  CHOICE_VARIANT,
-  DISABLED_ITEM_OPACITY,
-  ICON_POSITION,
-  ICON_POSITION_DIRECTION,
-  LIST_DESIGN,
-} from '@/inputs/segmented/segmented.constants';
-import { styles } from '@/inputs/segmented/segmented.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { CHOICE_ICON_POSITION, CHOICE_VARIANT, LIST_DESIGN } from '@/inputs/segmented/segmented.constants';
+import { styles, themed } from '@/inputs/segmented/segmented.styles';
 import type { ListItemProps } from '@/inputs/segmented/segmented.types';
 
 export const ListItem = <T,>({
@@ -26,15 +19,14 @@ export const ListItem = <T,>({
   slots,
   testID,
 }: ListItemProps<T>) => {
-  const c = theme.colors;
+  const sheet = themed(theme);
   const disabled = !!item.disabled;
   const segmented = variant === CHOICE_VARIANT.segmented;
   const { outlined } = LIST_DESIGN[theme.design];
-  const background = segmented ? 'transparent' : selected ? c.primaryMuted : c.surface;
-  const labelColor = outlined ? c.text : selected ? c.primary : segmented ? c.textSecondary : c.text;
+  const label = selected ? sheet.labelOn : segmented ? sheet.segmentLabel : sheet.label;
   // An icon above or below the label makes the item taller than the fixed segment or chip height.
-  const stacked = iconPosition === ICON_POSITION.top || iconPosition === ICON_POSITION.bottom;
-  const icon = typeof item.icon === 'function' ? item.icon({ selected, disabled, color: labelColor }) : item.icon;
+  const stacked = iconPosition === CHOICE_ICON_POSITION.top || iconPosition === CHOICE_ICON_POSITION.bottom;
+  const icon = typeof item.icon === 'function' ? item.icon({ selected, disabled, color: label.color }) : item.icon;
   return (
     <View onLayout={(e) => onLayout(e.nativeEvent.layout)} style={segmented && styles.segmentSlot} testID={testID}>
       <Touchable
@@ -42,25 +34,20 @@ export const ListItem = <T,>({
         pressScale={!segmented}
         disabled={disabled}
         onPress={onPress}
-        accessibilityRole="radio"
-        accessibilityState={{ checked: selected, disabled }}
-        accessibilityLabel={item.label}
+        role="radio"
+        aria-checked={selected}
+        aria-label={item.label}
         style={[
           styles.item,
-          !stacked && (segmented ? styles.segment : styles.chip),
-          stacked && { paddingVertical: theme.spacing.xs },
-          {
-            flexDirection: ICON_POSITION_DIRECTION[iconPosition],
-            gap: theme.spacing.xs,
-            paddingHorizontal: theme.spacing.md,
-            borderRadius: segmented ? theme.radius.sm : theme.radius.full,
-            backgroundColor: background,
-            opacity: disabled ? DISABLED_ITEM_OPACITY : 1,
-          },
-          outlined && { backgroundColor: selected ? c.primaryMuted : 'transparent', borderColor: c.textSecondary },
+          styles[iconPosition],
+          sheet.item,
+          stacked ? sheet.stacked : segmented ? styles.segment : styles.chip,
+          segmented ? sheet.segment : [sheet.chip, selected && sheet.chipOn],
+          disabled && styles.disabledItem,
+          outlined && (selected ? sheet.outlinedOn : sheet.outlinedOff),
           outlined &&
-            segmented && [styles.outlinedSegment, !stacked && styles.outlinedSegmentHeight, { borderStartWidth: divided ? 1 : 0 }],
-          outlined && !segmented && { borderRadius: theme.radius.sm, borderWidth: selected ? 0 : 1 },
+            segmented && [styles.outlinedSegment, !stacked && styles.outlinedSegmentHeight, divided ? styles.divided : styles.undivided],
+          outlined && !segmented && (selected ? sheet.outlinedChipOn : sheet.outlinedChipOff),
           slots?.item,
           selected && slots?.selectedItem,
         ]}
@@ -70,21 +57,20 @@ export const ListItem = <T,>({
         ) : (
           <>
             {outlined && selected ? (
-              <PickerText theme={theme} size="sm" weight="bold" style={{ color: labelColor }}>
+              <Text size="sm" weight="bold" style={label}>
                 {CHECK_MARK}
-              </PickerText>
+              </Text>
             ) : (
               icon
             )}
-            <PickerText
-              theme={theme}
+            <Text
               size="sm"
               weight={selected && !segmented ? 'bold' : 'medium'}
               numberOfLines={1}
-              style={[{ color: labelColor }, slots?.itemLabel, selected && slots?.selectedItemLabel]}
+              style={[label, slots?.itemLabel, selected && slots?.selectedItemLabel]}
             >
               {item.label}
-            </PickerText>
+            </Text>
           </>
         )}
       </Touchable>

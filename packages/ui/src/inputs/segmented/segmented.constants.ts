@@ -8,7 +8,7 @@ export const CHOICE_VARIANT = {
   chips: 'chips',
 } as const;
 
-export const ICON_POSITION = {
+export const CHOICE_ICON_POSITION = {
   left: 'left',
   right: 'right',
   top: 'top',
@@ -47,7 +47,6 @@ export const SCROLL_ARROW_SIDE = {
 
 export const SCROLL_ARROW_SIDES: readonly ChoiceArrowSide[] = [SCROLL_ARROW_SIDE.left, SCROLL_ARROW_SIDE.right];
 export const SCROLL_ARROW_GLYPHS: Record<ChoiceArrowSide, string> = { left: '‹', right: '›' };
-export const SCROLL_ARROW_LABELS: Record<ChoiceArrowSide, string> = { left: 'Scroll left', right: 'Scroll right' };
 export const SCROLL_ARROW_SIZE = 28;
 
 export const ARROW_POSITION = {
