@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { GestureResponderEvent, PressableProps, StyleProp, ViewStyle } from 'react-native';
+import type { GestureResponderEvent, HostInstance, PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { TextProps } from '@/foundations/text/text.types';
@@ -30,6 +30,8 @@ export interface LinkDesign {
 export type FabSize = keyof typeof FAB_SIZE;
 
 export interface FabProps extends Omit<PressableProps, 'children' | 'style'>, ThemableProps {
+  /** The button's view: to focus it, or for a Tooltip to measure where it floats */
+  ref?: React.Ref<HostInstance>;
   /** The icon, or a function of the color to draw it in */
   icon?: React.ReactNode | ((info: { color: string }) => React.ReactNode);
   /** Text beside the icon, for an extended FAB. Without it, give an `accessibilityLabel` */

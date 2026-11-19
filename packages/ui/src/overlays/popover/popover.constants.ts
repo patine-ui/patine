@@ -30,6 +30,10 @@ export const OPPOSITE_SIDE: Record<PopoverSide, PopoverSide> = {
 export const EDGE_MARGIN = 8;
 /** How far the arrow sticks out of the panel; it's twice as wide. */
 export const ARROW_SIZE = 8;
+/** The side of the turned square the arrow is drawn from: its half-diagonal is `ARROW_SIZE`. */
+export const ARROW_SIDE = ARROW_SIZE * Math.SQRT2;
+/** Room around the arrow for the panel's shadow, which the arrow repeats. */
+export const ARROW_SHADOW_ROOM = 16;
 /** The arrow stays this far from the panel's corners, clear of the rounding. */
 export const ARROW_INSET = 16;
 /** The panel slides this far in from its trigger as it fades in, unless motion is reduced. */

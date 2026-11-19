@@ -65,6 +65,36 @@ describe('Tooltip', () => {
     expect(tip()).toBeNull();
   });
 
+  it('measures the trigger itself, so a floating trigger gets its tooltip beside it, and keeps the trigger’s own ref', async () => {
+    let node: { measureInWindow: (cb: (...rect: number[]) => void) => void } | null = null;
+    const theirs = jest.fn();
+    await render(
+      <TooltipProvider>
+        <Tooltip content="Ask" testID="tip">
+          <Pressable
+            ref={(el) => {
+              node = el as typeof node;
+              theirs(el);
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Copy"
+          >
+            <Text>✦</Text>
+          </Pressable>
+        </Tooltip>
+      </TooltipProvider>
+    );
+    const ownMeasure = jest.fn((callback: (...rect: number[]) => void) => callback(1200, 700, 56, 56));
+    if (!node) throw new Error('The trigger got no ref');
+    (node as { measureInWindow: typeof ownMeasure }).measureInWindow = ownMeasure;
+    await fireEvent(button(), 'hoverIn');
+    await advance(500);
+    expect(ownMeasure).toHaveBeenCalled();
+    expect(measureInWindow).not.toHaveBeenCalled();
+    expect(theirs).toHaveBeenCalledWith(node);
+    expect(tip()?.props.role).toBe('tooltip');
+  });
+
   it('never opens when the pointer leaves before the delay', async () => {
     const onOpenChange = jest.fn();
     await render(<Example onOpenChange={onOpenChange} delayDuration={200} />);

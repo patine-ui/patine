@@ -1,5 +1,5 @@
-import { Children, cloneElement, type ReactElement, useEffect, useId } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { Children, cloneElement, type ReactElement, type Ref, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { type HostInstance, useWindowDimensions } from 'react-native';
 
 import { usePresence } from '@/core/animation/hooks/usePresence';
 import { IS_WEB } from '@/core/core.constants';
@@ -10,8 +10,7 @@ import { FloatingModal } from '@/overlays/popover/components/FloatingModal';
 import { FloatingPanel } from '@/overlays/popover/components/FloatingPanel';
 import { POPOVER_SIDE } from '@/overlays/popover/popover.constants';
 import type { Size } from '@/overlays/popover/popover.types';
-import { chain } from '@/overlays/popover/popover.utils';
-import { useAnchor } from '@/overlays/sheet/hooks/useAnchor';
+import { chain, liftToTopLayer, type TopLayerNode } from '@/overlays/popover/popover.utils';
 import type { AnchorRect } from '@/overlays/sheet/sheet.types';
 import { toLocalRect } from '@/overlays/sheet/sheet.utils';
 import { useTooltip } from './hooks/useTooltip';
@@ -44,15 +43,41 @@ export const Tooltip = ({
   const { mounted, progress } = usePresence({ visible: tooltip.open, duration: theme.animation.duration });
   const windowSize = useWindowDimensions();
   const id = useId();
-  const { ref, rect, measure } = useAnchor();
-  useEffect(() => {
-    if (tooltip.open) measure();
-  }, [tooltip.open, measure]);
-
-  const child = Children.only(children) as ReactElement<TooltipChildProps>;
+  const child = Children.only(children) as ReactElement<TooltipChildProps & { ref?: Ref<HostInstance> }>;
   const own = child.props;
   const ours = tooltip.triggerProps;
+  // The trigger itself is measured, not the view around it: a trigger placed on its own (a floating button, absolutely
+  // positioned) leaves that view empty at the parent's edge. The wrapper is the fallback for a child that doesn't pass refs.
+  const wrapper = useRef<HostInstance>(null);
+  const node = useRef<HostInstance | null>(null);
+  const triggerRef = useCallback(
+    (el: HostInstance | null) => {
+      node.current = el;
+      const theirs = own.ref;
+      if (typeof theirs === 'function') theirs(el);
+      else if (theirs) (theirs as { current: HostInstance | null }).current = el;
+    },
+    [own.ref]
+  );
+  const [rect, setRect] = useState<AnchorRect | null>(null);
+  useEffect(() => {
+    if (tooltip.open)
+      (node.current ?? wrapper.current)?.measureInWindow((x, y, width, height) =>
+        setRect({
+          x,
+          y,
+          width,
+          height,
+        })
+      );
+  }, [tooltip.open]);
+  // On the web the bubble goes to the browser's top layer, so no bar or card it's inside can cover or clip it.
+  const lift = useCallback((el: HostInstance | null) => {
+    liftToTopLayer(el as unknown as TopLayerNode | null);
+  }, []);
+
   const trigger = cloneElement(child, {
+    ref: triggerRef,
     onHoverIn: ours.onHoverIn && chain(own.onHoverIn, ours.onHoverIn),
     onHoverOut: ours.onHoverOut && chain(own.onHoverOut, ours.onHoverOut),
     onFocus: ours.onFocus && chain(own.onFocus, ours.onFocus),
@@ -64,6 +89,7 @@ export const Tooltip = ({
 
   const bubble = (area: Size, at: AnchorRect, ready: boolean) => (
     <FloatingPanel
+      ref={IS_WEB ? lift : undefined}
       id={id}
       role="tooltip"
       pointerEvents="none"
@@ -91,7 +117,7 @@ export const Tooltip = ({
   const screenArea = { x: 0, y: 0, ...windowSize };
   return (
     <ThemeScope theme={themeOverride}>
-      <View ref={ref} collapsable={false}>
+      <View ref={wrapper} collapsable={false}>
         {trigger}
       </View>
       {mounted && rect ? (

@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { Animated, GestureResponderEvent, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import type { Animated, GestureResponderEvent, HostInstance, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
 import type { ThemableProps, ValueOf } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
@@ -127,6 +127,8 @@ export interface FloatingModalProps {
 }
 
 export interface FloatingPanelProps extends PopoverPlacementProps, Omit<ViewProps, 'style'> {
+  /** The panel's own view, such as to lift it into the web's top layer */
+  ref?: React.Ref<HostInstance>;
   /** The trigger, in `area`'s space */
   trigger: PlacementOptions['trigger'];
   area: Size;

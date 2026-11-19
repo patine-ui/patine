@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { DimensionValue, ViewProps, ViewStyle } from 'react-native';
+import type { DimensionValue, View, ViewProps, ViewStyle } from 'react-native';
 
 import type { DeepPartial } from '@/core/core.types';
 import type { ShadowLevel, Theme } from '@/core/theme/theme.types';
@@ -9,6 +9,8 @@ import type { CONTAINER_WIDTH } from './layout.constants';
 interface LayoutBase extends ViewProps {
   /** Component-level theme override, merged on top of the provider theme */
   theme?: DeepPartial<Theme>;
+  /** The underlying view, e.g. to `measure()` it */
+  ref?: React.Ref<React.ComponentRef<typeof View>>;
 }
 
 /** Spacing and surface shorthands, each from the theme. */

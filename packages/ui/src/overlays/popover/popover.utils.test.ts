@@ -1,4 +1,4 @@
-import { getArrowFrame, getPlacement } from './popover.utils';
+import { getArrowClip, getArrowFrame, getArrowSquare, getPlacement, liftToTopLayer } from './popover.utils';
 
 const area = { width: 400, height: 800 };
 const size = { width: 200, height: 100 };
@@ -61,11 +61,35 @@ describe('getPlacement', () => {
 });
 
 describe('getArrowFrame', () => {
-  it('sits outside the edge facing the trigger, turned towards it', () => {
+  // The clip is 48 wide and 24 tall (+ the border); its centre sits (24 - border) / 2 outside the edge.
+  it('puts the clip outside the edge facing the trigger, turned towards it', () => {
     const p = { x: 0, y: 0, arrow: 50 };
-    expect(getArrowFrame({ ...p, side: 'bottom' }, size)).toEqual({ left: 42, top: -8, transform: [{ rotate: '0deg' }] });
-    expect(getArrowFrame({ ...p, side: 'top' }, size)).toMatchObject({ left: 42, top: 100 });
-    expect(getArrowFrame({ ...p, side: 'right' }, size)).toMatchObject({ left: -12, top: 46 });
-    expect(getArrowFrame({ ...p, side: 'left' }, size)).toMatchObject({ left: 196, top: 46 });
+    expect(getArrowFrame({ ...p, side: 'bottom' }, size)).toEqual({ left: 26, top: -24, transform: [{ rotate: '0deg' }] });
+    expect(getArrowFrame({ ...p, side: 'top' }, size)).toMatchObject({ left: 26, top: 100, transform: [{ rotate: '180deg' }] });
+    expect(getArrowFrame({ ...p, side: 'right' }, size)).toMatchObject({ left: -36, top: 38 });
+    expect(getArrowFrame({ ...p, side: 'left' }, size)).toMatchObject({ left: 188, top: 38 });
+  });
+
+  it('measures from inside the panel border, and the clip covers it', () => {
+    expect(getArrowFrame({ x: 0, y: 0, arrow: 50, side: 'bottom' }, size, 1)).toMatchObject({ left: 25, top: -25 });
+    expect(getArrowClip(1)).toEqual({ width: 48, height: 25 });
+    expect(getArrowSquare(0).top).toBeCloseTo(24 - 4 * Math.SQRT2);
+  });
+});
+
+describe('liftToTopLayer', () => {
+  it('puts the panel in the browser’s top layer, keeping its own place', () => {
+    const node = { setAttribute: jest.fn(), style: {} as Record<string, string>, showPopover: jest.fn() };
+    expect(liftToTopLayer(node)).toBe(true);
+    expect(node.setAttribute).toHaveBeenCalledWith('popover', 'manual');
+    expect(node.style).toMatchObject({ right: 'auto', bottom: 'auto', margin: '0', overflow: 'visible' });
+    expect(node.showPopover).toHaveBeenCalled();
+  });
+
+  it('leaves it be where there is no Popover API', () => {
+    const node = { setAttribute: jest.fn(), style: {} };
+    expect(liftToTopLayer(node)).toBe(false);
+    expect(node.setAttribute).not.toHaveBeenCalled();
+    expect(liftToTopLayer(null)).toBe(false);
   });
 });
