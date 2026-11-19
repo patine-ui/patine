@@ -1,10 +1,9 @@
-import { FlatList, View } from 'react-native';
-
-import { OwnScroll } from '@/core/components/OwnScroll';
-import { PickerText } from '@/core/components/PickerText';
-import { SHOWS_SCROLL_INDICATOR } from '@/core/core.constants';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { OwnScroll } from '@/core/primitives/OwnScroll';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { VirtualList } from '@/core/primitives/VirtualList';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { CategoryBar } from './components/CategoryBar';
 import { EmojiGridRow } from './components/EmojiGridRow';
 import { EmojiHeader } from './components/EmojiHeader';
@@ -14,17 +13,14 @@ import { SkinTonePopover } from './components/SkinTonePopover';
 import {
   CATEGORY_BAR_POSITION,
   DEFAULT_CATEGORY_ICONS,
-  DEFAULT_CATEGORY_LABELS,
   DEFAULT_COLUMNS,
-  DEFAULT_EMPTY_TEXT,
   DEFAULT_HEIGHT,
   DEFAULT_MAX_RECENT,
-  DEFAULT_SEARCH_PLACEHOLDER,
   EMOJI_CATEGORIES,
   EMOJI_DESIGN,
   EMOJI_ROW_TYPE,
 } from './emoji.constants';
-import { styles } from './emoji.styles';
+import { styles, themed } from './emoji.styles';
 import type { EmojiPickerProps, EmojiRow } from './emoji.types';
 import { getEmojiFontSize, getInitialRowCount, getRowKey, getVisibleTabs } from './emoji.utils';
 import { useEmojiGrid } from './hooks/useEmojiGrid';
@@ -40,8 +36,8 @@ export const EmojiPicker = (props: EmojiPickerProps) => {
     exclude,
     maxEmojiVersion,
     searchable = true,
-    searchPlaceholder = DEFAULT_SEARCH_PLACEHOLDER,
-    emptyText = DEFAULT_EMPTY_TEXT,
+    searchPlaceholder: searchPlaceholderProp,
+    emptyText: emptyTextProp,
     showCategoryBar = true,
     categoryBarPosition: categoryBarPositionProp = CATEGORY_BAR_POSITION.auto,
     showSectionHeaders = true,
@@ -57,7 +53,10 @@ export const EmojiPicker = (props: EmojiPickerProps) => {
     design,
     testID,
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const emptyText = emptyTextProp ?? words.emoji.empty;
+  const searchPlaceholder = searchPlaceholderProp ?? words.emoji.search;
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const categoryBarPosition =
     categoryBarPositionProp === CATEGORY_BAR_POSITION.auto ? EMOJI_DESIGN[theme.design].categoryBarPosition : categoryBarPositionProp;
   const selection = useEmojiSelection(props, showRecent, maxRecent);
@@ -72,7 +71,7 @@ export const EmojiPicker = (props: EmojiPickerProps) => {
   });
   const fontSize = getEmojiFontSize(grid.cellSize, emojiSize);
   const popover = useTonePopover(grid.cellSize, selection.select);
-  const labels = { ...DEFAULT_CATEGORY_LABELS, ...categoryLabels };
+  const labels = { ...words.emoji.categories, ...categoryLabels };
 
   const renderRow = ({ item }: { item: EmojiRow }) =>
     item.type === EMOJI_ROW_TYPE.header ? (
@@ -106,71 +105,67 @@ export const EmojiPicker = (props: EmojiPickerProps) => {
   );
 
   return (
-    <View
-      ref={popover.rootRef}
-      style={[{ height, backgroundColor: theme.colors.background }, style, slots?.container]}
-      {...ARROW_FOCUS}
-      testID={testID}
-    >
-      {(searchable || showSkinTones) && (
-        <EmojiHeader
-          searchable={searchable}
-          showSkinTones={showSkinTones}
-          query={grid.query}
-          onQueryChange={grid.search}
-          searchPlaceholder={searchPlaceholder}
-          tone={selection.tone}
-          onToneButtonPress={selection.toggleToneMenu}
-          theme={theme}
-          slots={slots}
-        />
-      )}
-      {selection.toneMenuOpen && <SkinToneMenu tone={selection.tone} onSelect={selection.pickTone} theme={theme} slots={slots} />}
-      {categoryBarPosition === CATEGORY_BAR_POSITION.top && categoryBar}
+    <ThemeScope theme={themeOverride}>
       <View
-        style={[styles.flex, { paddingHorizontal: theme.spacing.xs }]}
-        onLayout={grid.onLayout}
-        testID={testID ? `${testID}-grid` : undefined}
+        ref={popover.rootRef}
+        style={[{ height, backgroundColor: theme.colors.background }, style, slots?.container]}
+        {...ARROW_FOCUS}
+        testID={testID}
       >
-        {grid.measured && (
-          <OwnScroll>
-            <FlatList
-              ref={grid.listRef}
-              data={grid.rows}
-              showsVerticalScrollIndicator={SHOWS_SCROLL_INDICATOR}
-              renderItem={renderRow}
-              keyExtractor={getRowKey}
-              getItemLayout={grid.getItemLayout}
-              onScroll={grid.onScroll}
-              scrollEventThrottle={32}
-              keyboardShouldPersistTaps="handled"
-              initialNumToRender={getInitialRowCount(height, grid.cellSize)}
-              maxToRenderPerBatch={8}
-              windowSize={7}
-              ListEmptyComponent={
-                <View style={[styles.empty, { padding: theme.spacing.xl }, slots?.empty]}>
-                  <PickerText theme={theme} color="textSecondary" style={slots?.emptyText}>
-                    {emptyText}
-                  </PickerText>
-                </View>
-              }
-            />
-          </OwnScroll>
+        {(searchable || showSkinTones) && (
+          <EmojiHeader
+            searchable={searchable}
+            showSkinTones={showSkinTones}
+            query={grid.query}
+            onQueryChange={grid.search}
+            searchPlaceholder={searchPlaceholder}
+            tone={selection.tone}
+            onToneButtonPress={selection.toggleToneMenu}
+            theme={theme}
+            slots={slots}
+          />
+        )}
+        {selection.toneMenuOpen && <SkinToneMenu tone={selection.tone} onSelect={selection.pickTone} theme={theme} slots={slots} />}
+        {categoryBarPosition === CATEGORY_BAR_POSITION.top && categoryBar}
+        <View style={[styles.flex, themed(theme).list]} onLayout={grid.onLayout} testID={testID ? `${testID}-grid` : undefined}>
+          {grid.measured && (
+            <OwnScroll>
+              <VirtualList
+                ref={grid.listRef}
+                data={grid.rows}
+                renderItem={renderRow}
+                keyExtractor={getRowKey}
+                getItemLayout={grid.getItemLayout}
+                onScroll={grid.onScroll}
+                scrollEventThrottle={32}
+                initialNumToRender={getInitialRowCount(height, grid.cellSize)}
+                maxToRenderPerBatch={8}
+                windowSize={7}
+                ListEmptyComponent={
+                  <View style={[styles.empty, themed(theme).empty, slots?.empty]}>
+                    <Text theme={theme} color="textSecondary" style={slots?.emptyText}>
+                      {emptyText}
+                    </Text>
+                  </View>
+                }
+              />
+            </OwnScroll>
+          )}
+        </View>
+        {categoryBarPosition === CATEGORY_BAR_POSITION.bottom && categoryBar}
+        {popover.target && (
+          <SkinTonePopover
+            {...popover.target}
+            size={grid.cellSize}
+            fontSize={fontSize}
+            renderEmoji={renderEmoji}
+            onSelect={popover.pick}
+            onClose={popover.close}
+            theme={theme}
+            slots={slots}
+          />
         )}
       </View>
-      {categoryBarPosition === CATEGORY_BAR_POSITION.bottom && categoryBar}
-      {popover.target && (
-        <SkinTonePopover
-          {...popover.target}
-          size={grid.cellSize}
-          fontSize={fontSize}
-          renderEmoji={renderEmoji}
-          onSelect={popover.pick}
-          onClose={popover.close}
-          theme={theme}
-          slots={slots}
-        />
-      )}
-    </View>
+    </ThemeScope>
   );
 };

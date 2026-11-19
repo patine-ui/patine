@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import { Text } from 'react-native';
 
-import { Touchable } from '@/core/components/Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
 import { styles } from '@/pickers/emoji/emoji.styles';
 import type { EmojiCellProps } from '@/pickers/emoji/emoji.types';
 
@@ -10,8 +10,8 @@ export const EmojiCell = memo(({ emoji, char, size, fontSize, renderEmoji, onSel
     theme={theme}
     onPress={() => onSelect(emoji, char)}
     onLongPress={onLongPress && (() => onLongPress(emoji))}
-    accessibilityRole="button"
-    accessibilityLabel={emoji.name}
+    role="button"
+    aria-label={emoji.name}
     style={({ pressed }) => [
       styles.cell,
       { width: size, height: size, borderRadius: theme.radius.sm },

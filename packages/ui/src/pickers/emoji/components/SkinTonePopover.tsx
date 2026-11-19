@@ -1,10 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-
-import { Touchable } from '@/core/components/Touchable';
-import { SKIN_TONES, TONE_POPOVER_PADDING } from '@/pickers/emoji/emoji.constants';
-import { styles } from '@/pickers/emoji/emoji.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { Pressable, View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
+import { SKIN_TONES } from '@/pickers/emoji/emoji.constants';
+import { styles, themed } from '@/pickers/emoji/emoji.styles';
 import type { SkinTonePopoverProps } from '@/pickers/emoji/emoji.types';
-import { withSkinTone } from '@/pickers/emoji/emoji.utils';
+import { getPopoverPlace, squareOf, withSkinTone } from '@/pickers/emoji/emoji.utils';
 
 /** One emoji in every skin tone, over the emoji that was long-pressed; a tap outside closes it. */
 export const SkinTonePopover = ({
@@ -18,45 +19,34 @@ export const SkinTonePopover = ({
   onClose,
   theme,
   slots,
-}: SkinTonePopoverProps) => (
-  <>
-    <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" />
-    <View
-      style={[
-        styles.tonePopover,
-        {
-          left,
-          top,
-          padding: TONE_POPOVER_PADDING,
-          backgroundColor: theme.colors.sheet,
-          borderColor: theme.colors.border,
-          borderRadius: theme.radius.md,
-          boxShadow: theme.shadows.lg,
-        },
-        slots?.skinTonePopover,
-      ]}
-    >
-      {SKIN_TONES.map((tone) => {
-        const char = withSkinTone(emoji, tone);
-        return (
-          <Touchable
-            key={tone}
-            theme={theme}
-            onPress={() => onSelect(tone)}
-            accessibilityRole="button"
-            accessibilityLabel={`${emoji.name}, skin tone ${tone}`}
-            style={[styles.cell, { width: size, height: size, borderRadius: theme.radius.sm }]}
-          >
-            {renderEmoji ? (
-              renderEmoji(char, emoji, fontSize)
-            ) : (
-              <Text selectable={false} style={[{ fontSize, lineHeight: fontSize * 1.2 }, slots?.emojiText]}>
-                {char}
-              </Text>
-            )}
-          </Touchable>
-        );
-      })}
-    </View>
-  </>
-);
+}: SkinTonePopoverProps) => {
+  const words = useLabels();
+  return (
+    <>
+      <Pressable style={styles.fillArea} onPress={onClose} role="button" aria-label={words.close} />
+      <View style={[styles.tonePopover, getPopoverPlace(left, top), styles.popoverPad, themed(theme).popover, slots?.skinTonePopover]}>
+        {SKIN_TONES.map((tone) => {
+          const char = withSkinTone(emoji, tone);
+          return (
+            <Touchable
+              key={tone}
+              theme={theme}
+              onPress={() => onSelect(tone)}
+              role="button"
+              aria-label={`${emoji.name}, skin tone ${tone}`}
+              style={[styles.cell, squareOf(size), themed(theme).cell]}
+            >
+              {renderEmoji ? (
+                renderEmoji(char, emoji, fontSize)
+              ) : (
+                <Text selectable={false} style={[{ fontSize, lineHeight: fontSize * 1.2 }, slots?.emojiText]}>
+                  {char}
+                </Text>
+              )}
+            </Touchable>
+          );
+        })}
+      </View>
+    </>
+  );
+};

@@ -1,5 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { EmojiCategory, EmojiDesign, EmojiSectionKey, EmojiTabKey, SkinTone } from './emoji.types';
+import type { EmojiCategory, EmojiDesign, EmojiTabKey, SkinTone } from './emoji.types';
 
 export const EMOJI_CATEGORY = {
   smileys: 'smileys',
@@ -67,20 +67,6 @@ export const EMOJI_ROW_TYPE = {
 
 export const EMOJI_CATEGORIES: EmojiCategory[] = Object.values(EMOJI_CATEGORY);
 
-export const DEFAULT_CATEGORY_LABELS: Record<EmojiSectionKey, string> = {
-  recent: 'Recently used',
-  search: 'Search results',
-  smileys: 'Smileys & Emotion',
-  people: 'People & Body',
-  animals: 'Animals & Nature',
-  food: 'Food & Drink',
-  travel: 'Travel & Places',
-  activities: 'Activities',
-  objects: 'Objects',
-  symbols: 'Symbols',
-  flags: 'Flags',
-};
-
 export const DEFAULT_CATEGORY_ICONS: Record<EmojiTabKey, string> = {
   recent: '🕘',
   smileys: '😀',
@@ -120,9 +106,6 @@ export const DEFAULT_COLUMNS = 8;
 export const DEFAULT_HEIGHT = 380;
 export const DEFAULT_SHEET_HEIGHT = 420;
 export const DEFAULT_MAX_RECENT = 24;
-export const DEFAULT_SEARCH_PLACEHOLDER = 'Search emoji';
-export const DEFAULT_EMPTY_TEXT = 'No emoji found';
-
 export const SECTION_HEADER_HEIGHT = 32;
 /** Cell size before the grid has been measured. */
 export const FALLBACK_CELL_SIZE = 40;

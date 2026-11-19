@@ -1,3 +1,4 @@
+import { clamp } from '@/core/utils/track.utils';
 import type { AnchorRect } from '@/overlays/sheet/sheet.types';
 import {
   EMOJI_ROW_TYPE,
@@ -35,7 +36,7 @@ export const getTonePopoverPosition = (cell: AnchorRect, containerWidth: number,
   const height = size + 2 * TONE_POPOVER_PADDING;
   const above = cell.y - height - TONE_POPOVER_GAP;
   return {
-    left: Math.min(Math.max(0, cell.x + (cell.width - width) / 2), Math.max(0, containerWidth - width)),
+    left: clamp(cell.x + (cell.width - width) / 2, 0, Math.max(0, containerWidth - width)),
     top: above >= 0 ? above : cell.y + cell.height + TONE_POPOVER_GAP,
   };
 };
@@ -188,3 +189,15 @@ export const getInitialRowCount = (height: number, cellSize: number) => Math.cei
 /** Category bar tabs: recent first, then the categories that have a section. */
 export const getVisibleTabs = (categories: EmojiCategory[], headerIndex: Map<EmojiSectionKey, number>): EmojiTabKey[] =>
   ([EMOJI_SECTION.recent, ...categories] as EmojiTabKey[]).filter((key) => headerIndex.has(key));
+
+/** A square of the given side. */
+export const squareOf = (side: number) => ({
+  width: side,
+  height: side,
+});
+
+/** The skin-tone popover's place over its cell. */
+export const getPopoverPlace = (left: number, top: number) => ({
+  left,
+  top,
+});

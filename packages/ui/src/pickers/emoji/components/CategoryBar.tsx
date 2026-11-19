@@ -1,8 +1,8 @@
-import { Text, View } from 'react-native';
-
-import { Touchable } from '@/core/components/Touchable';
-import { ACTIVE_TAB, CATEGORY_BAR_POSITION, EMOJI_DESIGN, INACTIVE_TAB_OPACITY } from '@/pickers/emoji/emoji.constants';
-import { styles } from '@/pickers/emoji/emoji.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { ACTIVE_TAB, CATEGORY_BAR_POSITION, EMOJI_DESIGN } from '@/pickers/emoji/emoji.constants';
+import { styles, themed } from '@/pickers/emoji/emoji.styles';
 import type { CategoryBarProps } from '@/pickers/emoji/emoji.types';
 
 export const CategoryBar = ({ tabs, active, position, labels, icons, onSelect, theme, slots }: CategoryBarProps) => {
@@ -15,7 +15,7 @@ export const CategoryBar = ({ tabs, active, position, labels, icons, onSelect, t
         styles.bar,
         position === CATEGORY_BAR_POSITION.top ? styles.barTop : styles.barBottom,
         !underlined && styles.markedBar,
-        { borderColor: theme.colors.border },
+        themed(theme).bar,
         slots?.categoryBar,
       ]}
     >
@@ -27,29 +27,25 @@ export const CategoryBar = ({ tabs, active, position, labels, icons, onSelect, t
             key={key}
             theme={theme}
             onPress={() => onSelect(key)}
-            accessibilityRole="tab"
-            accessibilityLabel={labels[key]}
-            accessibilityState={{ selected }}
+            role="tab"
+            aria-label={labels[key]}
+            aria-selected={selected}
             style={[
               styles.tab,
               !underlined && styles.markedTab,
-              { borderRadius: pill ? theme.radius.full : theme.radius.sm },
-              !underlined && selected && { backgroundColor: pill ? theme.colors.primaryMuted : theme.colors.surface },
+              pill ? themed(theme).pillTab : themed(theme).tab,
+              !underlined && selected && (pill ? themed(theme).pillOn : themed(theme).tabOn),
               slots?.categoryTab,
               selected && slots?.activeCategoryTab,
             ]}
           >
-            {typeof icon === 'string' ? (
-              <Text style={[styles.tabIcon, { opacity: selected ? 1 : INACTIVE_TAB_OPACITY }]}>{icon}</Text>
-            ) : (
-              icon
-            )}
+            {typeof icon === 'string' ? <Text style={[styles.tabIcon, !selected && styles.inactiveTab]}>{icon}</Text> : icon}
             {underlined ? (
               <View
                 style={[
                   styles.tabIndicator,
                   position === CATEGORY_BAR_POSITION.top ? styles.tabIndicatorTop : styles.tabIndicatorBottom,
-                  { backgroundColor: selected ? theme.colors.primary : 'transparent' },
+                  selected && themed(theme).indicatorOn,
                   slots?.categoryIndicator,
                 ]}
               />

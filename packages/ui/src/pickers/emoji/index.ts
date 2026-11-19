@@ -1,7 +1,7 @@
 export { EmojiPicker } from './EmojiPicker';
 export { EmojiPickerField } from './EmojiPickerField';
 export { EmojiPickerSheet } from './EmojiPickerSheet';
-export { DEFAULT_CATEGORY_ICONS, DEFAULT_CATEGORY_LABELS, EMOJI_CATEGORIES } from './emoji.constants';
+export { DEFAULT_CATEGORY_ICONS, EMOJI_CATEGORIES } from './emoji.constants';
 export type {
   Emoji,
   EmojiCategory,

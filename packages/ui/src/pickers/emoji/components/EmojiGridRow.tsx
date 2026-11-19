@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import type { HostInstance } from 'react-native';
-import { View } from 'react-native';
 
+import { View } from '@/core/primitives/View';
 import { styles } from '@/pickers/emoji/emoji.styles';
 import type { Emoji, EmojiGridRowProps } from '@/pickers/emoji/emoji.types';
 import { withSkinTone } from '@/pickers/emoji/emoji.utils';

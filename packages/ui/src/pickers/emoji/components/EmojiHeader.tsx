@@ -1,10 +1,10 @@
-import { Text, View } from 'react-native';
-
 import { SearchInput } from '@/core/components/SearchInput';
-import { Touchable } from '@/core/components/Touchable';
-import { SEARCH_DESIGN } from '@/core/core.constants';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { TONE_SWATCHES } from '@/pickers/emoji/emoji.constants';
-import { styles } from '@/pickers/emoji/emoji.styles';
+import { styles, themed } from '@/pickers/emoji/emoji.styles';
 import type { EmojiHeaderProps } from '@/pickers/emoji/emoji.types';
 
 export const EmojiHeader = ({
@@ -18,11 +18,9 @@ export const EmojiHeader = ({
   theme,
   slots,
 }: EmojiHeaderProps) => {
-  const search = SEARCH_DESIGN[theme.design];
+  const words = useLabels();
   return (
-    <View
-      style={[styles.header, { paddingHorizontal: theme.spacing.sm, paddingTop: theme.spacing.sm, gap: theme.spacing.sm }, slots?.header]}
-    >
+    <View style={[styles.header, themed(theme).header, slots?.header]}>
       {searchable ? (
         <SearchInput
           value={query}
@@ -39,18 +37,9 @@ export const EmojiHeader = ({
         <Touchable
           theme={theme}
           onPress={onToneButtonPress}
-          accessibilityRole="button"
-          accessibilityLabel="Skin tone"
-          style={[
-            styles.toneButton,
-            {
-              width: search.height,
-              height: search.height,
-              backgroundColor: theme.colors.surface,
-              borderRadius: theme.radius[search.radius],
-            },
-            slots?.skinToneButton,
-          ]}
+          role="button"
+          aria-label={words.emoji.skinTone}
+          style={[styles.toneButton, themed(theme).toneButton, slots?.skinToneButton]}
         >
           <Text style={styles.toneButtonText}>{TONE_SWATCHES[tone]}</Text>
         </Touchable>
