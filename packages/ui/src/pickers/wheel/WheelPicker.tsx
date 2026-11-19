@@ -1,12 +1,13 @@
 import type React from 'react';
 import { useCallback, useMemo } from 'react';
 import type { AccessibilityActionEvent, FlatList } from 'react-native';
-import { Animated, View } from 'react-native';
 
-import { OwnScroll } from '@/core/components/OwnScroll';
-import { KEY } from '@/core/core.constants';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { keyboardProps } from '@/core/utils/keyboard.utils';
+import { KEY } from '@/core/a11y/a11y.constants';
+import { keyboardProps } from '@/core/a11y/keyboard.utils';
+import { OwnScroll } from '@/core/primitives/OwnScroll';
+import { View } from '@/core/primitives/View';
+import { AnimatedVirtualList } from '@/core/primitives/VirtualList';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { WheelIndicator } from './components/WheelIndicator';
 import { WheelRow } from './components/WheelRow';
 import { WheelTypingInput } from './components/WheelTypingInput';
@@ -15,7 +16,7 @@ import { useWheelScroll } from './hooks/useWheelScroll';
 import { DEFAULT_FADE_TO, DEFAULT_ITEM_HEIGHT, DEFAULT_ROTATION_DEG, DEFAULT_VISIBLE_ITEMS, WHEEL_VARIANT } from './wheel.constants';
 import { styles } from './wheel.styles';
 import type { WheelPickerProps } from './wheel.types';
-import { normalizeItem, toOddCount } from './wheel.utils';
+import { getItemHeight, getListPadding, normalizeItem, toOddCount } from './wheel.utils';
 
 const A11Y_ACTIONS = [{ name: 'increment' }, { name: 'decrement' }];
 
@@ -46,7 +47,7 @@ export const WheelPicker = <T,>(props: WheelPickerProps<T>) => {
     accessibilityLabel,
     testID,
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const items = useMemo(() => rawItems.map((input) => normalizeItem<T>(input)), [rawItems]);
   const visibleItems = toOddCount(requestedVisibleItems);
   const padding = ((visibleItems - 1) / 2) * itemHeight;
@@ -127,67 +128,71 @@ export const WheelPicker = <T,>(props: WheelPickerProps<T>) => {
   );
 
   return (
-    <View
-      style={[styles.clip, { height: itemHeight * visibleItems }, style, slots?.container]}
-      onLayout={wheel.onLayout}
-      accessible
-      accessibilityRole="adjustable"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityValue={{ text: wheel.activeItem?.label }}
-      accessibilityActions={A11Y_ACTIONS}
-      onAccessibilityAction={onAccessibilityAction}
-      {...(disabled
-        ? null
-        : keyboardProps({
-            [KEY.up]: () => move(-1),
-            [KEY.down]: () => move(1),
-            [KEY.home]: () => scrollToLogical(0, true),
-            [KEY.end]: () => scrollToLogical(items.length - 1, true),
-          }))}
-      testID={testID}
-    >
-      {showIndicator && <WheelIndicator itemHeight={itemHeight} theme={theme} style={slots?.indicator} renderIndicator={renderIndicator} />}
-      <OwnScroll>
-        <Animated.FlatList
-          ref={wheel.listRef as React.Ref<FlatList<number>>}
-          data={wheel.data}
-          testID={testID ? `${testID}-list` : undefined}
-          keyExtractor={(dataIndex: number) => String(dataIndex)}
-          renderItem={renderRow}
-          extraData={active}
-          getItemLayout={(_: unknown, index: number) => ({
-            length: itemHeight,
-            offset: padding + itemHeight * index,
-            index,
-          })}
-          contentContainerStyle={{ paddingVertical: padding }}
-          contentOffset={{ x: 0, y: wheel.initialDataIndex * itemHeight }}
-          // iOS applies contentOffset without a scroll event, so the list would only render rows from 0.
-          initialScrollIndex={Math.max(0, wheel.initialDataIndex - (visibleItems - 1) / 2)}
-          showsVerticalScrollIndicator={false}
-          snapToInterval={itemHeight}
-          decelerationRate="fast"
-          scrollEnabled={!disabled}
-          scrollEventThrottle={16}
-          {...wheel.scrollHandlers}
-          initialNumToRender={visibleItems + 4}
-          windowSize={5}
-          maxToRenderPerBatch={visibleItems * 2}
-          removeClippedSubviews={false}
-          nestedScrollEnabled
-        />
-      </OwnScroll>
-      {typeToSelect.typing && (
-        <WheelTypingInput
-          value={typeToSelect.typed ?? ''}
-          numeric={typeToSelect.numeric}
-          itemHeight={itemHeight}
-          theme={theme}
-          accessibilityLabel={accessibilityLabel}
-          onChangeText={typeToSelect.onType}
-          onDone={typeToSelect.stopTyping}
-        />
-      )}
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View
+        style={[styles.clip, getItemHeight(itemHeight * visibleItems), style, slots?.container]}
+        onLayout={wheel.onLayout}
+        accessible
+        role="slider"
+        aria-label={accessibilityLabel}
+        aria-valuetext={wheel.activeItem?.label}
+        accessibilityActions={A11Y_ACTIONS}
+        onAccessibilityAction={onAccessibilityAction}
+        {...(disabled
+          ? null
+          : keyboardProps({
+              [KEY.up]: () => move(-1),
+              [KEY.down]: () => move(1),
+              [KEY.home]: () => scrollToLogical(0, true),
+              [KEY.end]: () => scrollToLogical(items.length - 1, true),
+            }))}
+        testID={testID}
+      >
+        {showIndicator && (
+          <WheelIndicator itemHeight={itemHeight} theme={theme} style={slots?.indicator} renderIndicator={renderIndicator} />
+        )}
+        <OwnScroll>
+          <AnimatedVirtualList
+            ref={wheel.listRef as React.Ref<FlatList<number>>}
+            data={wheel.data}
+            testID={testID ? `${testID}-list` : undefined}
+            keyExtractor={(dataIndex: number) => String(dataIndex)}
+            renderItem={renderRow}
+            extraData={active}
+            getItemLayout={(_: unknown, index: number) => ({
+              length: itemHeight,
+              offset: padding + itemHeight * index,
+              index,
+            })}
+            contentContainerStyle={getListPadding(padding)}
+            contentOffset={{ x: 0, y: wheel.initialDataIndex * itemHeight }}
+            // iOS applies contentOffset without a scroll event, so the list would only render rows from 0.
+            initialScrollIndex={Math.max(0, wheel.initialDataIndex - (visibleItems - 1) / 2)}
+            showsVerticalScrollIndicator={false}
+            snapToInterval={itemHeight}
+            decelerationRate="fast"
+            scrollEnabled={!disabled}
+            scrollEventThrottle={16}
+            {...wheel.scrollHandlers}
+            initialNumToRender={visibleItems + 4}
+            windowSize={5}
+            maxToRenderPerBatch={visibleItems * 2}
+            removeClippedSubviews={false}
+            nestedScrollEnabled
+          />
+        </OwnScroll>
+        {typeToSelect.typing && (
+          <WheelTypingInput
+            value={typeToSelect.typed ?? ''}
+            numeric={typeToSelect.numeric}
+            itemHeight={itemHeight}
+            theme={theme}
+            accessibilityLabel={accessibilityLabel}
+            onChangeText={typeToSelect.onType}
+            onDone={typeToSelect.stopTyping}
+          />
+        )}
+      </View>
+    </ThemeScope>
   );
 };

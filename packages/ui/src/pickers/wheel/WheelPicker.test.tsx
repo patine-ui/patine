@@ -9,7 +9,7 @@ const scrollTo = async (y: number) => {
   await fireEvent.scroll(screen.getByTestId('wheel-list'), { nativeEvent: { contentOffset: { y } } });
   await act(() => jest.advanceTimersByTime(500));
 };
-const currentLabel = () => screen.getByTestId('wheel').props.accessibilityValue.text;
+const currentLabel = () => screen.getByTestId('wheel').props['aria-valuetext'];
 
 describe('WheelPicker', () => {
   let scrollToOffset: jest.SpyInstance;

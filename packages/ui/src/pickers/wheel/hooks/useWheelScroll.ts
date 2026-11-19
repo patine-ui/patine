@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { Animated } from 'react-native';
 
+import { animatedEvent } from '@/core/animation/animated';
 import { USE_NATIVE_DRIVER } from '@/core/animation/animation.constants';
 import { useAnimatedValue } from '@/core/animation/hooks/useAnimatedValue';
 import { SETTLE_DELAY, SETTLE_KIND } from '@/pickers/wheel/wheel.constants';
@@ -116,7 +116,7 @@ export const useWheelScroll = <T>({
 
   const onScroll = useMemo(
     () =>
-      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+      animatedEvent([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
         useNativeDriver: USE_NATIVE_DRIVER,
         listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
           const y = e.nativeEvent.contentOffset.y;

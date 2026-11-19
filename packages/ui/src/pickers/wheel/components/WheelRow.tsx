@@ -1,13 +1,13 @@
 import { memo, useMemo } from 'react';
-import { Animated, Pressable } from 'react-native';
 
-import { PickerText } from '@/core/components/PickerText';
-import { TouchFeedback } from '@/core/components/TouchFeedback';
 import { useTouchFeedback } from '@/core/hooks/useTouchFeedback';
+import { Text } from '@/core/primitives/Text';
+import { TouchFeedback } from '@/core/primitives/TouchFeedback';
+import { AnimatedView, Pressable } from '@/core/primitives/View';
 import { PERSPECTIVE } from '@/pickers/wheel/wheel.constants';
-import { styles } from '@/pickers/wheel/wheel.styles';
+import { styles, themed } from '@/pickers/wheel/wheel.styles';
 import type { WheelRowProps } from '@/pickers/wheel/wheel.types';
-import { getRowFrames } from '@/pickers/wheel/wheel.utils';
+import { getItemHeight, getRowFrames, getTextAlign } from '@/pickers/wheel/wheel.utils';
 
 const WheelRowImpl = <T,>({
   dataIndex,
@@ -48,32 +48,38 @@ const WheelRowImpl = <T,>({
     };
   }, [dataIndex, fadeTo, itemHeight, rotation, scrollY, variant, visibleItems]);
 
-  const color = item.disabled ? theme.colors.textDisabled : selected ? theme.colors.text : theme.colors.textSecondary;
+  const sheet = themed(theme);
+  const label = item.disabled ? sheet.labelOff : selected ? sheet.labelOn : sheet.label;
   const pressable = !!onSelect && !item.disabled;
   const touch = useTouchFeedback(theme, !pressable, false);
 
+  // ponytail: stays a Pressable, not a Touchable: its hover tint lives inside the animated row so it turns and fades with it;
+  // Touchable draws feedback on its own host. The rows are pointer-only (the wheel is the screen reader's control).
   return (
     <Pressable {...touch.handlers} onPress={pressable ? () => onSelect?.(dataIndex) : undefined} accessible={false}>
       {/* Hover only, no ripple: the hover tint lives inside the animated row, so it rotates and fades with it */}
-      <Animated.View
-        ref={touch.ref}
-        style={[styles.row, { height: itemHeight, paddingHorizontal: theme.spacing.sm }, animatedStyle, slots?.item]}
-      >
+      <AnimatedView ref={touch.ref} style={[styles.row, getItemHeight(itemHeight), themed(theme).row, animatedStyle, slots?.item]}>
         <TouchFeedback {...touch.feedback} borderRadius={theme.radius.md} />
         {renderItem ? (
           renderItem({ item, index: logicalIndex, selected, theme })
         ) : (
-          <PickerText
+          <Text
             theme={theme}
             size="lg"
             weight={selected ? 'bold' : 'regular'}
             numberOfLines={1}
-            style={[{ textAlign, color }, slots?.itemText, selected && slots?.selectedItemText, item.disabled && slots?.disabledItemText]}
+            style={[
+              getTextAlign(textAlign),
+              label,
+              slots?.itemText,
+              selected && slots?.selectedItemText,
+              item.disabled && slots?.disabledItemText,
+            ]}
           >
             {item.label}
-          </PickerText>
+          </Text>
         )}
-      </Animated.View>
+      </AnimatedView>
     </Pressable>
   );
 };

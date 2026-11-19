@@ -1,5 +1,7 @@
 import type React from 'react';
+import type { TextStyle } from 'react-native';
 
+import { clamp } from '@/core/utils/track.utils';
 import {
   ALIGN_TOLERANCE_PX,
   EDGE_ANGLE_MARGIN_RAD,
@@ -50,7 +52,7 @@ export const getLoopLayout = (count: number, loop: boolean): WheelLayout => {
   };
 };
 
-export const offsetToIndex = (y: number, itemHeight: number, total: number) => Math.min(total - 1, Math.max(0, Math.round(y / itemHeight)));
+export const offsetToIndex = (y: number, itemHeight: number, total: number) => clamp(Math.round(y / itemHeight), 0, total - 1);
 
 /** Data index of logical item `logicalIndex` on the same lap as `currentDataIndex`. */
 export const alignToLap = (currentDataIndex: number, logicalIndex: number, count: number, loop: boolean) =>
@@ -152,3 +154,16 @@ export const getItemLabel = <T>(
   value: T | undefined,
   isEqual: (a: T, b: T) => boolean = Object.is
 ) => (value === undefined ? '' : (items.map(normalizeItem).find((item) => isEqual(item.value, value))?.label ?? ''));
+
+/** A row or band as tall as an item. */
+export const getItemHeight = (height: number) => ({ height });
+
+/** A column's share of the wheels: a fixed width, or its flex (1 by default). */
+export const getColumnBox = (width: number | undefined, flex: number | undefined) =>
+  width !== undefined ? { width } : { flex: flex ?? 1 };
+
+/** Room above the first item and below the last, so both can reach the selection band. */
+export const getListPadding = (padding: number) => ({ paddingVertical: padding });
+
+/** A label's alignment in its column. */
+export const getTextAlign = (textAlign: TextStyle['textAlign']) => ({ textAlign });

@@ -1,8 +1,9 @@
-import { TextInput, View } from 'react-native';
-
+import { Input } from '@/core/primitives/Input';
+import { View } from '@/core/primitives/View';
 import { NUMERIC_KEYBOARD_TYPE } from '@/pickers/wheel/wheel.constants';
-import { styles } from '@/pickers/wheel/wheel.styles';
+import { styles, themed } from '@/pickers/wheel/wheel.styles';
 import type { WheelTypingInputProps } from '@/pickers/wheel/wheel.types';
+import { getItemHeight } from '@/pickers/wheel/wheel.utils';
 
 export const WheelTypingInput = ({
   value,
@@ -15,14 +16,10 @@ export const WheelTypingInput = ({
 }: WheelTypingInputProps) => (
   <>
     <View pointerEvents="none" style={styles.centerOverlay}>
-      <View
-        style={[
-          styles.typingRing,
-          { height: itemHeight, borderRadius: theme.radius.md, borderColor: theme.colors.primary, marginHorizontal: theme.spacing.xs },
-        ]}
-      />
+      <View style={[styles.typingRing, getItemHeight(itemHeight), themed(theme).typingRing]} />
     </View>
-    <TextInput
+    <Input
+      theme={theme}
       autoFocus
       value={value}
       onChangeText={onChangeText}
@@ -34,7 +31,7 @@ export const WheelTypingInput = ({
       autoCapitalize="none"
       caretHidden
       style={styles.hiddenInput}
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
     />
   </>
 );
