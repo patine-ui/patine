@@ -111,3 +111,6 @@ export const pinPreferred = <I, K>(pool: ReadonlyArray<I>, preferred: ReadonlyAr
     rest: pool.filter((item) => !pinnedKeys.has(keyOf(item))),
   };
 };
+
+/** A list held to `height`, or left to size itself. */
+export const getListHeight = (height: number | undefined) => (height === undefined ? null : { height });

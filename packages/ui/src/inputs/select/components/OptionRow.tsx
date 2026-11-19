@@ -1,10 +1,10 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { coreStyles } from '@/core/core.styles';
-import { DISABLED_OPTION_OPACITY, SELECT_DESIGN, SINGLE_INDICATOR } from '@/inputs/select/select.constants';
-import { styles } from '@/inputs/select/select.styles';
+import { startAlign } from '@/core/core.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useDirection } from '@/core/theme/ThemeProvider';
+import { SELECT_DESIGN, SINGLE_INDICATOR } from '@/inputs/select/select.constants';
+import { styles, themed } from '@/inputs/select/select.styles';
 import type { OptionRowProps } from '@/inputs/select/select.types';
 import { Check } from './Check';
 
@@ -19,7 +19,8 @@ export const OptionRow = <T,>({
   theme,
   slots,
 }: OptionRowProps<T>) => {
-  const c = theme.colors;
+  const dir = useDirection();
+  const sheet = themed(theme);
   const look = SELECT_DESIGN[theme.design];
   const radio = !multiple && look.singleIndicator === SINGLE_INDICATOR.radio;
   return (
@@ -27,19 +28,15 @@ export const OptionRow = <T,>({
       theme={theme}
       disabled={disabled}
       onPress={() => onToggle(option)}
-      accessibilityRole={multiple ? 'checkbox' : radio ? 'radio' : 'button'}
-      accessibilityState={{ selected, checked: multiple || radio ? selected : undefined, disabled }}
-      accessibilityLabel={option.label}
+      role={multiple ? 'checkbox' : radio ? 'radio' : 'button'}
+      aria-selected={selected}
+      aria-checked={multiple || radio ? selected : undefined}
+      aria-label={option.label}
       style={[
         styles.option,
-        {
-          minHeight: look.rowHeight,
-          paddingHorizontal: theme.spacing.lg,
-          marginHorizontal: look.insetRows ? theme.spacing.sm : 0,
-          borderRadius: look.insetRows ? theme.radius.md : 0,
-          backgroundColor: selected && look.tintSelected ? c.primaryMuted : 'transparent',
-          opacity: disabled ? DISABLED_OPTION_OPACITY : 1,
-        },
+        sheet.row,
+        selected && sheet.rowOn,
+        disabled && styles.disabledOption,
         slots?.option,
         selected && slots?.selectedOption,
       ]}
@@ -48,26 +45,26 @@ export const OptionRow = <T,>({
         renderOption({ option, selected, disabled, theme })
       ) : (
         <>
-          {option.icon ? <View style={[styles.icon, { marginEnd: theme.spacing.md }]}>{option.icon}</View> : null}
+          {option.icon ? <View style={[styles.icon, sheet.leading]}>{option.icon}</View> : null}
           <View style={styles.flex}>
-            <PickerText
+            <Text
               theme={theme}
               weight={selected ? 'medium' : 'regular'}
               numberOfLines={1}
-              style={[coreStyles.startAligned, slots?.optionLabel, selected && slots?.selectedOptionLabel]}
+              style={[startAlign[dir], slots?.optionLabel, selected && slots?.selectedOptionLabel]}
             >
               {option.label}
-            </PickerText>
+            </Text>
             {option.description ? (
-              <PickerText
+              <Text
                 theme={theme}
                 size="sm"
                 color="textSecondary"
                 numberOfLines={2}
-                style={[coreStyles.startAligned, styles.description, slots?.optionDescription]}
+                style={[startAlign[dir], styles.description, slots?.optionDescription]}
               >
                 {option.description}
-              </PickerText>
+              </Text>
             ) : null}
           </View>
           {showCheckmarks && (multiple || radio || selected) ? (

@@ -1,8 +1,7 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { styles } from '@/inputs/select/select.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { styles, themed } from '@/inputs/select/select.styles';
 import type { SelectTriggerProps } from '@/inputs/select/select.types';
 import { getSelectedLabel } from '@/inputs/select/select.utils';
 import { FieldTrigger } from '@/overlays/sheet/components/FieldTrigger';
@@ -25,13 +24,13 @@ export const SelectTrigger = <T,>({ selected, multiple, chips, onRemove, disable
             theme={theme}
             onPress={() => onRemove(option)}
             disabled={disabled}
-            accessibilityRole="button"
-            accessibilityLabel={`Remove ${option.label}`}
-            style={[styles.chip, { backgroundColor: theme.colors.primaryMuted, borderRadius: theme.radius.full }, slots?.chip]}
+            role="button"
+            aria-label={`Remove ${option.label}`}
+            style={[styles.chip, themed(theme).chip, slots?.chip]}
           >
-            <PickerText theme={theme} size="sm" weight="medium" color="primary" style={slots?.chipText}>
+            <Text size="sm" weight="medium" color="primary" style={slots?.chipText}>
               {option.label} ×
-            </PickerText>
+            </Text>
           </Touchable>
         ))}
       </View>

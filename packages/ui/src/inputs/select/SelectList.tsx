@@ -1,43 +1,34 @@
-import { FlatList, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { SearchInput } from '@/core/components/SearchInput';
-import { SHOWS_SCROLL_INDICATOR } from '@/core/core.constants';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { VirtualList } from '@/core/primitives/VirtualList';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { CreateRow } from './components/CreateRow';
 import { GroupHeader } from './components/GroupHeader';
 import { LoadingState } from './components/LoadingState';
 import { OptionRow } from './components/OptionRow';
 import { useSelectList } from './hooks/useSelectList';
 import { useSelectValue } from './hooks/useSelectValue';
-import {
-  DEFAULT_CREATE_LABEL,
-  DEFAULT_EMPTY_TEXT,
-  DEFAULT_LOADING_TEXT,
-  DEFAULT_SEARCH_PLACEHOLDER,
-  DEFAULT_SEARCH_PROMPT,
-  NO_OPTIONS,
-  SELECT_ROW_TYPE,
-} from './select.constants';
-import { styles } from './select.styles';
+import { DEFAULT_SEARCH_PROMPT, NO_OPTIONS, SELECT_ROW_TYPE } from './select.constants';
+import { styles, themed } from './select.styles';
 import type { SelectListProps, SelectRow } from './select.types';
-import { defaultFilter, getEmptyMessage, getRowKey, isOptionDisabled, keepAll, shouldShowSearch } from './select.utils';
+import { defaultFilter, getEmptyMessage, getListHeight, getRowKey, isOptionDisabled, keepAll, shouldShowSearch } from './select.utils';
 
 export const SelectList = <T,>(listProps: SelectListProps<T>) => {
   const { props } = useSelectValue<T, SelectListProps<T>>(listProps);
   const {
     options = NO_OPTIONS,
     searchable,
-    searchPlaceholder = DEFAULT_SEARCH_PLACEHOLDER,
+    searchPlaceholder: searchPlaceholderProp,
     filterOption = props.loadOptions || props.onSearchChange ? keepAll : defaultFilter,
     renderOption,
     renderGroupHeader,
-    createLabel = DEFAULT_CREATE_LABEL,
-    emptyText = DEFAULT_EMPTY_TEXT,
+    createLabel: createLabelProp,
+    emptyText: emptyTextProp,
     searchPrompt = DEFAULT_SEARCH_PROMPT,
     loading = false,
-    loadingText = DEFAULT_LOADING_TEXT,
+    loadingText: loadingTextProp,
     renderLoading,
     onEndReached,
     showCheckmarks = true,
@@ -50,7 +41,12 @@ export const SelectList = <T,>(listProps: SelectListProps<T>) => {
     design,
     testID,
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const createLabel = createLabelProp ?? words.create;
+  const loadingText = loadingTextProp ?? words.loading;
+  const emptyText = emptyTextProp ?? words.noResults;
+  const searchPlaceholder = searchPlaceholderProp ?? words.search;
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const { query, setQuery, rows, pending, atMax, isSelected, toggle, create } = useSelectList(props, filterOption, isEqual);
   const showLoader = loading || pending;
   const remote = !!(props.loadOptions || props.onSearchChange);
@@ -81,40 +77,40 @@ export const SelectList = <T,>(listProps: SelectListProps<T>) => {
   };
 
   return (
-    <View style={[style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
-      {props.query === undefined && shouldShowSearch(searchable, options.length, remote) && (
-        <View style={[{ paddingHorizontal: theme.spacing.lg, paddingBottom: theme.spacing.sm }, slots?.search]}>
-          <SearchInput
-            value={query}
-            onChangeText={setQuery}
-            placeholder={searchPlaceholder}
-            autoFocus={autoFocusSearch}
-            theme={theme}
-            style={slots?.searchInput}
-          />
-        </View>
-      )}
-      <FlatList
-        data={rows}
-        keyExtractor={getRowKey}
-        showsVerticalScrollIndicator={SHOWS_SCROLL_INDICATOR}
-        renderItem={renderRow}
-        keyboardShouldPersistTaps="handled"
-        onEndReached={onEndReached}
-        ListFooterComponent={showLoader && rows.length > 0 ? loader : undefined}
-        style={[listHeight !== undefined ? { height: listHeight } : null, slots?.list]}
-        ListEmptyComponent={
-          showLoader ? (
-            loader
-          ) : (
-            <View style={[styles.empty, { padding: theme.spacing.xl }, slots?.empty]}>
-              <PickerText theme={theme} color="textSecondary" style={slots?.emptyText}>
-                {getEmptyMessage(remote, query, searchPrompt, emptyText)}
-              </PickerText>
-            </View>
-          )
-        }
-      />
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View style={[style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
+        {props.query === undefined && shouldShowSearch(searchable, options.length, remote) && (
+          <View style={[themed(theme).search, slots?.search]}>
+            <SearchInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder={searchPlaceholder}
+              autoFocus={autoFocusSearch}
+              theme={theme}
+              style={slots?.searchInput}
+            />
+          </View>
+        )}
+        <VirtualList
+          data={rows}
+          keyExtractor={getRowKey}
+          renderItem={renderRow}
+          onEndReached={onEndReached}
+          ListFooterComponent={showLoader && rows.length > 0 ? loader : undefined}
+          style={[getListHeight(listHeight), slots?.list]}
+          ListEmptyComponent={
+            showLoader ? (
+              loader
+            ) : (
+              <View style={[styles.empty, themed(theme).empty, slots?.empty]}>
+                <Text color="textSecondary" style={slots?.emptyText}>
+                  {getEmptyMessage(remote, query, searchPrompt, emptyText)}
+                </Text>
+              </View>
+            )
+          }
+        />
+      </View>
+    </ThemeScope>
   );
 };

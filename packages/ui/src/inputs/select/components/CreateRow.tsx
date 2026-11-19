@@ -1,42 +1,34 @@
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { coreStyles } from '@/core/core.styles';
-import { CREATE_ICON, SELECT_DESIGN } from '@/inputs/select/select.constants';
-import { styles } from '@/inputs/select/select.styles';
+import { startAlign } from '@/core/core.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { useDirection } from '@/core/theme/ThemeProvider';
+import { CREATE_ICON } from '@/inputs/select/select.constants';
+import { styles, themed } from '@/inputs/select/select.styles';
 import type { CreateRowProps } from '@/inputs/select/select.types';
 
 /** The last row while the search matches no option's label: offers the typed text as a new option. */
 export const CreateRow = ({ text, label, onCreate, theme, slots }: CreateRowProps) => {
-  const look = SELECT_DESIGN[theme.design];
+  const dir = useDirection();
   return (
     <Touchable
       theme={theme}
       onPress={() => onCreate(text)}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      style={[
-        styles.option,
-        {
-          minHeight: look.rowHeight,
-          paddingHorizontal: theme.spacing.lg,
-          marginHorizontal: look.insetRows ? theme.spacing.sm : 0,
-          borderRadius: look.insetRows ? theme.radius.md : 0,
-        },
-        slots?.createOption,
-      ]}
+      role="button"
+      aria-label={label}
+      style={[styles.option, themed(theme).row, slots?.createOption]}
     >
-      <PickerText theme={theme} size="lg" weight="medium" color="primary" style={{ marginEnd: theme.spacing.md }}>
+      <Text size="lg" weight="medium" color="primary" style={themed(theme).leading}>
         {CREATE_ICON}
-      </PickerText>
-      <PickerText
+      </Text>
+      <Text
         theme={theme}
         weight="medium"
         color="primary"
         numberOfLines={1}
-        style={[coreStyles.startAligned, styles.flex, slots?.createOptionLabel]}
+        style={[startAlign[dir], styles.flex, slots?.createOptionLabel]}
       >
         {label}
-      </PickerText>
+      </Text>
     </Touchable>
   );
 };

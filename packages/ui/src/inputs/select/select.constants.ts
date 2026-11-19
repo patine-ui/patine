@@ -7,8 +7,6 @@ export const SEARCH_THRESHOLD = 8;
 
 /** The sheet height of a long built-in list (countries, languages, time zones), as a fraction of the screen. */
 export const BUILT_IN_LIST_SHEET_HEIGHT = 0.8;
-export const DEFAULT_PREFERRED_LABEL = 'Suggested';
-
 export const SELECT_PRESENTATION = FIELD_PRESENTATION;
 
 export const SELECT_ROW_TYPE = {
@@ -20,11 +18,7 @@ export const SELECT_ROW_TYPE = {
 /** One empty list for a missing `options`, so memos that depend on it don't rerun every render. */
 export const NO_OPTIONS: ReadonlyArray<never> = [];
 
-export const DEFAULT_SEARCH_PLACEHOLDER = 'Search';
-export const DEFAULT_EMPTY_TEXT = 'No results';
-export const DEFAULT_LOADING_TEXT = 'Loading…';
 export const DEFAULT_SEARCH_PROMPT = 'Type to search';
-export const DEFAULT_CREATE_LABEL = (text: string) => `Add "${text}"`;
 export const CREATE_ICON = '+';
 /** Wait for a pause in typing before searching a server. */
 export const DEFAULT_SEARCH_DEBOUNCE_MS = 300;
