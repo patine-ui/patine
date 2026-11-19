@@ -52,18 +52,22 @@ Run `pnpm lint && pnpm typecheck && pnpm test` before you finish.
 
 ```
 src/
-  core/        theme, animation (every animation and reduce motion), shared hooks, utils and primitives (Touchable, ChoiceRow…)
-  foundations/ text (Text, Heading), stack (Stack, HStack, VStack), separator
-  display/     card, badge, avatar, accordion
-  feedback/    alert, skeleton, toast
-  navigation/  tabs
+  core/        primitives (the only place that imports React Native views), a11y (constants, utils, focus hooks),
+               theme (provider, ThemeScope, labels, createStyles), animation (every animation and reduce motion),
+               components (internal composites: ChoiceRow, SearchInput…), hooks, utils
+  foundations/ text (Text, Heading), layout (Box, Grid, Center…), stack (Stack, HStack, VStack), separator
+  display/     accordion, avatar, badge, card, carousel, collapsible, descriptions, image, kbd, list, qrcode, sortable,
+               stat, swipeable, table
+  feedback/    alert, empty, progress, skeleton, toast
+  navigation/  breadcrumbs, header, pagination, steps, tabbar, tabs
   actions/     button
-  overlays/    sheet (bottom sheets, dropdowns, fields), action (action sheet, menu), dialog, popover, tooltip
-  inputs/      textfield, checkbox, radio, switch, select, segmented, otp, slider, rating
+  overlays/    sheet (bottom sheets, dropdowns, fields), action (action sheet, menu), dialog, lightbox, modal, popover, tooltip
+  inputs/      checkbox, field, otp, radio, rating, segmented, select, signature, slider, switch, textfield
   pickers/     wheel, time, duration, date, datetime, month, calendar, color, emoji, country, language, timezone
+  ai/          chat, suggestions, typing
 ```
 
-New categories as they arrive: `ai`. Imports flow one way: feature → `overlays/sheet` → `core`.
+Imports flow one way: feature → `overlays/sheet` → `core`. `index.ts` exists only in component folders (the public subpaths); everywhere else, import the file itself (`@/core/primitives/Text`), no barrels.
 
 Every component folder is also a public subpath, **flat**: `patine-ui/<folder>` (`patine-ui/date`), whatever category it sits in. `packages/ui/scripts/sync-exports.js` writes the `exports` map; folder names must be unique across categories. Renaming a folder is a breaking change; moving it to another category is not.
 
@@ -87,7 +91,34 @@ Every component folder has the same layout:
 - Dates are local time. Compare and serialize calendar days with `toDateKey`, never `toISOString()`.
 - `onValueChange` fires for user changes only. Changing `value` programmatically must not call it.
 - API names follow shadcn/ui and Radix where they exist (`variant`, `size`, `checked` + `onCheckedChange`, `value` + `onValueChange`, `RadioGroup` + `RadioGroupItem`), so agents that know shadcn already know Patine.
-- Accessibility is part of done: a role, a label, state (`selected`, `checked`, `expanded`, `disabled`), keyboard support on the web, 44pt touch targets, and `reduce motion` respected.
+- **Platform**: `usePlatform()` for behaviour, `IS_WEB` only for "does a DOM API exist", never raw `Platform.OS`.
+- Accessibility is part of done: a role, a label, state (`selected`, `checked`, `expanded`, `disabled`), keyboard support on the web, 44pt touch targets, and `reduce motion` respected. `Touchable` already gives the focus ring, the disabled state and the 44pt target; `Text` caps font scaling at `MAX_FONT_SCALE`.
+
+### One way to do each thing
+
+| Need | Use |
+|---|---|
+| A box | `View` from `@/core/primitives/View` |
+| Text | `Text` from `@/core/primitives/Text` (`size` / `weight` / `color` tokens) |
+| Anything pressable | `Touchable` (`role` required; focus ring, disabled and 44pt built in; `href` makes it a real link on the web) |
+| Backdrops, drag handles, gesture surfaces | `Pressable` from `@/core/primitives/View` |
+| Text entry | `Input` |
+| Scrolling / long lists | `Scroll` / `VirtualList` |
+| Motion | `core/animation` hooks, rendered with `AnimatedView` / `AnimatedText` |
+| Static styles | `StyleSheet.create` in `*.styles.ts` |
+| Theme styles | `createStyles` in `*.styles.ts` |
+| Row, center, fill, gap, hairline | `cs` / `commonStyles(theme)` from `@/core/core.styles` |
+| Colors | Theme tokens only (`theme.colors.*`); fixed data colors live in the allowlisted `*.constants.ts` |
+| Chart series / colors over media | `theme.chart[i % theme.chart.length]` / `theme.colors.media`, `onMedia`, `onMediaMuted`, `scrim`, `mediaTrack` |
+| Design differences | `Record<Design, …>` in `*.constants.ts` |
+| A component's parts | `<ThemeScope theme={themeOverride}>`, not a `theme` prop passed down |
+| Accessibility props | `role` + `aria-*`, never `accessibility*` on views |
+| Screen-reader announcement | `announce()` |
+| User-facing default text | `useLabels()` (keys in `DEFAULT_LABELS`) |
+| Right to left | `useDirection()` + logical `start` / `end` |
+| Public style overrides | `style` (root) + `styles.<slot>` |
+
+Lint rules hold this: `lint/primitives-only.grit` (no React Native views outside `core/primitives` and `core/animation`), `lint/styles-in-stylesheets.grit` (no object literals in `style=`), `lint/aria-props.grit` (no `accessibility*` props on views and primitives), `lint/colors-from-theme.grit` (no hex, `rgb()` or `hsl()` outside the theme).
 
 ## Docs stay in sync
 

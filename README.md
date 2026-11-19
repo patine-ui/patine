@@ -146,15 +146,36 @@ Theme tokens cover colors, radius, spacing and typography. Light and dark themes
 </PatineProvider>
 ```
 
-Each visual part of a component can be styled through the `styles` prop, and rows, days and triggers can be replaced with render props. See [Designs](https://patine.dev/docs/guides/designs), [Theming](https://patine.dev/docs/guides/theming) and [Styling](https://patine.dev/docs/guides/styling).
+A component's `design` and `theme` reach everything inside it, its parts and your children alike, the way the provider's do.
+
+Each visual part of a component is styled through its `styles` prop (`style` is the root), and rows, days and triggers can be replaced with render props:
+
+```tsx
+<Button styles={{ label: { letterSpacing: 0.5 } }}>Save</Button>
+<Checkbox label="Remember me" styles={{ box: { borderRadius: 4 }, label: { fontWeight: '600' } }} />
+```
+
+### Translation and right to left
+
+Every word a component shows or says by default comes from one place. Translate them for the whole app with `labels`; a component's own label props still win. `dir` sets which way text runs, so arrows, swipes, sliders and chevrons follow it (on the web it defaults to the page's `dir`):
+
+```tsx
+<PatineProvider dir="rtl" labels={{ close: 'סגור', cancel: 'ביטול', pagination: { next: 'הבא', previous: 'הקודם' } }}>
+  {/* app */}
+</PatineProvider>
+```
+
+`DEFAULT_LABELS` lists every key, and `useLabels()` and `useDirection()` read them in your own components. See [Designs](https://patine.dev/docs/guides/designs), [Theming](https://patine.dev/docs/guides/theming) and [Styling](https://patine.dev/docs/guides/styling).
 
 ## Accessibility
 
 - Roles, labels and states (`checked`, `selected`, `expanded`, `disabled`) for VoiceOver, TalkBack and web screen readers.
-- Touch targets of at least 44pt.
-- Full keyboard use and a visible focus ring on the web.
+- Touch targets of at least 44pt, added to small controls automatically on phones.
+- Full keyboard use and a visible focus ring on every pressable control on the web.
+- Text scales with the OS font size, up to 1.6× so fixed-height controls keep their text.
+- Real web semantics for search engines and assistive tech: `href` on Button, Card, ListItem, tab bar items and breadcrumbs renders an `<a href>` (and opens the URL on iOS and Android), the tab bars are `<nav>` landmarks, Header is a `<header>`, headings are `<h1>`–`<h4>`, and Image's `alt` reaches the `<img>`.
 - Animations stop when the OS asks to reduce motion.
-- Names, the 12/24-hour clock and the first day of the week come from `Intl`, and layouts flip for RTL.
+- Names, the 12/24-hour clock and the first day of the week come from `Intl`; layouts flip for RTL (`dir` on the provider), and every default word can be translated (`labels`).
 
 Details per component are in the [accessibility guide](https://patine.dev/docs/guides/accessibility).
 
@@ -182,15 +203,36 @@ import { PatineProvider } from 'patine-ui/core';
 
 Subpaths: `action` `alert` `avatar` `badge` `button` `calendar` `card` `chat` `checkbox` `color` `core` `country` `date` `datetime` `duration` `emoji` `empty` `header` `image` `language` `list` `month` `otp` `progress` `radio` `rating` `segmented` `select` `separator` `sheet` `skeleton` `slider` `stack` `suggestions` `switch` `text` `time` `timezone` `typing` `wheel`.
 
+### Building your own components (`patine-ui/core`)
+
+`patine-ui/core` holds the provider and the hooks (`useTheme`, `useLabels`, `useDirection`, `usePlatform`), the animation hooks, and two building blocks the library itself is made of:
+
+- `Touchable`: anything pressable. It needs a `role`, and brings the hover tint, the press dim or ripple, a keyboard focus ring (`focusRing`), the disabled state, a 44pt touch area on phones (`minTarget`), and `href` (+ `external`) for a real link on the web.
+- `createStyles`: a style sheet built from the theme once per theme, so theme colours and spacing cost nothing per render.
+
+```tsx
+import { createStyles, Touchable, useTheme } from 'patine-ui/core';
+
+const themed = createStyles((t) => ({ row: { padding: t.spacing.md, borderRadius: t.radius.md, backgroundColor: t.colors.surface } }));
+
+const Row = ({ children }) => (
+  <Touchable role="link" href="/orders" style={themed(useTheme()).row}>
+    {children}
+  </Touchable>
+);
+```
+
+Charts get eight colour-blind-safe series colours in `theme.chart`, tuned for light and dark; `theme.colors.media`, `onMedia`, `onMediaMuted`, `scrim` and `mediaTrack` are for anything drawn over photos and video.
+
 A few live alongside related components: `PhoneField` is in `country`, `TimeRangePicker` in `time`, `ChipGroup` in `segmented`, and `DropdownMenu` and `ActionSheet` in `action`. Subpaths need React Native 0.79 or later (Metro package exports).
 
 ## Requirements
 
 | | Version |
 |---|---|
-| `react` | 18 or later |
-| `react-native` | 0.72 or later |
-| Expo | Any SDK, including Expo Go |
+| `react` | 19 or later |
+| `react-native` | 0.78 or later (New Architecture) |
+| Expo | SDK 53 or later, including Expo Go |
 | `react-native-web` | Supported |
 
 No other peer dependencies.
