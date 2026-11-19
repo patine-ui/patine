@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
-import type { ControlPosition, ThemableProps } from '@/core/core.types';
+import type { ControlPosition, SlotStyles, ThemableProps } from '@/core/core.types';
 
 export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'>, ThemableProps {
   /** Controlled state */
@@ -18,8 +18,8 @@ export interface SwitchProps extends Omit<PressableProps, 'children' | 'style' |
   controlPosition?: ControlPosition;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** A string label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface SwitchDesign {
