@@ -1,5 +1,6 @@
+import type { Theme } from '@/core/theme/theme.types';
 import { FLICK_VELOCITY, FULL_SWIPE_SHARE, SWIPE_SIDE } from './swipeable.constants';
-import type { SwipeRelease } from './swipeable.types';
+import type { SwipeAction, SwipeDesign, SwipeRelease } from './swipeable.types';
 
 interface Bounds {
   /** How far the leading actions reach, ≥ 0 */
@@ -54,3 +55,13 @@ export const releaseSwipe = (offset: number, velocity: number, b: Bounds): Swipe
 /** The resting offset of a side. */
 export const openOffset = (side: string | null, b: Pick<Bounds, 'leading' | 'trailing'>) =>
   side === SWIPE_SIDE.leading ? b.leading : side === SWIPE_SIDE.trailing ? -b.trailing : 0;
+
+/** An action's fill: its own color, or the theme's for its variant. */
+export const getActionFill = (action: SwipeAction, look: SwipeDesign, colors: Theme['colors']) =>
+  action.color ?? (action.variant === 'destructive' ? colors.danger : action.variant === 'primary' ? colors.primary : colors[look.neutral]);
+
+/** An action's box: the design's width on its fill. */
+export const getActionBox = (action: SwipeAction, look: SwipeDesign, colors: Theme['colors']) => ({
+  width: look.actionWidth,
+  backgroundColor: getActionFill(action, look, colors),
+});

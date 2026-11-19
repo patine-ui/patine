@@ -1,8 +1,7 @@
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
-
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { focusOutline } from '@/core/utils/focus.utils';
+import { focusRing } from '@/core/a11y/a11y.utils';
+import { useFocusVisible } from '@/core/a11y/hooks/useFocusVisible';
+import { AnimatedView, Pressable, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { LIST_DESIGN } from '@/display/list/list.constants';
 import { SwipeActions } from './components/SwipeActions';
 import { useSwipeable } from './hooks/useSwipeable';
@@ -28,39 +27,48 @@ export const SwipeableRow = ({
   style,
   testID,
 }: SwipeableRowProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const swipe = useSwipeable({ leadingActions, trailingActions, fullSwipe, disabled, onOpenChange, theme });
   const focus = useFocusVisible();
   const fill = backgroundColor ?? theme.colors[LIST_DESIGN[theme.design].fill];
+  // The row's fill may be the app's own colour, and it follows the swipe.
+  const front = { backgroundColor: fill, transform: [{ translateX: swipe.x }] };
   const actions = { armed: swipe.armed, look: swipe.look, theme, onRun: swipe.run };
   return (
-    <View style={[styles.root, focus.focusVisible && focusOutline(theme.colors.primary), style]} onLayout={swipe.onLayout} testID={testID}>
-      <SwipeActions side={SWIPE_SIDE.leading} actions={leadingActions ?? []} visible={swipe.revealed === SWIPE_SIDE.leading} {...actions} />
-      <SwipeActions
-        side={SWIPE_SIDE.trailing}
-        actions={trailingActions ?? []}
-        visible={swipe.revealed === SWIPE_SIDE.trailing}
-        {...actions}
-      />
-      <Animated.View
-        style={[styles.front, { backgroundColor: fill, transform: [{ translateX: swipe.x }] }]}
-        {...swipe.panHandlers}
-        {...swipe.keys}
-        onFocus={focus.onFocus}
-        onBlur={focus.onBlur}
-        testID={testID ? `${testID}-content` : undefined}
-      >
-        {children}
-        {swipe.open ? (
-          <Pressable
-            accessible={false}
-            tabIndex={-1}
-            onPress={swipe.close}
-            style={StyleSheet.absoluteFill}
-            testID={testID ? `${testID}-close` : undefined}
-          />
-        ) : null}
-      </Animated.View>
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View style={[styles.root, focus.focusVisible && focusRing(theme.colors.primary), style]} onLayout={swipe.onLayout} testID={testID}>
+        <SwipeActions
+          side={SWIPE_SIDE.leading}
+          actions={leadingActions ?? []}
+          visible={swipe.revealed === SWIPE_SIDE.leading}
+          {...actions}
+        />
+        <SwipeActions
+          side={SWIPE_SIDE.trailing}
+          actions={trailingActions ?? []}
+          visible={swipe.revealed === SWIPE_SIDE.trailing}
+          {...actions}
+        />
+        <AnimatedView
+          style={[styles.front, front]}
+          {...swipe.panHandlers}
+          {...swipe.keys}
+          onFocus={focus.onFocus}
+          onBlur={focus.onBlur}
+          testID={testID ? `${testID}-content` : undefined}
+        >
+          {children}
+          {swipe.open ? (
+            <Pressable
+              accessible={false}
+              tabIndex={-1}
+              onPress={swipe.close}
+              style={styles.fill}
+              testID={testID ? `${testID}-close` : undefined}
+            />
+          ) : null}
+        </AnimatedView>
+      </View>
+    </ThemeScope>
   );
 };

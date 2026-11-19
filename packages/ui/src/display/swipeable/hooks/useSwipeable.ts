@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { KeyDownEvent, LayoutChangeEvent } from 'react-native';
 
+import { KEY } from '@/core/a11y/a11y.constants';
 import { EASE_OUT, timing, useAnimatedValue } from '@/core/animation';
-import { IS_WEB, KEY } from '@/core/core.constants';
+import { IS_WEB } from '@/core/core.constants';
 import { useDrag } from '@/core/hooks/useDrag';
 import type { Theme } from '@/core/theme/theme.types';
 import { SWIPE_DESIGN, SWIPE_SIDE } from '@/display/swipeable/swipeable.constants';
