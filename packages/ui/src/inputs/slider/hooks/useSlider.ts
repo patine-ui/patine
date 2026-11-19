@@ -1,16 +1,16 @@
 import { useRef, useState } from 'react';
-import { I18nManager, type LayoutChangeEvent, type PointerEvent } from 'react-native';
+import type { LayoutChangeEvent, PointerEvent } from 'react-native';
 
+import { adjustableProps } from '@/core/a11y/adjustable.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useTrackPan } from '@/core/hooks/useTrackPan';
+import { useDirection, useLabels } from '@/core/theme/ThemeProvider';
 import type { Theme } from '@/core/theme/theme.types';
-import { adjustableProps } from '@/core/utils/adjustable.utils';
 import { toFraction } from '@/core/utils/track.utils';
 import {
   DEFAULT_SLIDER_MAX,
   DEFAULT_SLIDER_MIN,
   DEFAULT_SLIDER_STEP,
-  DEFAULT_THUMB_LABELS,
   PAGE_FRACTION,
   SLIDER_DESIGN,
   SLIDER_VALUE_LABEL,
@@ -40,6 +40,8 @@ import {
  * `onValueChanging` fires on each step of a drag; `onValueChange` once the finger lifts, or on a key or screen-reader step.
  */
 export const useSlider = (props: SliderProps, theme: Theme) => {
+  const rtl = useDirection() === 'rtl';
+  const words = useLabels();
   const { min = DEFAULT_SLIDER_MIN, max = DEFAULT_SLIDER_MAX, step = DEFAULT_SLIDER_STEP, disabled = false, showSteps = false } = props;
   const design = SLIDER_DESIGN[theme.design];
   const range = !!props.range;
@@ -65,7 +67,7 @@ export const useSlider = (props: SliderProps, theme: Theme) => {
   const values = drag ?? committed;
 
   // Touches come in screen coordinates; the track runs from its start, which is the right edge in RTL.
-  const fromStart = (fraction: number) => (I18nManager.isRTL ? 1 - fraction : fraction);
+  const fromStart = (fraction: number) => (rtl ? 1 - fraction : fraction);
   const valueAt = (fraction: number) => snap(min + fromStart(fraction) * (max - min));
   const moveTo = (fraction: number) => {
     const from = live.current.drag ?? committed;
@@ -105,7 +107,7 @@ export const useSlider = (props: SliderProps, theme: Theme) => {
   const stepFrom = (value: number, direction: 1 | -1, by: number) =>
     onMarks ? stepToMark(value, markValues, direction) : value + direction * by;
   const valueLabel = props.valueLabel ?? design.valueLabel;
-  const thumbLabels = props.range ? (props.thumbLabels ?? DEFAULT_THUMB_LABELS) : [];
+  const thumbLabels = props.range ? (props.thumbLabels ?? words.slider.thumbs) : [];
 
   const inset = design.thumbWidth / 2;
   const offsets = values.map((v) => getThumbOffset(valueToFraction(v, min, max), width, inset));

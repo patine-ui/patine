@@ -1,5 +1,14 @@
+import { MIN_TOUCH_TARGET } from '@/core/a11y/a11y.constants';
 import { clamp, roundTo, stepDecimals } from '@/core/utils/track.utils';
-import { CONTINUOUS_DECIMALS, CONTINUOUS_STEP_FRACTION, HALO_LEVEL, MIN_MARK_SPACING } from './slider.constants';
+import {
+  CONTINUOUS_DECIMALS,
+  CONTINUOUS_STEP_FRACTION,
+  HALO_LEVEL,
+  MARK_LABEL_BOX_WIDTH,
+  MIN_MARK_SPACING,
+  VALUE_LABEL_BOX_WIDTH,
+  VALUE_LABEL_GAP,
+} from './slider.constants';
 import type {
   HaloLevel,
   HaloState,
@@ -148,3 +157,59 @@ export const getMarkLabels = (
       },
     ];
   });
+
+/** A round box `size` across, centred on `x` and on the 44pt track. */
+const centredBox = (x: number, width: number, height: number) => ({
+  start: x - width / 2,
+  top: (MIN_TOUCH_TARGET - height) / 2,
+  width,
+  height,
+  borderRadius: width / 2,
+});
+
+/** A thumb's box at its place on the track. */
+export const getThumbBox = (x: number, width: number, height: number) => centredBox(x, width, height);
+
+/** The web's halo, centred on its thumb. */
+export const getHaloBox = (x: number, size: number) => centredBox(x, size, size);
+
+/** The rail, centred in the 44pt touch area. */
+export const getRailBox = (trackHeight: number) => ({
+  top: (MIN_TOUCH_TARGET - trackHeight) / 2,
+  height: trackHeight,
+});
+
+/** A piece of track between thumbs: fully round at the track's ends, the design's inner radius beside a thumb. */
+export const getSegmentBox = (
+  segment: { start: number; end: number; outerStart: boolean; outerEnd: boolean },
+  trackHeight: number,
+  innerRadius: number
+) => {
+  const outer = trackHeight / 2;
+  return {
+    start: segment.start,
+    width: segment.end - segment.start,
+    borderTopStartRadius: segment.outerStart ? outer : innerRadius,
+    borderBottomStartRadius: segment.outerStart ? outer : innerRadius,
+    borderTopEndRadius: segment.outerEnd ? outer : innerRadius,
+    borderBottomEndRadius: segment.outerEnd ? outer : innerRadius,
+  };
+};
+
+/** A step or stop mark, centred on the track. */
+export const getMarkBox = (x: number, size: number, trackHeight: number) => ({
+  start: x - size / 2,
+  top: (trackHeight - size) / 2,
+  width: size,
+  height: size,
+  borderRadius: size / 2,
+});
+
+/** The value bubble, centred over its thumb. */
+export const getValueLabelPlace = (x: number, thumbHeight: number) => ({
+  start: x - VALUE_LABEL_BOX_WIDTH / 2,
+  bottom: (MIN_TOUCH_TARGET + thumbHeight) / 2 + VALUE_LABEL_GAP,
+});
+
+/** A mark's label, centred under it. */
+export const getMarkLabelPlace = (x: number) => ({ start: x - MARK_LABEL_BOX_WIDTH / 2 });

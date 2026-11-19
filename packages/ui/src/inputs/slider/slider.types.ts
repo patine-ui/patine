@@ -2,8 +2,8 @@ import type React from 'react';
 import type { Animated, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
+import type { adjustableProps } from '@/core/a11y/adjustable.utils';
 import type { ValueOf } from '@/core/core.types';
-import type { adjustableProps } from '@/core/utils/adjustable.utils';
 import type { HALO_LEVEL, SLIDER_THUMB, SLIDER_VALUE_LABEL } from './slider.constants';
 
 export type SliderThumbKind = ValueOf<typeof SLIDER_THUMB>;
@@ -140,7 +140,6 @@ export interface SliderMarkLabel extends SliderMark {
 
 export interface MarkLabelsProps {
   labels: SliderMarkLabel[];
-  theme: Theme;
   slots?: SlotStyles<SliderSlot>;
 }
 

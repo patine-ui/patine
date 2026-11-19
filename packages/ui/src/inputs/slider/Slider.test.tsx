@@ -40,7 +40,7 @@ describe('Slider', () => {
     await act(() => pan.onPanResponderMove?.(start, moved(40)));
     expect(onValueChanging).toHaveBeenLastCalledWith(70);
     expect(onValueChange).not.toHaveBeenCalled();
-    expect(screen.getByTestId('slider-thumb-0').props.accessibilityValue).toEqual({ text: '70' });
+    expect(screen.getByTestId('slider-thumb-0').props['aria-valuetext']).toEqual('70');
     await act(() => pan.onPanResponderRelease?.(start, moved(40)));
     expect(onValueChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith(70);
@@ -76,15 +76,15 @@ describe('Slider', () => {
     await act(() => pan.onPanResponderMove?.(start, moved(-160)));
     await act(() => pan.onPanResponderRelease?.(start, moved(-160)));
     expect(onValueChange).toHaveBeenCalledWith([20, 20]);
-    expect(screen.getByTestId('slider-thumb-0').props.accessibilityLabel).toBe('Minimum');
+    expect(screen.getByTestId('slider-thumb-0').props['aria-label']).toBe('Minimum');
   });
 
   it('follows a controlled value without reporting it', async () => {
     const onValueChange = jest.fn();
     await render(<Slider design="ios" value={30} onValueChange={onValueChange} formatValue={(v) => `${v}%`} testID="slider" />);
-    expect(screen.getByTestId('slider-thumb-0').props.accessibilityValue).toEqual({ text: '30%' });
+    expect(screen.getByTestId('slider-thumb-0').props['aria-valuetext']).toEqual('30%');
     await screen.rerender(<Slider design="ios" value={60} onValueChange={onValueChange} formatValue={(v) => `${v}%`} testID="slider" />);
-    expect(screen.getByTestId('slider-thumb-0').props.accessibilityValue).toEqual({ text: '60%' });
+    expect(screen.getByTestId('slider-thumb-0').props['aria-valuetext']).toEqual('60%');
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
@@ -103,7 +103,7 @@ describe('Slider', () => {
     const thumb = screen.getByTestId('slider-thumb-0');
     await fireEvent(thumb, 'keyDown', key('ArrowRight'));
     expect(onValueChange).not.toHaveBeenCalled();
-    expect(thumb.props.accessibilityState).toEqual({ disabled: true });
+    expect(thumb.props['aria-disabled']).toBe(true);
     expect(screen.getByTestId('slider-track').props.onResponderGrant).toBeUndefined();
   });
 

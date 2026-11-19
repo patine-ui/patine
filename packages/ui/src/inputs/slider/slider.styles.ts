@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { KNOB_COLOR, TOUCH_TARGET } from '@/core/core.constants';
+import { MIN_TOUCH_TARGET } from '@/core/a11y/a11y.constants';
+import { createStyles } from '@/core/theme/theme.utils';
 import {
   MARK_LABEL_BOX_WIDTH,
   MARK_LABEL_OFFSET,
+  SLIDER_DESIGN,
   SLIDER_DISABLED_OPACITY,
   VALUE_LABEL_BOX_WIDTH,
   VALUE_LABEL_SPACE,
@@ -15,7 +17,7 @@ export const styles = StyleSheet.create({
   noCursor: { cursor: 'auto' },
   column: { flex: 1 },
   reserveValueLabel: { paddingTop: VALUE_LABEL_SPACE },
-  track: { height: TOUCH_TARGET, cursor: 'pointer' },
+  track: { height: MIN_TOUCH_TARGET, cursor: 'pointer' },
   markLabels: { marginTop: MARK_LABEL_OFFSET, minHeight: 20 },
   markLabelBox: { position: 'absolute', width: MARK_LABEL_BOX_WIDTH, alignItems: 'center' },
   rail: { position: 'absolute', start: 0, end: 0 },
@@ -23,7 +25,15 @@ export const styles = StyleSheet.create({
   mark: { position: 'absolute' },
   thumb: { position: 'absolute' },
   halo: { position: 'absolute' },
-  knob: { backgroundColor: KNOB_COLOR },
   valueLabelBox: { position: 'absolute', width: VALUE_LABEL_BOX_WIDTH, alignItems: 'center' },
   valueLabel: { paddingHorizontal: 12, paddingVertical: 6 },
 });
+
+export const themed = createStyles((t) => ({
+  knob: { backgroundColor: t.colors.knob, boxShadow: t.shadows.sm },
+  fill: { backgroundColor: t.colors.primary },
+  inactive: { backgroundColor: t.colors[SLIDER_DESIGN[t.design].inactiveTrack] },
+  markOn: { backgroundColor: t.colors.onPrimary },
+  row: { gap: t.spacing.md },
+  valueLabel: { backgroundColor: t.colors.text, borderRadius: t.radius.full },
+}));

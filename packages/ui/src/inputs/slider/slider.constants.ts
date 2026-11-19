@@ -99,7 +99,6 @@ export const PAGE_FRACTION = 0.1;
 export const CONTINUOUS_DECIMALS = 2;
 /** Step marks closer than this many px would run together, so they're left out. */
 export const MIN_MARK_SPACING = 8;
-export const DEFAULT_THUMB_LABELS: [string, string] = ['Minimum', 'Maximum'];
 export const SLIDER_DISABLED_OPACITY = 0.38;
 /** The value bubble's box, centred over the thumb; the bubble inside is as wide as its text. */
 export const VALUE_LABEL_BOX_WIDTH = 120;

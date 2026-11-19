@@ -1,12 +1,17 @@
 import {
   formatSliderValue,
   fractionToValue,
+  getHaloBox,
   getHaloLevel,
   getKeyStep,
+  getMarkBox,
   getMarkLabels,
   getMarks,
+  getSegmentBox,
+  getThumbBox,
   getThumbOffset,
   getTrackSegments,
+  getValueLabelPlace,
   moveThumb,
   nearestMark,
   nearestThumb,
@@ -189,5 +194,28 @@ describe('marks', () => {
       { key: '0', x: 10, label: '0°C', active: true },
       { key: '100', x: 210, label: '100°C', active: false },
     ]);
+  });
+});
+
+describe('slider geometry', () => {
+  it('centres thumbs and halos on their value and in the 44pt track', () => {
+    expect(getThumbBox(100, 20, 20)).toEqual({ start: 90, top: 12, width: 20, height: 20, borderRadius: 10 });
+    expect(getHaloBox(50, 40)).toMatchObject({ start: 30, top: 2, width: 40 });
+  });
+
+  it('rounds a segment fully at the track ends and by the inner radius beside a thumb', () => {
+    expect(getSegmentBox({ start: 0, end: 60, outerStart: true, outerEnd: false }, 4, 1)).toEqual({
+      start: 0,
+      width: 60,
+      borderTopStartRadius: 2,
+      borderBottomStartRadius: 2,
+      borderTopEndRadius: 1,
+      borderBottomEndRadius: 1,
+    });
+  });
+
+  it('centres marks on the track and the value label over its thumb', () => {
+    expect(getMarkBox(10, 4, 8)).toEqual({ start: 8, top: 2, width: 4, height: 4, borderRadius: 2 });
+    expect(getValueLabelPlace(100, 20)).toEqual({ start: 40, bottom: 36 });
   });
 });
