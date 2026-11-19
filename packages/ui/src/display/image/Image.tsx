@@ -1,14 +1,14 @@
-import { Animated, StyleSheet, View } from 'react-native';
-
 import { useAnimatedTo } from '@/core/animation';
+import { AnimatedImage, View } from '@/core/primitives/View';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
 import { toImageSource } from '@/display/avatar/avatar.utils';
 import { Skeleton } from '@/feedback/skeleton/Skeleton';
 import { ImageGlyph } from './components/ImageGlyph';
 import { useImageStatus } from './hooks/useImageStatus';
 import { IMAGE_DESIGN } from './image.constants';
-import { styles } from './image.styles';
+import { styles, themed } from './image.styles';
 import type { ImageProps } from './image.types';
+import { getFrameBox, getImageAlt } from './image.utils';
 
 /**
  * A picture in a frame that holds its size while it loads: a breathing placeholder first, a fade in when it arrives, and a
@@ -38,6 +38,8 @@ export const Image = ({
   const { status, handleLoad, handleError } = useImageStatus(source, onLoad, onError);
   const opacity = useAnimatedTo(status === 'loaded' ? 1 : 0, { duration: theme.animation.duration });
   const corner = radius ?? look.radius;
+  // An animated value: the picture fades in once it loads.
+  const fade = { opacity };
 
   return (
     <View
@@ -48,26 +50,21 @@ export const Image = ({
       aria-busy={status === 'loading'}
       style={[
         styles.frame,
-        {
-          width,
-          height,
-          aspectRatio,
-          borderRadius: typeof corner === 'number' ? corner : theme.radius[corner],
-          backgroundColor: theme.colors.surface,
-          borderWidth: look.border ? StyleSheet.hairlineWidth : 0,
-          borderColor: theme.colors.border,
-        },
+        getFrameBox(width, height, aspectRatio, typeof corner === 'number' ? corner : theme.radius[corner]),
+        themed(theme).frame,
         style,
       ]}
       {...rest}
     >
       {source && status !== 'error' ? (
-        <Animated.Image
+        <AnimatedImage
           source={source}
           resizeMode={fit}
+          // React Native Web gives its hidden <img> this as `alt`, for search engines and image context menus.
+          {...getImageAlt(alt)}
           onLoad={handleLoad}
           onError={handleError}
-          style={[StyleSheet.absoluteFill, { opacity }]}
+          style={[styles.fill, fade]}
           testID={testID ? `${testID}-image` : undefined}
         />
       ) : null}
@@ -76,7 +73,7 @@ export const Image = ({
           {placeholder ?? <Skeleton width="100%" height="100%" radius={0} theme={themeProp} />}
         </View>
       ) : null}
-      {status === 'error' ? <View style={styles.layer}>{fallback ?? <ImageGlyph color={theme.colors.textSecondary} />}</View> : null}
+      {status === 'error' ? <View style={styles.layer}>{fallback ?? <ImageGlyph />}</View> : null}
     </View>
   );
 };

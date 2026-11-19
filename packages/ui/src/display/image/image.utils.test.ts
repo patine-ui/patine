@@ -1,4 +1,12 @@
-import { sourceKey, toImageStatus } from './image.utils';
+import { getImageAlt, sourceKey, toImageStatus } from './image.utils';
+
+let mockWeb = false;
+jest.mock('@/core/core.constants', () => ({
+  ...jest.requireActual('@/core/core.constants'),
+  get IS_WEB() {
+    return mockWeb;
+  },
+}));
 
 describe('sourceKey', () => {
   it('keys a source by its URI or asset number', () => {
@@ -19,5 +27,18 @@ describe('toImageStatus', () => {
 
   it('falls back when there is no source', () => {
     expect(toImageStatus('', null)).toBe('error');
+  });
+});
+
+describe('getImageAlt', () => {
+  afterEach(() => {
+    mockWeb = false;
+  });
+
+  it("gives React Native Web's <img> its alt text, and adds nothing on native or without alt", () => {
+    expect(getImageAlt('A red door')).toEqual({});
+    mockWeb = true;
+    expect(getImageAlt('A red door')).toEqual({ 'aria-label': 'A red door' });
+    expect(getImageAlt(undefined)).toEqual({});
   });
 });

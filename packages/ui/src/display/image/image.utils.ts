@@ -1,5 +1,6 @@
-import type { ImageSourcePropType, ImageURISource } from 'react-native';
+import type { DimensionValue, ImageSourcePropType, ImageURISource, ViewStyle } from 'react-native';
 
+import { IS_WEB } from '@/core/core.constants';
 import type { ImageStatus } from './image.types';
 
 /** What identifies a source across renders: its URI (an inline `{ uri }` is a new object every render) or its asset number. */
@@ -16,3 +17,19 @@ export const toImageStatus = (key: string, settled: { key: string; status: Image
   if (!key) return 'error';
   return settled?.key === key ? settled.status : 'loading';
 };
+
+/** On the web, the `aria-label` React Native Web turns into the `<img>`'s `alt`. Native reads `alt` from the frame instead. */
+export const getImageAlt = (alt: string | undefined) => (IS_WEB && alt ? { 'aria-label': alt } : {});
+
+/** The frame's size and corners: a theme radius step or points. */
+export const getFrameBox = (
+  width: DimensionValue | undefined,
+  height: DimensionValue | undefined,
+  aspectRatio: number | undefined,
+  borderRadius: number
+): ViewStyle => ({
+  width,
+  height,
+  aspectRatio,
+  borderRadius,
+});
