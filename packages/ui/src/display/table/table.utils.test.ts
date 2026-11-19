@@ -1,4 +1,4 @@
-import { compareValues, getAriaSort, nextSort, sortRows } from './table.utils';
+import { compareValues, getAriaSort, getColumnBox, getRowKey, getTableWidth, nextSort, sortRows } from './table.utils';
 
 type Row = { name: string; amount: number | null };
 const rows: Row[] = [
@@ -51,5 +51,23 @@ describe('getAriaSort', () => {
   it('names the sorted column', () => {
     expect(getAriaSort({ key: 'a', direction: 'desc' }, 'a')).toBe('descending');
     expect(getAriaSort({ key: 'a', direction: 'desc' }, 'b')).toBe('none');
+  });
+});
+
+describe('getColumnBox, getRowKey and getTableWidth', () => {
+  it('sizes a column by width or flex', () => {
+    expect(getColumnBox({ key: 'a', title: 'A', width: 80 })).toEqual({ width: 80 });
+    expect(getColumnBox({ key: 'a', title: 'A' })).toEqual({ flex: 1 });
+  });
+
+  it('keys a row by keyExtractor, id, then index', () => {
+    expect(getRowKey({ id: 7 }, 0, (_row, i) => `r${i}`)).toBe('r0');
+    expect(getRowKey({ id: 7 }, 0)).toBe('7');
+    expect(getRowKey({}, 3)).toBe('3');
+  });
+
+  it('only widens a table given minWidth', () => {
+    expect(getTableWidth(undefined)).toBeNull();
+    expect(getTableWidth(600)).toEqual({ minWidth: 600, flexGrow: 1 });
   });
 });

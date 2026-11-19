@@ -13,4 +13,3 @@ export const TABLE_DESIGN: Record<Design, TableDesign> = {
 };
 
 export const SORT_ARROW = { asc: '↑', desc: '↓' } as const;
-export const DEFAULT_EMPTY_TEXT = 'No results.';

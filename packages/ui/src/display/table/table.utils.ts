@@ -1,4 +1,6 @@
-import type { TableColumn, TableSort } from './table.types';
+import type { ViewStyle } from 'react-native';
+
+import type { TableAlign, TableColumn, TableSort } from './table.types';
 
 /** A cell's value: the column's accessor, or the row's field named by the column's key. */
 export const getCellValue = <T>(row: T, column: TableColumn<T>) =>
@@ -49,3 +51,26 @@ export const nextSort = (current: TableSort | null | undefined, key: string): Ta
 /** The `aria-sort` of a header. */
 export const getAriaSort = (sort: TableSort | null | undefined, key: string): 'ascending' | 'descending' | 'none' =>
   sort?.key === key ? (sort.direction === 'asc' ? 'ascending' : 'descending') : 'none';
+
+/** A column's share of the row: its fixed width, or its flex (1 by default). */
+export const getColumnBox = <T>(column: TableColumn<T>): ViewStyle => (column.width ? { width: column.width } : { flex: column.flex ?? 1 });
+
+/** The style keys that line a cell and its text up with the column's align. */
+export const ALIGN_KEYS: Record<TableAlign, { cell: 'left' | 'center' | 'right'; text: 'textLeft' | 'textCenter' | 'textRight' }> = {
+  left: { cell: 'left', text: 'textLeft' },
+  center: { cell: 'center', text: 'textCenter' },
+  right: { cell: 'right', text: 'textRight' },
+};
+
+/** A row's key: from `keyExtractor`, the row's `id`, or its index. */
+export const getRowKey = <T>(row: T, index: number, keyExtractor?: (row: T, index: number) => string) =>
+  keyExtractor?.(row, index) ?? String((row as { id?: string | number }).id ?? index);
+
+/** The table's box when it scrolls sideways: at least `minWidth`, growing to fill. */
+export const getTableWidth = (minWidth: number | undefined): ViewStyle | null =>
+  minWidth
+    ? {
+        minWidth,
+        flexGrow: 1,
+      }
+    : null;
