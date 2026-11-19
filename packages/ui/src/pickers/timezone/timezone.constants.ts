@@ -1,7 +1,3 @@
-export const DEFAULT_TIME_ZONE_PLACEHOLDER = 'Select a time zone';
-export const DEFAULT_TIME_ZONE_SEARCH_PLACEHOLDER = 'Search time zones';
-export const DEFAULT_CURRENT_TIME_ZONE_LABEL = 'Your time zone';
-export const DEFAULT_ALL_TIME_ZONES_LABEL = 'All time zones';
 /** iOS and Android both write offsets from GMT, and plain 'GMT' for zero. */
 export const GMT = 'GMT';
 export const MINUTES_PER_HOUR = 60;

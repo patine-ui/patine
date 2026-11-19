@@ -1,7 +1,7 @@
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { Select } from '@/inputs/select';
 import { withSheetHeight } from '@/inputs/select/select.utils';
 import { useTimeZoneOptions } from './hooks/useTimeZoneOptions';
-import { DEFAULT_TIME_ZONE_PLACEHOLDER, DEFAULT_TIME_ZONE_SEARCH_PLACEHOLDER } from './timezone.constants';
 import type { TimeZonePickerProps } from './timezone.types';
 import { normalizeTimeZoneValue } from './timezone.utils';
 
@@ -12,16 +12,19 @@ export const TimeZonePicker = ({
   allTimeZonesLabel,
   locale,
   date,
-  placeholder = DEFAULT_TIME_ZONE_PLACEHOLDER,
-  searchPlaceholder = DEFAULT_TIME_ZONE_SEARCH_PLACEHOLDER,
+  placeholder: placeholderProp,
+  searchPlaceholder: searchPlaceholderProp,
   sheet,
   ...selectProps
 }: TimeZonePickerProps) => {
+  const words = useLabels();
+  const searchPlaceholder = searchPlaceholderProp ?? words.timeZone.search;
+  const placeholder = placeholderProp ?? words.timeZone.placeholder;
   const options = useTimeZoneOptions({
     timeZones,
     preferred,
-    preferredLabel,
-    allTimeZonesLabel,
+    preferredLabel: preferredLabel ?? words.timeZone.current,
+    allTimeZonesLabel: allTimeZonesLabel ?? words.timeZone.all,
     locale,
     date,
   });

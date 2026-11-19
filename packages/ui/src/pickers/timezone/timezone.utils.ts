@@ -1,9 +1,10 @@
 import type { Locale } from '@/core';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
 import { getCompare, safe } from '@/core/utils/intl.utils';
 import type { SelectOption } from '@/inputs/select';
 import { pinPreferred } from '@/inputs/select/select.utils';
 import { RAW_TIME_ZONE_DATA } from './data';
-import { DEFAULT_ALL_TIME_ZONES_LABEL, DEFAULT_CURRENT_TIME_ZONE_LABEL, GMT, MINUTES_PER_HOUR, MS_PER_MINUTE } from './timezone.constants';
+import { GMT, MINUTES_PER_HOUR, MS_PER_MINUTE } from './timezone.constants';
 import type { TimeZone, TimeZoneListOptions } from './timezone.types';
 
 let cache: TimeZone[] | null = null;
@@ -126,8 +127,8 @@ export const getTimeZoneName = (id: string, locale?: Locale, date = new Date()) 
 export const buildTimeZoneOptions = ({
   timeZones,
   preferred,
-  preferredLabel = DEFAULT_CURRENT_TIME_ZONE_LABEL,
-  allTimeZonesLabel = DEFAULT_ALL_TIME_ZONES_LABEL,
+  preferredLabel = DEFAULT_LABELS.timeZone.current,
+  allTimeZonesLabel = DEFAULT_LABELS.timeZone.all,
   locale,
   date = new Date(),
 }: TimeZoneListOptions): SelectOption<string>[] => {
