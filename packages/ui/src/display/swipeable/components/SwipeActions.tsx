@@ -22,7 +22,8 @@ interface Props {
 
 /**
  * One side's actions behind the row, the outermost at the edge, on a fill of the outermost's colour so a long swipe shows
- * it growing. Screen readers on phones always reach them; on the web they're hidden until the row opens.
+ * it growing. Screen readers on phones always reach them; on the web they're hidden (and not drawn, so no colour bleeds past a
+ * rounded row's antialiased edge) until the row opens.
  */
 export const SwipeActions = ({ side, actions, visible, armed, look, theme, onRun }: Props) => {
   if (!actions.length) return null;
@@ -36,7 +37,14 @@ export const SwipeActions = ({ side, actions, visible, armed, look, theme, onRun
   const panelFill = { backgroundColor: getActionFill(edge, look, theme.colors) };
   return (
     <View
-      style={[styles.fill, styles.panel, visible ? styles.above : styles.below, panelFill, leading ? styles.start : styles.end]}
+      style={[
+        styles.fill,
+        styles.panel,
+        visible ? styles.above : styles.below,
+        panelFill,
+        leading ? styles.start : styles.end,
+        hidden && styles.idle,
+      ]}
       pointerEvents={visible ? 'box-none' : 'none'}
       aria-hidden={hidden}
     >

@@ -27,7 +27,8 @@ export const themed = createStyles((t) => {
       borderWidth: look.border ? StyleSheet.hairlineWidth : 0,
       borderColor: t.colors.border,
     },
-    leading: { marginEnd: t.spacing.md },
+    // A tall leading element (an account's avatar) grows the row and keeps clear of its edges, never touching them.
+    leading: { marginEnd: t.spacing.md, paddingVertical: t.spacing.md },
     content: { minHeight: look.minHeight, paddingEnd: t.spacing.lg, paddingVertical: t.spacing.sm, gap: t.spacing.sm },
     end: { gap: t.spacing.sm },
     item: { paddingStart: t.spacing.lg },

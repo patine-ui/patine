@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
   fill: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   above: { zIndex: 1 },
   below: { zIndex: 0 },
+  idle: { opacity: 0 },
 });
 
 export const themed = createStyles((t) => ({
