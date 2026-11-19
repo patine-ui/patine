@@ -1,8 +1,8 @@
-import { View } from 'react-native';
-
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { Checkbox } from './Checkbox';
+import { styles, themed } from './checkbox.styles';
 import type { CheckboxGroupProps } from './checkbox.types';
 import { getAllChecked, toggleAll, toggleChecked } from './checkbox.utils';
 
@@ -25,39 +25,37 @@ export const CheckboxGroup = ({
   ...rest
 }: CheckboxGroupProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
+  const sheet = themed(theme);
   const [checked, setChecked] = useControllableState<readonly string[]>(value, defaultValue, (next) => onValueChange?.([...next]));
   const horizontal = orientation === 'horizontal';
   return (
-    <View role="group" aria-disabled={disabled} style={[{ gap: horizontal ? theme.spacing.lg : 0 }, style]} {...rest}>
-      {selectAllLabel ? (
-        <Checkbox
-          theme={themeOverride}
-          label={selectAllLabel}
-          checked={getAllChecked(options, checked)}
-          onCheckedChange={() => setChecked(toggleAll(options, checked))}
-          disabled={disabled}
-          controlPosition={controlPosition}
-        />
-      ) : null}
-      <View
-        style={[
-          horizontal && { flexDirection: 'row', flexWrap: 'wrap', columnGap: theme.spacing.lg },
-          selectAllLabel ? { paddingStart: horizontal ? 0 : theme.spacing.xl } : null,
-        ]}
-      >
-        {options.map((option) => (
+    <ThemeScope theme={themeOverride}>
+      <View role="group" aria-disabled={disabled} style={[horizontal && sheet.groupGap, style]} {...rest}>
+        {selectAllLabel ? (
           <Checkbox
-            key={option.value}
             theme={themeOverride}
-            label={option.label}
-            description={option.description}
-            disabled={disabled || option.disabled}
-            checked={checked.includes(option.value)}
-            onCheckedChange={() => setChecked(toggleChecked(options, checked, option.value))}
+            label={selectAllLabel}
+            checked={getAllChecked(options, checked)}
+            onCheckedChange={() => setChecked(toggleAll(options, checked))}
+            disabled={disabled}
             controlPosition={controlPosition}
           />
-        ))}
+        ) : null}
+        <View style={[horizontal && [styles.groupRow, sheet.groupRow], !!selectAllLabel && !horizontal && sheet.indented]}>
+          {options.map((option) => (
+            <Checkbox
+              key={option.value}
+              theme={themeOverride}
+              label={option.label}
+              description={option.description}
+              disabled={disabled || option.disabled}
+              checked={checked.includes(option.value)}
+              onCheckedChange={() => setChecked(toggleChecked(options, checked, option.value))}
+              controlPosition={controlPosition}
+            />
+          ))}
+        </View>
       </View>
-    </View>
+    </ThemeScope>
   );
 };

@@ -1,13 +1,13 @@
-import { Animated, StyleSheet, Text, View } from 'react-native';
-
 import { usePop } from '@/core/animation/hooks/usePop';
 import { ChoiceRow } from '@/core/components/ChoiceRow';
 import { CHECK_MARK, CONTROL_POSITION } from '@/core/core.constants';
 import type { CheckedState } from '@/core/core.types';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { CHECKBOX_DESIGN, DASH, MIXED } from './checkbox.constants';
-import { styles } from './checkbox.styles';
+import { Text } from '@/core/primitives/Text';
+import { AnimatedView, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { DASH, MIXED } from './checkbox.constants';
+import { styles, themed } from './checkbox.styles';
 import type { CheckboxProps } from './checkbox.types';
 import { nextChecked } from './checkbox.utils';
 
@@ -18,45 +18,35 @@ export const Checkbox = ({
   onCheckedChange,
   theme: themeProp,
   design,
-  boxStyle,
   controlPosition = CONTROL_POSITION.start,
+  styles: slots,
   ...rest
 }: CheckboxProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const [checked, setChecked] = useControllableState<CheckedState>(checkedProp, defaultChecked, (next) => onCheckedChange?.(next === true));
-  const look = CHECKBOX_DESIGN[theme.design];
   const on = checked !== false;
   const pop = usePop(on);
-  const c = theme.colors;
+  const sheet = themed(theme);
 
   return (
-    <ChoiceRow
-      theme={theme}
-      role="checkbox"
-      checked={checked}
-      controlAtEnd={controlPosition === CONTROL_POSITION.end}
-      onPress={() => setChecked(nextChecked(checked))}
-      control={
-        <View
-          aria-hidden
-          style={[
-            styles.box,
-            {
-              width: look.size,
-              height: look.size,
-              borderRadius: look.radius === 'full' ? look.size / 2 : look.radius,
-              borderColor: on ? c.primary : c[look.offColor],
-            },
-            boxStyle,
-          ]}
-        >
-          {/* The fill and mark pop in and out rather than snap. */}
-          <Animated.View style={[StyleSheet.absoluteFill, styles.fill, { backgroundColor: c.primary }, pop]}>
-            <Text style={[styles.mark, { color: c.onPrimary }]}>{checked === MIXED ? DASH : CHECK_MARK}</Text>
-          </Animated.View>
-        </View>
-      }
-      {...rest}
-    />
+    <ThemeScope theme={themeOverride}>
+      <ChoiceRow
+        theme={theme}
+        role="checkbox"
+        checked={checked}
+        controlAtEnd={controlPosition === CONTROL_POSITION.end}
+        onPress={() => setChecked(nextChecked(checked))}
+        control={
+          <View aria-hidden style={[styles.box, sheet.box, on ? sheet.on : sheet.off]}>
+            {/* The fill and mark pop in and out rather than snap. */}
+            <AnimatedView style={[styles.fill, sheet.fill, pop]}>
+              <Text style={[styles.mark, sheet.mark]}>{checked === MIXED ? DASH : CHECK_MARK}</Text>
+            </AnimatedView>
+          </View>
+        }
+        labelStyle={slots?.label}
+        {...rest}
+      />
+    </ThemeScope>
   );
 };

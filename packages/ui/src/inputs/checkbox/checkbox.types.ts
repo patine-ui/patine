@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { PressableProps, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { PressableProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { CheckedState, ControlPosition, ThemableProps } from '@/core/core.types';
+import type { CheckedState, ControlPosition, SlotStyles, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style' | 'onPress' | 'role'>, ThemableProps {
@@ -19,10 +19,8 @@ export interface CheckboxProps extends Omit<PressableProps, 'children' | 'style'
   controlPosition?: ControlPosition;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** A string label's text */
-  labelStyle?: StyleProp<TextStyle>;
-  /** The box itself */
-  boxStyle?: StyleProp<ViewStyle>;
+  /** Styles for its parts: `label`, `box` */
+  styles?: SlotStyles<'label' | 'box'>;
 }
 
 export interface CheckboxDesign {
