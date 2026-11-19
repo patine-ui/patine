@@ -1,7 +1,6 @@
 import { useId } from 'react';
-import { I18nManager } from 'react-native';
 
-import { useTheme } from 'patine-ui';
+import { useDirection, useTheme } from 'patine-ui';
 
 import { DEFAULT_STROKE_WIDTH } from '../icons.constants';
 import type { GlyphProps } from '../icons.types';
@@ -14,9 +13,11 @@ export const useGlyph = ({
   color,
   strokeWidth = DEFAULT_STROKE_WIDTH,
   accessibilityLabel,
-  mirror = Boolean(icon.rtl) && I18nManager.isRTL,
+  mirror: mirrorProp,
 }: GlyphProps) => {
   const theme = useTheme();
+  const rtl = useDirection() === 'rtl';
+  const mirror = mirrorProp ?? (Boolean(icon.rtl) && rtl);
   const id = toSvgId(useId());
   const px = resolveIconSize(size);
   return {
