@@ -1,11 +1,9 @@
-import { View } from 'react-native';
-
 import { Button } from '@/actions/button/Button';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { Text } from '@/foundations/text/Text';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { TextArea } from '@/inputs/textfield/TextArea';
-import { COMPOSER_LABELS } from './chat.constants';
-import { styles } from './chat.styles';
+import { styles, themed } from './chat.styles';
 import type { ChatComposerProps } from './chat.types';
 import { useComposer } from './hooks/useComposer';
 
@@ -30,7 +28,8 @@ export const ChatComposer = ({
   style,
 }: ChatComposerProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
-  const labels = { ...COMPOSER_LABELS, ...labelsProp };
+  const words = useLabels();
+  const labels = { ...words.composer, ...labelsProp };
   const stoppable = sending && onStop !== undefined;
   const composer = useComposer({
     value,
@@ -40,39 +39,34 @@ export const ChatComposer = ({
     onStop: stoppable ? onStop : undefined,
     blocked: disabled || sending,
   });
+  const sheet = themed(theme);
   return (
-    <View style={[styles.composer, { gap: theme.spacing.sm, padding: theme.spacing.sm }, style]}>
-      {leading}
-      <TextArea
-        theme={themeOverride}
-        accessibilityLabel={labels.input}
-        placeholder={placeholder}
-        value={composer.text}
-        onValueChange={composer.setText}
-        onKeyPress={composer.onKeyPress}
-        disabled={disabled}
-        minRows={1}
-        maxRows={maxRows}
-        style={styles.input}
-      />
-      {stoppable ? (
-        <Button theme={themeOverride} size="icon" accessibilityLabel={labels.stop} onPress={onStop}>
-          <View aria-hidden style={[styles.stopGlyph, { backgroundColor: theme.colors.onPrimary }]} />
-        </Button>
-      ) : (
-        <Button
-          theme={themeOverride}
-          size="icon"
-          accessibilityLabel={labels.send}
-          disabled={!composer.canSend}
-          loading={sending}
-          onPress={composer.send}
-        >
-          <Text aria-hidden weight="bold" style={[styles.sendGlyph, { color: theme.colors.onPrimary }]}>
-            ↑
-          </Text>
-        </Button>
-      )}
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View style={[styles.composer, sheet.composer, style]}>
+        {leading}
+        <TextArea
+          aria-label={labels.input}
+          placeholder={placeholder}
+          value={composer.text}
+          onValueChange={composer.setText}
+          onKeyPress={composer.onKeyPress}
+          disabled={disabled}
+          minRows={1}
+          maxRows={maxRows}
+          style={styles.input}
+        />
+        {stoppable ? (
+          <Button size="icon" aria-label={labels.stop} onPress={onStop}>
+            <View aria-hidden style={[styles.stopGlyph, sheet.onPrimaryFill]} />
+          </Button>
+        ) : (
+          <Button size="icon" aria-label={labels.send} disabled={!composer.canSend} loading={sending} onPress={composer.send}>
+            <Text aria-hidden weight="bold" style={[styles.sendGlyph, sheet.onPrimary]}>
+              ↑
+            </Text>
+          </Button>
+        )}
+      </View>
+    </ThemeScope>
   );
 };

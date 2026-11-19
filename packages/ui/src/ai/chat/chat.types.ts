@@ -1,7 +1,8 @@
 import type React from 'react';
-import type { StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
+import type { ChatComposerLabels } from '@/core/theme/labels.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { MESSAGE_FROM } from './chat.constants';
 
@@ -16,18 +17,8 @@ export interface MessageBubbleProps extends ViewProps, ThemableProps {
   name?: string;
   /** Under the bubble, e.g. "9:41" or "Read" */
   meta?: string;
-  /** The bubble itself */
-  bubbleStyle?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-}
-
-export interface ChatComposerLabels {
-  /** The input's name for screen readers. Default: 'Message' */
-  input: string;
-  /** The send button's name. Default: 'Send' */
-  send: string;
-  /** The stop button's name, shown while `sending` when there's an `onStop`. Default: 'Stop' */
-  stop: string;
+  /** Styles for its parts: `bubble`, `text` */
+  styles?: SlotStyles<'bubble' | 'text'>;
 }
 
 export interface ChatComposerProps extends ThemableProps {
@@ -64,3 +55,5 @@ export interface ChatDesign {
   theirs: keyof Theme['colors'];
   theirsBorder: boolean;
 }
+
+export type { ChatComposerLabels } from '@/core/theme/labels.types';

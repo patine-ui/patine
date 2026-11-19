@@ -22,9 +22,3 @@ export const CHAT_DESIGN: Record<Design, ChatDesign> = {
 
 /** The widest a bubble grows, as a share of the thread. */
 export const BUBBLE_MAX_WIDTH = '80%';
-
-export const COMPOSER_LABELS = {
-  input: 'Message',
-  send: 'Send',
-  stop: 'Stop',
-} as const;
