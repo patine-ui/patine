@@ -11,7 +11,13 @@ import { useAnimatedValue } from './useAnimatedValue';
 export const useCollapse = (
   open: boolean,
   duration: number
-): { mounted: boolean; height: Animated.AnimatedInterpolation<number>; onContentLayout: (e: LayoutChangeEvent) => void } => {
+): {
+  mounted: boolean;
+  height: Animated.AnimatedInterpolation<number>;
+  /** The animated height as a style, for the clipping view */
+  style: { height: Animated.AnimatedInterpolation<number> };
+  onContentLayout: (e: LayoutChangeEvent) => void;
+} => {
   const progress = useAnimatedValue(open ? 1 : 0);
   const [mounted, setMounted] = useState(open);
   const [height, setHeight] = useState(0);
@@ -37,12 +43,14 @@ export const useCollapse = (
     if (measured) return afterPaint(() => timing(progress, 1, { duration, native: false }).start());
   }, [open, mounted, measured]);
 
+  const animated = progress.interpolate<number>({
+    inputRange: [0, 1],
+    outputRange: [0, height],
+  });
   return {
     mounted,
-    height: progress.interpolate<number>({
-      inputRange: [0, 1],
-      outputRange: [0, height],
-    }),
+    height: animated,
+    style: { height: animated },
     onContentLayout: (e: LayoutChangeEvent) => setHeight(e.nativeEvent.layout.height),
   };
 };
