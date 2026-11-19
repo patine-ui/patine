@@ -17,7 +17,7 @@ describe('adjustableProps', () => {
     const onMin = jest.fn();
     const onMax = jest.fn();
     const props = adjustableProps({ label: 'Volume', valueText: '40', onStep, onPage, onMin, onMax });
-    expect(props).toMatchObject({ accessibilityRole: 'adjustable', accessibilityLabel: 'Volume', accessibilityValue: { text: '40' } });
+    expect(props).toMatchObject({ role: 'slider', 'aria-label': 'Volume', 'aria-valuetext': '40' });
     props.onAccessibilityAction(action('increment'));
     props.onAccessibilityAction(action('decrement'));
     props.onKeyDown?.(key('ArrowRight'));
@@ -37,6 +37,6 @@ describe('adjustableProps', () => {
     props.onAccessibilityAction(action('increment'));
     expect(onStep).not.toHaveBeenCalled();
     expect('onKeyDown' in props).toBe(false);
-    expect(props.accessibilityState).toEqual({ disabled: true });
+    expect(props['aria-disabled']).toBe(true);
   });
 });

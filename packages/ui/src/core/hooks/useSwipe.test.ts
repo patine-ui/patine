@@ -43,8 +43,9 @@ describe('useSwipe', () => {
     const first = jest.fn();
     const latest = jest.fn();
     const { rerender } = await renderHook(({ go }: { go: (delta: number) => void }) => useSwipe(go), { initialProps: { go: first } });
-    await rerender({ go: latest });
+    // Direction is read while rendering, so an RTL switch takes effect on the next render.
     jest.replaceProperty(I18nManager, 'isRTL', true);
+    await rerender({ go: latest });
     responder().onPanResponderRelease?.(EVENT, gesture({ dx: -80 }));
     expect(first).not.toHaveBeenCalled();
     expect(latest).toHaveBeenCalledWith(-1);

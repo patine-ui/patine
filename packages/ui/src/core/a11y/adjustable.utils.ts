@@ -1,7 +1,7 @@
 import type { AccessibilityActionEvent } from 'react-native';
 
-import { A11Y_ACTION, ADJUSTABLE_ACTIONS, KEY } from '@/core/core.constants';
 import type { AdjustableOptions } from '@/core/core.types';
+import { A11Y_ACTION, ADJUSTABLE_ACTIONS, KEY } from './a11y.constants';
 import { keyboardProps } from './keyboard.utils';
 
 /**
@@ -10,10 +10,10 @@ import { keyboardProps } from './keyboard.utils';
  */
 export const adjustableProps = ({ label, valueText, disabled = false, onStep, onPage, onMin, onMax }: AdjustableOptions) => ({
   accessible: true,
-  accessibilityRole: 'adjustable' as const,
-  accessibilityLabel: label,
-  accessibilityValue: { text: valueText },
-  accessibilityState: { disabled },
+  role: 'slider' as const,
+  'aria-label': label,
+  'aria-valuetext': valueText,
+  'aria-disabled': disabled,
   accessibilityActions: ADJUSTABLE_ACTIONS,
   onAccessibilityAction: (e: AccessibilityActionEvent) => {
     if (!disabled) onStep(e.nativeEvent.actionName === A11Y_ACTION.increment ? 1 : -1);

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import { Platform } from 'react-native';
 
-import { createModality } from '@/core/utils/modality.utils';
+import { createModality } from '@/core/a11y/modality.utils';
+import { IS_WEB } from '@/core/core.constants';
 
 type KeyLike = Parameters<ReturnType<typeof createModality>['onKeyDown']>[0];
 // Method syntax on purpose: TypeScript checks it bivariantly, so the DOM's Document (where present) fits this shape.
@@ -10,7 +10,7 @@ interface DocumentLike {
 }
 
 // Native views only take focus from a hardware keyboard or a TV remote, so there focus always means keyboard.
-const modality = createModality(Platform.OS !== 'web');
+const modality = createModality(!IS_WEB);
 let listening = false;
 
 /** Listens on the whole document once, in the capture phase, so every component reads the same modality. */

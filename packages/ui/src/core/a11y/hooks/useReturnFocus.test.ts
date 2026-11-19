@@ -3,7 +3,7 @@ import { renderHook } from '@testing-library/react-native';
 import { useReturnFocus } from './useReturnFocus';
 
 const mockFocused = { focus: jest.fn() };
-jest.mock('@/core/utils/keyboard.utils', () => ({ focusedElement: () => mockFocused }));
+jest.mock('@/core/a11y/keyboard.utils', () => ({ focusedElement: () => mockFocused }));
 
 describe('useReturnFocus', () => {
   it('focuses what had focus when it opened, once it closes', async () => {

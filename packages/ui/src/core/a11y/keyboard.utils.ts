@@ -1,16 +1,8 @@
 import type { KeyDownEvent, TextInputKeyPressEvent } from 'react-native';
 
-import {
-  ARROW_DIRECTION,
-  CROSS_WEIGHT,
-  DIRECTION,
-  EDGE_TOLERANCE,
-  FOCUS_TARGETS,
-  IS_WEB,
-  KEY,
-  TEXT_FIELD_TAGS,
-} from '@/core/core.constants';
+import { IS_WEB } from '@/core/core.constants';
 import type { Direction, Key, KeyHandlers, Rect, WebElement } from '@/core/core.types';
+import { ARROW_DIRECTION, CROSS_WEIGHT, DIRECTION, EDGE_TOLERANCE, FOCUS_TARGETS, KEY, TEXT_FIELD_TAGS } from './a11y.constants';
 
 /** Lets a control take focus and answer keys. The keys it answers don't scroll the page or reach the grid around it. */
 export const keyboardProps = (handlers: KeyHandlers): { focusable: boolean; onKeyDown: (e: KeyDownEvent) => void } => ({

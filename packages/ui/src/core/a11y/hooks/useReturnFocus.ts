@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { focusedElement } from '@/core/utils/keyboard.utils';
+import { focusedElement } from '@/core/a11y/keyboard.utils';
 
 /**
  * While `open`, remembers what had focus (on the web, the field that opened a sheet) and gives focus back when it closes.

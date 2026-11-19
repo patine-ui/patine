@@ -1,5 +1,5 @@
-import { DIRECTION, KEY } from '@/core/core.constants';
 import type { Rect } from '@/core/core.types';
+import { DIRECTION, KEY } from './a11y.constants';
 import { keyboardProps, nearestInDirection, nextFocusIndex } from './keyboard.utils';
 
 const SIZE = 40;

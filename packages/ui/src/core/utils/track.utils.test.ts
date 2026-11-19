@@ -19,5 +19,6 @@ describe('track utils', () => {
     expect(roundTo(0.1 + 0.2, 1)).toBe(0.3);
     expect(stepDecimals(0.25)).toBe(2);
     expect(stepDecimals(5)).toBe(0);
+    expect(stepDecimals(1e-7)).toBe(7);
   });
 });
