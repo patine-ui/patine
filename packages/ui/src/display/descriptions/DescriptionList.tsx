@@ -1,8 +1,8 @@
-import { StyleSheet, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { DESCRIPTION_LIST_DESIGN } from './descriptions.constants';
+import { styles, themed } from './descriptions.styles';
 import type { DescriptionListProps } from './descriptions.types';
 
 /**
@@ -19,54 +19,51 @@ export const DescriptionList = ({
   styles: slots,
   ...rest
 }: DescriptionListProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = DESCRIPTION_LIST_DESIGN[theme.design];
   const horizontal = (orientation ?? look.orientation) === 'horizontal';
+  const sheet = themed(theme);
   return (
-    <View role="list" style={style} {...rest}>
-      {items.map(({ term, details }, i) => (
-        <View
-          key={term}
-          role="listitem"
-          accessible
-          accessibilityLabel={typeof details === 'string' || typeof details === 'number' ? `${term}, ${details}` : undefined}
-          style={[
-            {
-              flexDirection: horizontal ? 'row' : 'column',
-              alignItems: horizontal ? 'center' : 'stretch',
-              gap: horizontal ? theme.spacing.md : 2,
-              paddingVertical: theme.spacing.md,
-              minHeight: 44,
-            },
-            dividers && i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.colors.border },
-            slots?.row,
-          ]}
-        >
-          <PickerText
-            theme={theme}
-            role="term"
-            size={look.mutedTerm ? 'sm' : 'md'}
-            weight={look.mutedTerm ? 'medium' : 'regular'}
-            color={look.mutedTerm ? 'textSecondary' : 'text'}
-            style={[horizontal && { width: look.termWidth }, slots?.term]}
+    <ThemeScope theme={themeOverride}>
+      <View role="list" style={style} {...rest}>
+        {items.map(({ term, details }, i) => (
+          <View
+            key={term}
+            role="listitem"
+            accessible
+            aria-label={typeof details === 'string' || typeof details === 'number' ? `${term}, ${details}` : undefined}
+            style={[
+              styles.row,
+              sheet.row,
+              horizontal ? [styles.side, sheet.side] : styles.stacked,
+              dividers && i > 0 && sheet.divider,
+              slots?.row,
+            ]}
           >
-            {term}
-          </PickerText>
-          <View role="definition" style={[horizontal && { flex: 1, alignItems: look.detailsAtEnd ? 'flex-end' : 'flex-start' }]}>
-            {typeof details === 'string' || typeof details === 'number' ? (
-              <PickerText
-                theme={theme}
-                color={look.mutedTerm ? 'text' : 'textSecondary'}
-                style={[look.detailsAtEnd && horizontal && { textAlign: 'right' }, slots?.details]}
-              >
-                {details}
-              </PickerText>
-            ) : (
-              details
-            )}
+            <Text
+              role="term"
+              size={look.mutedTerm ? 'sm' : 'md'}
+              weight={look.mutedTerm ? 'medium' : 'regular'}
+              color={look.mutedTerm ? 'textSecondary' : 'text'}
+              style={[horizontal && sheet.term, slots?.term]}
+            >
+              {term}
+            </Text>
+            <View role="definition" style={horizontal && [styles.details, look.detailsAtEnd ? styles.end : styles.start]}>
+              {typeof details === 'string' || typeof details === 'number' ? (
+                <Text
+                  color={look.mutedTerm ? 'text' : 'textSecondary'}
+                  style={[look.detailsAtEnd && horizontal && styles.endText, slots?.details]}
+                >
+                  {details}
+                </Text>
+              ) : (
+                details
+              )}
+            </View>
           </View>
-        </View>
-      ))}
-    </View>
+        ))}
+      </View>
+    </ThemeScope>
   );
 };
