@@ -1,6 +1,6 @@
-import type { StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { ThemableProps } from '@/core/core.types';
+import type { SlotStyles, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface KbdProps extends Omit<ViewProps, 'children'>, ThemableProps {
@@ -14,7 +14,8 @@ export interface KbdProps extends Omit<ViewProps, 'children'>, ThemableProps {
   size?: 'sm' | 'md';
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `text` */
+  styles?: SlotStyles<'text'>;
 }
 
 export interface KbdDesign {
