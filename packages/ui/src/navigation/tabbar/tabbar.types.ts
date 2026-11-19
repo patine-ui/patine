@@ -18,6 +18,10 @@ export interface TabBarItem<T extends string = string> {
   /** A count in a red bubble, or `true` for a dot. 0 and false show none */
   badge?: number | boolean;
   disabled?: boolean;
+  /** Where it goes: a real link (`<a href>`) on the web that crawlers follow, opened with `Linking` on iOS and Android. Call `event.preventDefault()` in `onPress` to keep it from opening */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
 }
 
 export interface TabBarProps<T extends string = string> extends Omit<ViewProps, 'children'>, ThemableProps {
@@ -62,9 +66,8 @@ export interface TabBarDesign {
 export interface TabBarButtonProps {
   item: TabBarItem;
   selected: boolean;
+  /** In a tab list (no item has `href`): a tab; otherwise a button or a link */
+  tab: boolean;
   onPress: () => void;
-  look: TabBarDesign;
-  theme: Theme;
-  /** Fills a share of the row in a bar; a fixed square in a rail */
   rail: boolean;
 }

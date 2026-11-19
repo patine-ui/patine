@@ -13,3 +13,14 @@ export const getTabLabel = (label: string, badge: number | boolean | undefined) 
   if (text === null) return label;
   return text === '' ? `${label}, new` : `${label}, ${text} new`;
 };
+
+/** The room a bar or rail keeps for the system's home indicator or status bar: extra height plus padding on that edge. */
+export const getInsetStyle = (inset: number, edge: 'top' | 'bottom', height?: number) =>
+  edge === 'bottom'
+    ? {
+        height: height === undefined ? undefined : height + inset,
+        paddingBottom: inset,
+      }
+    : {
+        paddingTop: inset,
+      };

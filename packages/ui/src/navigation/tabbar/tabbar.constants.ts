@@ -47,7 +47,5 @@ export const TABBAR_DESIGN: Record<Design, TabBarDesign> = {
 /** Material 3's active indicator behind the selected icon. */
 export const INDICATOR = { width: 64, height: 32 } as const;
 
-export const DEFAULT_TABBAR_LABEL = 'Tabs';
-
 /** Counts past this read as "99+". */
 export const MAX_BADGE = 99;

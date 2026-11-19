@@ -38,3 +38,22 @@ describe('NavigationRail', () => {
     expect(screen.getByRole('tab', { name: 'Profile, new', selected: true })).toBeTruthy();
   });
 });
+
+describe('tab bar semantics', () => {
+  it('is a navigation landmark named by its label, with its items as tabs', async () => {
+    await render(<BottomTabBar items={ITEMS} />);
+    expect(screen.getByLabelText('Tabs').props.role).toBe('navigation');
+    expect(screen.getAllByRole('tab')).toHaveLength(3);
+  });
+
+  it('makes items with href links, outside a tab list', async () => {
+    const linked = ITEMS.map((item) => ({
+      ...item,
+      href: `/${item.value}`,
+    }));
+    await render(<NavigationRail items={linked} />);
+    expect(screen.getByLabelText('Tabs').props.role).toBe('navigation');
+    expect(screen.queryAllByRole('tab')).toHaveLength(0);
+    expect(screen.getAllByRole('link')).toHaveLength(3);
+  });
+});

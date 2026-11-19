@@ -7,6 +7,8 @@ export const useTabBar = <T extends string>({ items, value, defaultValue, onValu
     if (next !== undefined) onValueChange?.(next);
   });
   return {
+    /** Items that go to an address are links, so the bar isn't a tab list */
+    tabs: !items.some((item) => item.href),
     selected,
     select: (next: T) => setSelected(next),
   };

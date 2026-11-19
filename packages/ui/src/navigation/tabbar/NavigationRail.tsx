@@ -1,11 +1,11 @@
-import { StyleSheet, View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { TabBarButton } from './components/TabBarButton';
 import { useTabBar } from './hooks/useTabBar';
-import { DEFAULT_TABBAR_LABEL, TABBAR_DESIGN } from './tabbar.constants';
+import { styles, themed } from './tabbar.styles';
 import type { NavigationRailProps } from './tabbar.types';
+import { getInsetStyle } from './tabbar.utils';
 
 /**
  * The bottom tab bar's items down the side of a tablet or desktop window, as Material 3's navigation rail: an optional
@@ -16,7 +16,7 @@ export const NavigationRail = <T extends string>(props: NavigationRailProps<T>) 
     items,
     header,
     topInset = 0,
-    accessibilityLabel = DEFAULT_TABBAR_LABEL,
+    accessibilityLabel: accessibilityLabelProp,
     theme: themeProp,
     design,
     style,
@@ -25,38 +25,32 @@ export const NavigationRail = <T extends string>(props: NavigationRailProps<T>) 
     onValueChange: _onValueChange,
     ...rest
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const bar = useTabBar(props);
-  const look = TABBAR_DESIGN[theme.design];
+  const sheet = themed(theme);
   return (
-    <View
-      style={[
-        {
-          width: look.railWidth,
-          alignItems: 'center',
-          gap: theme.spacing.lg,
-          paddingTop: topInset + theme.spacing.md,
-          backgroundColor: theme.colors[look.background],
-        },
-        look.border && { borderEndWidth: StyleSheet.hairlineWidth, borderEndColor: theme.colors.border },
-        style,
-      ]}
-      {...rest}
-    >
-      {header}
-      <View role="tablist" aria-label={accessibilityLabel} aria-orientation="vertical" style={{ gap: theme.spacing.xs }} {...ARROW_FOCUS}>
-        {items.map((item) => (
-          <TabBarButton
-            key={item.value}
-            item={item}
-            selected={item.value === bar.selected}
-            onPress={() => bar.select(item.value)}
-            look={look}
-            theme={theme}
-            rail
-          />
-        ))}
+    <ThemeScope theme={themeOverride}>
+      <View
+        role="navigation"
+        aria-label={accessibilityLabelProp ?? words.tabBar}
+        style={[styles.rail, sheet.rail, getInsetStyle(topInset + theme.spacing.md, 'top'), style]}
+        {...rest}
+      >
+        {header}
+        <View role={bar.tabs ? 'tablist' : undefined} aria-orientation="vertical" style={sheet.railItems} {...ARROW_FOCUS}>
+          {items.map((item) => (
+            <TabBarButton
+              key={item.value}
+              item={item}
+              selected={item.value === bar.selected}
+              tab={bar.tabs}
+              onPress={() => bar.select(item.value)}
+              rail
+            />
+          ))}
+        </View>
       </View>
-    </View>
+    </ThemeScope>
   );
 };
