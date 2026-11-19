@@ -2,20 +2,7 @@ import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 
 import type { ButtonVariant } from '@/actions/button/button.types';
 import type { ThemableProps } from '@/core/core.types';
-
-/** What the pagination says, for translation. */
-export interface PaginationLabels {
-  /** Default: 'Pagination' */
-  nav: string;
-  /** Default: 'Previous' */
-  previous: string;
-  /** Default: 'Next' */
-  next: string;
-  /** A page button's name for screen readers. Default: page => `Page ${page}` */
-  page: (page: number) => string;
-  /** The compact variant's text. Default: (page, count) => `Page ${page} of ${count}` */
-  status: (page: number, count: number) => string;
-}
+import type { PaginationLabels } from '@/core/theme/labels.types';
 
 export interface PaginationProps extends Omit<ViewProps, 'children'>, ThemableProps {
   /** How many pages there are */
@@ -53,3 +40,5 @@ export interface PaginationDesign {
   /** Round page buttons, as Material draws them */
   round: boolean;
 }
+
+export type { PaginationLabels } from '@/core/theme/labels.types';

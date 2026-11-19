@@ -1,13 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { PaginationDesign, PaginationLabels } from './pagination.types';
-
-export const DEFAULT_PAGINATION_LABELS: PaginationLabels = {
-  nav: 'Pagination',
-  previous: 'Previous',
-  next: 'Next',
-  page: (page) => `Page ${page}`,
-  status: (page, count) => `Page ${page} of ${count}`,
-};
+import type { PaginationDesign } from './pagination.types';
 
 /** brand and Material fill the current page; iOS tints it gray; the web outlines it, as shadcn does. */
 export const PAGINATION_DESIGN: Record<Design, PaginationDesign> = {

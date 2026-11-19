@@ -1,3 +1,4 @@
+import { clamp } from '@/core/utils/track.utils';
 import type { PageItem } from './pagination.types';
 
 const range = (from: number, to: number) => Array.from({ length: Math.max(0, to - from + 1) }, (_, i) => from + i);
@@ -10,7 +11,7 @@ export const getPageItems = (page: number, count: number, siblings = 1, boundari
   const start = range(1, Math.min(boundaries, count));
   const end = range(Math.max(count - boundaries + 1, boundaries + 1), count);
   const siblingsStart = Math.max(Math.min(page - siblings, count - boundaries - siblings * 2 - 1), boundaries + 2);
-  const siblingsEnd = Math.min(Math.max(page + siblings, boundaries + siblings * 2 + 2), (end[0] ?? count + 1) - 2);
+  const siblingsEnd = clamp(page + siblings, boundaries + siblings * 2 + 2, (end[0] ?? count + 1) - 2);
   return [
     ...start,
     ...(siblingsStart > boundaries + 2 ? (['start-ellipsis'] as const) : boundaries + 1 < count - boundaries ? [boundaries + 1] : []),
@@ -21,4 +22,4 @@ export const getPageItems = (page: number, count: number, siblings = 1, boundari
 };
 
 /** A page kept between 1 and the count. */
-export const clampPage = (page: number, count: number) => Math.min(Math.max(1, Math.round(page)), Math.max(1, count));
+export const clampPage = (page: number, count: number) => clamp(Math.round(page), 1, Math.max(1, count));

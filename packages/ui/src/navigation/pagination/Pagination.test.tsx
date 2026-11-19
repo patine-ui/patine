@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { PatineProvider } from '@/core/theme/ThemeProvider';
 import { Pagination } from './Pagination';
 
 describe('Pagination', () => {
@@ -24,5 +25,15 @@ describe('Pagination', () => {
   it('compact: shows where you are in words', async () => {
     await render(<Pagination pageCount={12} page={3} variant="compact" />);
     expect(screen.getByText('Page 3 of 12')).toBeTruthy();
+  });
+
+  it("speaks the provider's language, and its own labels prop wins", async () => {
+    await render(
+      <PatineProvider labels={{ pagination: { next: 'Suivant', previous: 'Précédent' } }}>
+        <Pagination pageCount={3} defaultPage={2} labels={{ previous: 'Retour' }} />
+      </PatineProvider>
+    );
+    expect(screen.getByRole('button', { name: 'Suivant' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Retour' })).toBeTruthy();
   });
 });
