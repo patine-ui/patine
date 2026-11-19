@@ -25,11 +25,11 @@ describe('DatePickerSheet', () => {
     const { rerender } = await render(
       <DatePickerSheet open onOpenChange={jest.fn()} onConfirm={jest.fn()} initialMonth={OCTOBER} design="material" />
     );
-    expect(screen.getByRole('header', { name: 'Selected date' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Selected date' })).toBeTruthy();
     await pressDay(15);
-    expect(screen.getByRole('header', { name: 'Thu, Oct 15' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Thu, Oct 15' })).toBeTruthy();
     await rerender(<DatePickerSheet open onOpenChange={jest.fn()} onConfirm={jest.fn()} initialMonth={OCTOBER} design="ios" />);
-    expect(screen.queryByRole('header', { name: /Oct 15/ })).toBeNull();
+    expect(screen.queryByRole('heading', { name: /Oct 15/ })).toBeNull();
   });
 
   it('confirms a range picked from a preset', async () => {
