@@ -46,8 +46,8 @@
   },
   "peerDependencies": {
     "patine-ui": "*",
-    "react": ">=18",
-    "react-native": ">=0.72",
+    "react": ">=19",
+    "react-native": ">=0.78",
     "react-native-svg": ">=15"
   },
   "devDependencies": {
