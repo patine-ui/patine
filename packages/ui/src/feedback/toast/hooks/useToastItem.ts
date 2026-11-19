@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AccessibilityInfo, type Animated } from 'react-native';
+import type { Animated } from 'react-native';
 
+import { announce } from '@/core/a11y/a11y.utils';
 import { spring, useAnimatedValue, usePresence, useReducedMotion } from '@/core/animation';
 import { IS_WEB } from '@/core/core.constants';
 import { useDrag } from '@/core/hooks/useDrag';
@@ -39,7 +40,7 @@ export const useToastItem = (t: ToastData, { duration, animationDuration, positi
   const announcement = getToastAnnouncement(t);
   useEffect(() => {
     if (IS_WEB || !t.open) return;
-    AccessibilityInfo.announceForAccessibilityWithOptions(announcement, { queue: !isAssertive(t.type) });
+    announce(announcement, { assertive: isAssertive(t.type) });
   }, [announcement, t.open, t.type]);
 
   const panHandlers = useDrag({

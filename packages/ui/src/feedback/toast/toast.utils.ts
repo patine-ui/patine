@@ -138,3 +138,11 @@ export const getToastColors = (theme: Theme, look: ToastDesign, type: ToastType)
     action: (theme.dark ? lightTheme : darkTheme).colors.primary,
   };
 };
+
+/** The toaster's padding: the safe-area insets plus `edge` on every side. */
+export const getToasterPadding = (insets: { top?: number; bottom?: number; left?: number; right?: number }, edge: number) => ({
+  paddingTop: (insets.top ?? 0) + edge,
+  paddingBottom: (insets.bottom ?? 0) + edge,
+  paddingLeft: (insets.left ?? 0) + edge,
+  paddingRight: (insets.right ?? 0) + edge,
+});

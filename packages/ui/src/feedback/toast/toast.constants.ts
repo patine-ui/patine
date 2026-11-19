@@ -19,7 +19,6 @@ export const TOAST_POSITION = {
 /** sonner's default: long enough to read a short line. */
 export const TOAST_DURATION = 4000;
 export const TOAST_MAX = 3;
-export const TOAST_CLOSE_LABEL = 'Close notification';
 /** How far (px) a toast slides in from, toward its edge. */
 export const TOAST_ENTER_OFFSET = 16;
 export const TOAST_ICON_SIZE = 20;
