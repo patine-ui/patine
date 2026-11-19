@@ -1,6 +1,5 @@
-import { View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { AccordionContent } from './AccordionContent';
 import { AccordionContext } from './AccordionContext';
 import { AccordionItem } from './AccordionItem';
@@ -28,23 +27,25 @@ export const Accordion = (props: AccordionProps) => {
     children,
     ...viewProps
   } = props as AccordionProps & { collapsible?: boolean };
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const ctx = useAccordionState(props, theme);
   return (
-    <AccordionContext.Provider value={ctx}>
-      <View {...viewProps}>
-        {items
-          ? items.map((item, index) => {
-              const value = listItemValue(item, index);
-              return (
-                <AccordionItem key={value} value={value} disabled={item.disabled}>
-                  <AccordionTrigger>{item.title}</AccordionTrigger>
-                  <AccordionContent>{item.content}</AccordionContent>
-                </AccordionItem>
-              );
-            })
-          : children}
-      </View>
-    </AccordionContext.Provider>
+    <ThemeScope theme={themeOverride}>
+      <AccordionContext.Provider value={ctx}>
+        <View {...viewProps}>
+          {items
+            ? items.map((item, index) => {
+                const value = listItemValue(item, index);
+                return (
+                  <AccordionItem key={value} value={value} disabled={item.disabled}>
+                    <AccordionTrigger>{item.title}</AccordionTrigger>
+                    <AccordionContent>{item.content}</AccordionContent>
+                  </AccordionItem>
+                );
+              })
+            : children}
+        </View>
+      </AccordionContext.Provider>
+    </ThemeScope>
   );
 };

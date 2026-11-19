@@ -1,8 +1,7 @@
-import { Animated, View } from 'react-native';
-
 import { useCollapse } from '@/core/animation';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { useAccordion, useAccordionItem } from './AccordionContext';
-import { styles } from './accordion.styles';
+import { styles, themed } from './accordion.styles';
 import type { AccordionContentProps } from './accordion.types';
 
 /** What an item shows while open. Its height animates open and shut, and it unmounts once closed. */
@@ -12,16 +11,16 @@ export const AccordionContent = ({ style, children, ...rest }: AccordionContentP
   const collapse = useCollapse(item.open, theme.animation.duration);
   if (!collapse.mounted) return null;
   return (
-    <Animated.View
+    <AnimatedView
       role="region"
       id={item.contentId}
       aria-labelledby={item.triggerId}
       aria-hidden={!item.open}
-      style={[styles.collapse, { height: collapse.height }]}
+      style={[styles.collapse, collapse.style]}
     >
-      <View onLayout={collapse.onContentLayout} style={[{ paddingBottom: theme.spacing.lg }, style]} {...rest}>
+      <View onLayout={collapse.onContentLayout} style={[themed(theme).content, style]} {...rest}>
         {children}
       </View>
-    </Animated.View>
+    </AnimatedView>
   );
 };

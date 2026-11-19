@@ -19,19 +19,6 @@ export const toggleOpen = (open: readonly string[], item: string, type: Accordio
   return collapsible ? [] : null;
 };
 
-// ponytail: same helper as tabs.utils and radio.utils; move one copy to core/utils/keyboard.utils when core is free to change.
-/**
- * The enabled item `step` places from index `from`, wrapping around; undefined when none is enabled. Pass -1 with step 1
- * for the first enabled item, `items.length` with step -1 for the last.
- */
-export const findNextItem = <T extends { disabled: boolean }>(items: readonly T[], from: number, step: number): T | undefined => {
-  for (let i = 1; i <= items.length; i++) {
-    const item = items[(((from + step * i) % items.length) + items.length) % items.length];
-    if (item && !item.disabled) return item;
-  }
-  return undefined;
-};
-
 /** The ids that tie a trigger to its content, for `aria-controls` and `aria-labelledby`. */
 export const itemIds = (baseId: string, value: string) => ({
   trigger: `${baseId}-trigger-${value}`,

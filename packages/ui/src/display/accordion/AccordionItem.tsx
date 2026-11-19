@@ -1,5 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { View } from '@/core/primitives/View';
 import { AccordionItemContext, useAccordion } from './AccordionContext';
 import type { AccordionItemProps } from './accordion.types';
 import { itemIds } from './accordion.utils';

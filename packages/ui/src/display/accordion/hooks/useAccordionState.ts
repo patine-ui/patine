@@ -1,10 +1,11 @@
 import { useCallback, useId, useRef } from 'react';
 
+import { findNextEnabled } from '@/core/a11y/a11y.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import type { Theme } from '@/core/theme/theme.types';
 import { ACCORDION_TYPE } from '@/display/accordion/accordion.constants';
 import type { AccordionContextValue, AccordionProps, TriggerEntry } from '@/display/accordion/accordion.types';
-import { findNextItem, fromOpenList, toggleOpen, toOpenList } from '@/display/accordion/accordion.utils';
+import { fromOpenList, toggleOpen, toOpenList } from '@/display/accordion/accordion.utils';
 
 /** The open items, the triggers in render order, and arrow-key focus between them. */
 export const useAccordionState = (props: AccordionProps, theme: Theme): AccordionContextValue => {
@@ -42,12 +43,13 @@ export const useAccordionState = (props: AccordionProps, theme: Theme): Accordio
     register,
     move: (from, step) =>
       focus(
-        findNextItem(
+        findNextEnabled(
           triggers.current,
           triggers.current.findIndex((item) => item.value === from),
           step
         )
       ),
-    moveToEdge: (last) => focus(last ? findNextItem(triggers.current, triggers.current.length, -1) : findNextItem(triggers.current, -1, 1)),
+    moveToEdge: (last) =>
+      focus(last ? findNextEnabled(triggers.current, triggers.current.length, -1) : findNextEnabled(triggers.current, -1, 1)),
   };
 };

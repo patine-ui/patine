@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { HostInstance, KeyDownEvent, PressableProps, StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { HostInstance, KeyDownEvent, PressableProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { DisclosureIconOptions, DisclosureLook, ThemableProps, ValueOf } from '@/core/core.types';
+import type { DisclosureIconOptions, DisclosureLook, SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { ACCORDION_TYPE } from './accordion.constants';
 
@@ -66,8 +66,8 @@ export interface AccordionTriggerProps extends Omit<PressableProps, 'children' |
   children: React.ReactNode;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** A string label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface AccordionContentProps extends ViewProps {
@@ -103,7 +103,6 @@ export interface AccordionTriggerState {
   accordion: AccordionContextValue;
   item: AccordionItemContextValue;
   ref: React.RefObject<HostInstance | null>;
-  focus: { focusVisible: boolean; onFocus: () => void; onBlur: () => void };
   keys: { focusable: boolean; onKeyDown: (e: KeyDownEvent) => void };
 }
 

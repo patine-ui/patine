@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { HostInstance } from 'react-native';
 
-import { KEY } from '@/core/core.constants';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { keyboardProps } from '@/core/utils/keyboard.utils';
+import { KEY } from '@/core/a11y/a11y.constants';
+import { keyboardProps } from '@/core/a11y/keyboard.utils';
 import { useAccordion, useAccordionItem } from '@/display/accordion/AccordionContext';
 import type { AccordionTriggerState, TriggerEntry } from '@/display/accordion/accordion.types';
 
@@ -12,7 +11,6 @@ export const useAccordionTrigger = (): AccordionTriggerState => {
   const accordion = useAccordion();
   const item = useAccordionItem();
   const ref = useRef<HostInstance>(null);
-  const focus = useFocusVisible();
 
   // One entry for the trigger's life, kept current, so it keeps its place in the order when it's disabled or renamed.
   const entry = useRef<TriggerEntry>({ value: item.value, disabled: item.disabled, ref }).current;
@@ -24,7 +22,6 @@ export const useAccordionTrigger = (): AccordionTriggerState => {
     accordion,
     item,
     ref,
-    focus,
     keys: keyboardProps({
       [KEY.down]: () => accordion.move(item.value, 1),
       [KEY.up]: () => accordion.move(item.value, -1),
