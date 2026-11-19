@@ -1,15 +1,12 @@
 import { ActivityIndicator } from 'react-native';
 
-import { Touchable } from '@/core/components/Touchable';
-import { DISABLED_OPACITY, PLATFORM } from '@/core/core.constants';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
-import { useComponentTheme, usePlatform } from '@/core/theme/ThemeProvider';
-import { focusOutline } from '@/core/utils/focus.utils';
-import { Text } from '@/foundations/text/Text';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { BUTTON_DESIGN, BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
-import { styles } from './button.styles';
+import { buttonStyles, styles } from './button.styles';
 import type { ButtonProps } from './button.types';
-import { getButtonBox, getButtonColors, getHitSlop, isRaisedVariant } from './button.utils';
+import { getButtonBox, getButtonColors, isRaisedVariant } from './button.utils';
 
 /**
  * A button in shadcn/ui's variants and sizes, drawn in the active design, with hover, press feedback, a keyboard focus ring,
@@ -26,26 +23,21 @@ export const Button = ({
   theme: themeProp,
   design,
   style,
-  labelStyle,
-  onFocus,
-  onBlur,
+  styles: slots,
   ...rest
 }: ButtonProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
-  const platform = usePlatform();
-  const focus = useFocusVisible();
   const look = BUTTON_DESIGN[theme.design];
-  const colors = getButtonColors(theme.colors, variant);
+  const sheet = buttonStyles(theme);
   const box = getButtonBox(look, size);
   const blocked = !!disabled || loading;
   const label =
     typeof children === 'string' || typeof children === 'number' ? (
       <Text
-        theme={themeOverride}
         size={size === BUTTON_SIZE.icon ? look.textSize.default : look.textSize[size]}
         weight={look.weight}
         numberOfLines={1}
-        style={[styles.label, { color: colors.text }, variant === BUTTON_VARIANT.link && styles.underline, labelStyle]}
+        style={[styles.label, sheet[`${variant}Label`], variant === BUTTON_VARIANT.link && styles.underline, slots?.label]}
       >
         {children}
       </Text>
@@ -54,41 +46,19 @@ export const Button = ({
     );
 
   return (
-    <Touchable
-      theme={theme}
-      pressScale
-      role="button"
-      disabled={blocked}
-      aria-disabled={blocked}
-      aria-busy={loading}
-      hitSlop={getHitSlop(box.width, box.height, platform === PLATFORM.web)}
-      onFocus={(e) => {
-        focus.onFocus();
-        onFocus?.(e);
-      }}
-      onBlur={(e) => {
-        focus.onBlur();
-        onBlur?.(e);
-      }}
-      {...rest}
-      style={[
-        styles.button,
-        box,
-        {
-          gap: theme.spacing.sm,
-          borderRadius: theme.radius[look.radius],
-          backgroundColor: colors.background,
-          borderColor: colors.border,
-          boxShadow: isRaisedVariant(variant) && !blocked ? theme.shadows[look.shadow] : undefined,
-        },
-        blocked && { opacity: DISABLED_OPACITY },
-        focus.focusVisible && focusOutline(theme.colors.primary),
-        style,
-      ]}
-    >
-      {loading ? <ActivityIndicator size="small" color={colors.text} /> : startIcon}
-      {size === BUTTON_SIZE.icon && loading ? null : label}
-      {endIcon}
-    </Touchable>
+    <ThemeScope theme={themeOverride}>
+      <Touchable
+        pressScale
+        role="button"
+        disabled={blocked}
+        aria-busy={loading}
+        {...rest}
+        style={[styles.button, box, sheet.root, sheet[variant], isRaisedVariant(variant) && !blocked && sheet.raised, style]}
+      >
+        {loading ? <ActivityIndicator size="small" color={getButtonColors(theme.colors, variant).text} /> : startIcon}
+        {size === BUTTON_SIZE.icon && loading ? null : label}
+        {endIcon}
+      </Touchable>
+    </ThemeScope>
   );
 };

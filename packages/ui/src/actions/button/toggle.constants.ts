@@ -27,8 +27,5 @@ export const BUTTON_GROUP_DESIGN: Record<Design, ButtonGroupDesign> = {
 /** Buttons' border width, which joined buttons overlap so two edges read as one. */
 export const BUTTON_BORDER = 1;
 
-/** The line between two joined filled buttons, which have no border color of their own. */
-export const FILLED_DIVIDER = 'rgba(255,255,255,0.35)';
-
 /** Variants drawn as a solid fill, which need FILLED_DIVIDER when joined. */
 export const FILLED_VARIANTS: readonly string[] = ['default', 'destructive'];

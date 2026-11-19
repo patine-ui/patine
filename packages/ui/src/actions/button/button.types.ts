@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { ShadowLevel, TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
 import type { BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
 
@@ -12,6 +12,10 @@ type TextButtonSize = Exclude<ButtonSize, typeof BUTTON_SIZE.icon>;
 export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>, ThemableProps {
   /** The label. A string is drawn in the variant's text color; anything else is drawn as is */
   children?: React.ReactNode;
+  /** Where it goes: a real link (`<a href>`) on the web that crawlers follow, opened with `Linking` on iOS and Android. Call `event.preventDefault()` in `onPress` to keep it from opening */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
   /** 'default' (filled with the primary color), 'secondary', 'outline', 'ghost', 'destructive' or 'link'. Default: 'default' */
   variant?: ButtonVariant;
   /** 'sm', 'default', 'lg', or 'icon' (square: give it an `accessibilityLabel`). Default: 'default' */
@@ -26,8 +30,8 @@ export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>,
   endIcon?: React.ReactNode;
   /** The button's box */
   style?: StyleProp<ViewStyle>;
-  /** The label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface ButtonColors {

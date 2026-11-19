@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Linking } from 'react-native';
 
-import { IS_WEB } from '@/core/core.constants';
+import { Text } from '@/core/primitives/Text';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { Text } from '@/foundations/text/Text';
+import { getAnchorProps, openHref } from '@/core/utils/href.utils';
+import { styles } from './button.styles';
 import { EXTERNAL_MARK, LINK_DESIGN, LINK_UNDERLINE } from './link.constants';
 import type { LinkProps } from './link.types';
 
@@ -29,9 +29,6 @@ export const Link = ({
   const [hovered, setHovered] = useState(false);
   const line = underline ?? look.underline;
   const underlined = line === LINK_UNDERLINE.always || (line === LINK_UNDERLINE.hover && hovered);
-  // react-native-web draws `href` as an anchor; native ignores it and opens the URL on press.
-  const anchor =
-    IS_WEB && href && !disabled ? { href, hrefAttrs: external ? { target: '_blank', rel: 'noopener noreferrer' } : undefined } : {};
   return (
     <Text
       theme={themeOverride}
@@ -46,11 +43,11 @@ export const Link = ({
           ? undefined
           : (e) => {
               onPress?.(e);
-              if (!IS_WEB && href && !e.isDefaultPrevented()) Linking.openURL(href);
+              openHref(e, href);
             }
       }
-      style={[underlined && { textDecorationLine: 'underline' }, style]}
-      {...anchor}
+      style={[underlined && styles.underline, style]}
+      {...getAnchorProps(href, external, disabled)}
       {...rest}
     >
       {children}

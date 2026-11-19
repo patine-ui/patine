@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { GestureResponderEvent, PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { GestureResponderEvent, PressableProps, StyleProp, ViewStyle } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { TextProps } from '@/foundations/text/text.types';
 import type { ButtonSize, ButtonVariant } from './button.types';
 import type { FAB_SIZE, LINK_UNDERLINE } from './link.constants';
@@ -42,8 +42,8 @@ export interface FabProps extends Omit<PressableProps, 'children' | 'style'>, Th
   offset?: number;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
-  /** The label's text */
-  labelStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `label` */
+  styles?: SlotStyles<'label'>;
 }
 
 export interface FabDesign {

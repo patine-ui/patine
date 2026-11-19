@@ -1,9 +1,9 @@
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
 import { Button } from './Button';
-import { TOGGLE_DESIGN, TOGGLE_VARIANT } from './toggle.constants';
+import { toggleStyles } from './button.styles';
+import { TOGGLE_VARIANT } from './toggle.constants';
 import type { ToggleButtonProps } from './toggle.types';
-import { getToggleColors } from './toggle.utils';
 
 /**
  * A button that stays pressed, like Bold in a toolbar or a favorite star: shadcn's Toggle. Drawn in the design's toggle
@@ -18,12 +18,13 @@ export const ToggleButton = ({
   theme: themeProp,
   design,
   style,
-  labelStyle,
+  styles: slots,
   ...rest
 }: ToggleButtonProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const [pressed, setPressed] = useControllableState(pressedProp, defaultPressed, onPressedChange);
-  const colors = getToggleColors(theme.colors, TOGGLE_DESIGN[theme.design], variant, pressed);
+  const key = `${variant}_${pressed ? 'on' : 'off'}`;
+  const sheet = toggleStyles(theme);
   return (
     <Button
       variant="ghost"
@@ -33,8 +34,8 @@ export const ToggleButton = ({
         setPressed(!pressed);
         onPress?.(e);
       }}
-      style={[{ backgroundColor: colors.background, borderColor: colors.border }, style]}
-      labelStyle={[{ color: colors.text }, labelStyle]}
+      style={[sheet[key], style]}
+      styles={{ ...slots, label: [sheet[`${key}_label`], slots?.label] }}
       {...rest}
     />
   );

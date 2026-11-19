@@ -97,4 +97,16 @@ describe('Button', () => {
     await fireEvent(screen.getByRole('button', { name: 'Focus me' }), 'blur');
     expect(boxOf('Focus me').outlineWidth).toBeUndefined();
   });
+
+  it('styles its label through the `styles.label` slot', async () => {
+    await render(<Button styles={{ label: { letterSpacing: 2 } }}>Save</Button>);
+    expect(StyleSheet.flatten(screen.getByText('Save').props.style).letterSpacing).toBe(2);
+  });
+});
+
+describe('Button with href', () => {
+  it('is a link', async () => {
+    await render(<Button href="/pricing">See pricing</Button>);
+    expect(screen.getByRole('link', { name: 'See pricing' })).toBeTruthy();
+  });
 });

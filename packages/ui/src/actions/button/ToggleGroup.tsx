@@ -1,9 +1,10 @@
 import { Children, createContext, isValidElement, useContext, useMemo } from 'react';
-import { View } from 'react-native';
 
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { groupStyles, styles } from './button.styles';
 import { ToggleButton } from './ToggleButton';
 import { BUTTON_GROUP_DESIGN } from './toggle.constants';
 import type { ToggleGroupContextValue, ToggleGroupItemProps, ToggleGroupProps } from './toggle.types';
@@ -86,26 +87,24 @@ export const ToggleGroup = (props: ToggleGroupProps) => {
     [type, value, setValue, variant, size, disabled, themeOverride, attached, values, vertical, look]
   );
   return (
-    <ToggleGroupContext.Provider value={context}>
-      <View
-        role={type === 'single' ? 'radiogroup' : 'group'}
-        aria-orientation={orientation}
-        style={[
-          { flexDirection: vertical ? 'column' : 'row', alignItems: vertical ? 'stretch' : 'center' },
-          { gap: attached ? look.gap : theme.spacing.xs },
-          style,
-        ]}
-        {...ARROW_FOCUS}
-        {...rest}
-      >
-        {items
-          ? items.map(({ value: v, label, icon, accessibilityLabel, disabled: itemDisabled }) => (
-              <ToggleGroupItem key={v} value={v} startIcon={icon} accessibilityLabel={accessibilityLabel} disabled={itemDisabled}>
-                {label}
-              </ToggleGroupItem>
-            ))
-          : children}
-      </View>
-    </ToggleGroupContext.Provider>
+    <ThemeScope theme={themeOverride}>
+      <ToggleGroupContext.Provider value={context}>
+        <View
+          role={type === 'single' ? 'radiogroup' : 'group'}
+          aria-orientation={orientation}
+          style={[vertical ? styles.groupColumn : styles.groupRow, attached ? groupStyles(theme).joined : groupStyles(theme).apart, style]}
+          {...ARROW_FOCUS}
+          {...rest}
+        >
+          {items
+            ? items.map(({ value: v, label, icon, accessibilityLabel, disabled: itemDisabled }) => (
+                <ToggleGroupItem key={v} value={v} startIcon={icon} aria-label={accessibilityLabel} disabled={itemDisabled}>
+                  {label}
+                </ToggleGroupItem>
+              ))
+            : children}
+        </View>
+      </ToggleGroupContext.Provider>
+    </ThemeScope>
   );
 };
