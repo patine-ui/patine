@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { StepsLabels } from '@/core/theme/labels.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { STEP_STATUS, STEPS_VARIANT } from './steps.constants';
 
@@ -12,15 +13,6 @@ export interface StepItem {
   description?: string;
   /** Marks the step as failed, in the danger colour */
   error?: boolean;
-}
-
-export interface StepsLabels {
-  /** With `{page}` and `{count}`. Default: 'Step {page} of {count}' */
-  step: string;
-  /** Read after a done step. Default: 'completed' */
-  completed: string;
-  /** Default: 'error' */
-  error: string;
 }
 
 export interface StepsProps extends ThemableProps {
@@ -47,3 +39,5 @@ export interface StepsDesign {
   connector: number;
   upcomingFill: keyof Theme['colors'];
 }
+
+export type { StepsLabels } from '@/core/theme/labels.types';

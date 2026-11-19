@@ -1,10 +1,9 @@
-import { Pressable, View } from 'react-native';
-
-import type { DeepPartial } from '@/core/core.types';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
 import type { Theme } from '@/core/theme/theme.types';
-import { Text } from '@/foundations/text/Text';
-import { STEP_STATUS, STEPS_DESIGN } from '@/navigation/steps/steps.constants';
-import { styles } from '@/navigation/steps/steps.styles';
+import { STEP_STATUS } from '@/navigation/steps/steps.constants';
+import { lineStyles, styles } from '@/navigation/steps/steps.styles';
 import type { StepItem, StepsLabels } from '@/navigation/steps/steps.types';
 import { formatStep, stepStatus } from '@/navigation/steps/steps.utils';
 import { StepCircle } from './StepCircle';
@@ -17,37 +16,28 @@ interface Props {
   vertical: boolean;
   labels: StepsLabels;
   theme: Theme;
-  themeOverride?: DeepPartial<Theme>;
   onValueChange?: (index: number) => void;
 }
 
 /** One step: its circle between connectors (across) or above one (down), and its title and description. */
-export const StepRow = ({ step, index, count, current, vertical, labels, theme, themeOverride, onValueChange }: Props) => {
-  const look = STEPS_DESIGN[theme.design];
+export const StepRow = ({ step, index, count, current, vertical, labels, theme, onValueChange }: Props) => {
+  const lines = lineStyles(theme);
   const status = stepStatus(step, index, current);
   const done = status === STEP_STATUS.complete;
   const suffix = done ? `, ${labels.completed}` : status === STEP_STATUS.error ? `, ${labels.error}` : '';
   const line = (on: boolean, hidden = false) => (
     <View
       style={[
-        vertical ? styles.lineVertical : styles.line,
-        vertical ? { width: look.connector, marginVertical: theme.spacing.xs } : { height: look.connector },
-        { backgroundColor: on ? theme.colors.primary : theme.colors.border },
+        vertical ? [styles.lineVertical, lines.down] : [styles.line, lines.across],
+        on ? lines.on : lines.off,
         hidden && styles.hidden,
       ]}
     />
   );
-  const circle = <StepCircle index={index} status={status} look={look} theme={theme} themeOverride={themeOverride} />;
+  const circle = <StepCircle index={index} status={status} />;
   const text = (
-    <View
-      style={
-        vertical
-          ? [styles.textVertical, { paddingStart: theme.spacing.md }]
-          : [styles.text, { paddingHorizontal: theme.spacing.xs, marginTop: theme.spacing.xs }]
-      }
-    >
+    <View style={vertical ? [styles.textVertical, lines.textDown] : [styles.text, lines.textAcross]}>
       <Text
-        theme={themeOverride}
         size="sm"
         weight={status === STEP_STATUS.current ? 'bold' : 'medium'}
         color={status === STEP_STATUS.upcoming ? 'textSecondary' : status === STEP_STATUS.error ? 'danger' : 'text'}
@@ -57,7 +47,7 @@ export const StepRow = ({ step, index, count, current, vertical, labels, theme, 
         {step.title}
       </Text>
       {step.description ? (
-        <Text theme={themeOverride} size="xs" color="textSecondary" style={!vertical && styles.center}>
+        <Text size="xs" color="textSecondary" style={!vertical && styles.center}>
           {step.description}
         </Text>
       ) : null}
@@ -82,14 +72,14 @@ export const StepRow = ({ step, index, count, current, vertical, labels, theme, 
     </>
   );
   const a11y = {
-    accessibilityLabel: `${formatStep(labels.step, index + 1, count)}: ${step.title}${suffix}`,
-    accessibilityState: { selected: status === STEP_STATUS.current },
+    'aria-label': `${formatStep(labels.step, index + 1, count)}: ${step.title}${suffix}`,
+    'aria-selected': status === STEP_STATUS.current,
     style: vertical ? styles.itemVertical : styles.item,
   };
   return onValueChange && done ? (
-    <Pressable role="button" onPress={() => onValueChange(index)} {...a11y}>
+    <Touchable theme={theme} role="button" onPress={() => onValueChange(index)} {...a11y}>
       {content}
-    </Pressable>
+    </Touchable>
   ) : (
     <View accessible {...a11y}>
       {content}

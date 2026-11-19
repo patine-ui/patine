@@ -1,5 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { StepsDesign, StepsLabels } from './steps.types';
+import type { StepsDesign } from './steps.types';
 
 export const STEP_STATUS = {
   complete: 'complete',
@@ -12,12 +12,6 @@ export const STEPS_VARIANT = {
   steps: 'steps',
   progress: 'progress',
 } as const;
-
-export const DEFAULT_STEPS_LABELS: StepsLabels = {
-  step: 'Step {page} of {count}',
-  completed: 'completed',
-  error: 'error',
-};
 
 /**
  * Material 3: 24dp circles, the current one filled primary, 1dp connectors. iOS: 24pt circles with a primary ring for the
