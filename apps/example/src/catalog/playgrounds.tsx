@@ -151,8 +151,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: UIText,
     children: 'The quick brown fox jumps over the lazy dog.',
     controls: [
-      { prop: 'size', options: ['md', 'xs', 'sm', 'lg', 'xl', '2xl', '3xl'] },
-      { prop: 'weight', options: ['regular', 'medium', 'bold'] },
+      { prop: 'size', options: ['md', 'xs', 'sm', 'lg', 'xl', '2xl', '3xl', 'display', 'hero'] },
+      { prop: 'weight', options: ['regular', 'medium', 'semibold', 'bold'] },
+      { prop: 'font', options: ['body', 'heading', 'numeric', 'mono'] },
       { prop: 'color', options: ['text', 'textSecondary', 'primary', 'danger'] },
     ],
   },
@@ -241,6 +242,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       },
       { prop: 'defaultChecked', options: [false, true], initial: true },
       { prop: 'controlPosition', options: ['end', 'start'] },
+      { prop: 'loading', options: [false, true] },
       DISABLED,
       DESIGN,
     ],
@@ -268,7 +270,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         <CardDescription>Charts, scheduler and data grid.</CardDescription>
       </CardHeader>,
       <CardContent key="content">
-        <UIText size="2xl" weight="bold">
+        <UIText size="2xl" weight="semibold">
           $199
         </UIText>
         <UIText color="textSecondary">One-time payment, a year of updates</UIText>

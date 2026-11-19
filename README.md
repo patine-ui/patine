@@ -148,6 +148,24 @@ Theme tokens cover colors, radius, spacing and typography. Light and dark themes
 
 A component's `design` and `theme` reach everything inside it, its parts and your children alike, the way the provider's do.
 
+Fonts plug in through the theme by role (`body`, `heading`, `display`, `numeric`, `mono`), one family name per weight. Patine ships no font files: load them your way (Expo's `useFonts`, `@font-face`) and pass the names. `Heading` draws in `heading`; `Stat`, table numbers and `<Text font="numeric">` draw in `numeric` with tabular figures, so amounts line up. The scale runs `xs` to `3xl`, then `display` and `hero` for big numbers; `lineHeights` and `tracking` set each step:
+
+```tsx
+<PatineProvider
+  theme={{
+    typography: {
+      fonts: {
+        body: { regular: 'Manrope_400Regular', medium: 'Manrope_500Medium', semibold: 'Manrope_600SemiBold' },
+        heading: { regular: 'Newsreader_500Medium' },
+      },
+      lineHeights: { md: 24, '3xl': 40 },
+    },
+  }}
+>
+  {/* app */}
+</PatineProvider>
+```
+
 Each visual part of a component is styled through its `styles` prop (`style` is the root), and rows, days and triggers can be replaced with render props:
 
 ```tsx
@@ -209,6 +227,8 @@ Subpaths: `action` `alert` `avatar` `badge` `button` `calendar` `card` `chat` `c
 
 - `Touchable`: anything pressable. It needs a `role`, and brings the hover tint, the press dim or ripple, a keyboard focus ring (`focusRing`), the disabled state, a 44pt touch area on phones (`minTarget`), and `href` (+ `external`) for a real link on the web.
 - `createStyles`: a style sheet built from the theme once per theme, so theme colours and spacing cost nothing per render.
+- The primitives the components draw with, each with the library's defaults built in: `Scroll` and `VirtualList` (taps work while the keyboard is up, no scrollbar track on the web), `Input` (the theme's type and colours, a capped font scale), `Pressable` for surfaces that aren't controls (a backdrop, a drag area), and `AnimatedView`, `AnimatedText`, `AnimatedImage`, `AnimatedScrollView` with `animatedAdd`, `animatedMultiply`, `animatedSubtract`, `animatedEvent`, `createAnimatedValue` and `createAnimatedComponent` (an SVG shape), so your own components never import `Animated` or a view from `react-native`.
+- `ThemeScope` hands a component's `theme` or `design` down to everything inside it; `useFocusVisible` and `focusRing(color)` draw a ring on keyboard focus only; `IS_WEB` tells whether a DOM exists (use `usePlatform()` for behaviour). `Touchable`'s `hover={false}` drops the hover tint, for photos, cards that lift and selected rows.
 
 ```tsx
 import { createStyles, Touchable, useTheme } from 'patine-ui/core';

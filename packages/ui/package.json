@@ -312,6 +312,8 @@
     "shadcn",
     "accessibility",
     "theming",
+    "custom-fonts",
+    "typography",
     "dark-mode",
     "picker",
     "wheel-picker",
