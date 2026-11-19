@@ -1,10 +1,10 @@
-import { View } from 'react-native';
-
+import { View } from '@/core/primitives/View';
 import { useComponentTheme } from '@/core/theme/ThemeProvider';
 import { useQRCode } from './hooks/useQRCode';
 import { DEFAULT_QR_BACKGROUND, DEFAULT_QR_COLOR, QRCODE_DESIGN } from './qrcode.constants';
 import { styles } from './qrcode.styles';
 import type { QRCodeProps } from './qrcode.types';
+import { getLogoPlate, getQRFrame, getRunStyle } from './qrcode.utils';
 
 /**
  * A scannable QR code drawn with plain views: no SVG, no native code. Encodes any text or URL as UTF-8, at error-correction
@@ -31,24 +31,16 @@ export const QRCode = (props: QRCodeProps) => {
     <View
       accessible
       role="img"
-      accessibilityLabel={accessibilityLabel}
-      style={[styles.frame, { width: size, height: size, backgroundColor, borderRadius: theme.radius[look.radius] }, style]}
+      aria-label={accessibilityLabel}
+      style={[styles.frame, getQRFrame(size, backgroundColor, theme.radius[look.radius]), style]}
       testID={testID}
     >
       {runs.map((run) => (
-        <View
-          key={`${run.y}-${run.x}`}
-          style={[
-            styles.module,
-            { left: offset + run.x * cell, top: offset + run.y * cell, width: run.length * cell, height: cell, backgroundColor: color },
-          ]}
-        />
+        <View key={`${run.y}-${run.x}`} style={[styles.module, getRunStyle(run, cell, offset, color)]} />
       ))}
       {logo ? (
-        <View style={[styles.center, { padding: (size - logoSide) / 2 }]} pointerEvents="none">
-          <View style={[styles.logo, { width: logoSide, height: logoSide, backgroundColor, borderRadius: theme.radius[look.logoRadius] }]}>
-            {logo}
-          </View>
+        <View style={styles.center} pointerEvents="none">
+          <View style={[styles.logo, getLogoPlate(logoSide, backgroundColor, theme.radius[look.logoRadius])]}>{logo}</View>
         </View>
       ) : null}
     </View>

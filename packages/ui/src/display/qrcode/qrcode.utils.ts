@@ -1,3 +1,5 @@
+import type { ViewStyle } from 'react-native';
+
 import {
   BYTE_MODE,
   ECC_BLOCKS,
@@ -397,3 +399,28 @@ export const clearCenter = (modules: readonly (readonly boolean[])[], share: num
   const start = (size - side) / 2;
   return modules.map((row, y) => row.map((dark, x) => dark && !(x >= start && x < start + side && y >= start && y < start + side)));
 };
+
+/** The code's square, in its background color and the design's corners. */
+export const getQRFrame = (size: number, backgroundColor: string, borderRadius: number): ViewStyle => ({
+  width: size,
+  height: size,
+  backgroundColor,
+  borderRadius,
+});
+
+/** One run of dark modules along a row, drawn as a single view. */
+export const getRunStyle = (run: { x: number; y: number; length: number }, cell: number, offset: number, color: string): ViewStyle => ({
+  left: offset + run.x * cell,
+  top: offset + run.y * cell,
+  width: run.length * cell,
+  height: cell,
+  backgroundColor: color,
+});
+
+/** The logo's plate in the middle of the code, on the code's background. */
+export const getLogoPlate = (side: number, backgroundColor: string, borderRadius: number): ViewStyle => ({
+  width: side,
+  height: side,
+  backgroundColor,
+  borderRadius,
+});
