@@ -44,6 +44,21 @@ describe('useTouchFeedback', () => {
     expect(lastTarget(timing, hover)).toBe(0);
   });
 
+  it('keeps the hover tint off while hover is turned off, and fades it out when it turns off', async () => {
+    const timing = jest.spyOn(animation, 'timing');
+    const { result, rerender } = await renderHook(
+      ({ hover }: { hover: boolean }) => useTouchFeedback(lightTheme, false, true, false, hover),
+      {
+        initialProps: { hover: true },
+      }
+    );
+    const { hover } = result.current.feedback;
+    await act(() => result.current.handlers.onHoverIn());
+    expect(lastTarget(timing, hover)).toBe(1);
+    await rerender({ hover: false });
+    expect(lastTarget(timing, hover)).toBe(0);
+  });
+
   it('starts the ripple where the element was touched, sized to reach its far corner, in Material', async () => {
     const { result } = await renderHook(() => useTouchFeedback(material));
     placeElement(result.current.ref);

@@ -15,7 +15,7 @@ import { TouchFeedback } from './TouchFeedback';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * Anything pressable. Built in: the theme's hover tint and press dim or ripple, clipped to its own corners; with
+ * Anything pressable. Built in: the theme's hover tint (unless `hover` is false) and press dim or ripple, clipped to its own corners; with
  * `pressScale` a slight shrink while held; a focus ring on keyboard focus; the disabled state, announced and dimmed; and on
  * phones a touch area of at least 44pt.
  */
@@ -23,6 +23,7 @@ export const Touchable = ({
   ref,
   theme: themeProp,
   ripple = true,
+  hover = true,
   pressScale = false,
   focusRing = true,
   minTarget = true,
@@ -43,7 +44,7 @@ export const Touchable = ({
   ...rest
 }: TouchableProps) => {
   const theme = useTheme(themeProp);
-  const touch = useTouchFeedback(theme, !!disabled, ripple, pressScale);
+  const touch = useTouchFeedback(theme, !!disabled, ripple, pressScale, hover);
   const focus = useFocusVisible();
   const web = usePlatform() === 'web';
   // The ripple measures the view through the internal ref; the caller's ref gets the same view.

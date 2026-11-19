@@ -200,6 +200,8 @@ export type TouchableProps = Omit<PressableProps, 'style' | 'children' | 'role'>
   ref?: React.Ref<HostInstance>;
   /** Show press feedback: a ripple from the touch point, or a dim while held, as the design does it. Default: true */
   ripple?: boolean;
+  /** Tint on pointer hover. Turn it off for media and cards that show hover their own way, or a selected row. Default: true */
+  hover?: boolean;
   /** Shrink a little while held and spring back on release, as buttons do in brand, iOS and the web (not Material). Default: false */
   pressScale?: boolean;
   /** Draw the theme's ring on keyboard focus; `inset` draws it inside, for controls in a clipping container. Default: true */

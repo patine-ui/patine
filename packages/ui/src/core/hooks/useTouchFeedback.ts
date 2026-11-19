@@ -21,18 +21,24 @@ import { getRippleOrigin } from '@/core/utils/touch.utils';
 
 /**
  * Hover and press state for a pressable: an eased hover tint, then a ripple or a dim while held, as the theme's design does
- * it, and with `scaleOnPress` a slight shrink that springs back. `ref` goes on the view the effects cover (the ripple is
+ * it (the tint only while `hoverEnabled`), and with `scaleOnPress` a slight shrink that springs back. `ref` goes on the view the effects cover (the ripple is
  * measured against it), `handlers` on the Pressable, `pressScale` in its transform, and `feedback` on a <TouchFeedback />
  * inside that view.
  */
-export const useTouchFeedback = (theme: Theme, disabled = false, feedbackEnabled = true, scaleOnPress = false): TouchFeedbackState => {
+export const useTouchFeedback = (
+  theme: Theme,
+  disabled = false,
+  feedbackEnabled = true,
+  scaleOnPress = false,
+  hoverEnabled = true
+): TouchFeedbackState => {
   const ref = useRef<HostInstance>(null);
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
   const highlight = PRESS_FEEDBACK_DESIGN[theme.design] === PRESS_FEEDBACK.highlight;
   const shrinkTo = scaleOnPress ? PRESS_SCALE_DESIGN[theme.design] : 1;
   const [ripple, setRipple] = useState<RippleOrigin | null>(null);
-  const hover = useAnimatedTo(hovered && !disabled ? 1 : 0, { duration: DURATION.fast });
+  const hover = useAnimatedTo(hovered && hoverEnabled && !disabled ? 1 : 0, { duration: DURATION.fast });
   const press = useAnimatedValue(0);
   const pressScale = useAnimatedValue(1);
   const scale = useAnimatedValue(0);
