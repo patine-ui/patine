@@ -34,6 +34,24 @@ describe('BottomSheet', () => {
     expect(screen.getByRole('header', { name: 'Pick' })).toBeTruthy();
   });
 
+  it('has a ✕ as a centered modal only, which closes it', async () => {
+    const onOpenChange = jest.fn();
+    const { rerender } = await render(
+      <BottomSheet open onOpenChange={onOpenChange} title="Class" presentation="modal">
+        <Text>Body</Text>
+      </BottomSheet>
+    );
+    const [, closeButton] = screen.getAllByRole('button', { name: 'Close' });
+    if (closeButton) await fireEvent.press(closeButton);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    await rerender(
+      <BottomSheet open onOpenChange={onOpenChange} title="Class" presentation="bottomSheet">
+        <Text>Body</Text>
+      </BottomSheet>
+    );
+    expect(screen.getAllByRole('button', { name: 'Close' })).toHaveLength(1);
+  });
+
   it('closes on backdrop press unless disabled', async () => {
     const onClose = jest.fn();
     const { rerender } = await render(

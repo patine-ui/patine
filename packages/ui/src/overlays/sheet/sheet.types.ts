@@ -68,8 +68,10 @@ export interface BottomSheetProps extends ThemableProps, OpenStateProps {
   bottomInset?: number;
   /** 'bottomSheet', 'modal' (a centered card), or 'auto': a card on wide web windows, a sheet elsewhere. Default: 'auto' */
   presentation?: SheetPresentation;
-  /** What a screen reader says for the backdrop, which closes the sheet. Default: 'Close' */
+  /** What a screen reader says for the backdrop and the ✕, which close the sheet. Default: 'Close' */
   closeLabel?: string;
+  /** A ✕ in the header of the centered modal, unless `headerRight` takes its place. A bottom sheet has its handle instead. Default: true */
+  showCloseButton?: boolean;
   /** Per-part style overrides */
   styles?: SlotStyles<BottomSheetSlot>;
   /** Called once the open animation ends */
@@ -123,6 +125,12 @@ export interface SheetHeaderProps {
   headerRight?: React.ReactNode;
   theme: Theme;
   slots?: SlotStyles<BottomSheetSlot>;
+}
+
+export interface SheetCloseButtonProps {
+  label: string;
+  onPress: () => void;
+  theme: Theme;
 }
 
 export interface SheetButtonProps {

@@ -39,6 +39,8 @@ export const ActionSheet = ({
       expandable={false}
       showHandle={!grouped}
       presentation={presentation}
+      // Its own rows and Cancel close it; a ✕ would only add a header row
+      showCloseButton={false}
       {...sheetProps}
       styles={grouped ? { ...sheetProps?.styles, sheet: [styles.groupedSheet, sheetProps?.styles?.sheet] } : sheetProps?.styles}
       open={open}

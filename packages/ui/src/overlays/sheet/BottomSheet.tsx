@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { PLATFORM } from '@/core/core.constants';
 import { useReturnFocus } from '@/core/hooks/useReturnFocus';
 import { useComponentTheme, usePlatform } from '@/core/theme/ThemeProvider';
 import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { SheetCloseButton } from './components/SheetCloseButton';
 import { SheetDragArea } from './components/SheetDragArea';
 import { SheetHeader } from './components/SheetHeader';
 import { useSheetAnimation } from './hooks/useSheetAnimation';
@@ -32,6 +34,7 @@ export const BottomSheet = ({
   bottomInset: bottomInsetProp,
   presentation = SHEET_PRESENTATION.auto,
   closeLabel = DEFAULT_CLOSE_LABEL,
+  showCloseButton = true,
   styles: slots,
   theme: themeProp,
   design,
@@ -42,6 +45,9 @@ export const BottomSheet = ({
   const { theme } = useComponentTheme(themeProp, design);
   const onClose = () => onOpenChange?.(false);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  // The room the modal really has: the window on native, but on the web it can be a smaller host (a phone mock-up in a page).
+  const [area, setArea] = useState<number>();
+  const areaHeight = area ?? windowHeight;
   const platform = usePlatform();
   const defaults = getSheetDefaults(platform);
   const draggable = draggableProp ?? defaults.draggable;
@@ -54,7 +60,7 @@ export const BottomSheet = ({
     onOpened,
     onClosed,
   });
-  const expandedPx = resolveSheetHeight(expandedHeight, windowHeight) ?? windowHeight - defaults.expandedTopInset;
+  const expandedPx = resolveSheetHeight(expandedHeight, areaHeight) ?? areaHeight - defaults.expandedTopInset;
   const resize = useSheetResize({
     active: mounted && visible,
     slide,
@@ -68,11 +74,18 @@ export const BottomSheet = ({
   useReturnFocus(mounted);
 
   if (!mounted) return null;
-  const resolvedHeight = resolveSheetHeight(height, windowHeight);
+  const resolvedHeight = resolveSheetHeight(height, areaHeight);
+  const closeButton =
+    dialog && showCloseButton && !headerRight ? <SheetCloseButton label={closeLabel} onPress={onClose} theme={theme} /> : null;
+  const right = headerRight ?? closeButton;
 
   return (
     <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose} testID={testID}>
-      <KeyboardAvoidingView behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined} style={StyleSheet.absoluteFill}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined}
+        style={StyleSheet.absoluteFill}
+        onLayout={(e) => setArea(e.nativeEvent.layout.height)}
+      >
         <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.backdrop, opacity: progress }, slots?.backdrop]}>
           {/* Only a button when it closes the sheet, so a screen reader never lands on a "Close" that does nothing */}
           <Pressable
@@ -94,7 +107,7 @@ export const BottomSheet = ({
                 styles.sheet,
                 {
                   backgroundColor: theme.colors.sheet,
-                  maxHeight: resize.expanded ? expandedPx : windowHeight * maxHeightRatio,
+                  maxHeight: resize.expanded ? expandedPx : areaHeight * maxHeightRatio,
                   height: resize.expanded ? expandedPx : resolvedHeight,
                 },
                 dialog
@@ -121,13 +134,13 @@ export const BottomSheet = ({
                     <View style={[styles.handle, { backgroundColor: theme.colors.handle }, slots?.handle]} />
                   </View>
                 )}
-                {(title || headerLeft || headerRight) && (
+                {(title || headerLeft || right) && (
                   <View
                     {...(draggable && !dialog ? resize.panHandlers : null)}
                     collapsable={false}
                     pointerEvents={draggable && resize.dragArea ? 'box-none' : undefined}
                   >
-                    <SheetHeader title={title} headerLeft={headerLeft} headerRight={headerRight} theme={theme} slots={slots} />
+                    <SheetHeader title={title} headerLeft={headerLeft} headerRight={right} theme={theme} slots={slots} />
                   </View>
                 )}
               </View>

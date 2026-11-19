@@ -102,6 +102,8 @@ export const PickerSheet = ({
       headerLeft={inHeader ? cancel : undefined}
       headerRight={inHeader ? confirm : undefined}
       footer={inHeader || !(cancel || confirm) ? undefined : actions}
+      // Cancel already closes it
+      showCloseButton={!cancel}
       {...sheetProps}
     >
       {content}

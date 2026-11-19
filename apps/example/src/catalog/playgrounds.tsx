@@ -1020,6 +1020,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       { prop: 'draggable', options: [true, false], default: null },
       { prop: 'expandable', options: [true, false] },
       { prop: 'closeOnBackdropPress', options: [true, false] },
+      { prop: 'showCloseButton', options: [true, false] },
       { prop: 'showHandle', options: [true, false] },
       DESIGN,
     ],

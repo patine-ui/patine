@@ -22,6 +22,8 @@ export const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   /** Padded for a comfortable hover and ripple area; the negative margin keeps the label lined up with the edge. */
   button: { paddingVertical: 6, paddingHorizontal: 8, marginHorizontal: -8 },
+  /** Its glyph lines up with the header's edge; the rest of the 44pt is touch room. */
+  close: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center', marginEnd: -14 },
   dropdownOverlay: { position: 'absolute' },
   dropdown: { position: 'absolute', borderWidth: StyleSheet.hairlineWidth, paddingVertical: DROPDOWN_PADDING, overflow: 'hidden' },
   dropdownScroll: { flexGrow: 0, flexShrink: 1 },
