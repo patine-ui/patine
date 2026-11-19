@@ -1,6 +1,6 @@
-import type { ActivityIndicatorProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import type { ActivityIndicatorProps, ViewProps } from 'react-native';
 
-import type { ThemableProps } from '@/core/core.types';
+import type { SlotStyles, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
 export interface ProgressProps extends ViewProps, ThemableProps {
@@ -10,8 +10,8 @@ export interface ProgressProps extends ViewProps, ThemableProps {
   max?: number;
   /** The track's height. Default: from the design (4 on iOS and Material, 8 on the web and brand) */
   height?: number;
-  /** The filled part */
-  indicatorStyle?: StyleProp<ViewStyle>;
+  /** Styles for its parts: `indicator` */
+  styles?: SlotStyles<'indicator'>;
 }
 
 export interface ProgressDesign {

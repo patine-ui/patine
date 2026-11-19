@@ -7,7 +7,7 @@ describe('Progress', () => {
     await render(<Progress value={3} max={4} accessibilityLabel="Upload" />);
     const bar = screen.getByRole('progressbar', { name: 'Upload' });
     expect(bar.props['aria-valuenow']).toBe(75);
-    expect(bar.props.accessibilityValue).toEqual({ min: 0, max: 100, now: 75 });
+    expect(bar.props).toMatchObject({ 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 75 });
   });
 
   it('is busy with no value while indeterminate', async () => {

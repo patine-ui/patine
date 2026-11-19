@@ -13,7 +13,8 @@ export const useProgress = (value: number | null | undefined, max: number) => {
   return {
     ratio,
     indeterminate,
-    width: fill.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) as AnimatedInterpolation<string>,
+    /** The determinate fill's style: its animated width */
+    fill: { width: fill.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) as AnimatedInterpolation<string> },
     // Reduced motion holds a still, full-width segment instead of one parked off the end.
     segment: reduced
       ? { left: '0%' as const, width: '100%' as const, opacity: 0.5 }
