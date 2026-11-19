@@ -9,6 +9,10 @@ export interface BreadcrumbItem {
   onPress?: () => void;
   /** Before the label, such as a home icon */
   icon?: React.ReactNode;
+  /** Where it goes: a real link (`<a href>`) on the web that crawlers follow, opened with `Linking` on iOS and Android. Call `event.preventDefault()` in `onPress` to keep it from opening */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
 }
 
 export type BreadcrumbsSlot = 'item' | 'current' | 'separator';

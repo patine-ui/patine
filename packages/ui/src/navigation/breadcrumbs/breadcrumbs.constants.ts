@@ -9,6 +9,4 @@ export const BREADCRUMBS_DESIGN: Record<Design, BreadcrumbsDesign> = {
   web: { separator: '/', currentWeight: 'regular', primaryLinks: false },
 };
 
-export const DEFAULT_BREADCRUMBS_LABEL = 'Breadcrumb';
-export const DEFAULT_EXPAND_LABEL = 'Show path';
 export const BREADCRUMB_ELLIPSIS = '…';

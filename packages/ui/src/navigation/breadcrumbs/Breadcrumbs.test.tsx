@@ -25,3 +25,11 @@ describe('Breadcrumbs', () => {
     expect(screen.getByText('B')).toBeTruthy();
   });
 });
+
+describe('Breadcrumbs with href', () => {
+  it('makes a level with an address a link', async () => {
+    await render(<Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Docs' }]} />);
+    expect(screen.getByRole('link', { name: 'Home' })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: 'Docs' })).toBeNull();
+  });
+});
