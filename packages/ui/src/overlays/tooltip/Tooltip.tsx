@@ -1,10 +1,11 @@
 import { Children, cloneElement, type ReactElement, useEffect, useId } from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
 import { usePresence } from '@/core/animation/hooks/usePresence';
 import { IS_WEB } from '@/core/core.constants';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { Text } from '@/foundations/text/Text';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { FloatingModal } from '@/overlays/popover/components/FloatingModal';
 import { FloatingPanel } from '@/overlays/popover/components/FloatingPanel';
 import { POPOVER_SIDE } from '@/overlays/popover/popover.constants';
@@ -14,8 +15,8 @@ import { useAnchor } from '@/overlays/sheet/hooks/useAnchor';
 import type { AnchorRect } from '@/overlays/sheet/sheet.types';
 import { toLocalRect } from '@/overlays/sheet/sheet.utils';
 import { useTooltip } from './hooks/useTooltip';
-import { TOOLTIP_DESIGN, TOOLTIP_MAX_WIDTH } from './tooltip.constants';
-import { styles } from './tooltip.styles';
+import { TOOLTIP_DESIGN } from './tooltip.constants';
+import { styles, themed } from './tooltip.styles';
 import type { TooltipChildProps, TooltipProps } from './tooltip.types';
 
 /**
@@ -75,18 +76,7 @@ export const Tooltip = ({
       progress={progress}
       ready={ready}
       arrowColor={look.arrow ? theme.colors[look.background] : undefined}
-      style={[
-        IS_WEB && styles.webFixed,
-        look.raised && [styles.raised, { borderColor: theme.colors.border, boxShadow: theme.shadows.md }],
-        {
-          maxWidth: TOOLTIP_MAX_WIDTH,
-          backgroundColor: theme.colors[look.background],
-          borderRadius: theme.radius[look.radius],
-          paddingHorizontal: look.paddingX,
-          paddingVertical: look.paddingY,
-        },
-        style,
-      ]}
+      style={[IS_WEB && styles.webFixed, look.raised && [styles.raised, themed(theme).raised], themed(theme).bubble, style]}
     >
       {typeof content === 'string' || typeof content === 'number' ? (
         <Text theme={themeOverride} size={look.textSize} color={look.foreground}>
@@ -100,7 +90,7 @@ export const Tooltip = ({
 
   const screenArea = { x: 0, y: 0, ...windowSize };
   return (
-    <>
+    <ThemeScope theme={themeOverride}>
       <View ref={ref} collapsable={false}>
         {trigger}
       </View>
@@ -113,6 +103,6 @@ export const Tooltip = ({
           </FloatingModal>
         )
       ) : null}
-    </>
+    </ThemeScope>
   );
 };

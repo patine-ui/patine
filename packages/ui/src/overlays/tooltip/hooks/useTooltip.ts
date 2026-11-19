@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useRef } from 'react';
 
+import { useFocusVisible } from '@/core/a11y/hooks/useFocusVisible';
 import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
 import { DEFAULT_DELAY_MS, DEFAULT_SKIP_DELAY_MS, ESCAPE_KEY, LONG_PRESS_HIDE_MS } from '@/overlays/tooltip/tooltip.constants';
 import type { TooltipContextValue, TooltipStateOptions } from '@/overlays/tooltip/tooltip.types';
 
