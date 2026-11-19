@@ -1,0 +1,11 @@
+language js
+
+// Components build on Patine primitives (@/core/primitives/*), which already include the theme, the focus ring, 44pt targets
+// and the scroll defaults. Type-only imports are fine.
+JsImport() as $import where {
+  $import <: r"(?s)import\s*\{(?:.*,)?\s*(?:View|Text|TextInput|ScrollView|FlatList|SectionList|Pressable|TouchableOpacity|TouchableHighlight|TouchableWithoutFeedback|Animated)\s*(?:as\s+\w+\s*)?(?:,.*)?\}\s*from\s*['\"]react-native['\"];?",
+  $filename <: r".*packages/ui/src/.*",
+  $filename <: not r".*packages/ui/src/core/(?:primitives|animation)/.*",
+  $filename <: not r".*\.test\.tsx?",
+  register_diagnostic(span=$import, message="Import View, Text, Touchable, Input, Scroll, VirtualList or AnimatedView from `@/core/primitives/*`, not react-native.", severity="error")
+}

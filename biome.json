@@ -4,7 +4,11 @@
     "./lint/expand-returned-objects.grit",
     "./lint/arrow-functions-only.grit",
     "./lint/animations-in-core.grit",
-    "./lint/alias-imports.grit"
+    "./lint/alias-imports.grit",
+    "./lint/styles-in-stylesheets.grit",
+    "./lint/primitives-only.grit",
+    "./lint/aria-props.grit",
+    "./lint/colors-from-theme.grit"
   ],
   "vcs": {
     "enabled": true,
@@ -60,7 +64,6 @@
               "level": "on",
               "options": {
                 "skip": [
-                  "PickerText",
                   "Text",
                   "UIText",
                   "Heading",

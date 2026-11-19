@@ -1,0 +1,14 @@
+language js
+
+// One a11y vocabulary on views and primitives: `role` and `aria-*`. Kept, having no aria-* twin: accessibilityActions,
+// onAccessibilityAction, accessibilityHint, accessibilityLanguage. A component's own `accessibilityLabel` prop is its API, so
+// only views and primitives are checked.
+or {
+  JsxOpeningElement() as $el,
+  JsxSelfClosingElement() as $el
+} where {
+  $el <: r"(?s)<(?:View|Text|Touchable|Pressable|Input|Scroll|VirtualList|AnimatedView|AnimatedText|AnimatedImage|AnimatedScrollView|Image|Heading)\b.*\s(?:accessibilityRole|accessibilityLabel|accessibilityState|accessibilityValue|accessibilityLiveRegion|accessibilityElementsHidden|accessibilityLabelledBy|importantForAccessibility)=.*",
+  $filename <: r".*packages/ui/src/.*",
+  $filename <: not r".*\.test\.tsx",
+  register_diagnostic(span=$el, message="Use `role` and `aria-*` (aria-label, aria-checked, aria-valuetext, aria-hidden, aria-live, aria-labelledby), not the accessibility* props.", severity="error")
+}

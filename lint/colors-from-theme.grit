@@ -1,0 +1,12 @@
+language js
+
+// Every colour comes from the theme (core/theme), so light, dark, the designs and an app's own palette all reach it. Data
+// colours (the colour picker's presets, a QR code's documented default, a saved signature's ink) live in the files listed here.
+JsStringLiteralExpression() as $string where {
+  $string <: r"(?s)(?:['\"]#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})['\"]|.*\b(?:rgba?|hsla?)\(.*)",
+  $filename <: r".*packages/ui/src/.*",
+  $filename <: not r".*packages/ui/src/core/theme/.*",
+  $filename <: not r".*packages/ui/src/(?:pickers/color/color|display/qrcode/qrcode|inputs/signature/signature)\.constants\.ts",
+  $filename <: not r".*\.test\.tsx?",
+  register_diagnostic(span=$string, message="Use a theme colour (theme.colors.*, through createStyles); add a token to core/theme if none fits.", severity="error")
+}
