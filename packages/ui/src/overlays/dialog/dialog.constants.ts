@@ -11,12 +11,6 @@ export const DIALOG_BUTTONS = {
   text: 'text',
 } as const;
 
-/** The AlertDialog shorthand's button labels, when `confirmLabel` and `cancelLabel` are left out. */
-export const ALERT_DIALOG_LABELS = {
-  confirm: 'Continue',
-  cancel: 'Cancel',
-} as const;
-
 /** iOS stacks its alert buttons when there are more than this many. */
 export const IOS_MAX_SIDE_BY_SIDE = 2;
 

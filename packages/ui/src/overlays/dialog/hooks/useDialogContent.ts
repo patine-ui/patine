@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import type { Animated } from 'react-native';
 
+import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
 import { usePresence } from '@/core/animation/hooks/usePresence';
 import { IS_WEB } from '@/core/core.constants';
-import { useReturnFocus } from '@/core/hooks/useReturnFocus';
 import { useScrollLock } from '@/core/hooks/useScrollLock';
 import type { DialogContextValue } from '@/overlays/dialog/dialog.types';
 
@@ -35,6 +35,10 @@ export const useDialogContent = ({ open, setOpen, dismissible, alert, initialFoc
     mounted,
     progress,
     scale,
+    /** The backdrop's fade */
+    fade: { opacity: progress },
+    /** The card's fade and grow */
+    pop: { opacity: progress, transform: [{ scale }] },
     onRequestClose,
     onBackdropPress: dismissible && !alert ? close : undefined,
     // The web's modal moves focus to the first control once shown; a frame later, Cancel takes it if there is one.

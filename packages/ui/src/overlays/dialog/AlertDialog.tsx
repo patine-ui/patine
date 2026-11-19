@@ -1,9 +1,9 @@
 import { BUTTON_VARIANT } from '@/actions/button/button.constants';
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { DialogButton } from './components/DialogButton';
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogLayout, DialogTitle, DialogTrigger } from './Dialog';
 import { DialogContext, useDialogContext } from './DialogContext';
-import { ALERT_DIALOG_LABELS } from './dialog.constants';
 import type { AlertDialogProps, DialogActionProps } from './dialog.types';
 import { useDialog } from './hooks/useDialog';
 
@@ -24,6 +24,7 @@ export const AlertDialog = ({
   onCancel,
   ...props
 }: AlertDialogProps) => {
+  const words = useLabels();
   const ctx = useDialog(props, true);
   return (
     <DialogContext.Provider value={ctx}>
@@ -34,9 +35,9 @@ export const AlertDialog = ({
           description={description}
           footer={
             <DialogFooter>
-              <AlertDialogCancel onPress={onCancel}>{cancelLabel ?? ALERT_DIALOG_LABELS.cancel}</AlertDialogCancel>
+              <AlertDialogCancel onPress={onCancel}>{cancelLabel ?? words.alertDialog.cancel}</AlertDialogCancel>
               <AlertDialogAction variant={destructive ? BUTTON_VARIANT.destructive : BUTTON_VARIANT.default} onPress={onConfirm}>
-                {confirmLabel ?? ALERT_DIALOG_LABELS.confirm}
+                {confirmLabel ?? words.alertDialog.confirm}
               </AlertDialogAction>
             </DialogFooter>
           }

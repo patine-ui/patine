@@ -1,16 +1,18 @@
 import { Children, isValidElement } from 'react';
-import { Animated, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Modal } from 'react-native';
 
-import { PLATFORM } from '@/core/core.constants';
+import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { Scroll } from '@/core/primitives/Scroll';
+import { Text } from '@/core/primitives/Text';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { Heading } from '@/foundations/text/Heading';
-import { Text } from '@/foundations/text/Text';
 import type { HeadingProps, TextProps } from '@/foundations/text/text.types';
 import { DialogButton } from './components/DialogButton';
 import { PressSlot } from './components/PressSlot';
 import { DialogContext, useDialogContext } from './DialogContext';
 import { DIALOG_FOOTER } from './dialog.constants';
-import { styles } from './dialog.styles';
+import { styles, themed } from './dialog.styles';
 import type {
   DialogAction,
   DialogContentProps,
@@ -19,7 +21,7 @@ import type {
   DialogProps,
   DialogSectionProps,
 } from './dialog.types';
-import { getFooterDirection, resolveDialogRadius } from './dialog.utils';
+import { getFooterDirection } from './dialog.utils';
 import { useDialog } from './hooks/useDialog';
 import { useDialogContent } from './hooks/useDialogContent';
 
@@ -67,8 +69,9 @@ export const DialogClose = ({ children }: DialogPressSlotProps) => {
 /** The dialog's window: a centered card over a dimmed backdrop. Scrolls when taller than the screen. */
 export const DialogContent = ({ children, style, ...rest }: DialogContentProps) => {
   const ctx = useDialogContext();
-  const { theme, look, alert } = ctx;
+  const { theme, alert } = ctx;
   const content = useDialogContent(ctx);
+  const sheet = themed(theme);
   if (!content.mounted) return null;
 
   return (
@@ -81,16 +84,16 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
       onShow={content.onShow}
       testID={rest.testID ? `${rest.testID}-modal` : undefined}
     >
-      <KeyboardAvoidingView behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined} style={StyleSheet.absoluteFill}>
+      <KeyboardAvoidingView behavior={KEYBOARD_AVOID_BEHAVIOR} style={styles.fill}>
         {/* A responder, not a Pressable: the web's focus trap skips it, and a drag that starts in the card doesn't close it */}
-        <Animated.View
+        <AnimatedView
           testID={rest.testID ? `${rest.testID}-backdrop` : undefined}
-          style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.backdrop, opacity: content.progress }]}
+          style={[styles.fill, sheet.backdrop, content.fade]}
           onStartShouldSetResponder={() => !!content.onBackdropPress}
           onResponderRelease={content.onBackdropPress}
         />
         <View style={styles.container} pointerEvents="box-none">
-          <Animated.View
+          <AnimatedView
             role={alert ? 'alertdialog' : 'dialog'}
             aria-modal
             aria-labelledby={ctx.titleId}
@@ -98,28 +101,12 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
             accessibilityViewIsModal
             onAccessibilityEscape={content.onRequestClose}
             {...rest}
-            style={[
-              styles.card,
-              {
-                maxWidth: look.maxWidth,
-                borderRadius: resolveDialogRadius(look.radius, theme),
-                backgroundColor: theme.colors.sheet,
-                boxShadow: theme.shadows[look.shadow],
-                opacity: content.progress,
-                transform: [{ scale: content.scale }],
-              },
-              style,
-            ]}
+            style={[styles.card, sheet.card, content.pop, style]}
           >
-            <ScrollView
-              style={styles.scroll}
-              contentContainerStyle={{ padding: look.padding, gap: look.gap }}
-              keyboardShouldPersistTaps="handled"
-              bounces={false}
-            >
+            <Scroll style={styles.scroll} contentContainerStyle={sheet.body} bounces={false}>
               {children}
-            </ScrollView>
-          </Animated.View>
+            </Scroll>
+          </AnimatedView>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -128,35 +115,28 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
 
 /** The title and description at the top. */
 export const DialogHeader = ({ style, ...rest }: DialogSectionProps) => {
-  const { look } = useDialogContext();
-  return <View style={[{ gap: look.headerGap }, style]} {...rest} />;
+  const { theme } = useDialogContext();
+  return <View style={[themed(theme).header, style]} {...rest} />;
 };
 
 /** The dialog's name: a heading that labels it for screen readers. */
 export const DialogTitle = ({ level = 2, style, ...rest }: HeadingProps) => {
-  const { look, titleId, themeOverride } = useDialogContext();
+  const { look, titleId, themeOverride, theme } = useDialogContext();
   return (
-    <Heading
-      nativeID={titleId}
-      level={level}
-      size={look.titleSize}
-      theme={themeOverride}
-      style={[{ textAlign: look.textAlign }, style]}
-      {...rest}
-    />
+    <Heading nativeID={titleId} level={level} size={look.titleSize} theme={themeOverride} style={[themed(theme).text, style]} {...rest} />
   );
 };
 
 /** The detail under the title, read out as the dialog's description. */
 export const DialogDescription = ({ style, ...rest }: TextProps) => {
-  const { look, descriptionId, themeOverride } = useDialogContext();
+  const { look, descriptionId, themeOverride, theme } = useDialogContext();
   return (
     <Text
       nativeID={descriptionId}
       size={look.descriptionSize}
       color="textSecondary"
       theme={themeOverride}
-      style={[{ textAlign: look.textAlign }, style]}
+      style={[themed(theme).text, style]}
       {...rest}
     />
   );
@@ -173,16 +153,16 @@ export const DialogFooter = ({ children, style, ...rest }: DialogSectionProps) =
         {children}
       </View>
     );
-  const hairline = { borderColor: theme.colors.border };
+  const sheet = themed(theme);
 
   return (
-    <View style={[styles.cells, hairline, { flexDirection: direction, margin: -look.padding, marginTop: 0 }, style]} {...rest}>
+    <View style={[styles.cells, sheet.hairline, direction === 'row' ? styles.rowCells : styles.columnCells, sheet.cells, style]} {...rest}>
       {items.map((item, i) => (
         <View
           key={isValidElement(item) ? item.key : String(item)}
           style={[
             direction === 'row' ? styles.cell : styles.stackedCell,
-            i > 0 && [hairline, direction === 'row' ? { borderStartWidth: StyleSheet.hairlineWidth } : styles.cells],
+            i > 0 && [sheet.hairline, direction === 'row' ? styles.cellDivider : styles.cells],
           ]}
         >
           {item}
