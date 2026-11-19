@@ -1,7 +1,7 @@
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { Select } from '@/inputs/select';
 import { withSheetHeight } from '@/inputs/select/select.utils';
 import { useLanguageOptions } from './hooks/useLanguageOptions';
-import { DEFAULT_LANGUAGE_PLACEHOLDER, DEFAULT_LANGUAGE_SEARCH_PLACEHOLDER } from './language.constants';
 import type { LanguageCode, LanguagePickerProps } from './language.types';
 
 /** A searchable language list: each language under its own name, such as Español, with its name in `locale` below. */
@@ -14,11 +14,14 @@ export const LanguagePicker = ({
   flags,
   preferredLabel,
   allLanguagesLabel,
-  placeholder = DEFAULT_LANGUAGE_PLACEHOLDER,
-  searchPlaceholder = DEFAULT_LANGUAGE_SEARCH_PLACEHOLDER,
+  placeholder: placeholderProp,
+  searchPlaceholder: searchPlaceholderProp,
   sheet,
   ...selectProps
 }: LanguagePickerProps) => {
+  const words = useLabels();
+  const searchPlaceholder = searchPlaceholderProp ?? words.language.search;
+  const placeholder = placeholderProp ?? words.language.placeholder;
   const options = useLanguageOptions({
     languages,
     exclude,
@@ -27,7 +30,7 @@ export const LanguagePicker = ({
     showFlag,
     flags,
     preferredLabel,
-    allLanguagesLabel,
+    allLanguagesLabel: allLanguagesLabel ?? words.language.all,
   });
   return (
     <Select<LanguageCode>

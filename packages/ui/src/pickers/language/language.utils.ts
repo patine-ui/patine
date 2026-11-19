@@ -1,10 +1,9 @@
 import type { Locale } from '@/core';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
 import { getCompare, getDisplayNames, safe } from '@/core/utils/intl.utils';
 import type { SelectOption } from '@/inputs/select';
-import { DEFAULT_PREFERRED_LABEL } from '@/inputs/select/select.constants';
 import { pinPreferred } from '@/inputs/select/select.utils';
 import { LANGUAGE_DATA } from './data';
-import { DEFAULT_ALL_LANGUAGES_LABEL } from './language.constants';
 import type { Language, LanguageCode, LanguageListOptions } from './language.types';
 
 let cache: Language[] | null = null;
@@ -45,8 +44,8 @@ export const buildLanguageOptions = ({
   exclude,
   preferred,
   locale,
-  preferredLabel = DEFAULT_PREFERRED_LABEL,
-  allLanguagesLabel = DEFAULT_ALL_LANGUAGES_LABEL,
+  preferredLabel = DEFAULT_LABELS.suggested,
+  allLanguagesLabel = DEFAULT_LABELS.language.all,
 }: LanguageListOptions): SelectOption<LanguageCode>[] => {
   const excluded = new Set(exclude);
   const pool = (languages ? languages.flatMap((code) => getLanguage(code) ?? []) : getAllLanguages()).filter((l) => !excluded.has(l.code));
