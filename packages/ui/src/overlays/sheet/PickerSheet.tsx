@@ -1,14 +1,14 @@
-import { ScrollView, View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Scroll } from '@/core/primitives/Scroll';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { BottomSheet } from './BottomSheet';
 import { InlinePanel } from './components/InlinePanel';
 import { SheetButton } from './components/SheetButton';
 import { Dropdown } from './Dropdown';
 import { useDropdownFit } from './hooks/useDropdownFit';
 import { FieldSheetContext, useFieldSheet } from './hooks/useFieldSheet';
-import { DEFAULT_CANCEL_LABEL, FIELD_PRESENTATION, PICKER_DROPDOWN_MIN_WIDTH, SHEET_ACTIONS, SHEET_DESIGN } from './sheet.constants';
-import { styles } from './sheet.styles';
+import { FIELD_PRESENTATION, PICKER_DROPDOWN_MIN_WIDTH, SHEET_ACTIONS, SHEET_DESIGN } from './sheet.constants';
+import { sheetStyles, styles } from './sheet.styles';
 import type { PickerSheetProps } from './sheet.types';
 
 /**
@@ -22,7 +22,7 @@ export const PickerSheet = ({
   confirmDisabled,
   title,
   confirmLabel: confirmLabelProp,
-  cancelLabel = DEFAULT_CANCEL_LABEL,
+  cancelLabel: cancelLabelProp,
   showCancel = true,
   presentation: presentationProp,
   sheetProps,
@@ -30,6 +30,8 @@ export const PickerSheet = ({
   design,
   children,
 }: PickerSheetProps) => {
+  const words = useLabels();
+  const cancelLabel = cancelLabelProp ?? words.cancel;
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const onClose = () => onOpenChange?.(false);
   const sheetDesign = SHEET_DESIGN[theme.design];
@@ -70,20 +72,11 @@ export const PickerSheet = ({
         ready={fit.measured}
         theme={themeOverride}
       >
-        <ScrollView
-          style={styles.dropdownScroll}
-          bounces={false}
-          nestedScrollEnabled
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={fit.onContentSizeChange}
-        >
+        <Scroll style={styles.dropdownScroll} bounces={false} nestedScrollEnabled onContentSizeChange={fit.onContentSizeChange}>
           {content}
-        </ScrollView>
+        </Scroll>
         {cancel || confirm ? (
-          <View
-            style={[styles.actions, styles.dropdownFooter, { borderTopColor: theme.colors.border, paddingHorizontal: theme.spacing.lg }]}
-            onLayout={fit.onFooterLayout}
-          >
+          <View style={[styles.actions, styles.dropdownFooter, sheetStyles(theme).dropdownFooter]} onLayout={fit.onFooterLayout}>
             {cancel}
             {confirm}
           </View>
@@ -93,20 +86,22 @@ export const PickerSheet = ({
   }
 
   return (
-    <BottomSheet
-      open={visible}
-      onOpenChange={onClose}
-      title={title}
-      presentation={presentation}
-      theme={themeOverride}
-      headerLeft={inHeader ? cancel : undefined}
-      headerRight={inHeader ? confirm : undefined}
-      footer={inHeader || !(cancel || confirm) ? undefined : actions}
-      // Cancel already closes it
-      showCloseButton={!cancel}
-      {...sheetProps}
-    >
-      {content}
-    </BottomSheet>
+    <ThemeScope theme={themeOverride}>
+      <BottomSheet
+        open={visible}
+        onOpenChange={onClose}
+        title={title}
+        presentation={presentation}
+        theme={themeOverride}
+        headerLeft={inHeader ? cancel : undefined}
+        headerRight={inHeader ? confirm : undefined}
+        footer={inHeader || !(cancel || confirm) ? undefined : actions}
+        // Cancel already closes it
+        showCloseButton={!cancel}
+        {...sheetProps}
+      >
+        {content}
+      </BottomSheet>
+    </ThemeScope>
   );
 };

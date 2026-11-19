@@ -1,8 +1,7 @@
-import { Animated, View } from 'react-native';
-
-import { OwnScroll } from '@/core/components/OwnScroll';
+import { OwnScroll } from '@/core/primitives/OwnScroll';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { useInlineExpand } from '@/overlays/sheet/hooks/useInlineExpand';
-import { styles } from '@/overlays/sheet/sheet.styles';
+import { sheetStyles, styles } from '@/overlays/sheet/sheet.styles';
 import type { InlinePanelProps } from '@/overlays/sheet/sheet.types';
 
 /** The picker expanded under its field, pushing the content below down. The content lays out at full height and is clipped while the panel grows. */
@@ -11,10 +10,10 @@ export const InlinePanel = ({ visible, children, theme }: InlinePanelProps) => {
   if (!expand.mounted) return null;
 
   return (
-    <Animated.View style={[styles.inline, expand.style]} pointerEvents={visible ? 'auto' : 'none'}>
-      <View style={[styles.inlineContent, { paddingTop: theme.spacing.sm }]} onLayout={expand.onLayout}>
+    <AnimatedView style={[styles.inline, expand.style]} pointerEvents={visible ? 'auto' : 'none'}>
+      <View style={[styles.inlineContent, sheetStyles(theme).inline]} onLayout={expand.onLayout}>
         <OwnScroll>{children}</OwnScroll>
       </View>
-    </Animated.View>
+    </AnimatedView>
   );
 };

@@ -8,8 +8,8 @@ import type { SheetResizeOptions } from '@/overlays/sheet/sheet.types';
 import { useSheetResize } from './useSheetResize';
 
 let mockWeb = false;
-jest.mock('@/overlays/sheet/sheet.constants', () => ({
-  ...jest.requireActual('@/overlays/sheet/sheet.constants'),
+jest.mock('@/core/core.constants', () => ({
+  ...jest.requireActual('@/core/core.constants'),
   get IS_WEB() {
     return mockWeb;
   },

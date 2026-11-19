@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, useWindowDimensions } from 'react-native';
 
-import { PLATFORM } from '@/core/core.constants';
-import { useReturnFocus } from '@/core/hooks/useReturnFocus';
-import { useComponentTheme, usePlatform } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { AnimatedView, Pressable, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels, usePlatform } from '@/core/theme/ThemeProvider';
 import { SheetCloseButton } from './components/SheetCloseButton';
 import { SheetDragArea } from './components/SheetDragArea';
 import { SheetHeader } from './components/SheetHeader';
 import { useSheetAnimation } from './hooks/useSheetAnimation';
 import { useSheetResize } from './hooks/useSheetResize';
-import { DEFAULT_CLOSE_LABEL, DEFAULT_MAX_HEIGHT_RATIO, DIALOG_RISE, SHEET_PRESENTATION } from './sheet.constants';
-import { styles } from './sheet.styles';
+import { DEFAULT_MAX_HEIGHT_RATIO, DIALOG_RISE, SHEET_PRESENTATION } from './sheet.constants';
+import { sheetStyles, styles } from './sheet.styles';
 import type { BottomSheetProps } from './sheet.types';
-import { getSheetDefaults, resolvePresentation, resolveSheetHeight } from './sheet.utils';
+import { getBottomInset, getHeight, getSheetBox, getSheetDefaults, resolvePresentation, resolveSheetHeight } from './sheet.utils';
 
 export const BottomSheet = ({
   open: visible = false,
@@ -33,7 +34,7 @@ export const BottomSheet = ({
   height,
   bottomInset: bottomInsetProp,
   presentation = SHEET_PRESENTATION.auto,
-  closeLabel = DEFAULT_CLOSE_LABEL,
+  closeLabel: closeLabelProp,
   showCloseButton = true,
   styles: slots,
   theme: themeProp,
@@ -42,7 +43,9 @@ export const BottomSheet = ({
   onClosed,
   testID,
 }: BottomSheetProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const closeLabel = closeLabelProp ?? words.close;
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const onClose = () => onOpenChange?.(false);
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   // The room the modal really has: the window on native, but on the web it can be a smaller host (a phone mock-up in a page).
@@ -70,7 +73,9 @@ export const BottomSheet = ({
     expandedHeight: expandedPx,
     onClose,
   });
-  const radius = theme.radius.sheet;
+  const surface = sheetStyles(theme);
+  // An animated value: the backdrop (and a dialog) fade in.
+  const fade = { opacity: progress };
   useReturnFocus(mounted);
 
   if (!mounted) return null;
@@ -80,79 +85,70 @@ export const BottomSheet = ({
   const right = headerRight ?? closeButton;
 
   return (
-    <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose} testID={testID}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === PLATFORM.ios ? 'padding' : undefined}
-        style={StyleSheet.absoluteFill}
-        onLayout={(e) => setArea(e.nativeEvent.layout.height)}
-      >
-        <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: theme.colors.backdrop, opacity: progress }, slots?.backdrop]}>
-          {/* Only a button when it closes the sheet, so a screen reader never lands on a "Close" that does nothing */}
-          <Pressable
-            style={StyleSheet.absoluteFill}
-            onPress={closeOnBackdropPress ? onClose : undefined}
-            accessible={closeOnBackdropPress}
-            accessibilityRole={closeOnBackdropPress ? 'button' : undefined}
-            accessibilityLabel={closeOnBackdropPress ? closeLabel : undefined}
-          />
-        </Animated.View>
-        <View style={dialog ? styles.dialogContainer : styles.container} pointerEvents="box-none">
-          {/* Two layers: the frame slides and drags, the sheet clips its content */}
-          <Animated.View style={[styles.sheetFrame, resize.frameStyle, dialog && { opacity: progress }]}>
-            <View
-              ref={resize.sheetRef}
-              {...ARROW_FOCUS}
-              onLayout={resize.onLayout}
-              style={[
-                styles.sheet,
-                {
-                  backgroundColor: theme.colors.sheet,
-                  maxHeight: resize.expanded ? expandedPx : areaHeight * maxHeightRatio,
-                  height: resize.expanded ? expandedPx : resolvedHeight,
-                },
-                dialog
-                  ? { borderRadius: radius, paddingBottom: theme.spacing.md }
-                  : { borderTopLeftRadius: radius, borderTopRightRadius: radius, paddingBottom: bottomInset },
-                slots?.sheet,
-              ]}
-              role="dialog"
-              aria-modal
-              aria-label={typeof title === 'string' ? title : undefined}
-              accessibilityViewIsModal
-              onAccessibilityEscape={onClose}
-            >
-              {resize.dragArea ? <SheetDragArea {...resize.dragArea} /> : null}
-              {/* collapsable={false}: not flattened away, so a touch anywhere on the strip reaches the drag handlers */}
-              <View style={dialog && styles.dialogHeader} pointerEvents="box-none">
-                {!dialog && showHandle && (
-                  <View
-                    {...resize.panHandlers}
-                    collapsable={false}
-                    pointerEvents={resize.dragArea ? 'none' : undefined}
-                    style={styles.handleArea}
-                  >
-                    <View style={[styles.handle, { backgroundColor: theme.colors.handle }, slots?.handle]} />
-                  </View>
-                )}
-                {(title || headerLeft || right) && (
-                  <View
-                    {...(draggable && !dialog ? resize.panHandlers : null)}
-                    collapsable={false}
-                    pointerEvents={draggable && resize.dragArea ? 'box-none' : undefined}
-                  >
-                    <SheetHeader title={title} headerLeft={headerLeft} headerRight={right} theme={theme} slots={slots} />
-                  </View>
-                )}
+    <ThemeScope theme={themeOverride}>
+      <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose} testID={testID}>
+        <KeyboardAvoidingView behavior={KEYBOARD_AVOID_BEHAVIOR} style={styles.fill} onLayout={(e) => setArea(e.nativeEvent.layout.height)}>
+          <AnimatedView style={[styles.fill, surface.backdrop, fade, slots?.backdrop]}>
+            {/* Only a button when it closes the sheet, so a screen reader never lands on a "Close" that does nothing */}
+            <Pressable
+              style={styles.fill}
+              onPress={closeOnBackdropPress ? onClose : undefined}
+              accessible={closeOnBackdropPress}
+              role={closeOnBackdropPress ? 'button' : undefined}
+              aria-label={closeOnBackdropPress ? closeLabel : undefined}
+            />
+          </AnimatedView>
+          <View style={dialog ? styles.dialogContainer : styles.container} pointerEvents="box-none">
+            {/* Two layers: the frame slides and drags, the sheet clips its content */}
+            <AnimatedView style={[styles.sheetFrame, resize.frameStyle, dialog && fade]}>
+              <View
+                ref={resize.sheetRef}
+                {...ARROW_FOCUS}
+                onLayout={resize.onLayout}
+                style={[
+                  styles.sheet,
+                  surface.surface,
+                  getSheetBox(resize.expanded, expandedPx, areaHeight * maxHeightRatio, resolvedHeight),
+                  dialog ? surface.dialog : [surface.sheet, getBottomInset(bottomInset)],
+                  slots?.sheet,
+                ]}
+                role="dialog"
+                aria-modal
+                aria-label={typeof title === 'string' ? title : undefined}
+                accessibilityViewIsModal
+                onAccessibilityEscape={onClose}
+              >
+                {resize.dragArea ? <SheetDragArea {...resize.dragArea} /> : null}
+                {/* collapsable={false}: not flattened away, so a touch anywhere on the strip reaches the drag handlers */}
+                <View style={dialog && styles.dialogHeader} pointerEvents="box-none">
+                  {!dialog && showHandle && (
+                    <View
+                      {...resize.panHandlers}
+                      collapsable={false}
+                      pointerEvents={resize.dragArea ? 'none' : undefined}
+                      style={styles.handleArea}
+                    >
+                      <View style={[styles.handle, surface.handle, slots?.handle]} />
+                    </View>
+                  )}
+                  {(title || headerLeft || right) && (
+                    <View
+                      {...(draggable && !dialog ? resize.panHandlers : null)}
+                      collapsable={false}
+                      pointerEvents={draggable && resize.dragArea ? 'box-none' : undefined}
+                    >
+                      <SheetHeader title={title} headerLeft={headerLeft} headerRight={right} theme={theme} slots={slots} />
+                    </View>
+                  )}
+                </View>
+                <View style={[resolvedHeight || resize.expanded ? styles.flex : styles.shrink, slots?.content]}>{children}</View>
+                {footer ? <View style={[surface.footer, slots?.footer]}>{footer}</View> : null}
               </View>
-              <View style={[resolvedHeight || resize.expanded ? styles.flex : styles.shrink, slots?.content]}>{children}</View>
-              {footer ? (
-                <View style={[{ paddingHorizontal: theme.spacing.lg, paddingTop: theme.spacing.md }, slots?.footer]}>{footer}</View>
-              ) : null}
-            </View>
-            {dialog ? null : <View style={[styles.filler, { height: expandedPx, backgroundColor: theme.colors.sheet }]} />}
-          </Animated.View>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
+              {dialog ? null : <View style={[styles.filler, surface.surface, getHeight(expandedPx)]} />}
+            </AnimatedView>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+    </ThemeScope>
   );
 };

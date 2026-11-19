@@ -317,8 +317,8 @@ describe('getFieldMessage', () => {
 
 describe('getFieldAccessibility', () => {
   it('names the field and says it is required', () => {
-    expect(getFieldAccessibility({ name: 'Date' })).toEqual({ accessibilityLabel: 'Date', accessibilityHint: undefined });
-    expect(getFieldAccessibility({ name: 'Date', required: true }).accessibilityLabel).toBe('Date, required');
+    expect(getFieldAccessibility({ name: 'Date' })).toEqual({ 'aria-label': 'Date', accessibilityHint: undefined });
+    expect(getFieldAccessibility({ name: 'Date', required: true })['aria-label']).toBe('Date, required');
   });
 
   it('hints the value, then the error message or that it is invalid', () => {

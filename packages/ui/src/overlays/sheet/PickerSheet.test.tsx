@@ -31,7 +31,7 @@ describe('BottomSheet', () => {
       </BottomSheet>
     );
     expect(screen.getByText('Body')).toBeTruthy();
-    expect(screen.getByRole('header', { name: 'Pick' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Pick' })).toBeTruthy();
   });
 
   it('has a ✕ as a centered modal only, which closes it', async () => {
@@ -152,7 +152,7 @@ describe('PickerSheet in a field', () => {
       </FieldSheetContext.Provider>
     );
     expect(screen.getByText('Body')).toBeTruthy();
-    expect(screen.queryByRole('header', { name: 'Due' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Due' })).toBeNull();
     await fireEvent.press(screen.getByRole('button', { name: 'Done' }));
     expect(onConfirm).toHaveBeenCalled();
     await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));
@@ -167,7 +167,7 @@ describe('PickerSheet in a field', () => {
         </PickerSheet>
       </FieldSheetContext.Provider>
     );
-    expect(screen.getByRole('header', { name: 'Due' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Due' })).toBeTruthy();
   });
 
   it('keeps its own presentation over the field', async () => {
@@ -178,7 +178,7 @@ describe('PickerSheet in a field', () => {
         </PickerSheet>
       </FieldSheetContext.Provider>
     );
-    expect(screen.getByRole('header', { name: 'Due' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Due' })).toBeTruthy();
   });
 
   it('does not pass the field on to a sheet opened inside it', async () => {
@@ -191,6 +191,6 @@ describe('PickerSheet in a field', () => {
         </PickerSheet>
       </FieldSheetContext.Provider>
     );
-    expect(screen.getByRole('header', { name: 'Nested' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Nested' })).toBeTruthy();
   });
 });

@@ -1,7 +1,7 @@
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
 import { BUTTON_HIT_SLOP } from '@/overlays/sheet/sheet.constants';
-import { styles } from '@/overlays/sheet/sheet.styles';
+import { sheetStyles, styles } from '@/overlays/sheet/sheet.styles';
 import type { SheetButtonProps } from '@/overlays/sheet/sheet.types';
 
 export const SheetButton = ({ label, onPress, primary = false, disabled, theme }: SheetButtonProps) => {
@@ -11,17 +11,12 @@ export const SheetButton = ({ label, onPress, primary = false, disabled, theme }
       onPress={onPress}
       disabled={disabled}
       hitSlop={BUTTON_HIT_SLOP}
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      style={[styles.button, { borderRadius: theme.radius.sm }]}
+      role="button"
+      style={[styles.button, sheetStyles(theme).button]}
     >
-      <PickerText
-        theme={theme}
-        weight={primary ? 'bold' : 'regular'}
-        color={disabled ? 'textDisabled' : primary ? 'primary' : 'textSecondary'}
-      >
+      <Text weight={primary ? 'bold' : 'regular'} color={primary ? 'primary' : 'textSecondary'}>
         {label}
-      </PickerText>
+      </Text>
     </Touchable>
   );
 };

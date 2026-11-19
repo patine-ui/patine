@@ -1,16 +1,10 @@
-import { StyleSheet, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { coreStyles } from '@/core/core.styles';
-import {
-  DISABLED_TRIGGER_OPACITY,
-  FIELD_DESIGN,
-  FIELD_LABEL,
-  FLOATING_LABEL_PADDING,
-  FOCUS_RING_WIDTH,
-} from '@/overlays/sheet/sheet.constants';
-import { styles } from '@/overlays/sheet/sheet.styles';
+import { cs, startAlign } from '@/core/core.styles';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { useDirection, useLabels } from '@/core/theme/ThemeProvider';
+import { FIELD_DESIGN, FIELD_LABEL } from '@/overlays/sheet/sheet.constants';
+import { fieldStyles, sheetStyles, styles } from '@/overlays/sheet/sheet.styles';
 import type { FieldTriggerProps } from '@/overlays/sheet/sheet.types';
 import { getFieldAccessibility } from '@/overlays/sheet/sheet.utils';
 import { Chevron } from './Chevron';
@@ -35,9 +29,12 @@ export const FieldTrigger = ({
   slots,
   testID,
 }: FieldTriggerProps) => {
-  const c = theme.colors;
+  const dir = useDirection();
+  const words = useLabels();
   const look = FIELD_DESIGN[theme.design];
   const borderWidth = open ? look.openBorderWidth : 1;
+  const box = fieldStyles(theme);
+  const sheet = sheetStyles(theme);
   const floating = look.label === FIELD_LABEL.floating && !!label;
   const raised = open || !!displayValue || children != null;
   const invalid = !!error;
@@ -45,21 +42,7 @@ export const FieldTrigger = ({
   return (
     <View
       testID={testID}
-      style={[
-        styles.trigger,
-        {
-          minHeight: look.minHeight,
-          backgroundColor: c.background,
-          borderWidth,
-          borderColor: invalid ? c.danger : open ? c.primary : c[look.outline],
-          borderRadius: theme.radius.md,
-          // A thicker open border grows inward, so the content doesn't shift.
-          paddingHorizontal: theme.spacing.md - (borderWidth - 1),
-          opacity: disabled ? DISABLED_TRIGGER_OPACITY : 1,
-        },
-        open && look.focusRing && { boxShadow: `0px 0px 0px ${FOCUS_RING_WIDTH}px ${c.primaryMuted}` },
-        slots?.trigger,
-      ]}
+      style={[styles.trigger, box.box, open && box.open, invalid && box.invalid, disabled && cs.disabled, slots?.trigger]}
     >
       {floating ? (
         <FloatingLabel
@@ -70,39 +53,33 @@ export const FieldTrigger = ({
           required={required}
           borderWidth={borderWidth}
           theme={theme}
-          style={[{ marginStart: theme.spacing.md - FLOATING_LABEL_PADDING - (borderWidth - 1) }, slots?.label]}
+          style={[open ? box.floatingStartOpen : box.floatingStart, slots?.label]}
         />
       ) : null}
       {/* Full-size press target behind the content, so chips and clear stay sibling buttons */}
       <Touchable
         theme={theme}
         ripple={false}
-        style={[StyleSheet.absoluteFill, { borderRadius: theme.radius.md }]}
+        style={[styles.fill, sheet.pressArea]}
         onPress={onOpen}
         disabled={disabled}
-        accessibilityRole="button"
-        {...getFieldAccessibility({ name: label ?? placeholder, value: displayValue, error, required })}
-        accessibilityState={{ disabled, expanded: open }}
+        role="button"
+        {...getFieldAccessibility({ name: label ?? placeholder, value: displayValue, error, required }, words)}
+        aria-expanded={open}
       />
       <View style={styles.flex} pointerEvents="box-none">
         {children ??
           (displayValue ? (
             <View style={styles.triggerRow} pointerEvents="none">
               {icon ? <View style={styles.triggerIcon}>{icon}</View> : null}
-              <PickerText theme={theme} style={[coreStyles.startAligned, slots?.triggerText]} numberOfLines={1}>
+              <Text style={[startAlign[dir], slots?.triggerText]} numberOfLines={1}>
                 {displayValue}
-              </PickerText>
+              </Text>
             </View>
           ) : (
-            <PickerText
-              theme={theme}
-              color="textSecondary"
-              pointerEvents="none"
-              style={[coreStyles.startAligned, slots?.placeholder]}
-              numberOfLines={1}
-            >
+            <Text color="textSecondary" pointerEvents="none" style={[startAlign[dir], slots?.placeholder]} numberOfLines={1}>
               {floating && !raised ? '' : placeholder}
-            </PickerText>
+            </Text>
           ))}
       </View>
       {clearable && displayValue && !disabled ? (
@@ -110,13 +87,13 @@ export const FieldTrigger = ({
           theme={theme}
           hitSlop={10}
           onPress={onClear}
-          accessibilityRole="button"
-          accessibilityLabel="Clear"
-          style={[styles.clearButton, { borderRadius: theme.radius.full }]}
+          role="button"
+          aria-label={words.clear}
+          style={[styles.clearButton, sheet.round]}
         >
-          <PickerText theme={theme} size="lg" color="textSecondary" style={[styles.clear, slots?.clear]}>
+          <Text size="lg" color="textSecondary" style={[styles.clear, slots?.clear]}>
             ×
-          </PickerText>
+          </Text>
         </Touchable>
       ) : null}
       <Chevron open={open} renderChevron={renderChevron} theme={theme} style={slots?.chevron} />

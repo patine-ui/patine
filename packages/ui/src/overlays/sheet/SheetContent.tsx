@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-
+import { View } from '@/core/primitives/View';
 import { styles } from './sheet.styles';
 import type { SheetContentProps } from './sheet.types';
 

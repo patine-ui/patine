@@ -1,4 +1,4 @@
-import { Platform, type PlatformOSType, StatusBar } from 'react-native';
+import { type PlatformOSType, StatusBar } from 'react-native';
 
 import { PLATFORM } from '@/core/core.constants';
 import type { Design } from '@/core/theme/theme.types';
@@ -71,10 +71,7 @@ export const FLOATING_LABEL_PADDING = 4;
 /** A raised floating label shrinks from the body text size to this one. */
 export const FLOATING_LABEL_RAISED_SIZE = 'xs';
 
-export const DEFAULT_CANCEL_LABEL = 'Cancel';
 export const DEFAULT_MAX_HEIGHT_RATIO = 0.9;
-/** What a screen reader says for a sheet's backdrop. */
-export const DEFAULT_CLOSE_LABEL = 'Close';
 /** Room under a bottom sheet for the iOS home indicator, and a smaller margin elsewhere. */
 export const IOS_BOTTOM_INSET = 24;
 export const DEFAULT_BOTTOM_INSET = 12;
@@ -109,7 +106,6 @@ export const DRAG_REACH = 4000;
 /** A drag area within this many px of a stop has settled on it. */
 export const SNAP_TOLERANCE = 1;
 
-export const IS_WEB = Platform.OS === PLATFORM.web;
 /** Wheel distance (px) that expands, collapses or closes the sheet. */
 export const WHEEL_THRESHOLD = 40;
 /** A wheel gesture (and trackpad momentum) counts as over after this long without events. */
@@ -135,13 +131,8 @@ export const PICKER_DROPDOWN_MAX_HEIGHT = 440;
 
 export const BUTTON_HIT_SLOP = 10;
 
-export const DEFAULT_PLACEHOLDER = 'Select…';
 export const DISABLED_TRIGGER_OPACITY = 0.5;
 export const REQUIRED_MARK = ' *';
-export const REQUIRED_ACCESSIBILITY_LABEL = 'required';
-/** Read for an `error` set to `true`, which has no message of its own. */
-export const INVALID_ACCESSIBILITY_HINT = 'Invalid';
-
 /** The `PickerField` props a `*PickerField` keeps for itself; the rest go to its sheet. `theme` and `styles` go to both. */
 export const FIELD_PROP_KEYS = [
   'label',

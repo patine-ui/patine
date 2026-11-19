@@ -1,11 +1,13 @@
-import { Animated, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { AnimatedScrollView, View } from '@/core/primitives/View';
 import { styles } from '@/overlays/sheet/sheet.styles';
 import type { SheetDragAreaProps } from '@/overlays/sheet/sheet.types';
+import { getHeight } from '@/overlays/sheet/sheet.utils';
 
 /** An invisible scroll view behind the sheet's handle and header: dragging scrolls it, and its offset moves the sheet natively. */
 export const SheetDragArea = ({ contentHeight, initialOffset, snapToOffsets, onScroll, onDragEnd, style }: SheetDragAreaProps) => (
-  <Animated.ScrollView
+  <AnimatedScrollView
     style={[StyleSheet.absoluteFill, style]}
     contentOffset={{ x: 0, y: initialOffset }}
     snapToOffsets={snapToOffsets}
@@ -18,9 +20,8 @@ export const SheetDragArea = ({ contentHeight, initialOffset, snapToOffsets, onS
     onScroll={onScroll}
     onScrollEndDrag={onDragEnd}
     onMomentumScrollEnd={onDragEnd}
-    importantForAccessibility="no-hide-descendants"
-    accessibilityElementsHidden
+    aria-hidden
   >
-    <View style={[styles.dragContent, { height: contentHeight }]} />
-  </Animated.ScrollView>
+    <View style={[styles.dragContent, getHeight(contentHeight)]} />
+  </AnimatedScrollView>
 );

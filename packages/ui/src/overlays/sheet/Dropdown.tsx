@@ -1,14 +1,15 @@
-import { Animated, Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Modal, useWindowDimensions } from 'react-native';
 
+import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { usePresence } from '@/core/animation/hooks/usePresence';
-import { useReturnFocus } from '@/core/hooks/useReturnFocus';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { AnimatedView, Pressable, View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { useAnchor } from './hooks/useAnchor';
 import { DROPDOWN_MAX_HEIGHT } from './sheet.constants';
-import { styles } from './sheet.styles';
+import { sheetStyles, styles } from './sheet.styles';
 import type { DropdownProps } from './sheet.types';
-import { getDropdownFrame, toLocalRect } from './sheet.utils';
+import { getDropdownFrame, getRectBox, toLocalRect } from './sheet.utils';
 
 /** A popover anchored to a field; a tap outside closes it. It fades out, so a row's ripple can finish as it closes. */
 export const Dropdown = ({
@@ -26,7 +27,8 @@ export const Dropdown = ({
   design,
   testID,
 }: DropdownProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const windowSize = useWindowDimensions();
   const { mounted, progress } = usePresence({ visible, duration: theme.animation.duration, onHidden: onClosed });
   // In an app the modal covers the window. A page that pins modals over a smaller area, like a phone preview, moves it.
@@ -36,51 +38,24 @@ export const Dropdown = ({
   const area = root.rect ?? { x: 0, y: 0, ...windowSize };
   const field = toLocalRect(anchor, area);
 
+  // Animated values: the field's overlay fades in, and the list once it's placed.
+  const fade = { opacity: progress };
+  const shown = { opacity: ready && root.rect ? progress : 0 };
   return (
-    <Modal visible transparent animationType="none" onRequestClose={onClose} testID={testID}>
-      {/* One view around the field and the list, so arrow keys go between them */}
-      <View ref={root.ref} onLayout={root.measure} style={StyleSheet.absoluteFill} pointerEvents="box-none" {...ARROW_FOCUS}>
-        <Pressable
-          style={StyleSheet.absoluteFill}
-          onPress={onClose}
-          disabled={!visible}
-          accessibilityRole="button"
-          accessibilityLabel="Close"
-        />
-        {overlay ? (
-          <Animated.View
-            style={[
-              styles.dropdownOverlay,
-              { opacity: progress },
-              {
-                left: field.x,
-                top: field.y,
-                width: field.width,
-                height: field.height,
-              },
-            ]}
+    <ThemeScope theme={themeOverride}>
+      <Modal visible transparent animationType="none" onRequestClose={onClose} testID={testID}>
+        {/* One view around the field and the list, so arrow keys go between them */}
+        <View ref={root.ref} onLayout={root.measure} style={styles.fill} pointerEvents="box-none" {...ARROW_FOCUS}>
+          <Pressable style={styles.fill} onPress={onClose} disabled={!visible} role="button" aria-label={words.close} />
+          {overlay ? <AnimatedView style={[styles.dropdownOverlay, fade, getRectBox(field)]}>{overlay}</AnimatedView> : null}
+          <AnimatedView
+            pointerEvents={visible ? 'auto' : 'none'}
+            style={[styles.dropdown, shown, getDropdownFrame(field, area, maxHeight, minWidth), sheetStyles(theme).dropdown, style]}
           >
-            {overlay}
-          </Animated.View>
-        ) : null}
-        <Animated.View
-          pointerEvents={visible ? 'auto' : 'none'}
-          style={[
-            styles.dropdown,
-            { opacity: ready && root.rect ? progress : 0 },
-            getDropdownFrame(field, area, maxHeight, minWidth),
-            {
-              backgroundColor: theme.colors.sheet,
-              borderColor: theme.colors.border,
-              borderRadius: theme.radius.md,
-              boxShadow: theme.shadows.lg,
-            },
-            style,
-          ]}
-        >
-          {children}
-        </Animated.View>
-      </View>
-    </Modal>
+            {children}
+          </AnimatedView>
+        </View>
+      </Modal>
+    </ThemeScope>
   );
 };

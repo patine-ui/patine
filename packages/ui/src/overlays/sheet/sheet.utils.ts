@@ -2,6 +2,9 @@ import type { PlatformOSType } from 'react-native';
 
 import { PLATFORM } from '@/core/core.constants';
 import type { DistributiveOmit } from '@/core/core.types';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
+import type { Labels } from '@/core/theme/labels.types';
+import { clamp } from '@/core/utils/track.utils';
 import {
   DEFAULT_BOTTOM_INSET,
   DIALOG_MARGIN,
@@ -16,9 +19,7 @@ import {
   EXPANDED_TOP_INSET,
   FIELD_PRESENTATION,
   FIELD_PROP_KEYS,
-  INVALID_ACCESSIBILITY_HINT,
   IOS_BOTTOM_INSET,
-  REQUIRED_ACCESSIBILITY_LABEL,
   SCROLLABLE_OVERFLOW,
   SHEET_MAX_WIDTH,
   SHEET_PRESENTATION,
@@ -52,7 +53,7 @@ export const shouldDismiss = (dy: number, vy: number, sheetHeight: number) =>
 export const getDragFrame = (startHeight: number, dy: number, base: number, max: number, canClose: boolean): SheetDragFrame => {
   const height = startHeight - dy;
   return {
-    height: Math.min(Math.max(height, base), Math.max(max, base)),
+    height: clamp(height, base, Math.max(max, base)),
     offset: canClose ? Math.max(0, base - height) : 0,
   };
 };
@@ -203,10 +204,33 @@ export const getFloatingLabelShift = (boxHeight: number, textWidth: number, scal
 export const getFieldMessage = (error?: FieldError, helperText?: string) => (typeof error === 'string' && error ? error : helperText);
 
 /** What a screen reader says on a field: its name and whether it's required, then its value and error. */
-export const getFieldAccessibility = ({ name, value, error, required }: FieldAccessibilityOptions) => {
-  const errorHint = typeof error === 'string' && error ? error : error ? INVALID_ACCESSIBILITY_HINT : '';
+export const getFieldAccessibility = (
+  { name, value, error, required }: FieldAccessibilityOptions,
+  words: Pick<Labels, 'required' | 'invalid'> = DEFAULT_LABELS
+) => {
+  const errorHint = typeof error === 'string' && error ? error : error ? words.invalid : '';
   return {
-    accessibilityLabel: required ? `${name}, ${REQUIRED_ACCESSIBILITY_LABEL}` : name,
+    'aria-label': required ? `${name}, ${words.required}` : name,
     accessibilityHint: [value, errorHint].filter(Boolean).join('. ') || undefined,
   };
 };
+
+/** The sheet's height: the expanded height while expanded, else its own height up to `maxHeight`. */
+export const getSheetBox = (expanded: boolean, expandedPx: number, maxHeight: number, height: number | undefined) => ({
+  maxHeight: expanded ? expandedPx : maxHeight,
+  height: expanded ? expandedPx : height,
+});
+
+/** Room under a sheet's content for the home indicator. */
+export const getBottomInset = (inset: number) => ({ paddingBottom: inset });
+
+/** A plain height, from a measured or computed number. */
+export const getHeight = (height: number) => ({ height });
+
+/** A box at a measured rectangle. */
+export const getRectBox = (rect: { x: number; y: number; width: number; height: number }) => ({
+  left: rect.x,
+  top: rect.y,
+  width: rect.width,
+  height: rect.height,
+});

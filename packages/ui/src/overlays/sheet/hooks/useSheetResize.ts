@@ -1,18 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { GestureResponderHandlers, HostInstance, LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { Animated, PanResponder } from 'react-native';
+import { PanResponder } from 'react-native';
 
+import { animatedAdd, animatedEvent, animatedSubtract } from '@/core/animation/animated';
 import { USE_NATIVE_DRIVER } from '@/core/animation/animation.constants';
 import { spring } from '@/core/animation/animation.utils';
 import { useAnimatedValue } from '@/core/animation/hooks/useAnimatedValue';
-import {
-  IS_WEB,
-  SHEET_SNAP,
-  SNAP_BACK_BOUNCINESS,
-  SNAP_BACK_SPEED,
-  WHEEL_IDLE_MS,
-  WHEEL_THRESHOLD,
-} from '@/overlays/sheet/sheet.constants';
+import { IS_WEB } from '@/core/core.constants';
+import { SHEET_SNAP, SNAP_BACK_BOUNCINESS, SNAP_BACK_SPEED, WHEEL_IDLE_MS, WHEEL_THRESHOLD } from '@/overlays/sheet/sheet.constants';
 import type { ScrollNode, SheetResize, SheetResizeOptions, SheetSnap, WheelEventLike, WheelHost } from '@/overlays/sheet/sheet.types';
 import {
   canScrollWithin,
@@ -143,9 +138,9 @@ export const useSheetResize = (options: SheetResizeOptions): SheetResize => {
   const rest = stops.base;
   const animated = useMemo(
     () => ({
-      translateY: Animated.add(slide, Animated.subtract(rest, offset)),
-      counter: Animated.subtract(offset, rest),
-      onScroll: Animated.event([{ nativeEvent: { contentOffset: { y: offset } } }], { useNativeDriver: USE_NATIVE_DRIVER }),
+      translateY: animatedAdd(slide, animatedSubtract(rest, offset)),
+      counter: animatedSubtract(offset, rest),
+      onScroll: animatedEvent([{ nativeEvent: { contentOffset: { y: offset } } }], { useNativeDriver: USE_NATIVE_DRIVER }),
     }),
     [offset, rest, slide]
   );
