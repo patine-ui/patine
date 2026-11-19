@@ -71,7 +71,7 @@ export const DESIGN_SHADOWS: Record<Design, Theme['shadows']> = {
   },
 };
 
-const SHARED_TOKENS: Omit<Theme, 'dark' | 'colors'> = {
+const SHARED_TOKENS: Omit<Theme, 'dark' | 'colors' | 'chart'> = {
   design: DESIGN.ios,
   radius: { sm: 8, md: 12, lg: 16, full: 999, sheet: 24 },
   spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
@@ -106,7 +106,17 @@ export const lightTheme: Theme = {
     onDanger: '#FFFFFF',
     success: '#4D7C0F',
     warning: '#A16207',
+    media: '#000000',
+    onMedia: '#FFFFFF',
+    scrim: 'rgba(0,0,0,0.45)',
+    knob: '#FFFFFF',
+    rating: '#FFB400',
+    fillDivider: 'rgba(255,255,255,0.35)',
+    onMediaMuted: 'rgba(255,255,255,0.72)',
+    mediaTrack: 'rgba(255,255,255,0.32)',
   },
+  // Okabe–Ito, darkened where needed to read on white: blue, vermillion, bluish green, reddish purple, orange, sky blue, ochre, grey.
+  chart: ['#0072B2', '#D55E00', '#009E73', '#CC79A7', '#C77C00', '#3A9AD9', '#8C6D1F', '#6B6B6B'],
   ...SHARED_TOKENS,
 };
 
@@ -133,7 +143,17 @@ export const darkTheme: Theme = {
     onDanger: '#1F0705',
     success: '#A8D46A',
     warning: '#F2C94C',
+    media: '#000000',
+    onMedia: '#FFFFFF',
+    scrim: 'rgba(0,0,0,0.45)',
+    knob: '#FFFFFF',
+    rating: '#FFC23D',
+    fillDivider: 'rgba(0,0,0,0.25)',
+    onMediaMuted: 'rgba(255,255,255,0.72)',
+    mediaTrack: 'rgba(255,255,255,0.32)',
   },
+  // The same hues, lightened to read on the dark background.
+  chart: ['#56B4E9', '#FF8A4C', '#2FD3A0', '#E6A1CA', '#F2B53A', '#9AD4FF', '#F0E442', '#B4BCB8'],
   ...SHARED_TOKENS,
 };
 

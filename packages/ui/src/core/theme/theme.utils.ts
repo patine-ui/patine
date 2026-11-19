@@ -1,9 +1,10 @@
-import type { PlatformOSType, TextStyle } from 'react-native';
+import { I18nManager, type ImageStyle, type PlatformOSType, StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
 
-import { PLATFORM } from '@/core/core.constants';
+import { IS_WEB, PLATFORM } from '@/core/core.constants';
 import type { DeepPartial } from '@/core/core.types';
+import { clamp } from '@/core/utils/track.utils';
 import { DESIGN, darkTheme, lightTheme, SHADOW_LEVELS } from './theme.constants';
-import type { Design, DesignPreference, ShadowLevel, TextSize, TextWeight, Theme } from './theme.types';
+import type { Design, DesignPreference, LayoutDirection, ShadowLevel, TextSize, TextWeight, Theme } from './theme.types';
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> => {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -47,5 +48,29 @@ export const resolveDesign = (preference: DesignPreference, platform: PlatformOS
 /** The level `steps` up the elevation scale (down when negative), stopping at its ends: a hovered card's lift. */
 export const stepShadow = (level: ShadowLevel, steps: number): ShadowLevel => {
   const at = SHADOW_LEVELS.indexOf(level) + steps;
-  return SHADOW_LEVELS[Math.min(Math.max(at, 0), SHADOW_LEVELS.length - 1)] ?? level;
+  return SHADOW_LEVELS[clamp(at, 0, SHADOW_LEVELS.length - 1)] ?? level;
+};
+
+/**
+ * A style sheet built from the theme, once per theme: `const themed = createStyles((t) => ({ row: { gap: t.spacing.sm } }))`,
+ * then `themed(theme).row` in render. `useTheme` returns one object per theme, so the sheet is made once and reused.
+ */
+export const createStyles = <S extends Record<string, ViewStyle | TextStyle | ImageStyle>>(factory: (theme: Theme) => S) => {
+  const cache = new WeakMap<Theme, Readonly<S>>();
+  return (theme: Theme): Readonly<S> => {
+    let sheet = cache.get(theme);
+    if (!sheet) {
+      sheet = StyleSheet.create(factory(theme));
+      cache.set(theme, sheet);
+    }
+    return sheet;
+  };
+};
+
+/** The app's own direction: `I18nManager.isRTL` on iOS and Android, the page's `dir` on the web (where React Native Web has no RTL flag). */
+export const getSystemDirection = (): LayoutDirection => {
+  if (!IS_WEB) return I18nManager.isRTL ? 'rtl' : 'ltr';
+  // Reflect.get type-checks with and without the DOM types, so apps with either can compile the source.
+  const doc: { documentElement?: { dir?: string }; dir?: string } | undefined = Reflect.get(globalThis, 'document');
+  return (doc?.documentElement?.dir || doc?.dir) === 'rtl' ? 'rtl' : 'ltr';
 };

@@ -2,6 +2,7 @@ import type React from 'react';
 import type { PlatformOSType, TextStyle } from 'react-native';
 
 import type { DeepPartial, ValueOf } from '@/core/core.types';
+import type { Labels } from './labels.types';
 import type { COLOR_SCHEME, DESIGN, SHADOW_LEVEL } from './theme.constants';
 
 export interface Theme {
@@ -41,7 +42,28 @@ export interface Theme {
     success: string;
     /** Needs attention but isn't an error */
     warning: string;
+    /** Behind full-screen media, such as the image viewer */
+    media: string;
+    /** Text and icons on media, on a `scrim`, or on a saturated action fill (swipe actions) */
+    onMedia: string;
+    /** A see-through band over media that keeps `onMedia` text readable */
+    scrim: string;
+    /** A slider's or colour picker's thumb, as iOS draws it: the same in light and dark */
+    knob: string;
+    /** Filled rating stars */
+    rating: string;
+    /** The line between joined filled buttons, on the fill */
+    fillDivider: string;
+    /** Secondary text and icons on media: captions, counters, timestamps */
+    onMediaMuted: string;
+    /** A track or progress rail drawn on media, such as a video scrubber */
+    mediaTrack: string;
   };
+  /**
+   * Data colours for charts, in the order series should take them: eight hues from the Okabe–Ito colour-blind-safe palette,
+   * tuned to read on this scheme's background. `theme.chart[i % theme.chart.length]` colours series `i`.
+   */
+  chart: ChartPalette;
   radius: { sm: number; md: number; lg: number; full: number; sheet: number };
   spacing: { xs: number; sm: number; md: number; lg: number; xl: number };
   typography: {
@@ -83,4 +105,14 @@ export interface PatineProviderProps {
   platform?: PlatformOS;
   /** The look components follow. 'brand' is Patine's own look on every platform; 'native' matches the platform: 'ios' on iOS, 'web' on the web, 'material' elsewhere. Default: 'brand' */
   design?: DesignPreference;
+  /** The words components show and say by default, for translation: `{ close: 'Fermer', pagination: { next: 'Suivant' } }`. A component's own label props still win. Default: English */
+  labels?: DeepPartial<Labels>;
+  /** Which way text runs: arrows, swipes, sliders and chevrons follow it. Default: the app's, `I18nManager.isRTL` on iOS and Android and the page's `dir` on the web */
+  dir?: LayoutDirection;
 }
+
+/** Which way text runs. */
+export type LayoutDirection = 'ltr' | 'rtl';
+
+/** Eight chart series colours, in order. */
+export type ChartPalette = readonly [string, string, string, string, string, string, string, string];

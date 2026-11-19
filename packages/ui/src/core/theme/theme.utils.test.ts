@@ -1,5 +1,7 @@
-import { lightTheme } from './theme.constants';
-import { mergeTheme, resolveDesign, stepShadow } from './theme.utils';
+import { I18nManager } from 'react-native';
+
+import { darkTheme, lightTheme } from './theme.constants';
+import { createStyles, getSystemDirection, mergeTheme, resolveDesign, stepShadow } from './theme.utils';
 
 describe('resolveDesign', () => {
   it('matches the platform for native: iOS, the web, and Material everywhere else', () => {
@@ -27,5 +29,27 @@ describe('stepShadow', () => {
 describe('mergeTheme', () => {
   it('keeps the base value for a key set to undefined', () => {
     expect(mergeTheme(lightTheme, { shadows: undefined }).shadows).toBe(lightTheme.shadows);
+  });
+});
+
+describe('createStyles', () => {
+  it('builds a sheet once per theme and again for another theme', () => {
+    const factory = jest.fn((t: typeof lightTheme) => ({ row: { gap: t.spacing.sm } }));
+    const themed = createStyles(factory);
+    const first = themed(lightTheme);
+    expect(themed(lightTheme)).toBe(first);
+    expect(first.row.gap).toBe(lightTheme.spacing.sm);
+    expect(themed(darkTheme)).not.toBe(first);
+    expect(factory).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('getSystemDirection', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  it('reads I18nManager on iOS and Android', () => {
+    expect(getSystemDirection()).toBe('ltr');
+    jest.replaceProperty(I18nManager, 'isRTL', true);
+    expect(getSystemDirection()).toBe('rtl');
   });
 });

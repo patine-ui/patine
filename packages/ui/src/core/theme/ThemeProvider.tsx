@@ -1,20 +1,42 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, type ReactNode, useContext, useMemo } from 'react';
 import { Platform, useColorScheme } from 'react-native';
 
 import type { DeepPartial } from '@/core/core.types';
+import { DEFAULT_LABELS } from './labels.constants';
+import type { Labels } from './labels.types';
 import { COLOR_SCHEME, DESIGN, DESIGN_TOKENS, darkTheme, lightTheme } from './theme.constants';
-import type { ColorScheme, DesignPreference, PatineProviderProps, PlatformOS, Theme } from './theme.types';
-import { mergeTheme, resolveDesign } from './theme.utils';
+import type { Design, DesignPreference, LayoutDirection, PatineProviderProps, PlatformOS, Theme } from './theme.types';
+import { getSystemDirection, mergeTheme, resolveDesign } from './theme.utils';
 
 interface ThemeContextValue {
-  theme?: DeepPartial<Theme>;
-  darkTheme?: DeepPartial<Theme>;
-  colorScheme: ColorScheme;
   platform?: PlatformOS;
-  design: DesignPreference;
+  /** The theme every `useTheme()` without an override gets: the same object for all of them */
+  resolved: Theme;
+  /** The resolved theme in another design, cached, for a component's `design` override */
+  baseFor: (design: Design) => Theme;
+  /** The default words, with the provider's translations on top */
+  labels: Labels;
+  /** Which way text runs */
+  dir: LayoutDirection;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+/** The design tokens on the light or dark theme, then the provider's overrides, cached per design. */
+const themeCache = (isDark: boolean, provided: DeepPartial<Theme> | undefined) => {
+  const cache = new Map<Design, Theme>();
+  return (design: Design) => {
+    let theme = cache.get(design);
+    if (!theme) {
+      theme = mergeTheme(mergeTheme(isDark ? darkTheme : lightTheme, DESIGN_TOKENS[design]), provided);
+      cache.set(design, theme);
+    }
+    return theme;
+  };
+};
+
+// Without a provider every component shares these, so a theme-keyed style cache hits.
+const BARE = { light: themeCache(false, undefined), dark: themeCache(true, undefined) };
 
 export const PatineProvider = ({
   children,
@@ -23,40 +45,89 @@ export const PatineProvider = ({
   darkTheme: dark,
   platform,
   design = DESIGN.brand,
+  labels,
+  dir,
 }: PatineProviderProps) => {
-  const value = useMemo<ThemeContextValue>(
-    () => ({
-      theme,
-      darkTheme: dark,
-      colorScheme,
+  const system = useColorScheme();
+  const os = platform ?? Platform.OS;
+  const isDark = colorScheme === COLOR_SCHEME.auto ? system === COLOR_SCHEME.dark : colorScheme === COLOR_SCHEME.dark;
+  const provided = isDark ? (dark ?? theme) : theme;
+  const words = useMemo(() => mergeTheme(DEFAULT_LABELS, labels), [labels]);
+  const value = useMemo<ThemeContextValue>(() => {
+    const baseFor = themeCache(isDark, provided);
+    return {
       platform,
-      design,
-    }),
-    [theme, dark, colorScheme, platform, design]
-  );
+      resolved: baseFor(provided?.design ?? resolveDesign(design, os)),
+      baseFor,
+      labels: words,
+      dir: dir ?? getSystemDirection(),
+    };
+  }, [isDark, provided, platform, os, design, words, dir]);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
+
+/** The default words components show and say: English, or the provider's `labels` on top. */
+export const useLabels = (): Labels => useContext(ThemeContext)?.labels ?? DEFAULT_LABELS;
+
+/** Which way text runs: the provider's `dir`, or the app's own (see `getSystemDirection`). */
+export const useDirection = (): LayoutDirection => useContext(ThemeContext)?.dir ?? getSystemDirection();
 
 /** The platform pickers behave as on: the provider's `platform`, or the one they run on. */
 export const usePlatform = (): PlatformOS => useContext(ThemeContext)?.platform ?? Platform.OS;
 
+/** A theme override without its `design`, or undefined when that's all it held. */
+const withoutDesign = (override: DeepPartial<Theme> | undefined) => {
+  if (!override) return undefined;
+  const { design: _design, ...rest } = override;
+  return Object.keys(rest).length ? rest : undefined;
+};
+
 /**
  * Resolves the active theme: the design's tokens on the light or dark theme, then the provider's overrides, then the component's.
- * The design comes from the component override, the provider, or the platform.
+ * The design comes from the component override, the provider, or the platform. Every call without an override (or with only a
+ * `design`) returns the same object, so `createStyles` builds each sheet once.
  */
 export const useTheme = (override?: DeepPartial<Theme>): Theme => {
   const ctx = useContext(ThemeContext);
   const system = useColorScheme();
-  const platform = usePlatform();
-  const scheme = ctx?.colorScheme ?? COLOR_SCHEME.auto;
-  const isDark = scheme === COLOR_SCHEME.auto ? system === COLOR_SCHEME.dark : scheme === COLOR_SCHEME.dark;
-  const provided = isDark ? (ctx?.darkTheme ?? ctx?.theme) : ctx?.theme;
-  const design = override?.design ?? provided?.design ?? resolveDesign(ctx?.design ?? DESIGN.brand, platform);
-  const base = useMemo(
-    () => mergeTheme(mergeTheme(isDark ? darkTheme : lightTheme, DESIGN_TOKENS[design]), provided),
-    [isDark, design, provided]
-  );
-  return useMemo(() => mergeTheme(base, override), [base, override]);
+  const baseFor = ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
+  const resolved = ctx?.resolved ?? baseFor(DESIGN.brand);
+  const base = override?.design && override.design !== resolved.design ? baseFor(override.design) : resolved;
+  const rest = useMemo(() => withoutDesign(override), [override]);
+  // A part handed its parent's resolved theme gets that same object back.
+  return useMemo(() => (rest && override !== base ? mergeTheme(base, rest) : base), [base, rest, override]);
+};
+
+/**
+ * Hands a component's theme override down to everything inside it, the way PatineProvider does: its parts and the app's
+ * children then draw the same design and tokens without a `theme` prop. Renders no provider when there's nothing to change.
+ */
+export const ThemeScope = ({ theme: override, children }: { theme?: DeepPartial<Theme>; children: ReactNode }) => {
+  const ctx = useContext(ThemeContext);
+  const system = useColorScheme();
+  const resolved = useTheme(override);
+  const parentBaseFor = ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
+  const rest = useMemo(() => withoutDesign(override), [override]);
+  const value = useMemo<ThemeContextValue>(() => {
+    const cache = new Map<Design, Theme>();
+    return {
+      platform: ctx?.platform,
+      labels: ctx?.labels ?? DEFAULT_LABELS,
+      dir: ctx?.dir ?? getSystemDirection(),
+      resolved,
+      baseFor: (design: Design) => {
+        if (design === resolved.design) return resolved;
+        let theme = cache.get(design);
+        if (!theme) {
+          theme = mergeTheme(parentBaseFor(design), rest);
+          cache.set(design, theme);
+        }
+        return theme;
+      },
+    };
+  }, [ctx?.platform, ctx?.labels, ctx?.dir, resolved, parentBaseFor, rest]);
+  if (!override || resolved === (ctx?.resolved ?? parentBaseFor(DESIGN.brand))) return children;
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
 /**
