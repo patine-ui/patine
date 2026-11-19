@@ -1,4 +1,4 @@
-import type { ImageSourcePropType } from 'react-native';
+import type { ImageSourcePropType, TextStyle, ViewStyle } from 'react-native';
 
 import { AVATAR_SIZE } from './avatar.constants';
 import type { AvatarSize } from './avatar.types';
@@ -38,3 +38,17 @@ export const describeGroup = (names: readonly (string | undefined)[], rest: numb
   if (rest === 0) return named.length > 1 ? `${named.slice(0, -1).join(', ')} and ${named[named.length - 1]}` : (named[0] ?? '');
   return `${named.join(', ')} and ${rest} ${rest === 1 ? 'other' : 'others'}`;
 };
+
+/** An avatar's box: a circle, or a square with the theme's `md` corners. */
+export const getAvatarBox = (side: number, circle: boolean, squareRadius: number): ViewStyle => ({
+  width: side,
+  height: side,
+  borderRadius: circle ? side / 2 : squareRadius,
+});
+
+/** Initials (or "+N") sized to the avatar. */
+export const getInitialsSize = (side: number, scale: number): TextStyle => ({ fontSize: side * scale });
+
+/** How far each avatar after the first tucks under the one before. */
+export const getTuck = (index: number, side: number, overlap: number): ViewStyle | undefined =>
+  index > 0 ? { marginStart: -side * overlap } : undefined;
