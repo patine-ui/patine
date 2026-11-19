@@ -26,3 +26,17 @@ export const stepRating = (value: number, direction: 1 | -1, step: number, max: 
 export const getFills = (value: number, max: number) => Array.from({ length: max }, (_, i) => clamp01(value - i));
 
 export const formatRating = (value: number, max: number) => `${roundTo(value, 2)} of ${max}`;
+
+/** The space between items. */
+export const getRatingGap = (gap: number) => ({ gap });
+
+/** How much of an item the filled icon covers, from the start. */
+export const getFillWidth = (fill: number, size: number) => ({ width: fill * size });
+
+/** The star glyph at the item's size and colour. */
+export const getGlyphStyle = (size: number, color: string) => ({
+  width: size,
+  fontSize: size,
+  lineHeight: size,
+  color,
+});

@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
-import { I18nManager, type LayoutChangeEvent, type PointerEvent } from 'react-native';
+import type { LayoutChangeEvent, PointerEvent } from 'react-native';
 
+import { adjustableProps } from '@/core/a11y/adjustable.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { useTrackPan } from '@/core/hooks/useTrackPan';
+import { useDirection, useLabels } from '@/core/theme/ThemeProvider';
 import type { Theme } from '@/core/theme/theme.types';
-import { adjustableProps } from '@/core/utils/adjustable.utils';
 import { toFraction } from '@/core/utils/track.utils';
-import { DEFAULT_RATING_LABEL, DEFAULT_RATING_MAX, DEFAULT_RATING_SIZE, DEFAULT_RATING_STEP } from '@/inputs/rating/rating.constants';
+import { DEFAULT_RATING_MAX, DEFAULT_RATING_SIZE, DEFAULT_RATING_STEP } from '@/inputs/rating/rating.constants';
 import type { RatingProps, RatingState } from '@/inputs/rating/rating.types';
 import { formatRating, getFills, isOnStars, ratingAt, stepRating } from '@/inputs/rating/rating.utils';
 
@@ -15,6 +16,7 @@ import { formatRating, getFills, isOnStars, ratingAt, stepRating } from '@/input
  * previews the value a click would pick.
  */
 export const useRating = (props: RatingProps, theme: Theme): RatingState => {
+  const rtl = useDirection() === 'rtl';
   const {
     max = DEFAULT_RATING_MAX,
     step = DEFAULT_RATING_STEP,
@@ -22,8 +24,10 @@ export const useRating = (props: RatingProps, theme: Theme): RatingState => {
     readOnly = false,
     disabled = false,
     formatValue = formatRating,
-    accessibilityLabel = DEFAULT_RATING_LABEL,
+    accessibilityLabel: accessibilityLabelProp,
   } = props;
+  const words = useLabels();
+  const accessibilityLabel = accessibilityLabelProp ?? words.rating;
   const gap = theme.spacing.xs;
   const geometry = {
     size,
@@ -44,7 +48,7 @@ export const useRating = (props: RatingProps, theme: Theme): RatingState => {
     if (next !== value) commit(next);
   };
   // Touches come in screen coordinates; the stars run from the row's start, which is the right edge in RTL.
-  const xAt = (fraction: number) => (I18nManager.isRTL ? 1 - fraction : fraction) * width.current;
+  const xAt = (fraction: number) => (rtl ? 1 - fraction : fraction) * width.current;
   const moveTo = (fraction: number) => {
     if (!grabbed.current) return;
     live.current = ratingAt(xAt(fraction), geometry);
@@ -84,9 +88,9 @@ export const useRating = (props: RatingProps, theme: Theme): RatingState => {
     a11y: readOnly
       ? {
           accessible: true,
-          accessibilityRole: 'text',
-          accessibilityLabel,
-          accessibilityValue: { text: valueText },
+          role: 'img' as const,
+          'aria-label': accessibilityLabel,
+          'aria-valuetext': valueText,
         }
       : adjustableProps({
           label: accessibilityLabel,

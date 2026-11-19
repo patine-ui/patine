@@ -66,8 +66,8 @@ describe('Rating', () => {
   it('steps with keys and screen-reader actions', async () => {
     const onValueChange = jest.fn();
     await render(<Rating defaultValue={3} onValueChange={onValueChange} testID="rating" />);
-    const row = screen.getByRole('adjustable', { name: 'Rating' });
-    expect(row.props.accessibilityValue).toEqual({ text: '3 of 5' });
+    const row = screen.getByRole('slider', { name: 'Rating' });
+    expect(row.props['aria-valuetext']).toEqual('3 of 5');
     await fireEvent(row, 'keyDown', key('ArrowRight'));
     expect(onValueChange).toHaveBeenLastCalledWith(4);
     await fireEvent(row, 'accessibilityAction', { nativeEvent: { actionName: 'decrement' } });
@@ -80,7 +80,7 @@ describe('Rating', () => {
     await render(<Rating value={4.25} readOnly testID="rating" />);
     expect(fillOf(4)).toBe(8);
     expect(screen.getByTestId('rating').props.onResponderGrant).toBeUndefined();
-    expect(screen.getByLabelText('Rating').props.accessibilityValue).toEqual({ text: '4.25 of 5' });
+    expect(screen.getByLabelText('Rating').props['aria-valuetext']).toEqual('4.25 of 5');
   });
 
   it('draws a custom icon empty and filled', async () => {
@@ -93,7 +93,7 @@ describe('Rating', () => {
     const onValueChange = jest.fn();
     const { rerender } = await render(<Rating value={1} onValueChange={onValueChange} testID="rating" />);
     await rerender(<Rating value={4} onValueChange={onValueChange} testID="rating" />);
-    expect(screen.getByRole('adjustable').props.accessibilityValue).toEqual({ text: '4 of 5' });
+    expect(screen.getByRole('slider').props['aria-valuetext']).toEqual('4 of 5');
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
