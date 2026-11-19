@@ -1,9 +1,10 @@
-import { Animated, Pressable, View } from 'react-native';
-
+import { adjustableProps } from '@/core/a11y/adjustable.utils';
+import { animatedMultiply } from '@/core/animation/animated';
 import { IS_WEB } from '@/core/core.constants';
-import { adjustableProps } from '@/core/utils/adjustable.utils';
+import { Touchable } from '@/core/primitives/Touchable';
+import { AnimatedView, View } from '@/core/primitives/View';
 import { CAROUSEL_DESIGN } from '@/display/carousel/carousel.constants';
-import { styles } from '@/display/carousel/carousel.styles';
+import { styles, themed } from '@/display/carousel/carousel.styles';
 import type { DotsProps } from '@/display/carousel/carousel.types';
 import { formatSlideLabel, stepIndex } from '@/display/carousel/carousel.utils';
 
@@ -14,50 +15,36 @@ import { formatSlideLabel, stepIndex } from '@/display/carousel/carousel.utils';
  */
 export const Dots = ({ count, position, value, label, theme, onValueChange, style, testID }: DotsProps) => {
   const look = CAROUSEL_DESIGN[theme.design].indicator;
+  const sheet = themed(theme);
+  // An animated value: the mark follows the scroll.
+  const slide = { transform: [{ translateX: animatedMultiply(position, look.slot) }] };
   const valueText = formatSlideLabel(label, value + 1, count);
   const a11y = IS_WEB
     ? { 'aria-hidden': true }
     : onValueChange
       ? adjustableProps({ valueText, onStep: (direction) => onValueChange(stepIndex(value, direction, count, false)) })
-      : { accessible: true, accessibilityLabel: valueText };
+      : { accessible: true, 'aria-label': valueText };
   return (
     <View style={[styles.dots, style]} testID={testID} {...a11y}>
       {Array.from({ length: count }, (_, i) => (
-        <Pressable
+        <Touchable
           // biome-ignore lint/suspicious/noArrayIndexKey: dots are positions, the index is their identity.
           key={i}
+          // Pointer-only: the dots' one adjustable control (or the carousel's keys on the web) is what assistive tech gets.
+          role="none"
           accessible={false}
           tabIndex={-1}
+          focusRing={false}
+          ripple={false}
           disabled={!onValueChange}
           onPress={() => onValueChange?.(i)}
-          style={[styles.dotSlot, { width: look.slot }]}
+          style={[styles.dotSlot, sheet.slot, !onValueChange && styles.undimmed]}
           testID={testID ? `${testID}-${i}` : undefined}
         >
-          <View
-            style={{
-              width: look.dot,
-              height: look.dot,
-              borderRadius: look.dot / 2,
-              backgroundColor: theme.colors[look.inactiveColor],
-              opacity: look.inactiveOpacity,
-            }}
-          />
-        </Pressable>
+          <View style={sheet.dot} />
+        </Touchable>
       ))}
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.activeDot,
-          {
-            left: (look.slot - look.activeWidth) / 2,
-            width: look.activeWidth,
-            height: look.dot,
-            borderRadius: look.dot / 2,
-            backgroundColor: theme.colors[look.activeColor],
-            transform: [{ translateX: Animated.multiply(position, look.slot) }],
-          },
-        ]}
-      />
+      <AnimatedView pointerEvents="none" style={[styles.activeDot, sheet.activeDot, slide]} />
     </View>
   );
 };

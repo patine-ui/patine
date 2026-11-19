@@ -1,11 +1,13 @@
 import { Children, useEffect, useRef, useState } from 'react';
 import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, ScrollViewInstance } from 'react-native';
 
+import { KEY } from '@/core/a11y/a11y.constants';
+import { keyboardProps } from '@/core/a11y/keyboard.utils';
 import { useReducedMotion, useScrollPosition } from '@/core/animation';
 import type { AnimatedInterpolation } from '@/core/animation/animation.types';
-import { IS_WEB, KEY } from '@/core/core.constants';
+import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { keyboardProps } from '@/core/utils/keyboard.utils';
+import { clamp } from '@/core/utils/track.utils';
 import { CAROUSEL_ALIGN, ORIENTATION, SETTLE_MS } from '@/display/carousel/carousel.constants';
 import type { CarouselProps } from '@/display/carousel/carousel.types';
 import {
@@ -58,7 +60,7 @@ export const usePager = ({
   const trail = center ? lead : Math.max(0, size - item);
 
   const [stored, setStored] = useControllableState(value, defaultValue);
-  const index = Math.min(Math.max(0, stored), Math.max(0, count - 1));
+  const index = clamp(stored, 0, Math.max(0, count - 1));
   // The latest index, for timers and scroll events between renders.
   const indexRef = useRef(index);
   indexRef.current = index;

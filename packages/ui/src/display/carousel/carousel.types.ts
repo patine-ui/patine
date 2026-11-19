@@ -2,6 +2,7 @@ import type React from 'react';
 import type { Animated, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
+import type { CarouselLabels } from '@/core/theme/labels.types';
 import type { Theme } from '@/core/theme/theme.types';
 import type { CAROUSEL_ALIGN, ORIENTATION } from './carousel.constants';
 
@@ -9,15 +10,6 @@ export type CarouselOrientation = ValueOf<typeof ORIENTATION>;
 export type CarouselAlign = ValueOf<typeof CAROUSEL_ALIGN>;
 /** A width in points, or a share of the carousel's width such as `'80%'`. */
 export type ItemSize = number | `${number}%`;
-
-export interface CarouselLabels {
-  /** The previous-slide arrow. Default: 'Previous slide' */
-  previous: string;
-  /** The next-slide arrow. Default: 'Next slide' */
-  next: string;
-  /** Each slide's name, with `{page}` and `{count}` filled in. Default: 'Slide {page} of {count}' */
-  slide: string;
-}
 
 export type CarouselSlot = 'container' | 'item' | 'indicator' | 'arrow';
 
@@ -109,3 +101,5 @@ export interface DotsProps {
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
+
+export type { CarouselLabels } from '@/core/theme/labels.types';

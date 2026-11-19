@@ -1,5 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { CarouselDesign, CarouselLabels } from './carousel.types';
+import type { CarouselDesign } from './carousel.types';
 
 export const ORIENTATION = {
   horizontal: 'horizontal',
@@ -10,12 +10,6 @@ export const CAROUSEL_ALIGN = {
   center: 'center',
   start: 'start',
 } as const;
-
-export const DEFAULT_CAROUSEL_LABELS: CarouselLabels = {
-  previous: 'Previous slide',
-  next: 'Next slide',
-  slide: 'Slide {page} of {count}',
-};
 
 /** `autoplay={true}`: a slide every 4 seconds. */
 export const AUTOPLAY_MS = 4000;

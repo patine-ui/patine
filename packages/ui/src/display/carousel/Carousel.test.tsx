@@ -76,8 +76,8 @@ describe('Carousel', () => {
     expect(Platform.OS).not.toBe('web');
     const onValueChange = jest.fn();
     await render(<PageIndicator count={4} value={1} onValueChange={onValueChange} />);
-    const dots = screen.getByRole('adjustable');
-    expect(dots.props.accessibilityValue).toEqual({ text: 'Slide 2 of 4' });
+    const dots = screen.getByRole('slider');
+    expect(dots.props['aria-valuetext']).toEqual('Slide 2 of 4');
     await fireEvent(dots, 'accessibilityAction', { nativeEvent: { actionName: 'increment' } });
     expect(onValueChange).toHaveBeenCalledWith(2);
   });

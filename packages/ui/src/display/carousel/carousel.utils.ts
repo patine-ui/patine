@@ -1,3 +1,4 @@
+import { clamp } from '@/core/utils/track.utils';
 import type { ItemSize } from './carousel.types';
 
 /** Loop renders the slides three times and keeps the middle copy in view, so either neighbour is always there. */
@@ -12,7 +13,7 @@ export const edgePadding = (container: number, item: number, center: boolean) =>
 
 /** The slide nearest a scroll offset, among `total` rendered ones. */
 export const indexAtOffset = (offset: number, step: number, total: number) =>
-  step > 0 ? Math.min(total - 1, Math.max(0, Math.round(offset / step))) : 0;
+  step > 0 ? clamp(Math.round(offset / step), 0, total - 1) : 0;
 
 /** A rendered slide's real index. */
 export const toReal = (virtual: number, count: number) => (count > 0 ? ((virtual % count) + count) % count : 0);
@@ -33,7 +34,7 @@ export const recenter = (virtual: number, count: number, copies: number) => {
 
 /** Where a step of `delta` lands: wrapped in a loop, held at the ends otherwise. */
 export const stepIndex = (index: number, delta: number, count: number, loop: boolean) =>
-  loop ? toReal(index + delta, count) : Math.min(count - 1, Math.max(0, index + delta));
+  loop ? toReal(index + delta, count) : clamp(index + delta, 0, count - 1);
 
 /** Fills `{page}` and `{count}` in a label. */
 export const formatSlideLabel = (template: string, page: number, count: number) =>
@@ -54,3 +55,23 @@ export const positionRange = (count: number, copies: number, step: number) => {
       }
     : null;
 };
+
+/** The track's spacing: the gap between slides, and the room before the first and after the last so they can center. */
+export const getTrackStyle = (gap: number, horizontal: boolean, lead: number, trail: number) =>
+  horizontal
+    ? {
+        gap,
+        paddingLeft: lead,
+        paddingRight: trail,
+      }
+    : {
+        gap,
+        paddingTop: lead,
+        paddingBottom: trail,
+      };
+
+/** An arrow's place over the carousel's edge, centered on the cross axis. */
+export const getArrowPlace = (vertical: boolean, forward: boolean, size: number, edge: number) =>
+  vertical
+    ? { left: '50%' as const, marginLeft: -size / 2, ...(forward ? { bottom: edge } : { top: edge }) }
+    : { top: '50%' as const, marginTop: -size / 2, ...(forward ? { right: edge } : { left: edge }) };
