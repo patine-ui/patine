@@ -1,4 +1,4 @@
-import { Text } from './Text';
+import { Text } from '@/core/primitives/Text';
 import { HEADING_SIZE } from './text.constants';
 import type { HeadingProps } from './text.types';
 
