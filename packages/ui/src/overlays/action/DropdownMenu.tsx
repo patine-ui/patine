@@ -1,5 +1,6 @@
 import { useWindowDimensions } from 'react-native';
 
+import { useFinePointer } from '@/core/hooks/useFinePointer';
 import { Scroll } from '@/core/primitives/Scroll';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
@@ -7,7 +8,7 @@ import { ThemeScope, useComponentTheme, useDirection } from '@/core/theme/ThemeP
 import { Dropdown } from '@/overlays/sheet/Dropdown';
 import { useDropdownFit } from '@/overlays/sheet/hooks/useDropdownFit';
 import { ActionSheet } from './ActionSheet';
-import { MENU_ALIGN, MENU_DESIGN, MENU_PRESENTATION } from './action.constants';
+import { COMPACT_MENU, MENU_ALIGN, MENU_DESIGN, MENU_PRESENTATION } from './action.constants';
 import { styles } from './action.styles';
 import type { DropdownMenuProps } from './action.types';
 import { getMenuAnchor } from './action.utils';
@@ -40,6 +41,8 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   const menu = useDropdownMenu(props);
   const rect = menu.anchor.rect;
   const fit = useDropdownFit();
+  // A mouse needs no 44 pt rows: desktop menus are compact and quiet, as on macOS and Windows.
+  const compact = useFinePointer();
 
   return (
     <ThemeScope theme={themeOverride}>
@@ -88,7 +91,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
           testID={testID && `${testID}-menu`}
         >
           <Scroll style={styles.list} bounces={false} onContentSizeChange={fit.onContentSizeChange}>
-            <ActionSheetHeader title={title} grouped={look.centeredTitle} theme={theme} slots={slots} />
+            <ActionSheetHeader title={title} grouped={look.centeredTitle && !compact} compact={compact} theme={theme} slots={slots} />
             {actions.map((action, i) => (
               <ActionSheetRow
                 key={action.label}
@@ -96,7 +99,8 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
                 onPress={menu.press}
                 grouped={false}
                 separated={look.separators && (i > 0 || !!title)}
-                rowHeight={look.rowHeight}
+                rowHeight={compact ? COMPACT_MENU.rowHeight : look.rowHeight}
+                compact={compact}
                 iconAtEnd={look.iconAtEnd}
                 theme={theme}
                 slots={slots}

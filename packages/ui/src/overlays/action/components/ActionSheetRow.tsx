@@ -14,6 +14,7 @@ export const ActionSheetRow = ({
   separated,
   rowHeight,
   iconAtEnd = false,
+  compact = false,
   theme,
   slots,
 }: ActionSheetRowProps) => {
@@ -34,6 +35,7 @@ export const ActionSheetRow = ({
         grouped && styles.groupedRow,
         getRowMinHeight(rowHeight),
         sheet.row,
+        compact && sheet.compactRow,
         separated && [styles.separator, sheet.separator],
         slots?.[cancel ? 'cancel' : 'action'],
       ]}
@@ -41,8 +43,8 @@ export const ActionSheetRow = ({
       {iconAtEnd ? null : action.icon}
       <View style={grouped ? styles.groupedText : styles.text}>
         <Text
-          size={grouped ? 'lg' : 'md'}
-          weight={cancel && grouped ? 'bold' : 'regular'}
+          size={grouped ? 'lg' : compact ? 'sm' : 'md'}
+          weight={cancel && grouped ? 'semibold' : 'regular'}
           style={[label, slots?.[cancel ? 'cancelLabel' : 'actionLabel']]}
           numberOfLines={1}
         >
@@ -55,7 +57,7 @@ export const ActionSheetRow = ({
         ) : null}
       </View>
       {action.selected ? (
-        <Text weight="bold" color="primary" style={[grouped && [styles.groupedCheck, sheet.groupedCheck], slots?.check]}>
+        <Text weight="semibold" color="primary" style={[grouped && [styles.groupedCheck, sheet.groupedCheck], slots?.check]}>
           {CHECK_MARK}
         </Text>
       ) : null}

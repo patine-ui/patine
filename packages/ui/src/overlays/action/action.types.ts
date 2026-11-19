@@ -64,6 +64,8 @@ export interface ActionSheetDesign {
 
 export interface ActionSheetHeaderProps {
   title?: string;
+  /** A mouse-driven menu: the title is a quiet small caption */
+  compact?: boolean;
   message?: string;
   grouped: boolean;
   theme: Theme;
@@ -79,6 +81,8 @@ export interface ActionSheetRowProps {
   /** A hairline above the row, between grouped actions */
   separated: boolean;
   rowHeight: number;
+  /** A mouse-driven menu: smaller text and tighter padding */
+  compact?: boolean;
   /** After the label, as iOS menus put it */
   iconAtEnd?: boolean;
   theme: Theme;
