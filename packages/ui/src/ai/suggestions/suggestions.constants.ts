@@ -11,5 +11,3 @@ export const SUGGESTIONS_DESIGN: Record<Design, SuggestionsDesign> = {
   material: { variant: 'outline', radius: 'sm' },
   web: { variant: 'outline', radius: 'md' },
 };
-
-export const SUGGESTIONS_LABEL = 'Suggestions';
