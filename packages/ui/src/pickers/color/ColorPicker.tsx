@@ -1,7 +1,6 @@
-import { View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
-import { ARROW_FOCUS } from '@/core/utils/keyboard.utils';
+import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { COLOR_DISPLAY, COLOR_DISPLAY_DESIGN, DEFAULT_COLORS } from './color.constants';
 import { styles } from './color.styles';
 import type { ColorPickerProps } from './color.types';
@@ -35,22 +34,25 @@ export const ColorPicker = ({
   design,
   testID,
 }: ColorPickerProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const picker = useColorPicker({ value, defaultValue, onValueChange, showAlpha });
   const Layout = showCustom ? LAYOUTS[display ?? COLOR_DISPLAY_DESIGN[theme.design]] : SwatchesOnly;
   return (
-    <View style={[styles.column, style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
-      <Layout
-        picker={picker}
-        colors={colors}
-        showCustom={showCustom}
-        showAlpha={showAlpha}
-        copy={onCopy ?? getDefaultCopy()}
-        labels={resolveColorLabels(labels)}
-        theme={theme}
-        slots={slots}
-        testID={testID}
-      />
-    </View>
+    <ThemeScope theme={themeOverride}>
+      <View style={[styles.column, style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
+        <Layout
+          picker={picker}
+          colors={colors}
+          showCustom={showCustom}
+          showAlpha={showAlpha}
+          copy={onCopy ?? getDefaultCopy()}
+          labels={resolveColorLabels(labels, words.color)}
+          theme={theme}
+          slots={slots}
+          testID={testID}
+        />
+      </View>
+    </ThemeScope>
   );
 };

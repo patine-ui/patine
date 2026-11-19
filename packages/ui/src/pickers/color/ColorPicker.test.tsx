@@ -23,9 +23,9 @@ describe('ColorPicker', () => {
       await fireEvent(screen.getByTestId('color-spectrum'), 'accessibilityAction', action('down'));
       expect(onValueChange.mock.lastCall?.[0]).not.toBe('#FF0000');
       await fireEvent.press(screen.getByText('Sliders'));
-      expect(screen.getByTestId('color-red').props.accessibilityValue).toEqual({ text: expect.any(String) });
+      expect(screen.getByTestId('color-red').props['aria-valuetext']).toEqual(expect.any(String));
       await fireEvent.changeText(screen.getByTestId('color-hex'), '#336699');
-      expect(screen.getByTestId('color-green').props.accessibilityValue).toEqual({ text: '102' });
+      expect(screen.getByTestId('color-green').props['aria-valuetext']).toEqual('102');
     });
   });
 
@@ -55,7 +55,7 @@ describe('ColorPicker', () => {
       await fireEvent(screen.getByTestId('color-hue'), 'accessibilityAction', action('increment'));
       for (let i = 0; i < 40; i++) await fireEvent(screen.getByTestId('color-pad'), 'accessibilityAction', action('decrement'));
       expect(onValueChange).toHaveBeenLastCalledWith('#FFFFFF');
-      expect(screen.getByTestId('color-hue').props.accessibilityValue).toEqual({ text: '10°' });
+      expect(screen.getByTestId('color-hue').props['aria-valuetext']).toEqual('10°');
       await fireEvent.changeText(screen.getByTestId('color-hex'), 'f80');
       await fireEvent(screen.getByTestId('color-hex'), 'blur');
       expect(onValueChange).toHaveBeenLastCalledWith('#FF8800');
@@ -82,7 +82,7 @@ describe('ColorPicker', () => {
   it('adds opacity with showAlpha, as two more hex digits', async () => {
     const onValueChange = jest.fn();
     await render(<ColorPicker defaultValue="#FF0000" onValueChange={onValueChange} showAlpha design="web" testID="color" />);
-    expect(screen.getByTestId('color-opacity').props.accessibilityValue).toEqual({ text: '100%' });
+    expect(screen.getByTestId('color-opacity').props['aria-valuetext']).toEqual('100%');
     await fireEvent(screen.getByTestId('color-opacity'), 'accessibilityAction', action('decrement'));
     expect(onValueChange.mock.lastCall?.[0]).toMatch(/^#FF0000[0-9A-F]{2}$/);
   });

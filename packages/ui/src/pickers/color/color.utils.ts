@@ -1,9 +1,10 @@
 import { IS_WEB } from '@/core/core.constants';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
 import { clamp01 } from '@/core/utils/track.utils';
 import {
   CHECK_ON_DARK,
   CHECK_ON_LIGHT,
-  DEFAULT_COLOR_LABELS,
+  FALLBACK_HEX,
   IOS_GRID_COLUMNS,
   IOS_GRID_HUE_START,
   IOS_GRID_SHADES,
@@ -33,7 +34,7 @@ const toHexByte = (n: number) =>
 
 /** The colour without its opacity, and the opacity 0–1. */
 export const splitAlpha = (hex: string) => {
-  const full = normalizeHex(hex) ?? '#000000';
+  const full = normalizeHex(hex) ?? FALLBACK_HEX;
   return {
     rgb: full.slice(0, 7),
     alpha: full.length === 9 ? Number.parseInt(full.slice(7), 16) / 255 : 1,
@@ -155,8 +156,8 @@ export const percent = (value: number) => `${Math.round(value * 100)}%`;
 
 export const degrees = (value: number) => `${Math.round(value * 360)}°`;
 
-export const resolveColorLabels = (labels?: Partial<ColorLabels>): ColorLabels => {
-  const resolved = { ...DEFAULT_COLOR_LABELS };
+export const resolveColorLabels = (labels?: Partial<ColorLabels>, defaults: ColorLabels = DEFAULT_LABELS.color): ColorLabels => {
+  const resolved = { ...defaults };
   for (const key of Object.keys(resolved) as (keyof ColorLabels)[]) resolved[key] = labels?.[key] ?? resolved[key];
   return resolved;
 };
@@ -176,3 +177,31 @@ export const getEyeDropper = (): (() => Promise<string>) | null => {
   const EyeDropper = (globalThis as { EyeDropper?: new () => EyeDropperApi }).EyeDropper;
   return IS_WEB && EyeDropper ? async () => (await new EyeDropper().open()).sRGBHex : null;
 };
+
+/** A thumb's place across (and down) its pad or slider, as fractions of it. */
+export const getThumbPlace = (x: number, y?: number) => ({
+  left: `${x * 100}%` as const,
+  top: y === undefined ? undefined : (`${y * 100}%` as const),
+});
+
+/** A box of the given size and corners. */
+export const getBox = (width: number, height: number, borderRadius?: number) => ({
+  width,
+  height,
+  borderRadius,
+});
+
+/** A slider's rail: as tall as its track, inset by half a thumb so the thumb stays inside at the ends. */
+export const getRailBox = (trackHeight: number, inset: number) => ({
+  height: trackHeight,
+  marginHorizontal: inset,
+});
+
+/** A vertical offset that centres a `size` thumb on a `height` track. */
+export const getCenteredTop = (height: number, size: number) => ({ top: (height - size) / 2 });
+
+/** A plain height. */
+export const heightOf = (height: number) => ({ height });
+
+/** Corners of a given radius. */
+export const roundOf = (borderRadius: number) => ({ borderRadius });

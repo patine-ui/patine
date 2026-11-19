@@ -1,5 +1,5 @@
 import type { Design } from '@/core/theme/theme.types';
-import type { ColorDesign, ColorDisplay, ColorLabels, ColorOption } from './color.types';
+import type { ColorDesign, ColorDisplay, ColorOption } from './color.types';
 
 export const DEFAULT_COLOR = '#2196F3';
 
@@ -53,24 +53,6 @@ export const COLOR_TAB = {
   sliders: 'sliders',
 } as const;
 
-export const DEFAULT_COLOR_LABELS: ColorLabels = {
-  grid: 'Grid',
-  spectrum: 'Spectrum',
-  sliders: 'Sliders',
-  hue: 'Hue',
-  saturation: 'Saturation',
-  brightness: 'Brightness',
-  opacity: 'Opacity',
-  red: 'Red',
-  green: 'Green',
-  blue: 'Blue',
-  hex: 'Hex',
-  copy: 'Copy',
-  copied: 'Copied',
-  eyedropper: 'Pick a colour from the screen',
-  custom: 'Custom colour',
-};
-
 /** Slices that draw a gradient without a gradient library; more than the eye tells apart at these sizes. */
 export const SLIDER_SEGMENTS = 36;
 export const PAD_SEGMENTS = 32;
@@ -121,3 +103,6 @@ export const COLOR_DESIGN: Record<Design, ColorDesign> = {
 
 /** iOS's grid cells: as wide as the sheet allows, this tall, so the grid keeps its height on wide screens. */
 export const IOS_GRID_CELL_HEIGHT = 24;
+
+/** What an unreadable hex becomes. */
+export const FALLBACK_HEX = '#000000';

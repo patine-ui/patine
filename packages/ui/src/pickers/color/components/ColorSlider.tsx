@@ -1,14 +1,14 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
+import { adjustableProps } from '@/core/a11y/adjustable.utils';
 import { KNOB_SIZE } from '@/core/core.constants';
 import { useTrackPan } from '@/core/hooks/useTrackPan';
-import { adjustableProps } from '@/core/utils/adjustable.utils';
+import { Text } from '@/core/primitives/Text';
+import { View } from '@/core/primitives/View';
+import { fillOf } from '@/core/utils/style.utils';
 import { clamp01 } from '@/core/utils/track.utils';
 import { COLOR_DESIGN, COLOR_STEP } from '@/pickers/color/color.constants';
-import { styles } from '@/pickers/color/color.styles';
+import { knobStyles, styles, themed } from '@/pickers/color/color.styles';
 import type { ColorSliderProps } from '@/pickers/color/color.types';
-import { toSlices } from '@/pickers/color/color.utils';
+import { getCenteredTop, getRailBox, getThumbPlace, roundOf, toSlices } from '@/pickers/color/color.utils';
 import { Checkerboard } from './Checkerboard';
 
 const INSET = KNOB_SIZE / 2;
@@ -34,13 +34,13 @@ export const ColorSlider = ({
     <View>
       {showLabel || showValue ? (
         <View style={styles.sliderHeader}>
-          <PickerText theme={theme} size="sm" color="textSecondary" style={slots?.sliderLabel}>
+          <Text theme={theme} size="sm" color="textSecondary" style={slots?.sliderLabel}>
             {showLabel ? label : ''}
-          </PickerText>
+          </Text>
           {showValue ? (
-            <PickerText theme={theme} size="sm" color="textSecondary" style={slots?.sliderLabel}>
+            <Text theme={theme} size="sm" color="textSecondary" style={slots?.sliderLabel}>
               {valueText}
-            </PickerText>
+            </Text>
           ) : null}
         </View>
       ) : null}
@@ -57,17 +57,21 @@ export const ColorSlider = ({
         })}
         testID={testID}
       >
-        <View pointerEvents="none" style={[styles.rail, { height: trackHeight, marginHorizontal: INSET }]}>
-          <View style={[styles.track, { borderRadius: trackHeight / 2 }]}>
+        <View pointerEvents="none" style={[styles.rail, getRailBox(trackHeight, INSET)]}>
+          <View style={[styles.track, roundOf(trackHeight / 2)]}>
             {checkered ? <Checkerboard /> : null}
             {toSlices(colors).map(({ key, color }) => (
-              <View key={key} style={[styles.fill, { backgroundColor: color }]} />
+              <View key={key} style={[styles.fill, fillOf(color)]} />
             ))}
           </View>
           <View
             style={[
               styles.sliderThumb,
-              { left: `${value * 100}%`, top: (trackHeight - KNOB_SIZE) / 2, backgroundColor: thumbColor, boxShadow: theme.shadows.sm },
+              knobStyles(theme).ring,
+              getThumbPlace(value),
+              getCenteredTop(trackHeight, KNOB_SIZE),
+              fillOf(thumbColor),
+              themed(theme).shadow,
               slots?.sliderThumb,
             ]}
           />

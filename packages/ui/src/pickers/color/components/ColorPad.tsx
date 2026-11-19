@@ -1,12 +1,13 @@
-import { View } from 'react-native';
-
-import { A11Y_ACTION, ADJUSTABLE_ACTIONS, KEY } from '@/core/core.constants';
+import { A11Y_ACTION, ADJUSTABLE_ACTIONS, KEY } from '@/core/a11y/a11y.constants';
+import { keyboardProps } from '@/core/a11y/keyboard.utils';
 import { useTrackPan } from '@/core/hooks/useTrackPan';
-import { keyboardProps } from '@/core/utils/keyboard.utils';
+import { View } from '@/core/primitives/View';
+import { fillOf } from '@/core/utils/style.utils';
 import { clamp01 } from '@/core/utils/track.utils';
 import { COLOR_STEP, PAD_ACTION } from '@/pickers/color/color.constants';
-import { styles } from '@/pickers/color/color.styles';
+import { knobStyles, styles, themed } from '@/pickers/color/color.styles';
 import type { ColorPadProps } from '@/pickers/color/color.types';
+import { getThumbPlace, heightOf } from '@/pickers/color/color.utils';
 
 /**
  * A square of colour to tap or drag across. Screen readers step it across with increment and decrement, and up and down
@@ -32,13 +33,13 @@ export const ColorPad = ({
   const moveY = (by: number) => onValueChange(x, clamp01(y + by));
   return (
     <View
-      style={[styles.pad, { height, borderRadius: theme.radius.md }, slots?.pad]}
+      style={[styles.pad, heightOf(height), themed(theme).large, slots?.pad]}
       onLayout={pan.onLayout}
       {...pan.panHandlers}
       accessible
-      accessibilityRole="adjustable"
-      accessibilityLabel={label}
-      accessibilityValue={{ text: valueText }}
+      role="slider"
+      aria-label={label}
+      aria-valuetext={valueText}
       accessibilityActions={[...ADJUSTABLE_ACTIONS, { name: PAD_ACTION.up, label: upLabel }, { name: PAD_ACTION.down, label: downLabel }]}
       onAccessibilityAction={({ nativeEvent: { actionName } }) => {
         if (actionName === A11Y_ACTION.increment || actionName === A11Y_ACTION.decrement) {
@@ -58,7 +59,7 @@ export const ColorPad = ({
       </View>
       <View
         pointerEvents="none"
-        style={[styles.padThumb, { left: `${x * 100}%`, top: `${y * 100}%`, backgroundColor: thumbColor, boxShadow: theme.shadows.sm }]}
+        style={[styles.padThumb, knobStyles(theme).ring, getThumbPlace(x, y), fillOf(thumbColor), themed(theme).shadow]}
       />
     </View>
   );

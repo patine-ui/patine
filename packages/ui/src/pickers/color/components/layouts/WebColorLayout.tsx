@@ -1,8 +1,8 @@
-import { View } from 'react-native';
-
-import { Touchable } from '@/core/components/Touchable';
+import { commonStyles } from '@/core/core.styles';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
 import { COLOR_DESIGN } from '@/pickers/color/color.constants';
-import { styles } from '@/pickers/color/color.styles';
+import { styles, themed } from '@/pickers/color/color.styles';
 import type { ColorLayoutProps } from '@/pickers/color/color.types';
 import { AlphaSlider, HueSlider } from '@/pickers/color/components/ChannelSliders';
 import { EyedropperIcon } from '@/pickers/color/components/ColorIcons';
@@ -17,16 +17,16 @@ export const WebColorLayout = ({ picker, colors, showAlpha, copy, labels, theme,
   const pick = useEyeDropper(picker.select);
   const shared = { picker, labels, theme, slots, testID };
   return (
-    <View style={[styles.column, { gap: theme.spacing.md }]}>
+    <View style={[styles.column, commonStyles(theme).gapMd]}>
       <SaturationPad {...shared} height={COLOR_DESIGN[theme.design].padHeight} testID={testID ? `${testID}-pad` : undefined} />
-      <View style={[styles.row, styles.center, { gap: theme.spacing.md }]}>
+      <View style={[styles.row, styles.center, commonStyles(theme).gapMd]}>
         {pick ? (
           <Touchable
             theme={theme}
             onPress={pick}
-            accessibilityRole="button"
-            accessibilityLabel={labels.eyedropper}
-            style={[styles.iconButton, { borderRadius: theme.radius.sm, borderColor: theme.colors.border }]}
+            role="button"
+            aria-label={labels.eyedropper}
+            style={[styles.iconButton, themed(theme).small]}
           >
             <EyedropperIcon color={theme.colors.text} />
           </Touchable>

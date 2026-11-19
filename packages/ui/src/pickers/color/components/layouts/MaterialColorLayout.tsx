@@ -1,5 +1,5 @@
-import { View } from 'react-native';
-
+import { commonStyles } from '@/core/core.styles';
+import { View } from '@/core/primitives/View';
 import { COLOR_DESIGN } from '@/pickers/color/color.constants';
 import { styles } from '@/pickers/color/color.styles';
 import type { ColorLayoutProps } from '@/pickers/color/color.types';
@@ -16,7 +16,7 @@ export const MaterialColorLayout = ({ picker, colors, showAlpha, copy, labels, t
   const view = useColorView(!isSwatch(colors, picker.rgb));
   const shared = { picker, labels, theme, slots, testID };
   return (
-    <View style={[styles.column, { gap: theme.spacing.lg }]}>
+    <View style={[styles.column, commonStyles(theme).gapLg]}>
       <SwatchGrid
         colors={colors}
         shape="circle"
@@ -28,9 +28,9 @@ export const MaterialColorLayout = ({ picker, colors, showAlpha, copy, labels, t
         slots={slots}
       />
       {view.customOpen ? (
-        <View style={[styles.column, { gap: theme.spacing.md }]}>
+        <View style={[styles.column, commonStyles(theme).gapMd]}>
           <SaturationPad {...shared} height={COLOR_DESIGN.material.padHeight} testID={testID ? `${testID}-pad` : undefined} />
-          <View style={[styles.row, styles.center, { gap: theme.spacing.md }]}>
+          <View style={[styles.row, styles.center, commonStyles(theme).gapMd]}>
             <ColorPreview color={picker.value} shape="circle" theme={theme} />
             <View style={styles.fill}>
               <HueSlider {...shared} />

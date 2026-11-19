@@ -1,11 +1,12 @@
-import { ScrollView, View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
+import { Scroll } from '@/core/primitives/Scroll';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { fillOf, inkOf } from '@/core/utils/style.utils';
 import { CUSTOM_PLUS, SWATCH_CHECK } from '@/pickers/color/color.constants';
-import { styles } from '@/pickers/color/color.styles';
+import { styles, themed } from '@/pickers/color/color.styles';
 import type { SwatchGridProps } from '@/pickers/color/color.types';
-import { getCheckColor, isSwatch, toSwatchCells } from '@/pickers/color/color.utils';
+import { getBox, getCheckColor, isSwatch, toSwatchCells } from '@/pickers/color/color.utils';
 
 const CUSTOM_KEY = 'custom';
 
@@ -23,38 +24,35 @@ export const SwatchGrid = ({ colors, shape, size, scroll = false, selected, onSe
         key={key}
         theme={theme}
         onPress={isCustom ? custom?.onPress : () => onSelect(value)}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityState={isCustom ? { expanded: custom?.open, selected: chosen } : { selected: chosen }}
+        role="button"
+        aria-label={label}
+        aria-expanded={isCustom ? custom?.open : undefined}
+        aria-selected={chosen}
         style={[
           styles.swatch,
-          {
-            width: size,
-            height: size,
-            borderRadius: radius,
-            borderColor: theme.colors.border,
-            backgroundColor: isCustom && !customChosen ? theme.colors.surface : value,
-          },
+          getBox(size, size, radius),
+          themed(theme).border,
+          isCustom && !customChosen ? themed(theme).emptySwatch : fillOf(value),
           slots?.swatch,
         ]}
       >
         {chosen ? (
-          <PickerText theme={theme} size={size < 28 ? 'xs' : 'md'} weight="bold" style={{ color: getCheckColor(value) }}>
+          <Text theme={theme} size={size < 28 ? 'xs' : 'md'} weight="bold" style={inkOf(getCheckColor(value))}>
             {SWATCH_CHECK}
-          </PickerText>
+          </Text>
         ) : isCustom ? (
-          <PickerText theme={theme} size="lg" color="textSecondary">
+          <Text theme={theme} size="lg" color="textSecondary">
             {CUSTOM_PLUS}
-          </PickerText>
+          </Text>
         ) : null}
       </Touchable>
     );
   });
   const gap = { gap: theme.spacing.sm };
   return scroll ? (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.swatchRow, gap]} testID={testID}>
+    <Scroll horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.swatchRow, gap]} testID={testID}>
       {swatches}
-    </ScrollView>
+    </Scroll>
   ) : (
     <View style={[styles.swatches, gap]} testID={testID}>
       {swatches}

@@ -1,6 +1,6 @@
-import { View } from 'react-native';
-
-import { PAD_BLACK, PAD_SEGMENTS, PAD_WHITE, SLIDER_SEGMENTS } from '@/pickers/color/color.constants';
+import { View } from '@/core/primitives/View';
+import { fillOf, opacityOf } from '@/core/utils/style.utils';
+import { PAD_SEGMENTS, SLIDER_SEGMENTS } from '@/pickers/color/color.constants';
 import { styles } from '@/pickers/color/color.styles';
 import type { ColorLabels, ColorPadProps, ColorPickerState } from '@/pickers/color/color.types';
 import { degrees, getFade, getHueTrack, hsvToSpectrum, percent, spectrumToHsv, toSlices } from '@/pickers/color/color.utils';
@@ -31,17 +31,17 @@ export const SpectrumPad = ({
     >
       <View style={styles.layerRow}>
         {HUES.map(({ key, color }) => (
-          <View key={key} style={[styles.fill, { backgroundColor: color }]} />
+          <View key={key} style={[styles.fill, fillOf(color)]} />
         ))}
       </View>
       <View style={styles.halfTop}>
         {TINT.map(({ key, opacity }) => (
-          <View key={key} style={[styles.fill, { backgroundColor: PAD_WHITE, opacity }]} />
+          <View key={key} style={[styles.fill, styles.white, opacityOf(opacity)]} />
         ))}
       </View>
       <View style={styles.halfBottom}>
         {SHADE.map(({ key, opacity }) => (
-          <View key={key} style={[styles.fill, { backgroundColor: PAD_BLACK, opacity }]} />
+          <View key={key} style={[styles.fill, styles.black, opacityOf(opacity)]} />
         ))}
       </View>
     </ColorPad>

@@ -1,16 +1,22 @@
 import { StyleSheet } from 'react-native';
 
-import { KNOB_COLOR, KNOB_SIZE, TOUCH_TARGET } from '@/core/core.constants';
-import { CHECKER_SIZE, PAD_THUMB_SIZE } from './color.constants';
+import { MIN_TOUCH_TARGET } from '@/core/a11y/a11y.constants';
+import { KNOB_SIZE } from '@/core/core.constants';
+import { createStyles } from '@/core/theme/theme.utils';
+import { CHECKER_DARK, CHECKER_LIGHT, CHECKER_SIZE, IOS_GRID_CELL_HEIGHT, PAD_BLACK, PAD_THUMB_SIZE, PAD_WHITE } from './color.constants';
 
 /** The platforms' colour sliders ring the colour in white, so it shows on any colour. */
 const thumb = {
   position: 'absolute',
   borderWidth: 3,
-  borderColor: KNOB_COLOR,
 } as const;
 
 export const styles = StyleSheet.create({
+  checkerLight: { backgroundColor: CHECKER_LIGHT },
+  gridCellHeight: { height: IOS_GRID_CELL_HEIGHT },
+  checkerDark: { backgroundColor: CHECKER_DARK },
+  white: { backgroundColor: PAD_WHITE },
+  black: { backgroundColor: PAD_BLACK },
   row: { flexDirection: 'row' },
   column: { flexDirection: 'column' },
   center: { alignItems: 'center', justifyContent: 'center' },
@@ -19,7 +25,7 @@ export const styles = StyleSheet.create({
   swatches: { flexDirection: 'row', flexWrap: 'wrap' },
   swatchRow: { flexDirection: 'row' },
   swatch: { alignItems: 'center', justifyContent: 'center', borderWidth: StyleSheet.hairlineWidth },
-  slider: { height: TOUCH_TARGET, justifyContent: 'center' },
+  slider: { height: MIN_TOUCH_TARGET, justifyContent: 'center' },
   sliderHeader: { flexDirection: 'row', justifyContent: 'space-between' },
   rail: { justifyContent: 'center' },
   track: { ...StyleSheet.absoluteFill, flexDirection: 'row', overflow: 'hidden' },
@@ -66,3 +72,20 @@ export const styles = StyleSheet.create({
   dropperBody: { width: 4, height: 7, borderWidth: 1.5, borderTopWidth: 0 },
   dropperTip: { width: 1.5, height: 3 },
 });
+
+/** The thumbs' ring and the selected grid cell's frame, in the theme's knob colour so they show on any colour. */
+export const knobStyles = createStyles((t) => ({
+  ring: { borderColor: t.colors.knob },
+}));
+
+/** The picker's frames, inputs and buttons in the theme's corners, borders and spacing. */
+export const themed = createStyles((t) => ({
+  small: { borderRadius: t.radius.sm, borderColor: t.colors.border },
+  large: { borderRadius: t.radius.md, borderColor: t.colors.border },
+  shadow: { boxShadow: t.shadows.sm },
+  border: { borderColor: t.colors.border },
+  hexInput: { borderRadius: t.radius.sm, borderColor: t.colors.border, backgroundColor: t.colors.background, paddingStart: t.spacing.md },
+  hexPad: { paddingEnd: t.spacing.md },
+  hexPadCopy: { paddingEnd: 40 },
+  emptySwatch: { backgroundColor: t.colors.surface },
+}));

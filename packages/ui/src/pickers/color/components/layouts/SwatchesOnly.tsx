@@ -1,5 +1,5 @@
-import { View } from 'react-native';
-
+import { commonStyles } from '@/core/core.styles';
+import { View } from '@/core/primitives/View';
 import { COLOR_DESIGN } from '@/pickers/color/color.constants';
 import { styles } from '@/pickers/color/color.styles';
 import type { ColorLayoutProps } from '@/pickers/color/color.types';
@@ -8,7 +8,7 @@ import { SwatchGrid } from '@/pickers/color/components/SwatchGrid';
 
 /** `showCustom={false}`: only your swatches, in the design's shape, and opacity if asked for. */
 export const SwatchesOnly = ({ picker, colors, showAlpha, labels, theme, slots, testID }: ColorLayoutProps) => (
-  <View style={[styles.column, { gap: theme.spacing.md }]}>
+  <View style={[styles.column, commonStyles(theme).gapMd]}>
     <SwatchGrid
       colors={colors}
       shape={COLOR_DESIGN[theme.design].swatchShape}

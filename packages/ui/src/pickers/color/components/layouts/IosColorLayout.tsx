@@ -1,5 +1,5 @@
-import { View } from 'react-native';
-
+import { commonStyles } from '@/core/core.styles';
+import { View } from '@/core/primitives/View';
 import { SegmentedControl } from '@/inputs/segmented';
 import { COLOR_DESIGN, COLOR_TAB } from '@/pickers/color/color.constants';
 import { styles } from '@/pickers/color/color.styles';
@@ -22,14 +22,14 @@ export const IosColorLayout = ({ picker, colors, showAlpha, copy, labels, theme,
     { label: labels.sliders, value: COLOR_TAB.sliders },
   ];
   return (
-    <View style={[styles.column, { gap: theme.spacing.lg }]}>
+    <View style={[styles.column, commonStyles(theme).gapLg]}>
       <SegmentedControl items={tabs} value={view.tab} onValueChange={view.setTab} theme={theme} />
       {view.tab === COLOR_TAB.grid ? <IosGrid selected={picker.rgb} onSelect={picker.select} theme={theme} /> : null}
       {view.tab === COLOR_TAB.spectrum ? (
         <SpectrumPad {...shared} height={COLOR_DESIGN.ios.padHeight} testID={testID ? `${testID}-spectrum` : undefined} />
       ) : null}
       {view.tab === COLOR_TAB.sliders ? (
-        <View style={[styles.column, { gap: theme.spacing.sm }]}>
+        <View style={[styles.column, commonStyles(theme).gapSm]}>
           <RgbSliders {...shared} />
           <HexInput
             value={picker.value}
@@ -46,7 +46,7 @@ export const IosColorLayout = ({ picker, colors, showAlpha, copy, labels, theme,
         </View>
       ) : null}
       {showAlpha ? <AlphaSlider {...shared} captioned /> : null}
-      <View style={[styles.row, styles.centerRow, { gap: theme.spacing.md }]}>
+      <View style={[styles.row, styles.centerRow, commonStyles(theme).gapMd]}>
         <ColorPreview color={picker.value} shape="large" theme={theme} />
         {colors.length ? (
           <View style={styles.fill}>
