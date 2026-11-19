@@ -69,3 +69,13 @@ export const chain =
     theirs?.(...args);
     ours(...args);
   };
+
+/** The panel's place and room: at its computed spot (top-left until measured), never wider than the area allows. */
+export const getPanelPlace = (placement: { x: number; y: number } | null | undefined, areaWidth: number) => ({
+  maxWidth: areaWidth - EDGE_MARGIN * 2,
+  left: placement?.x ?? 0,
+  top: placement?.y ?? 0,
+});
+
+/** The arrow's fill: the panel's colour on its pointing side. */
+export const getArrowTint = (color: string) => ({ borderBottomColor: color });

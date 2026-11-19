@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import { ARROW_SIZE } from './popover.constants';
+import { createStyles } from '@/core/theme/theme.utils';
+import { ARROW_SIZE, POPOVER_DESIGN } from './popover.constants';
 
 export const styles = StyleSheet.create({
   // Placed before the backdrop, so the web's modal focus lands inside it rather than on the backdrop; zIndex lifts it above.
@@ -15,4 +16,19 @@ export const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
   },
+});
+
+export const themed = createStyles((t) => {
+  const look = POPOVER_DESIGN[t.design];
+  return {
+    panel: {
+      width: look.width,
+      padding: look.padding,
+      backgroundColor: t.colors.sheet,
+      borderRadius: t.radius[look.radius],
+      borderWidth: look.border ? 1 : 0,
+      borderColor: t.colors.border,
+      boxShadow: t.shadows.lg,
+    },
+  };
 });

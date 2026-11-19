@@ -50,5 +50,3 @@ export const POPOVER_DESIGN: Record<Design, PopoverDesign> = {
   material: { width: 280, padding: 16, radius: 'lg', border: false, arrow: false, sideOffset: 4 },
   web: { width: 288, padding: 12, radius: 'sm', border: true, arrow: false, sideOffset: 4 },
 };
-
-export const CLOSE_LABEL = 'Close';

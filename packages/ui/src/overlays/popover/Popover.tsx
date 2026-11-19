@@ -1,7 +1,7 @@
 import { Children, cloneElement, type ReactElement } from 'react';
-import { View } from 'react-native';
 
 import { useControllableState } from '@/core/hooks/useControllableState';
+import { View } from '@/core/primitives/View';
 import { BottomSheet } from '@/overlays/sheet/BottomSheet';
 import { useAnchor } from '@/overlays/sheet/hooks/useAnchor';
 import { PopoverPanel } from './components/PopoverPanel';
