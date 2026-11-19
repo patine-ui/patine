@@ -2,23 +2,10 @@ import type React from 'react';
 import type { StyleProp, TextInput, TextInputProps, TextStyle, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
+import type { SearchFieldLabels, TextFieldLabels } from '@/core/theme/labels.types';
 import type { FieldStatusProps } from '@/overlays/sheet/sheet.types';
 
 export type TextFieldSlot = 'label' | 'field' | 'input' | 'affix' | 'action' | 'helperText' | 'counter';
-
-/** What the field's buttons say, for translation. */
-export interface TextFieldLabels {
-  /** The clear button, for screen readers. Default: 'Clear' */
-  clear: string;
-  /** The password toggle while the password is hidden. Default: 'Show' */
-  show: string;
-  /** The password toggle while the password is shown. Default: 'Hide' */
-  hide: string;
-  /** The toggle, for screen readers, while the password is hidden. Default: 'Show password' */
-  showPassword: string;
-  /** The toggle, for screen readers, while the password is shown. Default: 'Hide password' */
-  hidePassword: string;
-}
 
 /** The props TextField and TextArea share. Other `TextInput` props (`keyboardType`, `autoComplete`, `maxLength`, `onSubmitEditing`…) pass through. */
 export interface TextFieldBaseProps
@@ -80,20 +67,12 @@ export type FieldInputProps = TextFieldProps & Pick<TextAreaProps, 'rows' | 'min
 
 export interface FieldButtonProps {
   label: string;
-  accessibilityLabel: string;
+  spokenLabel: string;
   onPress: () => void;
   /** A larger glyph, such as ×, in the secondary color; otherwise a word in the primary color */
   glyph?: boolean;
   theme: Theme;
   style?: StyleProp<TextStyle>;
-}
-
-/** What SearchField's buttons say, for translation. */
-export interface SearchFieldLabels {
-  /** The clear button, for screen readers. Default: 'Clear search' */
-  clear: string;
-  /** Default: 'Cancel' */
-  cancel: string;
 }
 
 export interface SearchFieldProps
@@ -117,8 +96,8 @@ export interface SearchFieldProps
   labels?: Partial<SearchFieldLabels>;
   /** The row around the field, for layout */
   style?: StyleProp<ViewStyle>;
-  /** The text input itself */
-  inputStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `input` */
+  styles?: SlotStyles<'input'>;
 }
 
 /** The few DOM members a TextArea's height needs on the web; the library is typed without the DOM. */
@@ -126,3 +105,5 @@ export interface WebTextArea {
   style: { height: string };
   scrollHeight: number;
 }
+
+export type { SearchFieldLabels, TextFieldLabels } from '@/core/theme/labels.types';

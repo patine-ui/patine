@@ -122,3 +122,17 @@ describe('TextField', () => {
     expect(input().props.placeholder).toBe('you@example.com');
   });
 });
+
+describe('TextField names', () => {
+  it("lets the caller's accessibilityLabel or aria-label win over the label and placeholder", async () => {
+    await render(
+      <>
+        <TextField label="Email" placeholder="you@example.com" accessibilityLabel="Work email" />
+        <TextField placeholder="Search" aria-label="Search orders" />
+      </>
+    );
+    expect(screen.getByLabelText('Work email')).toBeTruthy();
+    expect(screen.getByLabelText('Search orders')).toBeTruthy();
+    expect(screen.queryByLabelText('Email')).toBeNull();
+  });
+});

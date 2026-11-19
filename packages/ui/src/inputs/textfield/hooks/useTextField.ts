@@ -1,9 +1,9 @@
 import { type ComponentRef, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { TextInput, TextInputProps } from 'react-native';
 
+import { useFocus } from '@/core/a11y/hooks/useFocus';
 import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
-import { useFocus } from '@/core/hooks/useFocus';
 import type { Theme } from '@/core/theme/theme.types';
 import type { FieldInputProps, WebTextArea } from '@/inputs/textfield/textfield.types';
 import { getLineHeight, getTextAreaHeight, measureTextArea, resolveRows } from '@/inputs/textfield/textfield.utils';
@@ -74,6 +74,8 @@ export const useTextField = (
     multiline: {
       lineHeight,
       height,
+      /** The input's measured height and line height, as a style */
+      style: { lineHeight, height },
       scrollEnabled: contentHeight > height,
       onContentSizeChange: (e: EventOf<'onContentSizeChange'>) => {
         setContentHeight(e.nativeEvent.contentSize.height);

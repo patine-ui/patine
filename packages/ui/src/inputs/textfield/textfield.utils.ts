@@ -1,3 +1,6 @@
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
+import type { Labels } from '@/core/theme/labels.types';
+import { clamp } from '@/core/utils/track.utils';
 import type { FieldError } from '@/overlays/sheet/sheet.types';
 import { getFieldAccessibility } from '@/overlays/sheet/sheet.utils';
 import { DEFAULT_MIN_ROWS, LINE_HEIGHT_RATIO } from './textfield.constants';
@@ -16,7 +19,7 @@ export const getLineHeight = (fontSize: number) => Math.round(fontSize * LINE_HE
 
 /** A TextArea's height: its text's, kept between its first and last row. */
 export const getTextAreaHeight = (contentHeight: number, lineHeight: number, rows: { min: number; max: number }) =>
-  Math.min(Math.max(contentHeight, rows.min * lineHeight), rows.max * lineHeight);
+  clamp(contentHeight, rows.min * lineHeight, rows.max * lineHeight);
 
 /**
  * The web: a textarea's text height. Its `scrollHeight` never drops below its own height, so it's read at no height:
@@ -46,6 +49,8 @@ interface TextFieldAccessibilityOptions {
   disabled: boolean;
   /** The visible label's `nativeID`, on the web where `aria-labelledby` ties it to the input; native reads `accessibilityLabel` */
   labelledBy?: string;
+  /** The caller's own `aria-label` or `accessibilityLabel`: it wins over the name built from the label or placeholder */
+  spokenName?: string;
 }
 
 /**
@@ -53,21 +58,17 @@ interface TextFieldAccessibilityOptions {
  * its hint, and the invalid, required and disabled states. React Native types lack `aria-invalid` and `aria-required`;
  * React Native Web renders them and native ignores them.
  */
-export const getTextFieldAccessibility = ({
-  label,
-  placeholder,
-  error,
-  helperText,
-  required,
-  disabled,
-  labelledBy,
-}: TextFieldAccessibilityOptions) => {
+export const getTextFieldAccessibility = (
+  { label, placeholder, error, helperText, required, disabled, labelledBy, spokenName }: TextFieldAccessibilityOptions,
+  words: Pick<Labels, 'required' | 'invalid'> = DEFAULT_LABELS
+) => {
   const name = label ?? placeholder;
-  const field = name ? getFieldAccessibility({ name, error, required }) : { accessibilityLabel: undefined, accessibilityHint: undefined };
+  const field = name ? getFieldAccessibility({ name, error, required }, words) : { 'aria-label': undefined, accessibilityHint: undefined };
   return {
-    accessibilityLabel: field.accessibilityLabel,
+    'aria-label': spokenName ?? field['aria-label'],
     accessibilityHint: field.accessibilityHint ?? helperText,
-    'aria-labelledby': labelledBy,
+    // On the web aria-labelledby beats aria-label, so a caller's own name drops it.
+    'aria-labelledby': spokenName ? undefined : labelledBy,
     'aria-invalid': !!error,
     'aria-required': !!required,
     'aria-disabled': disabled,

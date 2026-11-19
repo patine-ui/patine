@@ -74,7 +74,7 @@ describe('getTextFieldAccessibility', () => {
     expect(
       getTextFieldAccessibility({ label: 'Email', required: true, error: 'Enter an email', helperText: 'Work email', disabled: false })
     ).toEqual({
-      accessibilityLabel: 'Email, required',
+      'aria-label': 'Email, required',
       accessibilityHint: 'Enter an email',
       'aria-labelledby': undefined,
       'aria-invalid': true,
@@ -85,7 +85,7 @@ describe('getTextFieldAccessibility', () => {
 
   it('falls back to the placeholder for its name and the helper text for its hint', () => {
     expect(getTextFieldAccessibility({ placeholder: 'Search', helperText: 'By name', disabled: true, labelledBy: 'id' })).toMatchObject({
-      accessibilityLabel: 'Search',
+      'aria-label': 'Search',
       accessibilityHint: 'By name',
       'aria-labelledby': 'id',
       'aria-invalid': false,
