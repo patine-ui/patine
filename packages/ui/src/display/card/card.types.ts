@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { GestureResponderEvent, PressableStateCallbackType, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import type { GestureResponderEvent, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
-import type { ThemableProps } from '@/core/core.types';
+import type { ThemableProps, TouchableState } from '@/core/core.types';
 import type { ShadowLevel, Theme } from '@/core/theme/theme.types';
 
 export interface CardProps extends ViewProps, ThemableProps {
@@ -9,6 +9,10 @@ export interface CardProps extends ViewProps, ThemableProps {
   shadow?: ShadowLevel;
   /** Makes the whole card pressable: a button for screen readers and the keyboard, with hover lift and press feedback */
   onPress?: (event: GestureResponderEvent) => void;
+  /** Makes the whole card a link to here: a real link (`<a href>`) on the web that crawlers follow, opened with `Linking` on iOS and Android. Call `event.preventDefault()` in `onPress` to keep it from opening */
+  href?: string;
+  /** With `href`, opens in a new tab on the web. Default: false */
+  external?: boolean;
   /** Makes the whole card pressable on a long press */
   onLongPress?: (event: GestureResponderEvent) => void;
   /** Hover lift and focus ring without `onPress`, for a card a parent link or gesture handles. Default: true when `onPress` is set */
@@ -44,8 +48,7 @@ export interface CardDesign {
 export interface CardPressState {
   /** The theme for the press feedback: without the hover tint in designs that lift instead */
   feedbackTheme: Theme;
-  focusVisible: boolean;
-  handlers: { onHoverIn: () => void; onHoverOut: () => void; onFocus: () => void; onBlur: () => void };
+  handlers: { onHoverIn: () => void; onHoverOut: () => void };
   /** The card's lift and shadow for its hover, focus and press state */
-  style: (state: PressableStateCallbackType) => StyleProp<ViewStyle>;
+  style: (state: TouchableState) => StyleProp<ViewStyle>;
 }

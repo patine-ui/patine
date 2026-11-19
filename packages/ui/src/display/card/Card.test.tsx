@@ -87,3 +87,14 @@ describe('Card shorthand', () => {
     expect(screen.getByText('Upgrade')).toBeTruthy();
   });
 });
+
+describe('Card with href', () => {
+  it('is one link to its address', async () => {
+    await render(
+      <Card href="/orders/42">
+        <Text>Order 42</Text>
+      </Card>
+    );
+    expect(screen.getByRole('link')).toBeTruthy();
+  });
+});

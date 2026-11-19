@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
 
 import { useHoverTransition } from '@/core/animation';
-import { useFocusVisible } from '@/core/hooks/useFocusVisible';
 import type { ShadowLevel, Theme } from '@/core/theme/theme.types';
 import { stepShadow } from '@/core/theme/theme.utils';
-import { focusOutline } from '@/core/utils/focus.utils';
 import type { CardDesign, CardPressState } from '@/display/card/card.types';
 
 /**
@@ -13,7 +11,6 @@ import type { CardDesign, CardPressState } from '@/display/card/card.types';
  */
 export const useCardPress = (theme: Theme, look: CardDesign, shadow: ShadowLevel): CardPressState => {
   const [hovered, setHovered] = useState(false);
-  const focus = useFocusVisible();
   const transition = useHoverTransition(theme.animation.duration);
   const raised = theme.shadows[stepShadow(shadow, look.hoverSteps)];
 
@@ -25,20 +22,13 @@ export const useCardPress = (theme: Theme, look: CardDesign, shadow: ShadowLevel
 
   return {
     feedbackTheme,
-    focusVisible: focus.focusVisible,
     handlers: {
       onHoverIn: () => setHovered(true),
       onHoverOut: () => setHovered(false),
-      onFocus: focus.onFocus,
-      onBlur: focus.onBlur,
     },
-    style: ({ pressed }) => {
-      const up = (hovered || focus.focusVisible) && !pressed;
-      return [
-        transition,
-        up && { boxShadow: raised, transform: [{ translateY: -look.hoverLift }] },
-        focus.focusVisible && focusOutline(theme.colors.primary),
-      ];
+    style: ({ pressed, focusVisible }) => {
+      const up = (hovered || focusVisible) && !pressed;
+      return [transition, up && { boxShadow: raised, transform: [{ translateY: -look.hoverLift }] }];
     },
   };
 };

@@ -1,15 +1,13 @@
-import { StyleSheet, View } from 'react-native';
-
-import { Touchable } from '@/core/components/Touchable';
-import { DISABLED_OPACITY } from '@/core/core.constants';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
 import { useComponentTheme, useTheme } from '@/core/theme/ThemeProvider';
 import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { Heading } from '@/foundations/text/Heading';
-import { Text } from '@/foundations/text/Text';
 import type { HeadingProps, TextProps } from '@/foundations/text/text.types';
 import { CardThemeContext, useCardTheme } from './CardContext';
 import { CARD_DESIGN } from './card.constants';
-import { styles } from './card.styles';
+import { shadowStyles, styles, themed } from './card.styles';
 import type { CardProps, CardSectionProps } from './card.types';
 import { useCardPress } from './hooks/useCardPress';
 
@@ -29,6 +27,8 @@ export const Card = ({
   shadow,
   onPress,
   onLongPress,
+  href,
+  external,
   interactive,
   disabled,
   onFocus,
@@ -39,19 +39,9 @@ export const Card = ({
   const look = CARD_DESIGN[theme.design];
   const level = shadow ?? look.shadow;
   const press = useCardPress(theme, look, level);
-  const surface = [
-    styles.card,
-    {
-      borderRadius: theme.radius[look.radius],
-      backgroundColor: look.border ? theme.colors.background : theme.colors.surface,
-      borderWidth: look.border ? StyleSheet.hairlineWidth : 0,
-      borderColor: theme.colors.border,
-      boxShadow: theme.shadows[level],
-      paddingVertical: theme.spacing.lg,
-      gap: theme.spacing.lg,
-    },
-  ];
-  const pressable = !!(onPress || onLongPress);
+  const sheet = themed(theme);
+  const surface = [styles.card, sheet.surface, shadowStyles(theme)[level]];
+  const pressable = !!(onPress || onLongPress || href);
   // Composed parts (CardHeader, CardTitle…) read the Card's theme and design from context.
   const body = (
     <CardThemeContext.Provider value={themeOverride}>
@@ -81,24 +71,19 @@ export const Card = ({
   return (
     <Touchable
       theme={press.feedbackTheme}
-      role={pressable ? 'button' : undefined}
-      aria-disabled={disabled}
+      role={pressable ? 'button' : 'none'}
       disabled={disabled}
       onPress={onPress}
+      href={href}
+      external={external}
       onLongPress={onLongPress}
       ripple={pressable}
       onHoverIn={press.handlers.onHoverIn}
       onHoverOut={press.handlers.onHoverOut}
-      onFocus={(e) => {
-        press.handlers.onFocus();
-        onFocus?.(e);
-      }}
-      onBlur={(e) => {
-        press.handlers.onBlur();
-        onBlur?.(e);
-      }}
+      onFocus={onFocus}
+      onBlur={onBlur}
       {...rest}
-      style={(state) => [surface, press.style(state), disabled && { opacity: DISABLED_OPACITY }, style]}
+      style={(state) => [surface, press.style(state), style]}
     >
       {body}
     </Touchable>
@@ -108,7 +93,7 @@ export const Card = ({
 /** The title and description at the top of a Card. */
 export const CardHeader = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
   const theme = useTheme(useCardTheme(themeProp));
-  return <View style={[{ paddingHorizontal: theme.spacing.lg, gap: theme.spacing.xs }, style]} {...rest} />;
+  return <View style={[themed(theme).header, style]} {...rest} />;
 };
 
 /** A Card's heading: level 3 for screen readers. */
@@ -124,11 +109,11 @@ export const CardDescription = ({ size = 'sm', color = 'textSecondary', theme, .
 /** The body of a Card. */
 export const CardContent = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
   const theme = useTheme(useCardTheme(themeProp));
-  return <View style={[{ paddingHorizontal: theme.spacing.lg }, style]} {...rest} />;
+  return <View style={[themed(theme).content, style]} {...rest} />;
 };
 
 /** Actions at the bottom of a Card, in a row. */
 export const CardFooter = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
   const theme = useTheme(useCardTheme(themeProp));
-  return <View style={[styles.footer, { paddingHorizontal: theme.spacing.lg, gap: theme.spacing.sm }, style]} {...rest} />;
+  return <View style={[styles.footer, themed(theme).footer, style]} {...rest} />;
 };
