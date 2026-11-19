@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { createModality } from '@/core/a11y/modality.utils';
 import { IS_WEB } from '@/core/core.constants';
@@ -23,12 +23,24 @@ const listen = () => {
   doc.addEventListener('pointerdown', modality.onPointerDown, true);
 };
 
-/** Focus state for a ring that shows on keyboard focus only: spread `onFocus` and `onBlur` on the focusable view. */
+/**
+ * Focus state for a ring that shows on keyboard focus only: spread `onFocus` and `onBlur` on the focusable view. While
+ * focused it follows the modality, so a click on a view focused from the keyboard hides the ring, and a key brings it back.
+ */
 export const useFocusVisible = () => {
   listen();
+  const [focused, setFocused] = useState(false);
   const [focusVisible, setFocusVisible] = useState(false);
-  const onFocus = useCallback(() => setFocusVisible(modality.isKeyboard()), []);
-  const onBlur = useCallback(() => setFocusVisible(false), []);
+  // Only the focused view listens, so a modality change re-renders one component, not every pressable on the page.
+  useEffect(() => (focused ? modality.subscribe(() => setFocusVisible(modality.isKeyboard())) : undefined), [focused]);
+  const onFocus = useCallback(() => {
+    setFocused(true);
+    setFocusVisible(modality.isKeyboard());
+  }, []);
+  const onBlur = useCallback(() => {
+    setFocused(false);
+    setFocusVisible(false);
+  }, []);
   return {
     focusVisible,
     onFocus,

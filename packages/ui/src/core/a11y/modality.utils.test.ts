@@ -18,3 +18,19 @@ describe('createModality', () => {
     expect(modality.isKeyboard()).toBe(false);
   });
 });
+
+describe('createModality subscribe', () => {
+  it('tells listeners when the modality changes, not on repeats, until they unsubscribe', () => {
+    const modality = createModality(false);
+    const listener = jest.fn();
+    const unsubscribe = modality.subscribe(listener);
+    modality.onKeyDown({});
+    modality.onKeyDown({});
+    expect(listener).toHaveBeenCalledTimes(1);
+    modality.onPointerDown();
+    expect(listener).toHaveBeenCalledTimes(2);
+    unsubscribe();
+    modality.onKeyDown({});
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+});
