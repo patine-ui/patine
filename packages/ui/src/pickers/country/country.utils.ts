@@ -1,10 +1,9 @@
 import type { Locale } from '@/core';
+import { DEFAULT_LABELS } from '@/core/theme/labels.constants';
 import { getCompare, getDisplayNames, safe } from '@/core/utils/intl.utils';
 import type { SelectOption } from '@/inputs/select';
-import { DEFAULT_PREFERRED_LABEL } from '@/inputs/select/select.constants';
 import { pinPreferred } from '@/inputs/select/select.utils';
 import {
-  DEFAULT_ALL_COUNTRIES_LABEL,
   DEFAULT_PHONE_PATTERN,
   E164_MAX_DIGITS,
   KEEPS_LEADING_ZERO,
@@ -63,8 +62,8 @@ export const buildCountryOptions = ({
   preferred,
   locale,
   showDialCode,
-  preferredLabel = DEFAULT_PREFERRED_LABEL,
-  allCountriesLabel = DEFAULT_ALL_COUNTRIES_LABEL,
+  preferredLabel = DEFAULT_LABELS.suggested,
+  allCountriesLabel = DEFAULT_LABELS.country.all,
 }: CountryListOptions): SelectOption<CountryCode>[] => {
   const excluded = new Set(exclude);
   const pool = (countries ? countries.flatMap((code) => getCountry(code) ?? []) : getAllCountries()).filter((c) => !excluded.has(c.code));

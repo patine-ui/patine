@@ -1,6 +1,6 @@
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { Select } from '@/inputs/select';
 import { withSheetHeight } from '@/inputs/select/select.utils';
-import { DEFAULT_COUNTRY_PLACEHOLDER, DEFAULT_COUNTRY_SEARCH_PLACEHOLDER } from './country.constants';
 import type { CountryCode, CountryPickerProps } from './country.types';
 import { useCountryOptions } from './hooks/useCountryOptions';
 
@@ -12,11 +12,14 @@ export const CountryPicker = ({
   showDialCode,
   preferredLabel,
   allCountriesLabel,
-  placeholder = DEFAULT_COUNTRY_PLACEHOLDER,
-  searchPlaceholder = DEFAULT_COUNTRY_SEARCH_PLACEHOLDER,
+  placeholder: placeholderProp,
+  searchPlaceholder: searchPlaceholderProp,
   sheet,
   ...selectProps
 }: CountryPickerProps) => {
+  const words = useLabels();
+  const searchPlaceholder = searchPlaceholderProp ?? words.country.search;
+  const placeholder = placeholderProp ?? words.country.placeholder;
   const options = useCountryOptions({
     countries,
     exclude,
@@ -24,7 +27,7 @@ export const CountryPicker = ({
     locale,
     showDialCode,
     preferredLabel,
-    allCountriesLabel,
+    allCountriesLabel: allCountriesLabel ?? words.country.all,
   });
   return (
     <Select<CountryCode>

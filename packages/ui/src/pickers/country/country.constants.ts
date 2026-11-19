@@ -1,18 +1,12 @@
 import type { PhoneFormat } from './country.types';
 import type { CountryCode } from './data';
 
-export const DEFAULT_COUNTRY_PLACEHOLDER = 'Select a country';
-export const DEFAULT_COUNTRY_SEARCH_PLACEHOLDER = 'Search countries';
-export const DEFAULT_ALL_COUNTRIES_LABEL = 'All countries';
-
 export const FLAG_SIZE = 22;
 
 /** Regional indicator symbol 🇦: a flag emoji is the two letters of its ISO code, shifted into this block. */
 export const REGIONAL_INDICATOR_A = 0x1f1e6;
 
 export const DEFAULT_PHONE_COUNTRY: CountryCode = 'US';
-export const DEFAULT_PHONE_LABEL = 'Phone number';
-export const PHONE_COUNTRY_BUTTON_LABEL = 'Country code';
 /** E.164: at most 15 digits, calling code included. */
 export const E164_MAX_DIGITS = 15;
 export const PHONE_MIN_DIGITS = 4;

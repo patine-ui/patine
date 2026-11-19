@@ -1,14 +1,15 @@
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { useLabels } from '@/core/theme/ThemeProvider';
 import { Chevron } from '@/overlays/sheet/components/Chevron';
-import { PHONE_COUNTRY_BUTTON_LABEL } from '@/pickers/country/country.constants';
-import { styles } from '@/pickers/country/country.styles';
+import { styles, themed } from '@/pickers/country/country.styles';
 import type { CountryButtonProps } from '@/pickers/country/country.types';
 import { getCallingCode } from '@/pickers/country/country.utils';
 import { CountryFlag } from './CountryFlag';
 
 /** The flag and calling code at the start of a phone field; it opens the country list. */
 export const CountryButton = ({ country, open, picking, disabled, theme, slots, testID }: CountryButtonProps) => {
+  const words = useLabels();
   const callingCode = `+${getCallingCode(country.code)}`;
   return (
     <Touchable
@@ -16,20 +17,17 @@ export const CountryButton = ({ country, open, picking, disabled, theme, slots, 
       ripple={false}
       onPress={open}
       disabled={disabled}
-      accessibilityRole="button"
-      accessibilityLabel={`${PHONE_COUNTRY_BUTTON_LABEL}: ${country.name} ${callingCode}`}
-      accessibilityState={{ disabled, expanded: picking }}
-      style={[
-        styles.countryButton,
-        { borderColor: theme.colors.border, paddingEnd: theme.spacing.sm, marginEnd: theme.spacing.sm },
-        slots?.countryButton,
-      ]}
+      role="button"
+      aria-label={`${words.country.code}: ${country.name} ${callingCode}`}
+      aria-disabled={disabled}
+      aria-expanded={picking}
+      style={[styles.countryButton, themed(theme).countryButton, slots?.countryButton]}
       testID={testID}
     >
       <CountryFlag code={country.code} />
-      <PickerText theme={theme} style={slots?.dialCode}>
+      <Text theme={theme} style={slots?.dialCode}>
         {callingCode}
-      </PickerText>
+      </Text>
       <Chevron open={picking} theme={theme} style={slots?.chevron} />
     </Touchable>
   );
