@@ -68,7 +68,7 @@ describe('DropdownMenu', () => {
       </DropdownMenu>
     );
     await fireEvent.press(screen.getByText('Options'));
-    expect(screen.getByRole('header', { name: 'Photo' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Photo' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Share' })).toBeTruthy();
   });
 

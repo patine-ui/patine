@@ -9,8 +9,6 @@ export const ACTION_SHEET_DESIGN: Record<Design, ActionSheetDesign> = {
   web: { grouped: false, showCancel: false, rowHeight: 44 },
 };
 
-export const CHECK_MARK = '✓';
-
 /** Space around the iOS cards and between the actions card and Cancel. */
 export const GROUP_GAP = 8;
 

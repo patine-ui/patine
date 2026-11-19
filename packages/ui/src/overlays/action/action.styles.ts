@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+import { createStyles } from '@/core/theme/theme.utils';
 import { GROUP_GAP } from './action.constants';
 
 export const styles = StyleSheet.create({
@@ -17,3 +18,14 @@ export const styles = StyleSheet.create({
   groupedText: { alignItems: 'center' },
   groupedCheck: { position: 'absolute' },
 });
+
+export const themed = createStyles((t) => ({
+  header: { paddingHorizontal: t.spacing.lg, paddingVertical: t.spacing.sm },
+  groupedHeader: { paddingVertical: t.spacing.md },
+  row: { paddingHorizontal: t.spacing.lg, paddingVertical: t.spacing.sm, gap: t.spacing.md },
+  separator: { borderColor: t.colors.border },
+  label: { color: t.colors.text },
+  groupedLabel: { color: t.colors.primary },
+  destructive: { color: t.colors.danger },
+  groupedCheck: { end: t.spacing.lg },
+}));

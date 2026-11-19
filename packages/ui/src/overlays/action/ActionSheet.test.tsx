@@ -60,7 +60,7 @@ describe('ActionSheet', () => {
 
   it('shows the title as a header and the message', async () => {
     await render(<ActionSheet open onOpenChange={jest.fn()} actions={[]} title="Delete photo?" message="It goes from all your devices." />);
-    expect(screen.getByRole('header', { name: 'Delete photo?' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Delete photo?' })).toBeTruthy();
     expect(screen.getByText('It goes from all your devices.')).toBeTruthy();
   });
 

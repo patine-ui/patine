@@ -17,3 +17,6 @@ export const getMenuAnchor = (
     width,
   };
 };
+
+/** A row at least `height` tall: the design's row height. */
+export const getRowMinHeight = (height: number) => ({ minHeight: height });

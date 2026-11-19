@@ -1,7 +1,9 @@
-import { I18nManager, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
-import { Touchable } from '@/core/components/Touchable';
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Scroll } from '@/core/primitives/Scroll';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useDirection } from '@/core/theme/ThemeProvider';
 import { Dropdown } from '@/overlays/sheet/Dropdown';
 import { useDropdownFit } from '@/overlays/sheet/hooks/useDropdownFit';
 import { ActionSheet } from './ActionSheet';
@@ -15,6 +17,7 @@ import { useDropdownMenu } from './hooks/useDropdownMenu';
 
 /** A menu of actions that drops from its trigger, or opens as an ActionSheet. Tap the trigger, or long-press it as a context menu. */
 export const DropdownMenu = (props: DropdownMenuProps) => {
+  const rtl = useDirection() === 'rtl';
   const {
     actions,
     children,
@@ -31,7 +34,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
     design,
     testID,
   } = props;
-  const { theme } = useComponentTheme(themeProp, design);
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = MENU_DESIGN[theme.design];
   const windowSize = useWindowDimensions();
   const menu = useDropdownMenu(props);
@@ -39,7 +42,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
   const fit = useDropdownFit();
 
   return (
-    <>
+    <ThemeScope theme={themeOverride}>
       <View ref={menu.anchor.ref} collapsable={false} style={style}>
         {typeof children === 'function' ? (
           children({ open: menu.open, visible: menu.visible })
@@ -49,9 +52,10 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
             onPress={openOnLongPress ? undefined : menu.open}
             onLongPress={openOnLongPress ? menu.open : undefined}
             disabled={disabled}
-            accessibilityRole="button"
-            accessibilityLabel={accessibilityLabel}
-            accessibilityState={{ expanded: menu.visible, disabled }}
+            role="button"
+            aria-label={accessibilityLabel}
+            aria-expanded={menu.visible}
+            aria-disabled={disabled}
             style={slots?.trigger}
             testID={testID}
           >
@@ -73,7 +77,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
       ) : (
         <Dropdown
           visible={menu.visible}
-          anchor={rect && getMenuAnchor(rect, width ?? look.width, align, windowSize.width, I18nManager.isRTL)}
+          anchor={rect && getMenuAnchor(rect, width ?? look.width, align, windowSize.width, rtl)}
           onClose={menu.close}
           onClosed={menu.onClosed}
           maxHeight={fit.height}
@@ -83,7 +87,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
           design={design}
           testID={testID && `${testID}-menu`}
         >
-          <ScrollView style={styles.list} bounces={false} onContentSizeChange={fit.onContentSizeChange}>
+          <Scroll style={styles.list} bounces={false} onContentSizeChange={fit.onContentSizeChange}>
             <ActionSheetHeader title={title} grouped={look.centeredTitle} theme={theme} slots={slots} />
             {actions.map((action, i) => (
               <ActionSheetRow
@@ -98,9 +102,9 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
                 slots={slots}
               />
             ))}
-          </ScrollView>
+          </Scroll>
         </Dropdown>
       )}
-    </>
+    </ThemeScope>
   );
 };

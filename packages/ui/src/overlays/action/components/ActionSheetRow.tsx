@@ -1,10 +1,10 @@
-import { View } from 'react-native';
-
-import { PickerText } from '@/core/components/PickerText';
-import { Touchable } from '@/core/components/Touchable';
-import { CHECK_MARK } from '@/overlays/action/action.constants';
-import { styles } from '@/overlays/action/action.styles';
+import { CHECK_MARK } from '@/core/core.constants';
+import { Text } from '@/core/primitives/Text';
+import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
+import { styles, themed } from '@/overlays/action/action.styles';
 import type { ActionSheetRowProps } from '@/overlays/action/action.types';
+import { getRowMinHeight } from '@/overlays/action/action.utils';
 
 export const ActionSheetRow = ({
   action,
@@ -17,56 +17,47 @@ export const ActionSheetRow = ({
   theme,
   slots,
 }: ActionSheetRowProps) => {
-  const c = theme.colors;
-  const color = action.disabled ? c.textDisabled : action.destructive ? c.danger : grouped ? c.primary : c.text;
+  const sheet = themed(theme);
+  // Disabled rows take Touchable's dim, like every other control.
+  const label = action.destructive ? sheet.destructive : grouped ? sheet.groupedLabel : sheet.label;
   return (
     <Touchable
       theme={theme}
       onPress={() => onPress(action)}
       disabled={action.disabled}
-      accessibilityRole="button"
-      accessibilityLabel={action.description ? `${action.label}, ${action.description}` : action.label}
-      accessibilityState={{ disabled: action.disabled, selected: action.selected }}
+      role="button"
+      aria-label={action.description ? `${action.label}, ${action.description}` : action.label}
+      aria-selected={action.selected}
       testID={action.testID}
       style={[
         styles.row,
         grouped && styles.groupedRow,
-        {
-          minHeight: rowHeight,
-          paddingHorizontal: theme.spacing.lg,
-          paddingVertical: theme.spacing.sm,
-          gap: theme.spacing.md,
-        },
-        separated && [styles.separator, { borderColor: c.border }],
+        getRowMinHeight(rowHeight),
+        sheet.row,
+        separated && [styles.separator, sheet.separator],
         slots?.[cancel ? 'cancel' : 'action'],
       ]}
     >
       {iconAtEnd ? null : action.icon}
       <View style={grouped ? styles.groupedText : styles.text}>
-        <PickerText
-          theme={theme}
+        <Text
           size={grouped ? 'lg' : 'md'}
           weight={cancel && grouped ? 'bold' : 'regular'}
-          style={[{ color }, slots?.[cancel ? 'cancelLabel' : 'actionLabel']]}
+          style={[label, slots?.[cancel ? 'cancelLabel' : 'actionLabel']]}
           numberOfLines={1}
         >
           {action.label}
-        </PickerText>
+        </Text>
         {action.description ? (
-          <PickerText theme={theme} size="sm" color="textSecondary" style={slots?.actionDescription} numberOfLines={2}>
+          <Text size="sm" color="textSecondary" style={slots?.actionDescription} numberOfLines={2}>
             {action.description}
-          </PickerText>
+          </Text>
         ) : null}
       </View>
       {action.selected ? (
-        <PickerText
-          theme={theme}
-          weight="bold"
-          color="primary"
-          style={[grouped && [styles.groupedCheck, { end: theme.spacing.lg }], slots?.check]}
-        >
+        <Text weight="bold" color="primary" style={[grouped && [styles.groupedCheck, sheet.groupedCheck], slots?.check]}>
           {CHECK_MARK}
-        </PickerText>
+        </Text>
       ) : null}
       {iconAtEnd ? action.icon : null}
     </Touchable>

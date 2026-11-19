@@ -1,8 +1,7 @@
-import { ScrollView, View } from 'react-native';
-
-import { useComponentTheme } from '@/core/theme/ThemeProvider';
+import { Scroll } from '@/core/primitives/Scroll';
+import { View } from '@/core/primitives/View';
+import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { BottomSheet } from '@/overlays/sheet/BottomSheet';
-import { DEFAULT_CANCEL_LABEL } from '@/overlays/sheet/sheet.constants';
 import { ACTION_SHEET_DESIGN } from './action.constants';
 import { styles } from './action.styles';
 import type { ActionSheetProps } from './action.types';
@@ -17,7 +16,7 @@ export const ActionSheet = ({
   actions,
   title,
   message,
-  cancelLabel = DEFAULT_CANCEL_LABEL,
+  cancelLabel: cancelLabelProp,
   showCancel,
   presentation,
   sheetProps,
@@ -26,7 +25,9 @@ export const ActionSheet = ({
   design,
   testID,
 }: ActionSheetProps) => {
-  const { theme } = useComponentTheme(themeProp, design);
+  const words = useLabels();
+  const cancelLabel = cancelLabelProp ?? words.cancel;
+  const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const onClose = () => onOpenChange?.(false);
   const look = ACTION_SHEET_DESIGN[theme.design];
   const { grouped } = look;
@@ -35,52 +36,54 @@ export const ActionSheet = ({
   const group = grouped && [styles.group, { backgroundColor: theme.colors.sheet, borderRadius: theme.radius.lg }, slots?.group];
 
   return (
-    <BottomSheet
-      expandable={false}
-      showHandle={!grouped}
-      presentation={presentation}
-      // Its own rows and Cancel close it; a ✕ would only add a header row
-      showCloseButton={false}
-      {...sheetProps}
-      styles={grouped ? { ...sheetProps?.styles, sheet: [styles.groupedSheet, sheetProps?.styles?.sheet] } : sheetProps?.styles}
-      open={open}
-      onOpenChange={onClose}
-      onClosed={onClosed}
-      theme={themeProp}
-      design={design}
-      testID={testID}
-    >
-      <View style={group || styles.group}>
-        <ActionSheetHeader title={title} message={message} grouped={grouped} theme={theme} slots={slots} />
-        <ScrollView style={styles.list} bounces={false}>
-          {actions.map((action, i) => (
+    <ThemeScope theme={themeOverride}>
+      <BottomSheet
+        expandable={false}
+        showHandle={!grouped}
+        presentation={presentation}
+        // Its own rows and Cancel close it; a ✕ would only add a header row
+        showCloseButton={false}
+        {...sheetProps}
+        styles={grouped ? { ...sheetProps?.styles, sheet: [styles.groupedSheet, sheetProps?.styles?.sheet] } : sheetProps?.styles}
+        open={open}
+        onOpenChange={onClose}
+        onClosed={onClosed}
+        theme={themeProp}
+        design={design}
+        testID={testID}
+      >
+        <View style={group || styles.group}>
+          <ActionSheetHeader title={title} message={message} grouped={grouped} theme={theme} slots={slots} />
+          <Scroll style={styles.list} bounces={false}>
+            {actions.map((action, i) => (
+              <ActionSheetRow
+                key={action.label}
+                action={action}
+                onPress={press}
+                grouped={grouped}
+                separated={grouped && (i > 0 || hasHeader)}
+                rowHeight={look.rowHeight}
+                theme={theme}
+                slots={slots}
+              />
+            ))}
+          </Scroll>
+        </View>
+        {(showCancel ?? look.showCancel) && (
+          <View style={[group, grouped && styles.cancelGroup]}>
             <ActionSheetRow
-              key={action.label}
-              action={action}
-              onPress={press}
+              action={{ label: cancelLabel, testID: testID ? `${testID}-cancel` : undefined }}
+              onPress={() => onClose()}
               grouped={grouped}
-              separated={grouped && (i > 0 || hasHeader)}
+              cancel
+              separated={!grouped}
               rowHeight={look.rowHeight}
               theme={theme}
               slots={slots}
             />
-          ))}
-        </ScrollView>
-      </View>
-      {(showCancel ?? look.showCancel) && (
-        <View style={[group, grouped && styles.cancelGroup]}>
-          <ActionSheetRow
-            action={{ label: cancelLabel, testID: testID ? `${testID}-cancel` : undefined }}
-            onPress={() => onClose()}
-            grouped={grouped}
-            cancel
-            separated={!grouped}
-            rowHeight={look.rowHeight}
-            theme={theme}
-            slots={slots}
-          />
-        </View>
-      )}
-    </BottomSheet>
+          </View>
+        )}
+      </BottomSheet>
+    </ThemeScope>
   );
 };
