@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { StyleProp, TextStyle, ViewProps } from 'react-native';
+import type { ViewProps } from 'react-native';
 
-import type { ThemableProps, ValueOf } from '@/core/core.types';
+import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { TextSize, TextWeight } from '@/core/theme/theme.types';
 import type { HEADER_SIZE } from './header.constants';
 
@@ -22,8 +22,8 @@ export interface HeaderProps extends ViewProps, ThemableProps {
   actions?: React.ReactNode;
   /** 'large' puts a big title under the bar. Default: 'default' */
   size?: HeaderSize;
-  /** The title's text */
-  titleStyle?: StyleProp<TextStyle>;
+  /** Styles for its parts: `title` */
+  styles?: SlotStyles<'title'>;
 }
 
 export interface HeaderDesign {
