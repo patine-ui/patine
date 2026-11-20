@@ -96,4 +96,5 @@ jobs:
         with:
           name: package
           path: package
-      - run: npm publish package/*.tgz --ignore-scripts --access public
+      # The ./ matters: npm reads `package/x.tgz` as a GitHub repo shorthand.
+      - run: npm publish ./package/*.tgz --ignore-scripts --access public
