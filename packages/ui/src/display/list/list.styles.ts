@@ -5,10 +5,15 @@ import { LIST_DESIGN } from './list.constants';
 
 export const styles = StyleSheet.create({
   group: { overflow: 'hidden' },
+  /** Inside a container that already pads its content: no margin of its own */
+  flush: { marginHorizontal: 0 },
   row: { flexDirection: 'row', alignItems: 'center' },
   content: { flex: 1, alignSelf: 'stretch' },
-  text: { flex: 1, minWidth: 0 },
+  text: { flexGrow: 1, flexShrink: 1, flexBasis: 'auto', minWidth: 0 },
   end: { flexDirection: 'row', alignItems: 'center', flexShrink: 0 },
+  // With a value, the title keeps its line and the value gives way (truncates) first, as iOS settings rows do. A control
+  // (a switch) never shrinks.
+  endYields: { flexShrink: 4, minWidth: 0 },
   value: { flexShrink: 1 },
   // On the web a heading is an <h1>–<h6>, which a page's stylesheet may give margins.
   heading: { margin: 0 },

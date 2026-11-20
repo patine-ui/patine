@@ -7,6 +7,7 @@ import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { Heading } from '@/foundations/text/Heading';
+import { ListInsetContext } from './ListInsetContext';
 import { LIST_DESIGN } from './list.constants';
 import { styles, themed } from './list.styles';
 import type { ListItemProps, ListProps } from './list.types';
@@ -23,9 +24,10 @@ export const List = ({ title, footer, theme: themeProp, design, style, styles: s
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const look = LIST_DESIGN[theme.design];
   const sheet = themed(theme);
+  const inset = useContext(ListInsetContext);
   return (
     <ThemeScope theme={themeOverride}>
-      <View style={[sheet.root, style]} {...rest}>
+      <View style={[sheet.root, !inset && styles.flush, style]} {...rest}>
         {title ? (
           <Heading
             level={3}
@@ -93,7 +95,7 @@ export const ListItem = ({
             </Text>
           ) : null}
         </View>
-        <View style={[styles.end, sheet.end]}>
+        <View style={[styles.end, sheet.end, value ? styles.endYields : null]}>
           {value ? (
             <Text color="textSecondary" numberOfLines={1} style={styles.value}>
               {value}
