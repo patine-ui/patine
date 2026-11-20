@@ -23,7 +23,9 @@ jobs:
       pull-requests: write
       issues: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
+      # The package lives in packages/ui, so release-please names its output by that path; the bare
+      # `release_created` is only set for a package at the repo root.
+      release_created: ${{ steps.release.outputs['packages/ui--release_created'] }}
     steps:
       - id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
