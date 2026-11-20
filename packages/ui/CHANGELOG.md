@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/patine-ui/patine/compare/v0.1.0...v0.2.0) (2026-11-20)
+
+
+### ✨ Features
+
+* **list:** line inset lists up with a padded container ([7130095](https://github.com/patine-ui/patine/commit/7130095cfaa09df8cdf53986aea9bef771b8f7a3))
+
+
+### 🐛 Bug Fixes
+
+* **a11y:** a focus that follows a press shows no ring ([782253b](https://github.com/patine-ui/patine/commit/782253bd45a11ceb848049d196d461816f19782b))
+
 ## 0.1.0 (2026-11-20)
 
 
