@@ -10,6 +10,7 @@ import { Input } from './Input';
 import { Portal, PortalHost } from './Portal';
 import { Scroll } from './Scroll';
 import { Slot } from './Slot';
+import { Span } from './Span';
 import { Touchable } from './Touchable';
 import { VirtualList } from './VirtualList';
 import { VisuallyHidden } from './VisuallyHidden';
@@ -114,5 +115,14 @@ describe('patine-ui/core exports', () => {
   it('offers Touchable and createStyles to apps and Pro', () => {
     expect(core.Touchable).toBe(Touchable);
     expect(typeof core.createStyles).toBe('function');
+  });
+});
+
+describe('Span', () => {
+  it('adds no style of its own and caps font scaling', async () => {
+    await render(<Span>Bold</Span>);
+    const span = screen.getByText('Bold');
+    expect(span.props.style).toBeUndefined();
+    expect(span.props.maxFontSizeMultiplier).toBe(MAX_FONT_SCALE);
   });
 });

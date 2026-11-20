@@ -20,6 +20,7 @@ export type { InputProps, ScrollProps, VirtualListProps } from '@/core/primitive
 export { Scroll } from '@/core/primitives/Scroll';
 export type { SlotProps } from '@/core/primitives/Slot';
 export { Slot } from '@/core/primitives/Slot';
+export { Span } from '@/core/primitives/Span';
 export { Pressable } from '@/core/primitives/View';
 export { VirtualList } from '@/core/primitives/VirtualList';
 export type { VisuallyHiddenProps } from '@/core/primitives/VisuallyHidden';

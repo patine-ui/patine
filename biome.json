@@ -65,6 +65,7 @@
               "options": {
                 "skip": [
                   "Text",
+                  "Span",
                   "UIText",
                   "Heading",
                   "Button",
