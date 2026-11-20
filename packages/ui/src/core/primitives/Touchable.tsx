@@ -93,6 +93,7 @@ export const Touchable = ({
           : undefined
       }
       onPressIn={(e) => {
+        focus.onPressIn();
         touch.handlers.onPressIn(e);
         onPressIn?.(e);
       }}

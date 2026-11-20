@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createModality } from '@/core/a11y/modality.utils';
 import { IS_WEB } from '@/core/core.constants';
@@ -12,6 +12,9 @@ interface DocumentLike {
 // Native views only take focus from a hardware keyboard or a TV remote, so there focus always means keyboard.
 const modality = createModality(!IS_WEB);
 let listening = false;
+// A focus that follows a press on the same view came from a finger or a mouse, even on native, where an iOS simulator or an
+// iPad with a keyboard attached hands focus to whatever is tapped.
+const PRESS_FOCUS_MS = 600;
 
 /** Listens on the whole document once, in the capture phase, so every component reads the same modality. */
 const listen = () => {
@@ -31,11 +34,16 @@ export const useFocusVisible = () => {
   listen();
   const [focused, setFocused] = useState(false);
   const [focusVisible, setFocusVisible] = useState(false);
+  const lastPress = useRef(0);
   // Only the focused view listens, so a modality change re-renders one component, not every pressable on the page.
   useEffect(() => (focused ? modality.subscribe(() => setFocusVisible(modality.isKeyboard())) : undefined), [focused]);
   const onFocus = useCallback(() => {
     setFocused(true);
-    setFocusVisible(modality.isKeyboard());
+    setFocusVisible(modality.isKeyboard() && Date.now() - lastPress.current > PRESS_FOCUS_MS);
+  }, []);
+  const onPressIn = useCallback(() => {
+    lastPress.current = Date.now();
+    setFocusVisible(false);
   }, []);
   const onBlur = useCallback(() => {
     setFocused(false);
@@ -45,5 +53,7 @@ export const useFocusVisible = () => {
     focusVisible,
     onFocus,
     onBlur,
+    /** Spread on the view's press-in: a press never shows the ring, and a focus right after one doesn't either */
+    onPressIn,
   };
 };

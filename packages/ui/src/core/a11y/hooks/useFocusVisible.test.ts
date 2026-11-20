@@ -35,4 +35,11 @@ describe('useFocusVisible', () => {
       Reflect.deleteProperty(globalThis, 'document');
     }
   });
+
+  it('shows no ring for a focus that follows a press (a tap with a keyboard attached on native)', async () => {
+    const { result } = await renderHook(() => useFocusVisible());
+    await act(() => result.current.onPressIn());
+    await act(() => result.current.onFocus());
+    expect(result.current.focusVisible).toBe(false);
+  });
 });
