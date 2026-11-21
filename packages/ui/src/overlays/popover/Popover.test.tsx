@@ -9,14 +9,14 @@ import type { PopoverProps } from './popover.types';
 const Example = (props: Omit<PopoverProps, 'children'>) => (
   <Popover {...props}>
     <PopoverTrigger>
-      <Pressable accessibilityRole="button" accessibilityLabel="Filters">
+      <Pressable accessibilityRole="button" aria-label="Filters">
         <Text>Filters</Text>
       </Pressable>
     </PopoverTrigger>
-    <PopoverContent accessibilityLabel="Filter options">
+    <PopoverContent aria-label="Filter options">
       <Text>Only unread</Text>
       <PopoverClose>
-        <Pressable accessibilityRole="button" accessibilityLabel="Done">
+        <Pressable accessibilityRole="button" aria-label="Done">
           <Text>Done</Text>
         </Pressable>
       </PopoverClose>
@@ -111,7 +111,7 @@ describe('Popover', () => {
     await render(
       <Popover>
         <PopoverTrigger>
-          <Pressable accessibilityRole="button" accessibilityLabel="Filters" onPress={onPress} />
+          <Pressable accessibilityRole="button" aria-label="Filters" onPress={onPress} />
         </PopoverTrigger>
         <PopoverContent>
           <Text>Body</Text>
@@ -127,7 +127,7 @@ describe('Popover', () => {
     await render(
       <Popover defaultOpen>
         <PopoverTrigger>
-          <Pressable accessibilityRole="button" accessibilityLabel="Filters" />
+          <Pressable accessibilityRole="button" aria-label="Filters" />
         </PopoverTrigger>
         <PopoverContent presentation="sheet">
           <Text>In a sheet</Text>
@@ -154,9 +154,9 @@ describe('Popover shorthand', () => {
   it('draws its trigger and puts its children in the content', async () => {
     await render(
       <Popover
-        accessibilityLabel="Filter options"
+        aria-label="Filter options"
         trigger={
-          <Pressable accessibilityRole="button" accessibilityLabel="Filters">
+          <Pressable accessibilityRole="button" aria-label="Filters">
             <Text>Filters</Text>
           </Pressable>
         }

@@ -18,7 +18,7 @@ jest.mock('@/core/core.constants', () => ({
 const Example = (props: Partial<TooltipProps>) => (
   <TooltipProvider>
     <Tooltip content="Copy link" testID="tip" {...props}>
-      <Pressable accessibilityRole="button" accessibilityLabel="Copy">
+      <Pressable accessibilityRole="button" aria-label="Copy">
         <Text>⧉</Text>
       </Pressable>
     </Tooltip>
@@ -77,7 +77,7 @@ describe('Tooltip', () => {
               theirs(el);
             }}
             accessibilityRole="button"
-            accessibilityLabel="Copy"
+            aria-label="Copy"
           >
             <Text>✦</Text>
           </Pressable>
@@ -110,10 +110,10 @@ describe('Tooltip', () => {
     await render(
       <TooltipProvider delayDuration={500} skipDelayDuration={300}>
         <Tooltip content="Bold">
-          <Pressable accessibilityRole="button" accessibilityLabel="B" />
+          <Pressable accessibilityRole="button" aria-label="B" />
         </Tooltip>
         <Tooltip content="Italic">
-          <Pressable accessibilityRole="button" accessibilityLabel="I" />
+          <Pressable accessibilityRole="button" aria-label="I" />
         </Tooltip>
       </TooltipProvider>
     );
@@ -174,7 +174,7 @@ describe('Tooltip', () => {
     const onOpenChange = jest.fn();
     const ui = (open: boolean) => (
       <Tooltip content="Copy link" testID="tip" open={open} onOpenChange={onOpenChange}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Copy" onLongPress={onLongPress} />
+        <Pressable accessibilityRole="button" aria-label="Copy" onLongPress={onLongPress} />
       </Tooltip>
     );
     const { rerender } = await render(ui(true));

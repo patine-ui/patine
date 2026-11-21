@@ -55,7 +55,7 @@ export interface TooltipChildProps {
 export interface TooltipProps extends PopoverPlacementProps, TooltipStateOptions, ThemableProps {
   /** What it says. A string is drawn in the design's text style; keep it short and never put buttons or links in it */
   content: React.ReactNode;
-  /** One element that already has its own accessible name, such as an icon Button with an `accessibilityLabel` */
+  /** One element that already has its own accessible name, such as an icon Button with an `aria-label` */
   children: React.ReactElement;
   /** The tooltip's box */
   style?: StyleProp<ViewStyle>;

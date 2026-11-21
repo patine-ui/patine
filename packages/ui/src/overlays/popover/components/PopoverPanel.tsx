@@ -19,7 +19,7 @@ export const PopoverPanel = ({
   align,
   sideOffset,
   arrow,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   style,
   theme: themeProp,
   design,

@@ -58,10 +58,7 @@ export interface PopoverContextValue {
 
 /** The shorthand: give `trigger` and the popover draws its own trigger and content, with `children` as the content. */
 export interface PopoverShorthandProps
-  extends Pick<
-    PopoverContentProps,
-    'side' | 'align' | 'sideOffset' | 'arrow' | 'presentation' | 'accessibilityLabel' | 'theme' | 'design'
-  > {
+  extends Pick<PopoverContentProps, 'side' | 'align' | 'sideOffset' | 'arrow' | 'presentation' | 'aria-label' | 'theme' | 'design'> {
   /** One pressable element, such as a Button, that opens and closes it */
   trigger?: React.ReactElement;
 }
@@ -112,7 +109,7 @@ export interface PopoverContentProps extends PopoverPlacementProps, ThemableProp
   /** By the trigger, or a bottom sheet (as `DropdownMenu` does). Default: 'popover' */
   presentation?: PopoverPresentation;
   /** What screen readers call the dialog */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The panel: its width, padding, colors */
   style?: StyleProp<ViewStyle>;
   testID?: string;
