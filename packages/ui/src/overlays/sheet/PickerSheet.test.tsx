@@ -2,6 +2,7 @@ import { Text } from 'react-native';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { PatineProvider } from '@/core/theme/ThemeProvider';
 import { BottomSheet } from './BottomSheet';
 import { FieldSheetContext } from './hooks/useFieldSheet';
 import { PickerSheet } from './PickerSheet';
@@ -18,6 +19,29 @@ const inDropdownField: FieldSheetContextValue = {
 };
 
 describe('BottomSheet', () => {
+  it("opens itself from its trigger, keeping the trigger's own onPress", async () => {
+    const onPress = jest.fn();
+    const onOpenChange = jest.fn();
+    await render(
+      <BottomSheet
+        title="Filters"
+        onOpenChange={onOpenChange}
+        trigger={
+          <Text role="button" onPress={onPress}>
+            Filter
+          </Text>
+        }
+      >
+        <Text>Body</Text>
+      </BottomSheet>
+    );
+    expect(screen.queryByText('Body')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Filter' }));
+    expect(onPress).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(screen.getByText('Body')).toBeTruthy();
+  });
+
   it('renders nothing until visible', async () => {
     const { rerender } = await render(
       <BottomSheet open={false} onOpenChange={jest.fn()} title="Pick">
@@ -111,6 +135,20 @@ describe('PickerSheet', () => {
     await rerender(sheet('material'));
     const materialText = screen.getAllByText(/Pick|Body|Cancel|OK/).map((node) => node.props.children);
     expect(materialText).toEqual(['Pick', 'Body', 'Cancel', 'OK']);
+  });
+
+  it("confirms with the app's translated Done and OK", async () => {
+    const sheet = (design: 'ios' | 'material') => (
+      <PatineProvider labels={{ done: 'Fertig', ok: 'Okay' }}>
+        <PickerSheet open onOpenChange={jest.fn()} onConfirm={jest.fn()} title="Pick" design={design}>
+          <Text>Body</Text>
+        </PickerSheet>
+      </PatineProvider>
+    );
+    const { rerender } = await render(sheet('ios'));
+    expect(screen.getByRole('button', { name: 'Fertig' })).toBeTruthy();
+    await rerender(sheet('material'));
+    expect(screen.getByRole('button', { name: 'Okay' })).toBeTruthy();
   });
 
   it('cancels and confirms from the header', async () => {

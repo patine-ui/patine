@@ -1,5 +1,6 @@
 export { BottomSheet } from './BottomSheet';
 export { useDraft } from './hooks/useDraft';
+export { useFieldValue } from './hooks/useFieldValue';
 export { PickerField } from './PickerField';
 export { PickerSheet } from './PickerSheet';
 export type {
@@ -9,6 +10,7 @@ export type {
   FieldError,
   FieldPresentation,
   FieldStatusProps,
+  FieldValueProps,
   PickerFieldBaseProps,
   PickerFieldProps,
   PickerFieldSlot,

@@ -2,7 +2,7 @@ import { type PlatformOSType, StatusBar } from 'react-native';
 
 import { PLATFORM } from '@/core/core.constants';
 import type { Design } from '@/core/theme/theme.types';
-import type { FieldDesign, PickerFieldBaseProps, SheetDesign } from './sheet.types';
+import type { FieldDesign, PickerFieldProps, SheetDesign } from './sheet.types';
 
 export const SHEET_PRESENTATION = {
   auto: 'auto',
@@ -35,10 +35,10 @@ export const TITLE_ALIGN = {
 
 /** iOS puts Cancel / Done beside a centered title; Material and the web put the title first and Cancel / OK at the bottom. */
 export const SHEET_DESIGN: Record<Design, SheetDesign> = {
-  brand: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'Done' },
-  ios: { actions: SHEET_ACTIONS.header, titleAlign: TITLE_ALIGN.center, confirmLabel: 'Done' },
-  material: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'OK' },
-  web: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'Done' },
+  brand: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'done' },
+  ios: { actions: SHEET_ACTIONS.header, titleAlign: TITLE_ALIGN.center, confirmLabel: 'done' },
+  material: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'ok' },
+  web: { actions: SHEET_ACTIONS.footer, titleAlign: TITLE_ALIGN.start, confirmLabel: 'done' },
 };
 
 export const FIELD_LABEL = {
@@ -53,17 +53,42 @@ export const FIELD_ARROW = {
 
 /** Material fields are outlined, with the label inside until there's a value and then on the border; web fields are compact, with a focus ring. */
 export const FIELD_DESIGN: Record<Design, FieldDesign> = {
-  brand: { label: FIELD_LABEL.above, arrow: FIELD_ARROW.chevron, minHeight: 44, outline: 'outline', openBorderWidth: 1, focusRing: true },
-  ios: { label: FIELD_LABEL.above, arrow: FIELD_ARROW.chevron, minHeight: 48, outline: 'outline', openBorderWidth: 1, focusRing: false },
+  brand: {
+    label: FIELD_LABEL.above,
+    arrow: FIELD_ARROW.chevron,
+    minHeight: 44,
+    outline: 'outline',
+    hoverOutline: 'textSecondary',
+    openBorderWidth: 1,
+    focusRing: true,
+  },
+  ios: {
+    label: FIELD_LABEL.above,
+    arrow: FIELD_ARROW.chevron,
+    minHeight: 48,
+    outline: 'outline',
+    hoverOutline: 'outline',
+    openBorderWidth: 1,
+    focusRing: false,
+  },
   material: {
     label: FIELD_LABEL.floating,
     arrow: FIELD_ARROW.triangle,
     minHeight: 56,
     outline: 'textSecondary',
+    hoverOutline: 'text',
     openBorderWidth: 2,
     focusRing: false,
   },
-  web: { label: FIELD_LABEL.above, arrow: FIELD_ARROW.chevron, minHeight: 40, outline: 'outline', openBorderWidth: 1, focusRing: true },
+  web: {
+    label: FIELD_LABEL.above,
+    arrow: FIELD_ARROW.chevron,
+    minHeight: 40,
+    outline: 'outline',
+    hoverOutline: 'textSecondary',
+    openBorderWidth: 1,
+    focusRing: true,
+  },
 };
 export const FOCUS_RING_WIDTH = 3;
 /** Space either side of a floating label, cut out of the border behind it. */
@@ -133,6 +158,9 @@ export const BUTTON_HIT_SLOP = 10;
 
 export const DISABLED_TRIGGER_OPACITY = 0.5;
 export const REQUIRED_MARK = ' *';
+/** A field's value props, which it keeps instead of passing them to its sheet. */
+export const FIELD_VALUE_KEYS = ['value', 'defaultValue', 'onValueChange'] as const;
+
 /** The `PickerField` props a `*PickerField` keeps for itself; the rest go to its sheet. `theme` and `styles` go to both. */
 export const FIELD_PROP_KEYS = [
   'label',
@@ -152,4 +180,4 @@ export const FIELD_PROP_KEYS = [
   'required',
   'style',
   'testID',
-] as const satisfies ReadonlyArray<keyof PickerFieldBaseProps>;
+] as const satisfies ReadonlyArray<keyof PickerFieldProps>;

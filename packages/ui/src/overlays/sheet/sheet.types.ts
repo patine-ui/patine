@@ -38,8 +38,10 @@ export interface FieldSheetContextValue {
 
 export type BottomSheetSlot = 'backdrop' | 'sheet' | 'handle' | 'header' | 'title' | 'content' | 'footer';
 
-export interface BottomSheetProps extends ThemableProps, OpenStateProps {
+export interface BottomSheetProps extends ThemableProps, TriggeredOpenProps {
   children: React.ReactNode;
+  /** One pressable element, such as a Button, that opens it. Its own `onPress` still runs. Without it, control `open` */
+  trigger?: React.ReactElement<{ onPress?: (...args: never[]) => void }>;
   /** The header's title. A string is also the sheet's name for screen readers */
   title?: React.ReactNode;
   /** Rendered on the right side of the header (e.g. a Done button) */
@@ -84,7 +86,7 @@ export interface BottomSheetProps extends ThemableProps, OpenStateProps {
 export interface SheetChromeProps extends ThemableProps, OpenStateProps {
   /** The header title */
   title?: React.ReactNode;
-  /** Default: 'OK' in the Material design, else 'Done' */
+  /** Default: `labels.ok` ('OK') in the Material design, else `labels.done` ('Done') */
   confirmLabel?: string;
   /** Default: 'Cancel' */
   cancelLabel?: string;
@@ -93,7 +95,7 @@ export interface SheetChromeProps extends ThemableProps, OpenStateProps {
   /** Bottom sheet or centered modal. Default: 'auto' (modal on wide web windows) */
   presentation?: SheetPresentation;
   /** Passed through to the underlying BottomSheet */
-  sheetProps?: Partial<Omit<BottomSheetProps, keyof OpenStateProps | 'children'>>;
+  sheetProps?: Partial<Omit<BottomSheetProps, keyof TriggeredOpenProps | 'trigger' | 'children'>>;
 }
 
 export interface PickerSheetProps extends Omit<SheetChromeProps, 'presentation'> {
@@ -148,7 +150,8 @@ export interface SheetDesign {
   /** Where Cancel and Done go: beside the title, or in a row at the bottom */
   actions: ValueOf<typeof SHEET_ACTIONS>;
   titleAlign: ValueOf<typeof TITLE_ALIGN>;
-  confirmLabel: string;
+  /** Which label confirms: Material's OK, or Done */
+  confirmLabel: 'done' | 'ok';
 }
 
 export interface FieldDesign {
@@ -159,6 +162,8 @@ export interface FieldDesign {
   minHeight: number;
   /** The border color while closed */
   outline: keyof Theme['colors'];
+  /** The border color under a pointer, while closed */
+  hoverOutline: keyof Theme['colors'];
   /** The border, in the primary color, while open */
   openBorderWidth: number;
   /** A soft ring around the field while open */
@@ -348,9 +353,8 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
   displayValue?: string;
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;
-  /** Show a clear (×) button while the field has a value; reset your value in `onClear` */
+  /** Show a clear (✕) button while the field has a value; it calls `onValueChange` with `null` */
   clearable?: boolean;
-  onClear?: () => void;
   /** Custom trigger: render anything and call `open()` */
   renderTrigger?: (info: PickerFieldTriggerInfo) => React.ReactNode;
   /** Custom chevron icon; it still rotates as the field opens and closes */
@@ -369,6 +373,8 @@ export interface PickerFieldBaseProps<S extends string = never> extends Themable
 }
 
 export interface PickerFieldProps extends PickerFieldBaseProps {
+  /** Called by the clear (✕) button: empty your value here */
+  onClear?: () => void;
   /** Shown before the value, such as a colour swatch or a flag */
   icon?: React.ReactNode;
   /** Render the sheet the field opens: spread the state on it */
@@ -382,8 +388,21 @@ export interface FieldSheetState {
   onOpenChange: (open: boolean) => void;
 }
 
-/** A sheet's props turned into a field's: no `open` (the field owns the open state), and the field props in place of the picker's own `style`, `testID`... */
-export type WithPickerField<SheetProps, S extends string> = DistributiveOmit<SheetProps, keyof PickerFieldBaseProps> &
+/** A picker field's value: the field keeps its own from `defaultValue`, or you control it with `value`. */
+export interface FieldValueProps<V> {
+  /** The value, when you control it; `null` for none */
+  value?: V | null;
+  /** The value at first, when the field keeps its own. Default: none */
+  defaultValue?: V | null;
+  /** Called with the confirmed value (Done, or each change when `inline`), and with `null` when the user clears the field. Never when `value` changes from your code */
+  onValueChange?: (value: V | null) => void;
+}
+
+/** A sheet's `value` + `onConfirm` turned into a field's `value`, `defaultValue` and `onValueChange`, one union member (mode) at a time. */
+type ToFieldValue<P> = P extends { onConfirm: (value: infer V) => void } ? Omit<P, 'value' | 'onConfirm'> & FieldValueProps<V> : P;
+
+/** A sheet's props turned into a field's: no `open` (the field owns the open state), the value as `value` + `onValueChange`, and the field props in place of the picker's own `style`, `testID`... */
+export type WithPickerField<SheetProps, S extends string> = ToFieldValue<DistributiveOmit<SheetProps, keyof PickerFieldBaseProps>> &
   PickerFieldBaseProps<S>;
 
 export interface FieldLabelProps {
