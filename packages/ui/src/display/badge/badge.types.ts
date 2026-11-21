@@ -11,6 +11,8 @@ export interface BadgeProps extends ViewProps, ThemableProps {
   children?: React.ReactNode;
   /** Default: 'default' */
   variant?: BadgeVariant;
+  /** Before the label, such as a small icon or a status dot. An `Icon` without a color takes the label's */
+  startIcon?: React.ReactNode;
   /** Styles for its parts: `label` */
   styles?: SlotStyles<'label'>;
 }
