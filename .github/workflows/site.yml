@@ -1,0 +1,19 @@
+# patine.dev is built and deployed from the private docs repo (patine-ui/pro, "Deploy site"), which reads this repo's
+# master. When master moves, ask it to redeploy, so the site (and the llms-full.txt a release downloads from it) is
+# current before the release PR is merged.
+name: Site
+
+on:
+  push:
+    branches: [master]
+
+permissions: {}
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-24.04
+    steps:
+      # A fine-grained token for patine-ui/pro only, Contents: read and write (what repository_dispatch needs).
+      - env:
+          GH_TOKEN: ${{ secrets.PRO_DISPATCH_TOKEN }}
+        run: gh api repos/patine-ui/pro/dispatches -f event_type=public-master
