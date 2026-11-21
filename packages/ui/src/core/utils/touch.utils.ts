@@ -28,3 +28,21 @@ export const getRippleBox = (ripple: RippleOrigin) => ({
 
 /** Corners that follow the pressable's own. */
 export const roundOf = (borderRadius: number | undefined) => ({ borderRadius });
+
+interface Measurable {
+  offsetWidth: number;
+  getBoundingClientRect(): { width: number };
+}
+
+const isMeasurable = (node: unknown): node is Measurable =>
+  typeof node === 'object' && node !== null && 'offsetWidth' in node && 'getBoundingClientRect' in node;
+
+/**
+ * Layout pixels per pointer pixel on the touched element. 1 on native; on the web, more than 1 inside a CSS-zoomed or
+ * scaled-down region (a phone mock, a thumbnail), where touches come in screen pixels and sizes in the element's own.
+ */
+export const toLayoutScale = (node: unknown) => {
+  if (!isMeasurable(node)) return 1;
+  const shown = node.getBoundingClientRect().width;
+  return shown > 0 && node.offsetWidth > 0 ? node.offsetWidth / shown : 1;
+};

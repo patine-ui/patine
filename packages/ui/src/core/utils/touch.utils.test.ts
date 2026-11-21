@@ -1,4 +1,4 @@
-import { getRippleBox, getRippleOrigin, touchSize } from './touch.utils';
+import { getRippleBox, getRippleOrigin, toLayoutScale, touchSize } from './touch.utils';
 
 describe('getRippleOrigin', () => {
   it('reaches the farthest corner from the touch point', () => {
@@ -26,5 +26,23 @@ describe('touchSize', () => {
 describe('getRippleBox', () => {
   it('centres the circle on the touch point', () => {
     expect(getRippleBox({ x: 10, y: 20, radius: 5 })).toEqual({ left: 5, top: 15, width: 10, height: 10, borderRadius: 5 });
+  });
+});
+
+describe('toLayoutScale', () => {
+  const element = (offsetWidth: number, shown: number) => ({
+    offsetWidth,
+    getBoundingClientRect: () => ({ width: shown }),
+  });
+
+  it('converts screen pixels to layout pixels in a zoomed-out region', () => {
+    expect(toLayoutScale(element(200, 100))).toBe(2);
+    expect(toLayoutScale(element(200, 200))).toBe(1);
+  });
+
+  it('is 1 on native, and for a hidden or unmeasured element', () => {
+    expect(toLayoutScale(42)).toBe(1);
+    expect(toLayoutScale(undefined)).toBe(1);
+    expect(toLayoutScale(element(0, 0))).toBe(1);
   });
 });
