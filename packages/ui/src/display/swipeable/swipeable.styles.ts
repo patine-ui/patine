@@ -1,7 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-import { createStyles } from '@/core/theme/theme.utils';
-
 export const styles = StyleSheet.create({
   root: { overflow: 'hidden' },
   panel: { flexDirection: 'row' },
@@ -14,7 +12,3 @@ export const styles = StyleSheet.create({
   below: { zIndex: 0 },
   idle: { opacity: 0 },
 });
-
-export const themed = createStyles((t) => ({
-  label: { color: t.colors.onMedia },
-}));

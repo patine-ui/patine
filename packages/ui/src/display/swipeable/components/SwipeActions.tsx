@@ -2,11 +2,13 @@ import { IS_WEB } from '@/core/core.constants';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import type { Theme } from '@/core/theme/theme.types';
+import { inkOf } from '@/core/utils/style.utils';
 import { SWIPE_SIDE } from '@/display/swipeable/swipeable.constants';
-import { styles, themed } from '@/display/swipeable/swipeable.styles';
+import { styles } from '@/display/swipeable/swipeable.styles';
 import type { SwipeAction, SwipeDesign, SwipeSide } from '@/display/swipeable/swipeable.types';
-import { getActionBox, getActionFill } from '@/display/swipeable/swipeable.utils';
+import { getActionBox, getActionContent, getActionFill } from '@/display/swipeable/swipeable.utils';
 
 interface Props {
   side: SwipeSide;
@@ -58,8 +60,8 @@ export const SwipeActions = ({ side, actions, visible, armed, look, theme, onRun
           onPress={() => onRun(action)}
           style={[styles.action, getActionBox(action, look, theme.colors)]}
         >
-          {action.icon}
-          <Text size={look.labelSize} weight="medium" numberOfLines={1} style={themed(theme).label}>
+          <ContentColor color={getActionContent(action, theme.colors)}>{action.icon}</ContentColor>
+          <Text size={look.labelSize} weight="medium" numberOfLines={1} style={inkOf(getActionContent(action, theme.colors))}>
             {action.label}
           </Text>
         </Touchable>

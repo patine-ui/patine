@@ -60,6 +60,19 @@ export const openOffset = (side: string | null, b: Pick<Bounds, 'leading' | 'tra
 export const getActionFill = (action: SwipeAction, look: SwipeDesign, colors: Theme['colors']) =>
   action.color ?? (action.variant === 'destructive' ? colors.danger : action.variant === 'primary' ? colors.primary : colors[look.neutral]);
 
+/**
+ * The icon and label colour that reads on an action's fill: the theme's pair for its own fills (light ones in dark mode), white
+ * on an app's own colour.
+ */
+export const getActionContent = (action: SwipeAction, colors: Theme['colors']) =>
+  action.color
+    ? colors.onMedia
+    : action.variant === 'destructive'
+      ? colors.onDanger
+      : action.variant === 'primary'
+        ? colors.onPrimary
+        : colors.background;
+
 /** An action's box: the design's width on its fill. */
 export const getActionBox = (action: SwipeAction, look: SwipeDesign, colors: Theme['colors']) => ({
   width: look.actionWidth,

@@ -1,4 +1,5 @@
-import { clampOffset, isFullSwipe, openOffset, releaseSwipe } from './swipeable.utils';
+import { lightTheme } from '@/core/theme/theme.constants';
+import { clampOffset, getActionContent, isFullSwipe, openOffset, releaseSwipe } from './swipeable.utils';
 
 const b = { leading: 80, trailing: 160, width: 400, full: false, resistance: 0.5 };
 
@@ -32,5 +33,16 @@ describe('swipeable utils', () => {
     expect(openOffset('leading', b)).toBe(80);
     expect(openOffset('trailing', b)).toBe(-160);
     expect(openOffset(null, b)).toBe(0);
+  });
+});
+
+describe('getActionContent', () => {
+  const { colors } = lightTheme;
+
+  it("reads on the theme's fills, and white on the app's own colour", () => {
+    expect(getActionContent({ label: 'Read', variant: 'primary', onPress: () => {} }, colors)).toBe(colors.onPrimary);
+    expect(getActionContent({ label: 'Delete', variant: 'destructive', onPress: () => {} }, colors)).toBe(colors.onDanger);
+    expect(getActionContent({ label: 'Archive', onPress: () => {} }, colors)).toBe(colors.background);
+    expect(getActionContent({ label: 'Flag', color: '#F97316', onPress: () => {} }, colors)).toBe(colors.onMedia);
   });
 });
