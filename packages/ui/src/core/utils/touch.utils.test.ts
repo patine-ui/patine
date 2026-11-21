@@ -1,4 +1,4 @@
-import { getRippleBox, getRippleOrigin, toLayoutScale, touchSize } from './touch.utils';
+import { getRippleBox, getRippleOrigin, shapeOf, toLayoutScale, touchSize } from './touch.utils';
 
 describe('getRippleOrigin', () => {
   it('reaches the farthest corner from the touch point', () => {
@@ -44,5 +44,24 @@ describe('toLayoutScale', () => {
     expect(toLayoutScale(42)).toBe(1);
     expect(toLayoutScale(undefined)).toBe(1);
     expect(toLayoutScale(element(0, 0))).toBe(1);
+  });
+});
+
+describe('shapeOf', () => {
+  it('reaches out under a border to the frame', () => {
+    expect(shapeOf({ borderRadius: 8, borderWidth: 1 })).toEqual({ borderRadius: 8, top: -1, right: -1, bottom: -1, left: -1 });
+  });
+
+  it('keeps each corner, so a joined button stays square where it meets the next', () => {
+    expect(shapeOf({ borderRadius: 8, borderTopEndRadius: 0, borderBottomEndRadius: 0 })).toEqual({
+      borderRadius: 8,
+      borderTopEndRadius: 0,
+      borderBottomEndRadius: 0,
+    });
+  });
+
+  it('fills the box when there is no border', () => {
+    expect(shapeOf({ borderRadius: 8 })).toEqual({ borderRadius: 8 });
+    expect(shapeOf(undefined)).toEqual({});
   });
 });

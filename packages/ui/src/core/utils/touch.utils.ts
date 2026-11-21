@@ -27,7 +27,40 @@ export const getRippleBox = (ripple: RippleOrigin) => ({
 });
 
 /** Corners that follow the pressable's own. */
-export const roundOf = (borderRadius: number | undefined) => ({ borderRadius });
+const CORNERS = [
+  'borderRadius',
+  'borderTopLeftRadius',
+  'borderTopRightRadius',
+  'borderBottomLeftRadius',
+  'borderBottomRightRadius',
+  'borderTopStartRadius',
+  'borderTopEndRadius',
+  'borderBottomStartRadius',
+  'borderBottomEndRadius',
+] as const;
+
+/**
+ * The feedback layer's box, from the element's style: each of its corners (a joined group squares its inner ones), reaching out
+ * under its border. An absolute fill stops inside the border, so a framed button's tint left a ring between it and the frame.
+ */
+export const shapeOf = (style: ViewStyle | undefined): ViewStyle => {
+  const shape: ViewStyle = Object.fromEntries(
+    CORNERS.flatMap((corner) => {
+      const radius = numeric(style?.[corner]);
+      return radius === undefined ? [] : [[corner, radius]];
+    })
+  );
+  const border = numeric(style?.borderWidth) ?? 0;
+  return border
+    ? {
+        ...shape,
+        top: -border,
+        right: -border,
+        bottom: -border,
+        left: -border,
+      }
+    : shape;
+};
 
 interface Measurable {
   offsetWidth: number;

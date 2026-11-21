@@ -6,3 +6,5 @@ export const ACTION_HIT_SLOP = 10;
 
 /** Room at the end of a search field for its clear button. */
 export const SEARCH_CLEAR_SPACE = 36;
+/** The clear ✕ button's round box, in points; its hit slop takes the touch area to 44. */
+export const CLEAR_SIZE = 28;

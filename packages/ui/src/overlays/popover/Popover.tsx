@@ -65,7 +65,14 @@ export const PopoverContent = ({ presentation = POPOVER_PRESENTATION.popover, ..
   const { open, setOpen } = usePopoverContext();
   if (presentation === POPOVER_PRESENTATION.sheet) {
     return (
-      <BottomSheet open={open} onOpenChange={setOpen} theme={props.theme} design={props.design} testID={props.testID}>
+      <BottomSheet
+        open={open}
+        onOpenChange={setOpen}
+        showCloseButton={props.showCloseButton}
+        theme={props.theme}
+        design={props.design}
+        testID={props.testID}
+      >
         {props.children}
       </BottomSheet>
     );

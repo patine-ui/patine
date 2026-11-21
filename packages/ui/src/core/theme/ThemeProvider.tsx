@@ -1,5 +1,5 @@
-import { createContext, type ReactNode, useContext, useMemo } from 'react';
-import { Platform, useColorScheme, type ViewProps } from 'react-native';
+import { createContext, type ReactNode, useContext, useMemo, useSyncExternalStore } from 'react';
+import { Appearance, Platform, useColorScheme, type ViewProps } from 'react-native';
 
 import { IS_WEB } from '@/core/core.constants';
 import type { DeepPartial } from '@/core/core.types';
@@ -98,6 +98,24 @@ const withoutDesign = (override: DeepPartial<Theme> | undefined) => {
   return Object.keys(rest).length ? rest : undefined;
 };
 
+const subscribeScheme = (onChange: () => void) => {
+  const subscription = Appearance.addChangeListener(onChange);
+  return () => subscription.remove();
+};
+const subscribeNone = () => () => undefined;
+const systemScheme = () => Appearance.getColorScheme();
+const noScheme = () => null;
+
+/**
+ * The context's themes, or without a provider the bare ones for the system's light or dark. Only a component outside every
+ * provider listens to the system scheme: one listener per mounted component cost a long list ~80ms per re-render on the web.
+ */
+const useBaseFor = (ctx: ThemeContextValue | null) => {
+  // The server has no system scheme: it renders light, and the client corrects it.
+  const system = useSyncExternalStore(ctx ? subscribeNone : subscribeScheme, ctx ? noScheme : systemScheme, noScheme);
+  return ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
+};
+
 /**
  * Resolves the active theme: the design's tokens on the light or dark theme, then the provider's overrides, then the component's.
  * The design comes from the component override, the provider, or the platform. Every call without an override (or with only a
@@ -105,8 +123,7 @@ const withoutDesign = (override: DeepPartial<Theme> | undefined) => {
  */
 export const useTheme = (override?: DeepPartial<Theme>): Theme => {
   const ctx = useContext(ThemeContext);
-  const system = useColorScheme();
-  const baseFor = ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
+  const baseFor = useBaseFor(ctx);
   const resolved = ctx?.resolved ?? baseFor(DESIGN.brand);
   const base = override?.design && override.design !== resolved.design ? baseFor(override.design) : resolved;
   const rest = useMemo(() => withoutDesign(override), [override]);
@@ -120,9 +137,8 @@ export const useTheme = (override?: DeepPartial<Theme>): Theme => {
  */
 export const ThemeScope = ({ theme: override, children }: { theme?: DeepPartial<Theme>; children: ReactNode }) => {
   const ctx = useContext(ThemeContext);
-  const system = useColorScheme();
   const resolved = useTheme(override);
-  const parentBaseFor = ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
+  const parentBaseFor = useBaseFor(ctx);
   const rest = useMemo(() => withoutDesign(override), [override]);
   const value = useMemo<ThemeContextValue>(() => {
     const cache = new Map<Design, Theme>();

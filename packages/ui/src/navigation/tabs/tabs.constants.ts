@@ -20,13 +20,13 @@ export const INDICATOR_FIT = {
 export const TRACK_PADDING = 3;
 
 /**
- * Brand: shadcn's muted track with the active tab raised. iOS: a segmented control. Material 3: primary tabs, full width,
+ * Brand: shadcn's muted track with the active tab raised, the tabs sharing its width. iOS: a segmented control. Material 3: primary tabs, full width,
  * the indicator under the label. The web: an underline under the whole tab, sized to its label.
  */
 export const TABS_DESIGN: Record<Design, TabsDesign> = {
   brand: {
     variant: TABS_VARIANT.pills,
-    fullWidth: false,
+    fullWidth: true,
     pillHeight: 36,
     underlineHeight: 44,
     indicatorSize: 2,
