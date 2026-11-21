@@ -75,7 +75,7 @@ describe('getColumnBox, getRowKey and getTableWidth', () => {
 describe('getCellFont', () => {
   it('draws numbers and right-aligned cells in the numeric font', () => {
     expect(getCellFont(12, undefined)).toBe('numeric');
-    expect(getCellFont('$1,200', 'right')).toBe('numeric');
-    expect(getCellFont('Ana', 'left')).toBe('body');
+    expect(getCellFont('$1,200', 'end')).toBe('numeric');
+    expect(getCellFont('Ana', 'start')).toBe('body');
   });
 });

@@ -1,15 +1,17 @@
 import type { ViewStyle } from 'react-native';
 
-import type { FontRole } from '@/core/theme/theme.types';
+import { endAlign, startAlign } from '@/core/core.styles';
+import type { FontRole, LayoutDirection } from '@/core/theme/theme.types';
+import { styles } from './table.styles';
 import type { TableAlign, TableColumn, TableSort } from './table.types';
 
 /** A cell's value: the column's accessor, or the row's field named by the column's key. */
 export const getCellValue = <T>(row: T, column: TableColumn<T>) =>
   column.accessor ? column.accessor(row) : (row as Record<string, unknown>)[column.key];
 
-/** Numbers, and anything right-aligned (amounts already formatted as text), draw in the theme's numeric font. */
+/** Numbers, and anything end-aligned (amounts already formatted as text), draw in the theme's numeric font. */
 export const getCellFont = (value: unknown, align: TableAlign | undefined): FontRole =>
-  typeof value === 'number' || align === 'right' ? 'numeric' : 'body';
+  typeof value === 'number' || align === 'end' ? 'numeric' : 'body';
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
@@ -60,12 +62,9 @@ export const getAriaSort = (sort: TableSort | null | undefined, key: string): 'a
 /** A column's share of the row: its fixed width, or its flex (1 by default). */
 export const getColumnBox = <T>(column: TableColumn<T>): ViewStyle => (column.width ? { width: column.width } : { flex: column.flex ?? 1 });
 
-/** The style keys that line a cell and its text up with the column's align. */
-export const ALIGN_KEYS: Record<TableAlign, { cell: 'left' | 'center' | 'right'; text: 'textLeft' | 'textCenter' | 'textRight' }> = {
-  left: { cell: 'left', text: 'textLeft' },
-  center: { cell: 'center', text: 'textCenter' },
-  right: { cell: 'right', text: 'textRight' },
-};
+/** The text alignment for a column's align, in the reading direction (the web doesn't flip `textAlign` by itself). */
+export const getTextAlign = (align: TableAlign | undefined, dir: LayoutDirection) =>
+  align === 'end' ? endAlign[dir] : align === 'center' ? styles.textCenter : startAlign[dir];
 
 /** A row's key: from `keyExtractor`, the row's `id`, or its index. */
 export const getRowKey = <T>(row: T, index: number, keyExtractor?: (row: T, index: number) => string) =>
