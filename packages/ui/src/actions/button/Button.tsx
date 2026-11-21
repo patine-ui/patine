@@ -1,12 +1,14 @@
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { isTextContent } from '@/core/utils/text.utils';
 import { BUTTON_DESIGN, BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
 import { buttonStyles, styles } from './button.styles';
 import type { ButtonProps } from './button.types';
-import { getButtonBox, getButtonColors, isRaisedVariant } from './button.utils';
+import { getButtonBox, getButtonColors, iconSideOf, isRaisedVariant } from './button.utils';
 
 /**
  * A button in shadcn/ui's variants and sizes, drawn in the active design, with hover, press feedback, a keyboard focus ring,
@@ -31,33 +33,38 @@ export const Button = ({
   const sheet = buttonStyles(theme);
   const box = getButtonBox(look, size);
   const blocked = !!disabled || loading;
-  const label =
-    typeof children === 'string' || typeof children === 'number' ? (
-      <Text
-        size={size === BUTTON_SIZE.icon ? look.textSize.default : look.textSize[size]}
-        weight={look.weight}
-        numberOfLines={1}
-        style={[styles.label, sheet[`${variant}Label`], variant === BUTTON_VARIANT.link && styles.underline, slots?.label]}
-      >
-        {children}
-      </Text>
-    ) : (
-      children
-    );
+  const square = iconSideOf(size);
+  // Icons without their own color take the label's, so they match every variant and a restyled label.
+  const contentColor = (StyleSheet.flatten(slots?.label)?.color as string | undefined) ?? getButtonColors(theme.colors, variant).text;
+  const label = isTextContent(children) ? (
+    <Text
+      size={look.textSize[square ?? (size as keyof typeof look.textSize)]}
+      weight={look.weight}
+      numberOfLines={1}
+      style={[styles.label, sheet[`${variant}Label`], variant === BUTTON_VARIANT.link && styles.underline, slots?.label]}
+    >
+      {children}
+    </Text>
+  ) : (
+    children
+  );
 
   return (
     <ThemeScope theme={themeOverride}>
       <Touchable
         pressScale
+        feedbackColor={contentColor}
         role="button"
         disabled={blocked}
         aria-busy={loading}
         {...rest}
         style={[styles.button, box, sheet.root, sheet[variant], isRaisedVariant(variant) && !blocked && sheet.raised, style]}
       >
-        {loading ? <ActivityIndicator size="small" color={getButtonColors(theme.colors, variant).text} /> : startIcon}
-        {size === BUTTON_SIZE.icon && loading ? null : label}
-        {endIcon}
+        <ContentColor color={contentColor}>
+          {loading ? <ActivityIndicator size="small" color={contentColor} /> : startIcon}
+          {square && loading ? null : label}
+          {endIcon}
+        </ContentColor>
       </Touchable>
     </ThemeScope>
   );

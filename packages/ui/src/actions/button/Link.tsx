@@ -22,6 +22,7 @@ export const Link = ({
   design,
   style,
   weight,
+  color,
   ...rest
 }: LinkProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
@@ -33,7 +34,7 @@ export const Link = ({
     <Text
       theme={themeOverride}
       role="link"
-      color={disabled ? 'textDisabled' : 'primary'}
+      color={disabled ? 'textDisabled' : (color ?? 'primary')}
       weight={weight ?? look.weight}
       aria-disabled={disabled}
       onPointerEnter={() => setHovered(true)}

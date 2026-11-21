@@ -1,5 +1,5 @@
 import type { Theme } from '@/core/theme/theme.types';
-import { BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
+import { BUTTON_VARIANT, ICON_BUTTON_SIDE } from './button.constants';
 import type { ButtonColors, ButtonDesign, ButtonSize, ButtonVariant } from './button.types';
 
 const TRANSPARENT = 'transparent';
@@ -49,10 +49,14 @@ export const getButtonColors = (colors: Theme['colors'], variant: ButtonVariant)
 /** Ghost and link buttons sit flat on the surface; the others take the design's lift. */
 export const isRaisedVariant = (variant: ButtonVariant) => variant !== BUTTON_VARIANT.ghost && variant !== BUTTON_VARIANT.link;
 
-/** Height and side padding for a size. An icon button is a square of the default height. */
+/** The text size an icon size matches in height, or null for a text size. */
+export const iconSideOf = (size: ButtonSize) => (size in ICON_BUTTON_SIDE ? ICON_BUTTON_SIDE[size as keyof typeof ICON_BUTTON_SIDE] : null);
+
+/** Height and side padding for a size. An icon button is a square as tall as its text size. */
 export const getButtonBox = (design: ButtonDesign, size: ButtonSize) => {
-  if (size === BUTTON_SIZE.icon) {
-    const side = design.heights.default;
+  const square = iconSideOf(size);
+  if (square) {
+    const side = design.heights[square];
     return {
       height: side,
       width: side,
@@ -60,8 +64,8 @@ export const getButtonBox = (design: ButtonDesign, size: ButtonSize) => {
     };
   }
   return {
-    height: design.heights[size],
+    height: design.heights[size as keyof typeof design.heights],
     width: undefined,
-    paddingHorizontal: design.paddingX[size],
+    paddingHorizontal: design.paddingX[size as keyof typeof design.paddingX],
   };
 };

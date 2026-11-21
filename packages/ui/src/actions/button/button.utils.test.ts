@@ -25,6 +25,11 @@ describe('getButtonBox', () => {
   it('makes an icon button a square of the default height', () => {
     expect(getButtonBox(BUTTON_DESIGN.brand, 'icon')).toEqual({ height: 44, width: 44, paddingHorizontal: 0 });
   });
+
+  it('makes icon-sm and icon-lg squares as tall as sm and lg', () => {
+    expect(getButtonBox(BUTTON_DESIGN.brand, 'icon-sm')).toMatchObject({ height: 36, width: 36 });
+    expect(getButtonBox(BUTTON_DESIGN.brand, 'icon-lg')).toMatchObject({ height: 52, width: 52 });
+  });
 });
 
 describe('isRaisedVariant', () => {

@@ -34,7 +34,7 @@ export interface FabProps extends Omit<PressableProps, 'children' | 'style'>, Th
   ref?: React.Ref<HostInstance>;
   /** The icon, or a function of the color to draw it in */
   icon?: React.ReactNode | ((info: { color: string }) => React.ReactNode);
-  /** Text beside the icon, for an extended FAB. Without it, give an `accessibilityLabel` */
+  /** Text beside the icon, for an extended FAB. Without it, give an `aria-label` */
   label?: string;
   /** Default: 'md' */
   size?: FabSize;

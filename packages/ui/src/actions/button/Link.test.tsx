@@ -31,7 +31,7 @@ describe('Link', () => {
 describe('Fab', () => {
   it('is a named button that can float in a corner', async () => {
     const onPress = jest.fn();
-    await render(<Fab icon={<Text>+</Text>} accessibilityLabel="New message" placement="bottomEnd" onPress={onPress} />);
+    await render(<Fab icon={<Text>+</Text>} aria-label="New message" placement="bottomEnd" onPress={onPress} />);
     const fab = screen.getByRole('button', { name: 'New message' });
     expect(fab).toHaveStyle({ position: 'absolute', bottom: 16, end: 16 });
     await fireEvent.press(fab);

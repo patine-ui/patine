@@ -37,7 +37,7 @@ export interface ToggleGroupItemData<T extends string = string> {
   /** Before the label */
   icon?: React.ReactNode;
   /** Names an icon-only item for screen readers */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   disabled?: boolean;
 }
 
@@ -47,7 +47,7 @@ interface ToggleGroupBase extends Omit<ViewProps, 'children'>, ThemableProps {
   children?: React.ReactNode;
   variant?: ToggleVariant;
   /** Default: 'default' */
-  size?: Exclude<ButtonSize, 'icon'> | 'icon';
+  size?: ButtonSize;
   /** Joins the buttons into one bar, as a toolbar does. Default: false */
   attached?: boolean;
   /** Default: 'horizontal' */

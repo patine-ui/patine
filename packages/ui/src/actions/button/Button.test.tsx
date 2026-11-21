@@ -2,12 +2,27 @@ import { Text as RNText, StyleSheet } from 'react-native';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { useContentColor } from '@/core/theme/ContentColor';
 import { DESIGN_TOKENS, lightTheme } from '@/core/theme/theme.constants';
 import { Button } from './Button';
 
 const boxOf = (name: string) => StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
 
+/** Stands in for an Icon without a color: it shows the color it would draw in. */
+const Swatch = () => <RNText testID="swatch">{useContentColor()}</RNText>;
+
 describe('Button', () => {
+  it("gives icons without their own color the variant's label color", async () => {
+    await render(<Button startIcon={<Swatch />}>Save</Button>);
+    expect(screen.getByTestId('swatch')).toHaveTextContent(lightTheme.colors.onPrimary);
+    await render(
+      <Button variant="outline" startIcon={<Swatch />} styles={{ label: { color: 'tomato' } }}>
+        Save
+      </Button>
+    );
+    expect(screen.getByTestId('swatch')).toHaveTextContent('tomato');
+  });
+
   it('is a button named by its label, and presses', async () => {
     const onPress = jest.fn();
     await render(<Button onPress={onPress}>Save</Button>);

@@ -1,6 +1,7 @@
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { fabStyles, styles } from './button.styles';
 import { DEFAULT_FAB_OFFSET, FAB_DESIGN } from './link.constants';
@@ -36,7 +37,11 @@ export const Fab = ({
         style={[styles.fab, getFabBox(look, size), sheet.root, label && sheet.extended, getFabPlacement(placement, offset), style]}
       >
         {icon ? (
-          <View style={styles[`fabIcon_${size}`]}>{typeof icon === 'function' ? icon({ color: theme.colors[look.onFill] }) : icon}</View>
+          <View style={styles[`fabIcon_${size}`]}>
+            <ContentColor color={theme.colors[look.onFill]}>
+              {typeof icon === 'function' ? icon({ color: theme.colors[look.onFill] }) : icon}
+            </ContentColor>
+          </View>
         ) : null}
         {label ? (
           <Text weight="medium" numberOfLines={1} style={[sheet.label, slots?.label]}>
