@@ -5,6 +5,7 @@ import { cs } from '@/core/core.styles';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { Heading } from '@/foundations/text/Heading';
 import { ListInsetContext } from './ListInsetContext';
@@ -83,7 +84,11 @@ export const ListItem = ({
   const separator = getSeparatorEdge(look, first);
   const content = (
     <>
-      {leading ? <View style={sheet.leading}>{leading}</View> : null}
+      {leading ? (
+        <View style={sheet.leading}>
+          <ContentColor color={destructive ? theme.colors.danger : undefined}>{leading}</ContentColor>
+        </View>
+      ) : null}
       <View style={[styles.row, styles.content, sheet.content, separator === 'content' && sheet.line]}>
         <View style={styles.text}>
           <Text color={destructive ? 'danger' : 'text'} style={slots?.title}>
@@ -102,7 +107,7 @@ export const ListItem = ({
             </Text>
           ) : null}
           {trailing}
-          {showsChevron(look, !!(onPress || href), showChevron) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
+          {showsChevron(look, !!(onPress || href), showChevron, destructive) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
         </View>
       </View>
     </>
