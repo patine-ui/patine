@@ -17,4 +17,6 @@ export interface AlertProps extends ViewProps, ThemableProps {
   title?: React.ReactNode;
   /** Shorthand: the AlertDescription under the title */
   description?: React.ReactNode;
+  /** At the alert's end, level with the title: a dismiss ✕ or a small Retry button */
+  action?: React.ReactNode;
 }
