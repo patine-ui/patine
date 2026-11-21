@@ -1,7 +1,6 @@
-import { StyleSheet } from 'react-native';
-
 import { View } from '@/core/primitives/View';
 import { AccordionItemContext, useAccordion } from './AccordionContext';
+import { themed } from './accordion.styles';
 import type { AccordionItemProps } from './accordion.types';
 import { itemIds } from './accordion.utils';
 
@@ -18,7 +17,7 @@ export const AccordionItem = ({ value, disabled = false, style, children, ...res
   };
   return (
     <AccordionItemContext.Provider value={item}>
-      <View style={[{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: accordion.theme.colors.border }, style]} {...rest}>
+      <View style={[themed(accordion.theme).item, style]} {...rest}>
         {children}
       </View>
     </AccordionItemContext.Provider>
