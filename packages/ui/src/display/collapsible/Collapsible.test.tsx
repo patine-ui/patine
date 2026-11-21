@@ -123,7 +123,7 @@ describe('Collapsible shorthand', () => {
     await render(
       <Collapsible
         trigger={
-          <Pressable accessibilityRole="button" accessibilityLabel="More">
+          <Pressable accessibilityRole="button" aria-label="More">
             <Text>More</Text>
           </Pressable>
         }
