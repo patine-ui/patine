@@ -52,9 +52,10 @@ export interface SelectRenderOptionInfo<T> {
 
 /**
  * One value, or with `multiple` an array. Controlled with `value` (`null` for none), or uncontrolled from `defaultValue`.
- * `onValueChange` fires when the user picks, never when `value` changes from your code.
+ * `onValueChange` fires when the user picks, never when `value` changes from your code. `Empty` is what a single value can be
+ * reported as besides a value: `null` for Select, whose clear button empties it; nothing for SelectList.
  */
-export type SelectValueProps<T> =
+export type SelectValueProps<T, Empty = never> =
   | {
       /** Pick several options. Default: false */
       multiple?: false;
@@ -62,8 +63,8 @@ export type SelectValueProps<T> =
       value?: T | null;
       /** The value selected at first when `value` is left out. Default: none */
       defaultValue?: T | null;
-      /** Called with the picked value and its option */
-      onValueChange?: (value: NoInferValue<T>, option: SelectOption<T>) => void;
+      /** Called with the picked value and its option; on Select, with `null` and `null` when the user clears it */
+      onValueChange?: (value: NoInferValue<T> | Empty, option: SelectOption<T> | Empty) => void;
     }
   | {
       multiple: true;
@@ -164,7 +165,7 @@ type ServerSearchProp =
 export type BuiltInSelectProps<T> = DistributiveOmit<SelectProps<T>, ServerSearchProp>;
 
 export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | 'query'> &
-  SelectValueProps<T> &
+  SelectValueProps<T, null> &
   FieldStatusProps &
   TriggeredOpenProps & {
     /** Shown in the field while nothing is selected. Default: 'Select…' */
@@ -173,10 +174,8 @@ export type SelectProps<T> = Omit<SelectListBaseProps<T>, 'style' | 'styles' | '
     label?: string;
     /** Dims the field and keeps it from opening. Default: false */
     disabled?: boolean;
-    /** Show a clear (×) button when something is selected. Default: false */
+    /** Show a clear (✕) button when something is selected; it calls `onValueChange` with `null` (single) or `[]` (multiple). Default: false */
     clearable?: boolean;
-    /** Called when the clear button is pressed. In single mode with `value`, set it to `null` here */
-    onClear?: () => void;
     /** Show selected values as chips in multiple mode. Default: true */
     chips?: boolean;
     /** Single mode: close the sheet on select. Default: true */

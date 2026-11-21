@@ -13,13 +13,12 @@ import { LIST_STYLE } from './select.styles';
 import type { SelectListBaseProps, SelectProps } from './select.types';
 
 export const Select = <T,>(selectProps: SelectProps<T>) => {
-  const { props, reset } = useSelectValue<T, SelectProps<T>>(selectProps);
+  const { props } = useSelectValue<T, SelectProps<T>>(selectProps);
   const {
     placeholder: placeholderProp,
     label,
     disabled = false,
     clearable = false,
-    onClear: _onClear,
     error,
     helperText,
     required,
@@ -90,10 +89,7 @@ export const Select = <T,>(selectProps: SelectProps<T>) => {
                 required={required}
                 onOpen={picker.toggle}
                 onRemove={picker.removeOption}
-                onClear={() => {
-                  picker.clear();
-                  reset();
-                }}
+                onClear={picker.clear}
                 renderChevron={renderChevron}
                 theme={theme}
                 slots={slots}
