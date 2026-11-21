@@ -13,6 +13,9 @@ export const themed = createStyles((t) => ({
     minHeight: COLLAPSIBLE_DESIGN[t.design].minHeight,
     gap: t.spacing.sm,
     paddingVertical: t.spacing.sm,
+    // The hover and focus fill reaches past the label, which stays in line with the content under it.
+    paddingHorizontal: t.spacing.sm,
+    marginHorizontal: -t.spacing.sm,
     borderRadius: t.radius.sm,
   },
   content: { paddingBottom: t.spacing.lg },
