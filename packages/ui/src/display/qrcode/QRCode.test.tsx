@@ -6,7 +6,7 @@ import { QRCode } from './QRCode';
 
 describe('QRCode', () => {
   it('is an image named for screen readers, drawn one view per run of modules', async () => {
-    await render(<QRCode value="https://patine.dev" accessibilityLabel="Open patine.dev" size={150} testID="qr" />);
+    await render(<QRCode value="https://patine.dev" aria-label="Open patine.dev" size={150} testID="qr" />);
     const image = screen.getByRole('img', { name: 'Open patine.dev' });
     expect(image.props.style).toEqual(expect.arrayContaining([expect.objectContaining({ width: 150, height: 150 })]));
     expect(screen.getByTestId('qr').children.length).toBeGreaterThan(50);

@@ -16,7 +16,7 @@ export const QRCode = (props: QRCodeProps) => {
     color = DEFAULT_QR_COLOR,
     backgroundColor = DEFAULT_QR_BACKGROUND,
     logo,
-    accessibilityLabel = 'QR code',
+    'aria-label': accessibilityLabel = 'QR code',
     theme: themeProp,
     design,
     style,

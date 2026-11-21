@@ -44,7 +44,7 @@ export interface QRCodeProps extends ThemableProps {
   /** The logo plate's share of the code's width, up to 0.3. Default: 0.22 */
   logoSize?: number;
   /** Read by screen readers. Default: 'QR code' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The value is too long for a QR code at this level; nothing is drawn */
   onError?: (error: Error) => void;
   /** The outer view, for layout */
