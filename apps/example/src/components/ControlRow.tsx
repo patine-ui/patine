@@ -21,7 +21,7 @@ export const ControlRow = ({ control: { prop, options }, selected, onChoose }: C
     return (
       <View style={styles.switchRow}>
         {name}
-        <Switch accessibilityLabel={prop} value={selected === true} onValueChange={(on) => onChoose(prop, on)} />
+        <Switch aria-label={prop} value={selected === true} onValueChange={(on) => onChoose(prop, on)} />
       </View>
     );
   }
@@ -36,7 +36,7 @@ export const ControlRow = ({ control: { prop, options }, selected, onChoose }: C
     <View style={styles.control}>
       {name}
       {needsSelect(items.map((item) => item.label)) ? (
-        <Select options={items} value={index} onValueChange={choose} searchable={false} placeholder={prop} />
+        <Select options={items} value={index} onValueChange={(i) => i !== null && choose(i)} searchable={false} placeholder={prop} />
       ) : (
         <SegmentedControl items={items} value={index} onValueChange={choose} />
       )}
