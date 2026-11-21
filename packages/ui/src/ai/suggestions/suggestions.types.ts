@@ -17,6 +17,6 @@ export interface SuggestionChipsProps extends ThemableProps {
   /** Blocks every chip, e.g. while an assistant replies */
   disabled?: boolean;
   /** Names the group for screen readers. Default: 'Suggestions' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   style?: StyleProp<ViewStyle>;
 }

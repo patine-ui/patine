@@ -4,6 +4,7 @@ import { Text } from '@/core/primitives/Text';
 import { View } from '@/core/primitives/View';
 import { VirtualList } from '@/core/primitives/VirtualList';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
+import { heightOf } from '@/core/utils/style.utils';
 import { CategoryBar } from './components/CategoryBar';
 import { EmojiGridRow } from './components/EmojiGridRow';
 import { EmojiHeader } from './components/EmojiHeader';
@@ -108,7 +109,7 @@ export const EmojiPicker = (props: EmojiPickerProps) => {
     <ThemeScope theme={themeOverride}>
       <View
         ref={popover.rootRef}
-        style={[{ height, backgroundColor: theme.colors.background }, style, slots?.container]}
+        style={[heightOf(height), themed(theme).container, style, slots?.container]}
         {...ARROW_FOCUS}
         testID={testID}
       >

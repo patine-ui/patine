@@ -87,6 +87,8 @@ export const CALENDAR_DESIGN: Record<Design, CalendarDesign> = {
 export const DEFAULT_DAY_HEIGHT = 44;
 /** The day circle never grows past this, however tall the cell. */
 export const MAX_DAY_SIZE = 40;
+/** Of its cell's width, at most, so side-by-side days keep a gap in a narrow calendar. */
+export const DAY_MAX_WIDTH = '90%';
 export const WEEKDAY_ROW_HEIGHT = 28;
 export const MAX_MARKING_DOTS = 3;
 

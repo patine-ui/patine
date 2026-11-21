@@ -1,4 +1,3 @@
-export const CLEAR_GLYPH = '×';
 export const DEFAULT_MIN_ROWS = 3;
 /** A TextArea's line height, as a multiple of its font size; its rows are this tall. */
 export const LINE_HEIGHT_RATIO = 1.4;

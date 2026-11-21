@@ -1,6 +1,7 @@
 import { ICON_POSITION } from '@/core/core.constants';
 import type { DisclosureLabelProps } from '@/core/core.types';
 import { Text } from '@/core/primitives/Text';
+import { isTextContent } from '@/core/utils/text.utils';
 import { styles } from './components.styles';
 import { DisclosureIcon } from './DisclosureIcon';
 
@@ -14,7 +15,7 @@ export const DisclosureLabel = ({ open, theme, look, options, children, labelSty
   return (
     <>
       {iconPosition === ICON_POSITION.start ? icon : null}
-      {typeof children === 'string' || typeof children === 'number' ? (
+      {isTextContent(children) ? (
         <Text theme={theme} weight={look.labelWeight} style={[styles.disclosureLabel, labelStyle]}>
           {children}
         </Text>

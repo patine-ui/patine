@@ -1,10 +1,10 @@
 import { Button } from '@/actions/button/Button';
+import { CloseMark } from '@/core/components/CloseMark';
 import { IS_WEB } from '@/core/core.constants';
 import { Text } from '@/core/primitives/Text';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { useTheme } from '@/core/theme/ThemeProvider';
 import { useToastItem } from '@/feedback/toast/hooks/useToastItem';
-import { TOAST_CLOSE_GLYPH } from '@/feedback/toast/toast.constants';
 import { styles, themed } from '@/feedback/toast/toast.styles';
 import type { ToastData, ToastDesign, ToastPosition } from '@/feedback/toast/toast.types';
 import { isAssertive, isPersistent } from '@/feedback/toast/toast.utils';
@@ -61,9 +61,7 @@ export const ToastItem = ({ toast: t, look, position, duration, closeButton, clo
         ) : null}
         {(closeButton ?? isPersistent(t, duration)) ? (
           <Button size="sm" variant="ghost" aria-label={closeLabel} onPress={item.dismiss}>
-            <Text size="sm" style={sheet.secondary}>
-              {TOAST_CLOSE_GLYPH}
-            </Text>
+            <CloseMark color={String(sheet.secondary.color)} />
           </Button>
         ) : null}
       </View>

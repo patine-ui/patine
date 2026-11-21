@@ -1,6 +1,7 @@
 import { Text } from '@/core/primitives/Text';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { isTextContent } from '@/core/utils/text.utils';
 import { MESSAGE_FROM } from './chat.constants';
 import { styles, themed } from './chat.styles';
 import type { MessageBubbleProps } from './chat.types';
@@ -28,7 +29,7 @@ export const MessageBubble = ({
           </Text>
         ) : null}
         <View style={[styles.bubble, sheet[from], slots?.bubble]}>
-          {typeof children === 'string' || typeof children === 'number' ? (
+          {isTextContent(children) ? (
             <Text selectable style={[from === MESSAGE_FROM.me ? sheet.meText : sheet.themText, slots?.text]}>
               {children}
             </Text>

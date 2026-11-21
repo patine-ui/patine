@@ -4,8 +4,8 @@ import type { ThemableProps } from '@/core/core.types';
 import type { LightboxLabels } from '@/core/theme/labels.types';
 
 export interface LightboxImage {
-  /** A URL, or a `require`d image */
-  source: ImageSourcePropType;
+  /** A URL, or a `require`d image, as on Image and Avatar */
+  src: string | ImageSourcePropType;
   /** Read by screen readers */
   alt?: string;
 }

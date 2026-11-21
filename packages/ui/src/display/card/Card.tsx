@@ -1,3 +1,5 @@
+import type { ViewProps } from 'react-native';
+
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
@@ -9,6 +11,7 @@ import { CardThemeContext, useCardTheme } from './CardContext';
 import { CARD_DESIGN } from './card.constants';
 import { shadowStyles, styles, themed } from './card.styles';
 import type { CardProps, CardSectionProps } from './card.types';
+import { splitCardAction } from './card.utils';
 import { useCardPress } from './hooks/useCardPress';
 
 /**
@@ -22,6 +25,7 @@ export const Card = ({
   title,
   description,
   footer,
+  action,
   children,
   style,
   shadow,
@@ -45,12 +49,13 @@ export const Card = ({
   // Composed parts (CardHeader, CardTitle…) read the Card's theme and design from context.
   const body = (
     <CardThemeContext.Provider value={themeOverride}>
-      {hasShorthand(title, description, footer) ? (
+      {hasShorthand(title, description, footer, action) ? (
         <>
-          {title || description ? (
+          {title || description || action ? (
             <CardHeader>
               {title ? <CardTitle>{title}</CardTitle> : null}
               {description ? <CardDescription>{description}</CardDescription> : null}
+              {action ? <CardAction>{action}</CardAction> : null}
             </CardHeader>
           ) : null}
           {children ? <CardContent>{children}</CardContent> : null}
@@ -90,11 +95,26 @@ export const Card = ({
   );
 };
 
-/** The title and description at the top of a Card. */
-export const CardHeader = ({ theme: themeProp, style, ...rest }: CardSectionProps) => {
-  const theme = useTheme(useCardTheme(themeProp));
-  return <View style={[themed(theme).header, style]} {...rest} />;
+/** The title and description at the top of a Card, with a CardAction at its end when it has one. */
+export const CardHeader = ({ theme: themeProp, style, children, ...rest }: CardSectionProps) => {
+  const sheet = themed(useTheme(useCardTheme(themeProp)));
+  const { text, action } = splitCardAction(children, CardAction);
+  if (!action)
+    return (
+      <View style={[sheet.header, style]} {...rest}>
+        {children}
+      </View>
+    );
+  return (
+    <View style={[sheet.header, styles.headerRow, sheet.headerRow, style]} {...rest}>
+      <View style={[styles.headerText, sheet.headerText]}>{text}</View>
+      {action}
+    </View>
+  );
 };
+
+/** Put inside a CardHeader: sits at the header's end, beside the title, such as a Badge, a menu or a small Button. */
+export const CardAction = ({ style, ...rest }: ViewProps) => <View style={[styles.action, style]} {...rest} />;
 
 /** A Card's heading: level 3 for screen readers. */
 export const CardTitle = ({ level = 3, size = 'lg', theme, ...rest }: HeadingProps) => (

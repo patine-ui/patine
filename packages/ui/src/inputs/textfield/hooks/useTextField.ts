@@ -34,6 +34,7 @@ export const useTextField = (
   const focus = useFocus();
   const labelId = useId();
   const [revealed, setRevealed] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const lineHeight = getLineHeight(theme.typography.sizes.md);
   const lines = resolveRows(rows, minRows, maxRows);
@@ -59,6 +60,11 @@ export const useTextField = (
       focus.onBlur();
       onBlur?.(e);
     },
+    hovered,
+    onHoverIn: () => setHovered(true),
+    onHoverOut: () => setHovered(false),
+    /** A press anywhere on the box, such as on its icon or padding, puts the caret in the text */
+    focusInput: () => node.current?.focus(),
     hidden: !!secureTextEntry && !revealed,
     toggleRevealed: () => setRevealed((r) => !r),
     labelId,

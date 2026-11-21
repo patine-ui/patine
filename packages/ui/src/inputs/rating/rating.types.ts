@@ -39,7 +39,7 @@ export interface RatingProps extends ThemableProps {
   /** The value as screen readers hear it. Default: '3 of 5' */
   formatValue?: (value: number, max: number) => string;
   /** What screen readers call the rating. Default: 'Rating' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   /** Per-part style overrides */

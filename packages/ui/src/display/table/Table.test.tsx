@@ -10,7 +10,7 @@ const DATA: Invoice[] = [
 const COLUMNS = [
   { key: 'id', title: 'Invoice' },
   { key: 'customer', title: 'Customer', sortable: true },
-  { key: 'amount', title: 'Amount', align: 'right' as const, sortable: true, accessor: (r: Invoice) => r.amount * 100 },
+  { key: 'amount', title: 'Amount', align: 'end' as const, sortable: true, accessor: (r: Invoice) => r.amount * 100 },
 ];
 
 describe('Table', () => {

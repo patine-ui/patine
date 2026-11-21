@@ -16,9 +16,9 @@ import {
 } from '@/core/utils/date.utils';
 import { clamp01 } from '@/core/utils/track.utils';
 import {
-  ARROW_DIRECTION,
   CALENDAR_MODE,
   CALENDAR_VIEW,
+  DAY_MAX_WIDTH,
   DAY_MS,
   DAY_SELECTION,
   DAYS_PER_WEEK,
@@ -32,7 +32,6 @@ import {
   YEARS_PER_PAGE,
 } from './calendar.constants';
 import type {
-  ArrowDirection,
   CalendarDesign,
   CalendarSelection,
   CalendarView,
@@ -216,9 +215,6 @@ export const orderWeekdays = (names: string[], firstDayOfWeek: number): Weekday[
     };
   });
 
-/** ‹ points to the previous month, mirrored in RTL. */
-export const getArrowGlyph = (direction: ArrowDirection, rtl: boolean) => ((direction === ARROW_DIRECTION.prev) !== rtl ? '‹' : '›');
-
 export const canGoToMonth = (month: Date, delta: number, minDate?: Date, maxDate?: Date) => {
   const target = addMonths(month, delta);
   if (delta < 0) return !minDate || compareDay(target, startOfMonth(minDate)) >= 0;
@@ -352,10 +348,15 @@ export const getBandBox = (height: number, size: number) => ({
   height: size,
 });
 
-/** A day's circle (or rounded square). */
+/**
+ * A day's circle (or rounded square): `size` across, or less in a narrow cell, always square and clear of its neighbours, so
+ * separate chosen days never touch and read as a range (a range's band joins them instead).
+ */
+// ponytail: in a cell narrower than the day, the range band (sized from `size`) stands a little taller than its ends; measure the cell if that shows
 export const getDayBox = (size: number, radius: number) => ({
   width: size,
-  height: size,
+  maxWidth: DAY_MAX_WIDTH,
+  aspectRatio: 1,
   borderRadius: radius,
 });
 

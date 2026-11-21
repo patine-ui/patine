@@ -3,6 +3,7 @@ import type { Animated, GestureResponderEvent, GestureResponderHandlers } from '
 import { PanResponder } from 'react-native';
 
 import { getDayPeriods } from '@/core/utils/date.utils';
+import { toLayoutScale } from '@/core/utils/touch.utils';
 import { CLOCK_MODE, DIAL_SIZE, TIME_FORMAT } from '@/pickers/time/time.constants';
 import type { ClockMode, TimeOptions, TimeParts } from '@/pickers/time/time.types';
 import {
@@ -75,9 +76,13 @@ export const useClockDial = (
   // The responder is created once, so it calls the latest handlers, and reads touches against where the dial was on the page.
   const latest = useRef({ pickAt, finish });
   latest.current = { pickAt, finish };
-  const origin = useRef({ x: 0, y: 0 });
+  // Touches in a zoomed region of a web page come in screen pixels; the dial's size is in its own.
+  const origin = useRef({ x: 0, y: 0, scale: 1 });
   const pick = (e: GestureResponderEvent) =>
-    latest.current.pickAt(e.nativeEvent.pageX - origin.current.x, e.nativeEvent.pageY - origin.current.y);
+    latest.current.pickAt(
+      (e.nativeEvent.pageX - origin.current.x) * origin.current.scale,
+      (e.nativeEvent.pageY - origin.current.y) * origin.current.scale
+    );
   const pan = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -85,7 +90,7 @@ export const useClockDial = (
       onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: (e) => {
         const { pageX, pageY, locationX, locationY } = e.nativeEvent;
-        origin.current = { x: pageX - locationX, y: pageY - locationY };
+        origin.current = { x: pageX - locationX, y: pageY - locationY, scale: toLayoutScale(e.currentTarget) };
         dragging.current = false;
         pick(e);
       },

@@ -4,6 +4,7 @@ import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { formatMonthYear } from '@/core/utils/date.utils';
 import { CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
+import { themed } from './calendar.styles';
 import type { WeekStripProps } from './calendar.types';
 import { getStripWeek, getWeekMonth } from './calendar.utils';
 import { CalendarHeader } from './components/CalendarHeader';
@@ -51,11 +52,7 @@ export const WeekStrip = (props: WeekStripProps) => {
   const title = formatTitle ? formatTitle(nav.weekStart, locale) : formatMonthYear(getWeekMonth(nav.weekStart), locale);
 
   return (
-    <View
-      style={[{ backgroundColor: theme.colors.background, paddingVertical: theme.spacing.sm }, style, slots?.container]}
-      {...ARROW_FOCUS}
-      testID={testID}
-    >
+    <View style={[themed(theme).container, style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
       {showHeader ? (
         <CalendarHeader
           label={title}
@@ -66,7 +63,6 @@ export const WeekStrip = (props: WeekStripProps) => {
           onTitlePress={noop}
           onArrowPress={nav.onArrowPress}
           renderArrow={renderArrow}
-          rtl={nav.rtl}
           theme={theme}
           slots={slots}
         />

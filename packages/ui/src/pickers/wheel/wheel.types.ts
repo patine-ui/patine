@@ -65,7 +65,7 @@ export interface WheelPickerProps<T> extends ThemableProps {
   style?: StyleProp<ViewStyle>;
   /** Per-part style overrides */
   styles?: SlotStyles<WheelPickerSlot>;
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   testID?: string;
 }
 
@@ -159,7 +159,7 @@ export interface WheelTypingInputProps {
   numeric: boolean;
   itemHeight: number;
   theme: Theme;
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   onChangeText: (text: string) => void;
   onDone: () => void;
 }

@@ -2,6 +2,7 @@ import { AccessibilityInfo, StyleSheet } from 'react-native';
 
 import { render, screen } from '@testing-library/react-native';
 
+import { Text } from '@/core/primitives/Text';
 import { lightTheme } from '@/core/theme/theme.constants';
 import { Alert, AlertDescription, AlertTitle } from './Alert';
 
@@ -41,5 +42,12 @@ describe('Alert shorthand', () => {
     expect(screen.getByText('Heads up')).toBeTruthy();
     expect(screen.getByText('Your trial ends soon.')).toBeTruthy();
     expect(screen.getByText('Upgrade to keep your data.')).toBeTruthy();
+  });
+
+  it('puts its action after the text, where a dismiss button goes', async () => {
+    await render(<Alert testID="alert" title="Saved" action={<Text testID="close">✕</Text>} />);
+    const row = screen.getByTestId('alert');
+    const last = row.children[row.children.length - 1] as { props: { testID?: string } };
+    expect(last.props.testID).toBe('close');
   });
 });

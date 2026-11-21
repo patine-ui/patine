@@ -10,5 +10,3 @@ export const PAGINATION_DESIGN: Record<Design, PaginationDesign> = {
 };
 
 export const ELLIPSIS = '…';
-export const PREV_ARROW = '‹';
-export const NEXT_ARROW = '›';

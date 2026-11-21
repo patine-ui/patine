@@ -23,5 +23,5 @@ export interface SpinnerProps extends Omit<ActivityIndicatorProps, 'color'>, The
   /** A theme color. Default: 'primary' */
   color?: keyof Theme['colors'];
   /** Read by screen readers. Default: 'Loading' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
 }

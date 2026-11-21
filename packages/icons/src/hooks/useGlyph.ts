@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-import { useDirection, useTheme } from 'patine-ui';
+import { useContentColor, useDirection, useTheme } from 'patine-ui';
 
 import { DEFAULT_STROKE_WIDTH } from '../icons.constants';
 import type { GlyphProps } from '../icons.types';
@@ -12,10 +12,11 @@ export const useGlyph = ({
   size = 'md',
   color,
   strokeWidth = DEFAULT_STROKE_WIDTH,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   mirror: mirrorProp,
 }: GlyphProps) => {
   const theme = useTheme();
+  const contentColor = useContentColor();
   const rtl = useDirection() === 'rtl';
   const mirror = mirrorProp ?? (Boolean(icon.rtl) && rtl);
   const id = toSvgId(useId());
@@ -25,7 +26,7 @@ export const useGlyph = ({
     id,
     strokeWidth,
     ...splitCut(icon.paths),
-    stroke: resolveColor(theme.colors as unknown as Record<string, string>, color, theme.colors.textSecondary),
+    stroke: resolveColor(theme.colors as unknown as Record<string, string>, color, contentColor ?? theme.colors.textSecondary),
     box: {
       width: px,
       height: px,

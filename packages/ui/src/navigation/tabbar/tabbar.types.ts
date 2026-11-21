@@ -35,7 +35,7 @@ export interface TabBarProps<T extends string = string> extends Omit<ViewProps, 
   /** Space under the bar, for the home indicator: pass the safe area's bottom inset. Default: 0 */
   bottomInset?: number;
   /** Names the bar for screen readers. Default: 'Tabs' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }

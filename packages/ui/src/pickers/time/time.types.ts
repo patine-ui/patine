@@ -141,7 +141,7 @@ export type TimeColumnSpec = Omit<WheelColumn<number>, 'onValueChange' | 'onValu
 };
 
 /** A column of cells to click on the web: a time or duration wheel column with its handler attached. */
-export type TimePanelColumn = Pick<WheelColumn<number>, 'items' | 'accessibilityLabel' | 'suffix' | 'testID'> & {
+export type TimePanelColumn = Pick<WheelColumn<number>, 'items' | 'aria-label' | 'suffix' | 'testID'> & {
   key: string;
   value?: number;
   onValueChange: (value: number) => void;

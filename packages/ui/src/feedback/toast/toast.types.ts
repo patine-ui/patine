@@ -27,6 +27,11 @@ export interface ToastOptions {
   id?: ToastId;
   /** Show it only in the `<Toaster id>` with this id. Default: the Toaster without an id */
   toasterId?: string;
+  /**
+   * Called once when it closes without its action: its timer, the close button, a swipe or `toast.dismiss`. An Undo toast
+   * commits the change here, since pressing Undo doesn't call it
+   */
+  onDismiss?: (id: ToastId) => void;
 }
 
 /** A toast in the store. */

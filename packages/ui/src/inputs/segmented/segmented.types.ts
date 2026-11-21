@@ -48,7 +48,10 @@ export interface ChoiceRenderItemInfo<T> {
 
 export type ChoiceListProps<T> = ThemableProps & {
   items: ReadonlyArray<ChoiceItem<T>>;
+  /** The selected item's value, when you control it; `null` for none */
   value?: T | null;
+  /** The value selected at first, when it keeps its own state. Default: none */
+  defaultValue?: T | null;
   onValueChange?: (value: NoInferValue<T>, item: ChoiceItem<T>) => void;
   isEqual?: (a: T, b: T) => boolean;
   /** 'segmented': items on a track, the selected one on a sliding thumb. 'chips': separate pills. Set by SegmentedControl and ChipGroup */
@@ -67,7 +70,7 @@ export type ChoiceListProps<T> = ThemableProps & {
   /** Custom item content, inside the pressable item */
   renderItem?: (info: ChoiceRenderItemInfo<T>) => React.ReactNode;
   /** Names the list for screen readers */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   style?: StyleProp<ViewStyle>;
   styles?: SlotStyles<ChoiceSlot>;
   testID?: string;

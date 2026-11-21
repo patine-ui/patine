@@ -18,7 +18,7 @@ export const CopyButton = ({
   timeout = COPY_TIMEOUT,
   variant = 'ghost',
   size,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   ...rest
 }: CopyButtonProps) => {
   const words = useLabels();

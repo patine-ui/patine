@@ -35,7 +35,7 @@ export const PickerSheet = ({
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const onClose = () => onOpenChange?.(false);
   const sheetDesign = SHEET_DESIGN[theme.design];
-  const confirmLabel = confirmLabelProp ?? sheetDesign.confirmLabel;
+  const confirmLabel = confirmLabelProp ?? words[sheetDesign.confirmLabel];
   const field = useFieldSheet();
   const presentation = presentationProp ?? field?.presentation;
   const fit = useDropdownFit();

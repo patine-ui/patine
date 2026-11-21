@@ -40,6 +40,7 @@ export const themed = createStyles((t) => {
   const look = SELECT_DESIGN[t.design];
   const { size, radius, offColor } = look.checkbox;
   return {
+    groupHeader: { paddingHorizontal: t.spacing.lg, paddingTop: t.spacing.md, paddingBottom: t.spacing.xs },
     row: {
       minHeight: look.rowHeight,
       paddingHorizontal: t.spacing.lg,

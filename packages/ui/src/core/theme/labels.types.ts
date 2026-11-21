@@ -112,6 +112,10 @@ export interface Labels {
   close: string;
   /** Default: 'Cancel' */
   cancel: string;
+  /** Confirms a picker sheet, in every design but Material. Default: 'Done' */
+  done: string;
+  /** Confirms a picker sheet in the Material design. Default: 'OK' */
+  ok: string;
   /** A header's back button. Default: 'Back' */
   back: string;
   /** A retry action after something failed to load or send. Default: 'Try again' */

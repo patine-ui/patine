@@ -2,6 +2,7 @@ import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { Pressable, View } from '@/core/primitives/View';
 import { useLabels } from '@/core/theme/ThemeProvider';
+import { fontSizeOf } from '@/core/utils/style.utils';
 import { SKIN_TONES } from '@/pickers/emoji/emoji.constants';
 import { styles, themed } from '@/pickers/emoji/emoji.styles';
 import type { SkinTonePopoverProps } from '@/pickers/emoji/emoji.types';
@@ -39,7 +40,7 @@ export const SkinTonePopover = ({
               {renderEmoji ? (
                 renderEmoji(char, emoji, fontSize)
               ) : (
-                <Text selectable={false} style={[{ fontSize, lineHeight: fontSize * 1.2 }, slots?.emojiText]}>
+                <Text selectable={false} style={[fontSizeOf(fontSize), slots?.emojiText]}>
                   {char}
                 </Text>
               )}

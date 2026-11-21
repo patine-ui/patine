@@ -55,8 +55,7 @@ export const styles = StyleSheet.create({
   floatingLabel: { paddingHorizontal: FLOATING_LABEL_PADDING },
   triggerRow: { flexDirection: 'row', alignItems: 'center' },
   triggerIcon: { marginEnd: 8 },
-  clear: { paddingHorizontal: 6 },
-  clearButton: { justifyContent: 'center' },
+  clearButton: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   chevron: { width: 20, height: 20, alignItems: 'center', justifyContent: 'center', marginStart: 4 },
   chevronTriangle: {
     width: 0,
@@ -93,6 +92,7 @@ export const fieldStyles = createStyles((t) => {
       paddingHorizontal: inset(look.openBorderWidth),
       boxShadow: look.focusRing ? `0px 0px 0px ${FOCUS_RING_WIDTH}px ${t.colors.primaryMuted}` : undefined,
     },
+    hover: { borderColor: t.colors[look.hoverOutline] },
     invalid: { borderColor: t.colors.danger },
     multiline: { paddingVertical: inset(1) },
     multilineOpen: { paddingVertical: inset(look.openBorderWidth) },

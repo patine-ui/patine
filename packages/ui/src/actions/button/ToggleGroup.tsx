@@ -97,7 +97,7 @@ export const ToggleGroup = (props: ToggleGroupProps) => {
           {...rest}
         >
           {items
-            ? items.map(({ value: v, label, icon, accessibilityLabel, disabled: itemDisabled }) => (
+            ? items.map(({ value: v, label, icon, 'aria-label': accessibilityLabel, disabled: itemDisabled }) => (
                 <ToggleGroupItem key={v} value={v} startIcon={icon} aria-label={accessibilityLabel} disabled={itemDisabled}>
                   {label}
                 </ToggleGroupItem>

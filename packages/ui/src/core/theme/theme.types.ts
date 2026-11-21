@@ -117,7 +117,7 @@ export interface PatineProviderProps {
   theme?: DeepPartial<Theme>;
   /** Overrides applied to the dark theme */
   darkTheme?: DeepPartial<Theme>;
-  /** Pickers behave as on this platform: sheets or dropdowns, insets, dragging. For previewing iOS or Android in a browser. Default: `Platform.OS` */
+  /** Components behave as on this platform: sheets or dropdowns, insets, dragging, keyboard. For previewing iOS or Android in a browser. Default: `Platform.OS` */
   platform?: PlatformOS;
   /** The look components follow. 'brand' is Patine's own look on every platform; 'native' matches the platform: 'ios' on iOS, 'web' on the web, 'material' elsewhere. Default: 'brand' */
   design?: DesignPreference;

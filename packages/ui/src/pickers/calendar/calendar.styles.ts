@@ -33,6 +33,8 @@ export const styles = StyleSheet.create({
 
 /** The calendar's header, grid cells and days in the theme's colours. */
 export const themed = createStyles((t) => ({
+  container: { backgroundColor: t.colors.background, paddingVertical: t.spacing.sm },
+  expandableContainer: { backgroundColor: t.colors.background, paddingTop: t.spacing.sm },
   header: { paddingHorizontal: t.spacing.sm, marginBottom: t.spacing.sm },
   title: { borderRadius: t.radius.sm },
   round: { borderRadius: t.radius.full },

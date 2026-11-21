@@ -11,7 +11,7 @@ export const SuggestionChips = ({
   suggestions,
   onPress,
   disabled,
-  accessibilityLabel: accessibilityLabelProp,
+  'aria-label': accessibilityLabelProp,
   theme: themeProp,
   design,
   style,

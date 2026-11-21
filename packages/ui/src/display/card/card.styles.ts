@@ -7,6 +7,9 @@ import { CARD_DESIGN } from './card.constants';
 export const styles = StyleSheet.create({
   card: { overflow: 'hidden' },
   footer: { flexDirection: 'row', alignItems: 'center' },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  headerText: { flex: 1 },
+  action: { flexShrink: 0 },
 });
 
 /** The design's card surface, its sections' padding, and each shadow level . */
@@ -22,6 +25,8 @@ export const themed = createStyles((t) => {
       gap: t.spacing.lg,
     },
     header: { paddingHorizontal: t.spacing.lg, gap: t.spacing.xs },
+    headerRow: { gap: t.spacing.md },
+    headerText: { gap: t.spacing.xs },
     content: { paddingHorizontal: t.spacing.lg },
     footer: { paddingHorizontal: t.spacing.lg, gap: t.spacing.sm },
   };

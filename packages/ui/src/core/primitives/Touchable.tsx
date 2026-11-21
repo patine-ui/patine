@@ -24,6 +24,7 @@ export const Touchable = ({
   theme: themeProp,
   ripple = true,
   hover = true,
+  feedbackColor,
   pressScale = false,
   focusRing = true,
   minTarget = true,
@@ -123,7 +124,11 @@ export const Touchable = ({
         const borderRadius = StyleSheet.flatten(callerStyle(state))?.borderRadius;
         return (
           <>
-            <TouchFeedback {...touch.feedback} borderRadius={typeof borderRadius === 'number' ? borderRadius : undefined} />
+            <TouchFeedback
+              {...touch.feedback}
+              feedbackColor={feedbackColor}
+              borderRadius={typeof borderRadius === 'number' ? borderRadius : undefined}
+            />
             {typeof children === 'function' ? children(withFocus(state)) : children}
           </>
         );

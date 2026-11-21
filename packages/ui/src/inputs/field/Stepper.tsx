@@ -24,7 +24,7 @@ export const Stepper = ({
   step = 1,
   showValue,
   formatValue = String,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   disabled = false,
   labels: labelsProp,
   theme: themeProp,

@@ -42,12 +42,7 @@ export const Layout = ({ insets, design, onDesignChange }: LayoutProps) => {
       <View style={styles.main}>
         <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
           {wide ? null : (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="DropdownMenu"
-              onPress={() => setDrawerOpen(true)}
-              style={styles.menuButton}
-            >
+            <Pressable accessibilityRole="button" aria-label="DropdownMenu" onPress={() => setDrawerOpen(true)} style={styles.menuButton}>
               <Text style={[styles.menuIcon, { color: colors.text }]}>{MENU_ICON}</Text>
             </Pressable>
           )}
@@ -71,12 +66,7 @@ export const Layout = ({ insets, design, onDesignChange }: LayoutProps) => {
       {floating.mounted ? (
         <View style={styles.drawerOverlay}>
           <Animated.View style={[styles.backdrop, { backgroundColor: colors.backdrop }, floating.backdropStyle]}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Close menu"
-              onPress={() => setDrawerOpen(false)}
-              style={styles.fill}
-            />
+            <Pressable accessibilityRole="button" aria-label="Close menu" onPress={() => setDrawerOpen(false)} style={styles.fill} />
           </Animated.View>
           <Animated.View style={[drawerStyle, styles.drawerFloating, floating.panelStyle]}>{drawer}</Animated.View>
         </View>

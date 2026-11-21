@@ -5,7 +5,7 @@ import { MIN_TOUCH_TARGET } from '@/core/a11y/a11y.constants';
 /** The chevron drawn with views: two sides of a turned square. */
 export const CHEVRON_SIZE = 8;
 
-import { DISCLOSURE_CHEVRON, HOVER_FILL_SPREAD, SEARCH_DESIGN, SEARCH_ICON_SIZE } from '@/core/core.constants';
+import { CLOSE_MARK, DISCLOSURE_CHEVRON, HOVER_FILL_SPREAD, SEARCH_DESIGN, SEARCH_ICON_SIZE } from '@/core/core.constants';
 import { createStyles } from '@/core/theme/theme.utils';
 
 export const styles = StyleSheet.create({
@@ -15,6 +15,12 @@ export const styles = StyleSheet.create({
   chevronMark: { width: CHEVRON_SIZE, height: CHEVRON_SIZE, borderTopWidth: 2, borderRightWidth: 2, borderRadius: 1 },
   chevronForward: { transform: [{ rotate: '45deg' }] },
   chevronBack: { transform: [{ rotate: '-135deg' }] },
+  closeMark_sm: { width: CLOSE_MARK.sm, height: CLOSE_MARK.sm, alignItems: 'center', justifyContent: 'center' },
+  closeMark_md: { width: CLOSE_MARK.md, height: CLOSE_MARK.md, alignItems: 'center', justifyContent: 'center' },
+  closeBar_sm: { position: 'absolute', width: CLOSE_MARK.sm * Math.SQRT2, height: CLOSE_MARK.stroke, borderRadius: 1 },
+  closeBar_md: { position: 'absolute', width: CLOSE_MARK.md * Math.SQRT2, height: CLOSE_MARK.stroke, borderRadius: 1 },
+  closeBarDown: { transform: [{ rotate: '45deg' }] },
+  closeBarUp: { transform: [{ rotate: '-45deg' }] },
   searchIcon: { width: SEARCH_ICON_SIZE, height: SEARCH_ICON_SIZE },
   searchLens: { width: 11, height: 11, borderRadius: 6, borderWidth: 1.6 },
   searchHandle: { position: 'absolute', left: 10.4, top: 8.7, width: 1.6, height: 5, borderRadius: 1, transform: [{ rotate: '-45deg' }] },

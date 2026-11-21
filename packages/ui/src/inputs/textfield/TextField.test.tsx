@@ -1,8 +1,9 @@
 import { type ComponentRef, createRef, useState } from 'react';
-import type { TextInput } from 'react-native';
+import { StyleSheet, type TextInput } from 'react-native';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { lightTheme } from '@/core/theme/theme.constants';
 import { TextField } from './TextField';
 
 const input = (name = 'Email') => screen.getByLabelText(name);
@@ -22,6 +23,18 @@ const Controlled = ({ onValueChange }: { onValueChange: (text: string) => void }
 };
 
 describe('TextField', () => {
+  it('focuses the input when its box is pressed, and darkens the border under a pointer', async () => {
+    const ref = createRef<ComponentRef<typeof TextInput>>();
+    await render(<TextField label="Email" ref={ref} />);
+    const focus = jest.fn();
+    if (ref.current) ref.current.focus = focus;
+    const box = input().parent as NonNullable<ReturnType<typeof input>['parent']>;
+    await fireEvent.press(box);
+    expect(focus).toHaveBeenCalled();
+    await fireEvent(box, 'hoverIn');
+    expect(StyleSheet.flatten(box.props.style).borderColor).toBe(lightTheme.colors.textSecondary);
+  });
+
   it('reports what the user types, and keeps its own text when uncontrolled', async () => {
     const onValueChange = jest.fn();
     await render(<TextField label="Email" defaultValue="a" onValueChange={onValueChange} />);
@@ -127,7 +140,7 @@ describe('TextField names', () => {
   it("lets the caller's accessibilityLabel or aria-label win over the label and placeholder", async () => {
     await render(
       <>
-        <TextField label="Email" placeholder="you@example.com" accessibilityLabel="Work email" />
+        <TextField label="Email" placeholder="you@example.com" aria-label="Work email" />
         <TextField placeholder="Search" aria-label="Search orders" />
       </>
     );

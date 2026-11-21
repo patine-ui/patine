@@ -33,6 +33,8 @@ export const CHECK_MARK = '✓';
 
 /** The drawn chevron of Accordion, Collapsible and tree rows: its arm length and stroke, in points. */
 export const DISCLOSURE_CHEVRON = { size: 8, stroke: 1.75 } as const;
+/** The drawn ✕ of close and clear buttons: the square it fills, per size, and its stroke. Drawn, so every font shows the same mark. */
+export const CLOSE_MARK = { sm: 9, md: 11, stroke: 1.6 } as const;
 
 /** Which side of its label a checkbox or switch sits on. */
 export const CONTROL_POSITION = {
@@ -101,6 +103,10 @@ export const SEARCH_DESIGN: Record<Design, SearchDesign> = {
 };
 
 export const SEARCH_ICON_SIZE = 16;
+
+/** A `feedbackColor` layer's strength on hover and while held: Material's state layers, a touch stronger so they read on dark fills. Press adds to hover while held. */
+export const TINT_HOVER_OPACITY = 0.12;
+export const TINT_PRESS_OPACITY = 0.14;
 
 /** The ripple grows over this multiple of the theme's animation duration, and fades out over the other. */
 export const RIPPLE_GROW_RATIO = 1.5;

@@ -44,8 +44,6 @@ export interface PlaygroundConfig {
   value?: unknown;
   /** The callback that receives the new value. */
   changeProp?: string;
-  /** A callback that resets the value, e.g. `onClear`. */
-  resetProp?: string;
   /** Renders a button that opens the component, which gets `open` and `onOpenChange`. */
   opener?: string;
   children?: ReactNode;

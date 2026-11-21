@@ -1,4 +1,5 @@
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { useControllableState } from '@/core/hooks/useControllableState';
 import { Scroll } from '@/core/primitives/Scroll';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
@@ -15,6 +16,7 @@ import { findItemIndex } from './segmented.utils';
 export const ChoiceList = <T,>({
   items,
   value,
+  defaultValue = null,
   onValueChange,
   isEqual = Object.is,
   variant = CHOICE_VARIANT.segmented,
@@ -23,7 +25,7 @@ export const ChoiceList = <T,>({
   arrowPosition = ARROW_POSITION.outside,
   renderArrow,
   renderItem,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   style,
   styles: slots,
   theme: themeProp,
@@ -32,8 +34,12 @@ export const ChoiceList = <T,>({
 }: ChoiceListProps<T>) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const sheet = themed(theme);
-  const list = useChoiceList(onValueChange, theme.spacing.lg);
-  const selectedIndex = findItemIndex(items, value, isEqual);
+  const [selected, setSelected] = useControllableState<T | null>(value, defaultValue);
+  const list = useChoiceList<T>((next, item) => {
+    setSelected(next);
+    onValueChange?.(next, item);
+  }, theme.spacing.lg);
+  const selectedIndex = findItemIndex(items, selected, isEqual);
   const thumb = useSegmentThumb(selectedIndex, theme.animation.duration);
   const segmented = variant === CHOICE_VARIANT.segmented;
   const { outlined } = LIST_DESIGN[theme.design];

@@ -116,13 +116,17 @@ describe('Select', () => {
     expect(onValueChange).toHaveBeenCalledWith(['expo'], [options[2]]);
   });
 
-  it('clears everything with the clear button', async () => {
+  it('clears everything with the clear button: [] when multiple, null when single', async () => {
     const onValueChange = jest.fn();
-    const onClear = jest.fn();
-    await render(<Select multiple clearable options={options} value={['react']} onValueChange={onValueChange} onClear={onClear} />);
+    await render(<Select multiple clearable options={options} value={['react']} onValueChange={onValueChange} />);
     await fireEvent.press(screen.getByLabelText('Clear'));
     expect(onValueChange).toHaveBeenCalledWith([], []);
-    expect(onClear).toHaveBeenCalled();
+
+    const onSingle = jest.fn();
+    await render(<Select clearable options={options} defaultValue="react" onValueChange={onSingle} />);
+    await fireEvent.press(screen.getByLabelText('Clear'));
+    expect(onSingle).toHaveBeenCalledWith(null, null);
+    expect(screen.queryByLabelText('Clear')).toBeNull();
   });
 
   it('renders a custom trigger that can open the sheet', async () => {

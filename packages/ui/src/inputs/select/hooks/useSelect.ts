@@ -10,7 +10,7 @@ import { resolveFieldPresentation, shouldCollapseOnPress } from '@/overlays/shee
 
 /** Open state (plus the field's position for a dropdown), the selected options, and the value props the inner SelectList gets. */
 export const useSelect = <T>(props: SelectProps<T>, isEqual: (a: T, b: T) => boolean) => {
-  const { options = NO_OPTIONS, disabled = false, closeOnSelect = true, onClear } = props;
+  const { options = NO_OPTIONS, disabled = false, closeOnSelect = true } = props;
   const [open, setOpen] = useControllableState(props.open, props.defaultOpen ?? false, props.onOpenChange);
   const anchor = useAnchor();
   const [query, setQuery] = useState('');
@@ -83,7 +83,7 @@ export const useSelect = <T>(props: SelectProps<T>, isEqual: (a: T, b: T) => boo
 
   const clear = () => {
     if (props.multiple) props.onValueChange?.([], []);
-    onClear?.();
+    else props.onValueChange?.(null, null);
   };
 
   return {

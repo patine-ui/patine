@@ -4,7 +4,9 @@ import { KeyboardAvoidingView, useWindowDimensions } from 'react-native';
 import { useReturnFocus } from '@/core/a11y/hooks/useReturnFocus';
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
+import { useControllableState } from '@/core/hooks/useControllableState';
 import { Modal } from '@/core/primitives/Modal';
+import { Slot } from '@/core/primitives/Slot';
 import { AnimatedView, Pressable, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels, usePlatform } from '@/core/theme/ThemeProvider';
 import { SheetCloseButton } from './components/SheetCloseButton';
@@ -17,7 +19,25 @@ import { sheetStyles, styles } from './sheet.styles';
 import type { BottomSheetProps } from './sheet.types';
 import { getBottomInset, getHeight, getSheetBox, getSheetDefaults, resolvePresentation, resolveSheetHeight } from './sheet.utils';
 
-export const BottomSheet = ({
+/**
+ * A sheet that slides up from the bottom, drags to resize and swipes away; a centered card on wide web windows. Give it a
+ * `trigger` to open itself, or control it with `open` + `onOpenChange`.
+ */
+export const BottomSheet = ({ open, defaultOpen = false, onOpenChange, trigger, ...rest }: BottomSheetProps) => {
+  const [visible, setVisible] = useControllableState(open, defaultOpen, onOpenChange);
+  return (
+    <>
+      {trigger ? (
+        <Slot onPress={() => setVisible(true)} aria-expanded={visible}>
+          {trigger}
+        </Slot>
+      ) : null}
+      <SheetPanel {...rest} open={visible} onOpenChange={setVisible} />
+    </>
+  );
+};
+
+const SheetPanel = ({
   open: visible = false,
   onOpenChange,
   children,
@@ -43,7 +63,7 @@ export const BottomSheet = ({
   onOpened,
   onClosed,
   testID,
-}: BottomSheetProps) => {
+}: Omit<BottomSheetProps, 'trigger' | 'defaultOpen'>) => {
   const words = useLabels();
   const closeLabel = closeLabelProp ?? words.close;
   const { theme, themeOverride } = useComponentTheme(themeProp, design);

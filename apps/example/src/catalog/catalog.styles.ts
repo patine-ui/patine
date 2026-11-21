@@ -12,8 +12,6 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   pill: { borderRadius: 999 },
-  slide: { height: 150, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   sortRow: { flexDirection: 'row', alignItems: 'center', paddingStart: 16, minHeight: 52 },
   grow: { flex: 1 },
-  slideText: { color: '#FFFFFF', fontSize: 32, fontWeight: '700' },
 });

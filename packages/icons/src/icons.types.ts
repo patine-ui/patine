@@ -27,12 +27,12 @@ export interface GlyphProps {
   icon: IconGlyph;
   /** Points, or 'sm' (16), 'md' (20), 'lg' (24). Default: 'md' */
   size?: keyof typeof ICON_SIZE | number;
-  /** A theme color or any CSS color. Default: 'textSecondary' */
+  /** A theme color or any CSS color. Default: the color of the Button, Fab or toggle it sits in, else 'textSecondary' */
   color?: ThemeColor | (string & {});
   /** On the 24-point grid. Default: 1.5 */
   strokeWidth?: number;
   /** Names the icon for screen readers. Without it the icon is decorative and hidden from them. */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** Flips the icon. Default: directional icons flip in right-to-left layouts */
   mirror?: boolean;
   style?: StyleProp<ViewStyle>;

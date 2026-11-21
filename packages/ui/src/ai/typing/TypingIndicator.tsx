@@ -14,7 +14,14 @@ const DOTS = Array.from({ length: TYPING_DOTS.count }, (_, i) => i);
  * MessageBubble's `from="them"` in every design. Screen readers hear "Maya is typing" when it appears; the dots hold still
  * when the OS asks to reduce motion.
  */
-export const TypingIndicator = ({ name, accessibilityLabel, theme: themeProp, design, style, ...rest }: TypingIndicatorProps) => {
+export const TypingIndicator = ({
+  name,
+  'aria-label': accessibilityLabel,
+  theme: themeProp,
+  design,
+  style,
+  ...rest
+}: TypingIndicatorProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const sweep = useSweep(true, TYPING_DOTS.period);
   const sheet = themed(theme);

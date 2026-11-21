@@ -3,9 +3,26 @@ import { StyleSheet, Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DESIGN_SHADOWS, DESIGN_TOKENS, lightTheme } from '@/core/theme/theme.constants';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './Card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './Card';
 
 describe('Card', () => {
+  it('lays a CardAction at the end of the header, beside the title, composed or as the `action` shorthand', async () => {
+    await render(
+      <Card>
+        <CardHeader testID="header">
+          <CardTitle>Order #20417</CardTitle>
+          <CardAction>
+            <Text>On its way</Text>
+          </CardAction>
+        </CardHeader>
+      </Card>
+    );
+    expect(StyleSheet.flatten(screen.getByTestId('header').props.style)).toMatchObject({ flexDirection: 'row' });
+    await render(<Card title="Order #20417" action={<Text>On its way</Text>} />);
+    expect(screen.getByRole('heading', { name: 'Order #20417' })).toBeTruthy();
+    expect(screen.getByText('On its way')).toBeTruthy();
+  });
+
   it('groups a heading, text and actions', async () => {
     await render(
       <Card testID="card">
@@ -55,7 +72,7 @@ describe('Card', () => {
 
   it('is a button with onPress, and rises on hover', async () => {
     const onPress = jest.fn();
-    await render(<Card testID="card" onPress={onPress} accessibilityLabel="Pro plan" />);
+    await render(<Card testID="card" onPress={onPress} aria-label="Pro plan" />);
     const card = screen.getByRole('button', { name: 'Pro plan' });
     await fireEvent.press(card);
     expect(onPress).toHaveBeenCalled();
@@ -68,7 +85,7 @@ describe('Card', () => {
 
   it('ignores presses when disabled', async () => {
     const onPress = jest.fn();
-    await render(<Card onPress={onPress} disabled accessibilityLabel="Plan" />);
+    await render(<Card onPress={onPress} disabled aria-label="Plan" />);
     await fireEvent.press(screen.getByRole('button', { name: 'Plan' }));
     expect(onPress).not.toHaveBeenCalled();
   });

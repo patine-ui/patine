@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { ChipGroup } from './ChipGroup';
 import { SegmentedControl } from './SegmentedControl';
@@ -19,5 +19,14 @@ describe('SegmentedControl and ChipGroup', () => {
     await render(<ChipGroup items={items} value="day" testID="chips" />);
     expect(radiusOf('chips')).toBeUndefined();
     expect(screen.getByLabelText('Day').props.accessibilityState).toMatchObject({ checked: true });
+  });
+
+  it('keeps its own selection from defaultValue, and reports each pick', async () => {
+    const onValueChange = jest.fn();
+    await render(<SegmentedControl items={items} defaultValue="day" onValueChange={onValueChange} />);
+    expect(screen.getByLabelText('Day').props.accessibilityState).toMatchObject({ checked: true });
+    await fireEvent.press(screen.getByLabelText('Week'));
+    expect(onValueChange).toHaveBeenCalledWith('week', items[1]);
+    expect(screen.getByLabelText('Week').props.accessibilityState).toMatchObject({ checked: true });
   });
 });

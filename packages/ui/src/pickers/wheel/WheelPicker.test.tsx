@@ -99,7 +99,7 @@ describe('WheelPicker', () => {
 
   it('jumps to a typed value after tapping the selected row', async () => {
     const minutes = ['00', '15', '30', '45'];
-    await render(<WheelPicker items={minutes} defaultValue="00" accessibilityLabel="Minutes" testID="wheel" />);
+    await render(<WheelPicker items={minutes} defaultValue="00" aria-label="Minutes" testID="wheel" />);
     await fireEvent.press(screen.getByText('00'));
     await fireEvent.changeText(screen.getByDisplayValue(''), '30');
     expect(scrollToOffset).toHaveBeenLastCalledWith({ offset: 2 * H, animated: true });

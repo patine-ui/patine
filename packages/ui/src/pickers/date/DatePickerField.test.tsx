@@ -9,7 +9,7 @@ const pressDay = (d: number) => fireEvent.press(screen.getByLabelText(new RegExp
 describe('DatePickerField', () => {
   it('opens the sheet titled by the label and confirms the picked day', async () => {
     const onConfirm = jest.fn();
-    await render(<DatePickerField label="Due" locale="en-US" placeholder="Pick a day" initialMonth={OCTOBER} onConfirm={onConfirm} />);
+    await render(<DatePickerField label="Due" locale="en-US" placeholder="Pick a day" initialMonth={OCTOBER} onValueChange={onConfirm} />);
     expect(screen.getByText('Pick a day')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Due' }));
     expect(screen.getAllByText('Due')).toHaveLength(2);
@@ -19,20 +19,20 @@ describe('DatePickerField', () => {
   });
 
   it('shows a range in the field', async () => {
-    const onConfirm = jest.fn((range: DateRange) => range);
+    const onConfirm = jest.fn((range: DateRange | null) => range);
     await render(
       <DatePickerField
         mode="range"
         locale="en-US"
         value={{ start: new Date(2026, 9, 5), end: new Date(2026, 9, 9) }}
-        onConfirm={onConfirm}
+        onValueChange={onConfirm}
       />
     );
     expect(screen.getByText('Oct 5, 2026 – Oct 9, 2026')).toBeTruthy();
   });
 
   it('prefers displayValue over the formatted value', async () => {
-    await render(<DatePickerField value={new Date(2026, 9, 5)} displayValue="Tomorrow" onConfirm={jest.fn()} />);
+    await render(<DatePickerField value={new Date(2026, 9, 5)} displayValue="Tomorrow" onValueChange={jest.fn()} />);
     expect(screen.getByText('Tomorrow')).toBeTruthy();
   });
 
@@ -46,7 +46,7 @@ describe('DatePickerField', () => {
 
     it('opens under the field without a title, and confirms with Done', async () => {
       const onConfirm = jest.fn();
-      await render(<DatePickerField label="Due" presentation="dropdown" locale="en-US" initialMonth={OCTOBER} onConfirm={onConfirm} />);
+      await render(<DatePickerField label="Due" presentation="dropdown" locale="en-US" initialMonth={OCTOBER} onValueChange={onConfirm} />);
       await fireEvent.press(screen.getByRole('button', { name: 'Due' }));
       expect(screen.getAllByText('Due')).toHaveLength(1);
       await pressDay(15);
@@ -57,7 +57,7 @@ describe('DatePickerField', () => {
 
     it('closes without confirming on Cancel', async () => {
       const onConfirm = jest.fn();
-      await render(<DatePickerField label="Due" presentation="dropdown" locale="en-US" initialMonth={OCTOBER} onConfirm={onConfirm} />);
+      await render(<DatePickerField label="Due" presentation="dropdown" locale="en-US" initialMonth={OCTOBER} onValueChange={onConfirm} />);
       await fireEvent.press(screen.getByRole('button', { name: 'Due' }));
       await pressDay(15);
       await fireEvent.press(screen.getByRole('button', { name: 'Cancel' }));

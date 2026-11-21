@@ -21,6 +21,8 @@ export const SECURE_DOT = '•';
 export const OTP_AUTO_COMPLETE: TextInputProps['autoComplete'] = Platform.select({ android: 'sms-otp', default: 'one-time-code' });
 
 export const OTP_CELL_MAX_WIDTH = 56;
+/** Keeps the cells drawn when the row has no width to share, as inside a centered column. */
+export const OTP_CELL_MIN_WIDTH = 40;
 export const CARET_WIDTH = 2;
 /** The caret's height, as a multiple of the cell's font size. */
 export const CARET_HEIGHT_RATIO = 1.2;

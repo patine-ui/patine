@@ -2,6 +2,7 @@ import { memo } from 'react';
 
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
+import { fontSizeOf } from '@/core/utils/style.utils';
 import { styles } from '@/pickers/emoji/emoji.styles';
 import type { EmojiCellProps } from '@/pickers/emoji/emoji.types';
 
@@ -22,7 +23,7 @@ export const EmojiCell = memo(({ emoji, char, size, fontSize, renderEmoji, onSel
     {renderEmoji ? (
       renderEmoji(char, emoji, fontSize)
     ) : (
-      <Text selectable={false} style={[{ fontSize, lineHeight: fontSize * 1.2 }, slots?.emojiText]}>
+      <Text selectable={false} style={[fontSizeOf(fontSize), slots?.emojiText]}>
         {char}
       </Text>
     )}

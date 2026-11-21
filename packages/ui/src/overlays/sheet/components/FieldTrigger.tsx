@@ -1,3 +1,6 @@
+import { StyleSheet } from 'react-native';
+
+import { CloseMark } from '@/core/components/CloseMark';
 import { cs, startAlign } from '@/core/core.styles';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
@@ -85,15 +88,13 @@ export const FieldTrigger = ({
       {clearable && displayValue && !disabled ? (
         <Touchable
           theme={theme}
-          hitSlop={10}
           onPress={onClear}
           role="button"
           aria-label={words.clear}
-          style={[styles.clearButton, sheet.round]}
+          style={[styles.clearButton, sheet.round, slots?.clear]}
         >
-          <Text size="lg" color="textSecondary" style={[styles.clear, slots?.clear]}>
-            ×
-          </Text>
+          {/* The `clear` slot's color reaches the drawn ✕ too */}
+          <CloseMark size="sm" color={String(StyleSheet.flatten(slots?.clear)?.color ?? theme.colors.textSecondary)} />
         </Touchable>
       ) : null}
       <Chevron open={open} renderChevron={renderChevron} theme={theme} style={slots?.chevron} />

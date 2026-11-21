@@ -59,6 +59,15 @@ describe('Dialog', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
   });
 
+  it('closes from its ✕, as shadcn/ui does, unless showCloseButton is false', async () => {
+    const onOpenChange = jest.fn();
+    await render(<Example defaultOpen onOpenChange={onOpenChange} />);
+    await fireEvent.press(screen.getByRole('button', { name: 'Close' }));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    await render(<Dialog defaultOpen title="Rename" showCloseButton={false} />);
+    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+  });
+
   it('starts open with defaultOpen', async () => {
     await render(<Example defaultOpen />);
     expect(isOpen()).toBe(true);
@@ -171,6 +180,29 @@ describe('Dialog shorthand', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
     await finishAnimations();
     expect(screen.queryByRole('heading', { name: 'Edit profile' })).toBeNull();
+  });
+
+  it('stays open when an action calls preventDefault, as a Save that finds an error does', async () => {
+    const onOpenChange = jest.fn();
+    await render(
+      <Dialog
+        defaultOpen
+        title="Rename"
+        actions={[{ label: 'Save', onPress: (event) => event.preventDefault() }]}
+        onOpenChange={onOpenChange}
+      />
+    );
+    let prevented = false;
+    const event = {
+      preventDefault: () => {
+        prevented = true;
+      },
+      isDefaultPrevented: () => prevented,
+    };
+    await fireEvent.press(screen.getByRole('button', { name: 'Save' }), event);
+    expect(prevented).toBe(true);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('heading', { name: 'Rename' })).toBeTruthy();
   });
 
   it('renders its children as they are without shorthand props', async () => {

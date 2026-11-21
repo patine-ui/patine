@@ -2,16 +2,19 @@ import { useMemo } from 'react';
 
 import { Text } from '@/core/primitives/Text';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import type { TextProps } from '@/foundations/text/text.types';
 import { AlertContext, useAlertText, useAlertTitleStyle } from './AlertContext';
 import { ALERT_VARIANT } from './alert.constants';
 import { styles, themed } from './alert.styles';
 import type { AlertProps } from './alert.types';
+import { getAlertAccent } from './alert.utils';
 import { useAlertAnnouncement } from './hooks/useAlertAnnouncement';
 
 /**
- * A message that needs attention: give it `title` and `description`, or put AlertTitle and AlertDescription inside.
+ * A message that needs attention: give it `title`, `description` and an `action` such as a dismiss ✕, or put AlertTitle and
+ * AlertDescription inside.
  * Destructive alerts (or any with `live`) are read out by screen readers when they appear, on every platform.
  */
 export const Alert = ({
@@ -20,6 +23,7 @@ export const Alert = ({
   live,
   title,
   description,
+  action,
   theme: themeProp,
   design,
   style,
@@ -47,12 +51,13 @@ export const Alert = ({
           style={[styles.alert, sheet.alert, sheet[variant], style]}
           {...rest}
         >
-          {icon}
+          <ContentColor color={getAlertAccent(theme.colors, variant)}>{icon}</ContentColor>
           <View style={styles.body}>
             {title ? <AlertTitle>{title}</AlertTitle> : null}
             {description ? <AlertDescription>{description}</AlertDescription> : null}
             {children}
           </View>
+          {action}
         </View>
       </AlertContext.Provider>
     </ThemeScope>

@@ -6,7 +6,7 @@ import type { SelectValueProps } from '@/inputs/select/select.types';
  * Select's and SelectList's value: `value` when given, otherwise their own state seeded from `defaultValue`. Returns the
  * props with the value filled in, and `reset` to empty the selection when it's uncontrolled.
  */
-export const useSelectValue = <T, P extends SelectValueProps<T>>(props: P): { props: P; reset: () => void } => {
+export const useSelectValue = <T, P extends SelectValueProps<T> | SelectValueProps<T, null>>(props: P): { props: P; reset: () => void } => {
   const [inner, setInner] = useState<T | T[] | null | undefined>(props.defaultValue);
   const controlled = props.value !== undefined;
   const reset = () => {

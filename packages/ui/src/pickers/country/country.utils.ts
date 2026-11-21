@@ -18,7 +18,7 @@ import { RAW_COUNTRY_DATA } from './data';
 let cache: Country[] | null = null;
 let byCode: Map<string, Country> | null = null;
 
-/** The flag emoji for an ISO 3166-1 alpha-2 code, e.g. 'IL' → 🇮🇱. */
+/** The flag emoji for an ISO 3166-1 alpha-2 code, e.g. 'FR' → 🇫🇷. */
 export const getCountryFlag = (code: string) =>
   String.fromCodePoint(...Array.from(code.toUpperCase(), (c) => REGIONAL_INDICATOR_A + c.charCodeAt(0) - 65));
 
@@ -115,7 +115,7 @@ export const formatPhoneDigits = (digits: string, pattern = DEFAULT_PHONE_PATTER
   return out + digits.slice(used);
 };
 
-/** The digits after the calling code as the country writes them, e.g. '54-123-4567' in Israel. */
+/** The digits after the calling code as the country writes them, e.g. '6 12 34 56 78' in France. */
 export const formatNationalNumber = (nationalNumber: string, code: CountryCode) =>
   formatPhoneDigits(nationalNumber, getPhoneFormat(code)?.pattern);
 
@@ -124,8 +124,8 @@ export const getPhonePlaceholder = (code: CountryCode) =>
   formatNationalNumber(PHONE_PLACEHOLDER_DIGITS.slice(0, getPhoneFormat(code)?.max ?? PHONE_MIN_DIGITS + 6), code);
 
 /**
- * What the user typed, as the digits after the calling code: separators gone, a trunk 0 dropped ('054…' in Israel is
- * '54…'), and cut at the most digits the country's numbers have.
+ * What the user typed, as the digits after the calling code: separators gone, a trunk 0 dropped ('06…' in France is
+ * '6…'), and cut at the most digits the country's numbers have.
  */
 export const toNationalNumber = (typed: string, code: CountryCode) => {
   const digits = digitsOf(typed);
@@ -133,7 +133,7 @@ export const toNationalNumber = (typed: string, code: CountryCode) => {
   return national.slice(0, maxDigits(code));
 };
 
-/** E.164, e.g. '+972541234567', or '' without a number. */
+/** E.164, e.g. '+33612345678', or '' without a number. */
 export const toE164 = (nationalNumber: string, code: CountryCode) => (nationalNumber ? `+${getCallingCode(code)}${nationalNumber}` : '');
 
 /** Whether the number has as many digits as the country's numbers do. */

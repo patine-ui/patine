@@ -3,20 +3,20 @@ import { Scroll } from '@/core/primitives/Scroll';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
-import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
+import { ThemeScope, useComponentTheme, useDirection, useLabels } from '@/core/theme/ThemeProvider';
 import { Heading } from '@/foundations/text/Heading';
 import { HeaderTitle } from './components/HeaderTitle';
 import { TABLE_DESIGN } from './table.constants';
 import { styles, themed } from './table.styles';
 import type { TableColumn, TableProps, TableSort } from './table.types';
 import {
-  ALIGN_KEYS,
   getAriaSort,
   getCellFont,
   getCellValue,
   getColumnBox,
   getRowKey,
   getTableWidth,
+  getTextAlign,
   nextSort,
   sortRows,
 } from './table.utils';
@@ -45,18 +45,14 @@ export const Table = <T,>({
   ...rest
 }: TableProps<T>) => {
   const words = useLabels();
+  const dir = useDirection();
   const emptyText = emptyTextProp ?? words.table.empty;
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const [sort, setSort] = useControllableState<TableSort | null>(sortProp, defaultSort, onSortChange);
   const look = TABLE_DESIGN[theme.design];
   const sheet = themed(theme);
   const rows = manualSort ? [...data] : sortRows(data, columns, sort);
-  const cellBox = (column: TableColumn<T>) => [
-    getColumnBox(column),
-    styles.cell,
-    sheet.cell,
-    styles[ALIGN_KEYS[column.align ?? 'left'].cell],
-  ];
+  const cellBox = (column: TableColumn<T>) => [getColumnBox(column), styles.cell, sheet.cell, styles[column.align ?? 'start']];
 
   const headerTitle = (column: TableColumn<T>) => (
     <HeaderTitle
@@ -100,7 +96,7 @@ export const Table = <T,>({
             <Text
               size={look.cellSize}
               font={getCellFont(value, column.align)}
-              style={[styles[ALIGN_KEYS[column.align ?? 'left'].text], styles.numbers, slots?.cell]}
+              style={[getTextAlign(column.align, dir), styles.numbers, slots?.cell]}
             >
               {value === null || value === undefined ? '' : String(value)}
             </Text>

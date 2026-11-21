@@ -1,5 +1,6 @@
 import { animatedAdd } from '@/core/animation/animated';
 import { AnimatedImage, AnimatedView, Pressable } from '@/core/primitives/View';
+import { toImageSource } from '@/display/avatar/avatar.utils';
 import { useZoom } from '@/overlays/lightbox/hooks/useZoom';
 import { styles } from '@/overlays/lightbox/lightbox.styles';
 import type { ZoomableImageProps } from '@/overlays/lightbox/lightbox.types';
@@ -13,7 +14,7 @@ export const ZoomableImage = ({ image, ...props }: ZoomableImageProps) => {
     <AnimatedView style={styles.page} onLayout={zoom.onLayout} {...zoom.panHandlers}>
       <Pressable accessible={false} tabIndex={-1} onPress={zoom.onPress} style={styles.page}>
         <AnimatedImage
-          source={image.source}
+          source={toImageSource(image.src)}
           aria-label={image.alt}
           accessibilityIgnoresInvertColors
           role="img"

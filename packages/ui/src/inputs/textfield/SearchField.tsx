@@ -10,7 +10,6 @@ import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { FieldButton } from './components/FieldButton';
-import { CLEAR_GLYPH } from './textfield.constants';
 import { styles, themed } from './textfield.styles';
 import type { SearchFieldProps } from './textfield.types';
 
@@ -76,7 +75,7 @@ export const SearchField = ({
         >
           {showClear ? (
             <View style={[styles.searchClear, sheet.searchClear]}>
-              <FieldButton label={CLEAR_GLYPH} glyph spokenLabel={labels.clear} onPress={() => setValue('')} theme={theme} />
+              <FieldButton spokenLabel={labels.clear} onPress={() => setValue('')} theme={theme} />
             </View>
           ) : null}
         </SearchInput>

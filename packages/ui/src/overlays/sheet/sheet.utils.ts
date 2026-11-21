@@ -19,6 +19,7 @@ import {
   EXPANDED_TOP_INSET,
   FIELD_PRESENTATION,
   FIELD_PROP_KEYS,
+  FIELD_VALUE_KEYS,
   IOS_BOTTOM_INSET,
   SCROLLABLE_OVERFLOW,
   SHEET_MAX_WIDTH,
@@ -33,6 +34,7 @@ import type {
   FieldError,
   FieldPresentation,
   PickerFieldBaseProps,
+  PickerFieldProps,
   ScrollNode,
   SheetDragFrame,
   SheetDragStops,
@@ -182,12 +184,14 @@ export const splitFieldProps = <P extends PickerFieldBaseProps<string>>(props: P
   };
   const sheet: Record<string, unknown> = { ...(props as object) };
   for (const key of FIELD_PROP_KEYS) {
-    field[key] = props[key];
+    field[key] = (props as Partial<PickerFieldProps>)[key];
     delete sheet[key];
   }
+  // The field owns the value (useFieldValue) and hands the sheet its own `value` and `onConfirm`.
+  for (const key of FIELD_VALUE_KEYS) delete sheet[key];
   return {
-    field: field as Pick<PickerFieldBaseProps<string>, FieldPropKey | SharedFieldPropKey>,
-    sheet: sheet as DistributiveOmit<P, FieldPropKey>,
+    field: field as Pick<PickerFieldProps, FieldPropKey | SharedFieldPropKey>,
+    sheet: sheet as DistributiveOmit<P, FieldPropKey | (typeof FIELD_VALUE_KEYS)[number]>,
   };
 };
 

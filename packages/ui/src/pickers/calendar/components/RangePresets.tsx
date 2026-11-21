@@ -11,7 +11,7 @@ export const RangePresets = ({ presets, range, rules, isDisabled, onSelect, them
   return (
     <ChoiceList
       variant={CHOICE_VARIANT.chips}
-      accessibilityLabel={words.calendar.presets}
+      aria-label={words.calendar.presets}
       theme={theme}
       {...listProps}
       items={getPresetItems(presets, rules, isDisabled)}

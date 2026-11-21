@@ -30,9 +30,9 @@ export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProp
   trailing?: React.ReactNode;
   /** The current value, in secondary text at the end, e.g. "English" */
   value?: string;
-  /** Show a chevron at the end. Default: when the row has `onPress` and the design draws them (brand and iOS) */
+  /** Show a chevron at the end. Default: when the row has `onPress`, isn't `destructive`, and the design draws them (brand and iOS) */
   showChevron?: boolean;
-  /** Draws the title in the danger color, for rows like "Delete account" */
+  /** Draws the title, and an `Icon` in `leading` without its own color, in the danger color, for rows like "Delete account" */
   destructive?: boolean;
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;

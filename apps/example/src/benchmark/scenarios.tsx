@@ -47,7 +47,7 @@ const Measured = ({ children, id = 'comp' }: { children: React.ReactNode; id?: s
 
 const OursWheel = () => (
   <Measured id="wheel">
-    <WheelPicker items={WHEEL_ITEMS} value={100} onValueChange={noop} visibleItems={7} accessibilityLabel="Bench" />
+    <WheelPicker items={WHEEL_ITEMS} value={100} onValueChange={noop} visibleItems={7} aria-label="Bench" />
   </Measured>
 );
 

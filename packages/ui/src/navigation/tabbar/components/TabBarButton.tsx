@@ -1,6 +1,7 @@
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { useTheme } from '@/core/theme/ThemeProvider';
 import { TABBAR_DESIGN } from '@/navigation/tabbar/tabbar.constants';
 import { styles, themed } from '@/navigation/tabbar/tabbar.styles';
@@ -28,7 +29,7 @@ export const TabBarButton = ({ item, selected, tab, onPress, rail }: TabBarButto
       style={[styles.item, sheet.item, rail ? sheet.itemInRail : styles.itemInBar]}
     >
       <View style={[styles.icon, look.indicator && [styles.pill, selected && sheet.pillOn]]}>
-        {icon}
+        <ContentColor color={String(tone.color)}>{icon}</ContentColor>
         {badge !== null ? (
           <View aria-hidden style={[badge === '' ? styles.dot : styles.badge, sheet.badge]}>
             {badge === '' ? null : (

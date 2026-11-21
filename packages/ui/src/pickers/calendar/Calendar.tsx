@@ -5,6 +5,7 @@ import { AnimatedView, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { buildMonthGrid, formatMonthYear, getFirstDayOfWeek, getMonthNames, getWeekdayNames } from '@/core/utils/date.utils';
 import { CALENDAR_DESIGN, CALENDAR_MODE, CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
+import { themed } from './calendar.styles';
 import type { CalendarProps } from './calendar.types';
 import {
   getAnchorMonth,
@@ -93,11 +94,7 @@ export const Calendar = (props: CalendarProps) => {
 
   return (
     <ThemeScope theme={themeOverride}>
-      <View
-        style={[{ backgroundColor: theme.colors.background, paddingVertical: theme.spacing.sm }, style, slots?.container]}
-        {...ARROW_FOCUS}
-        testID={testID}
-      >
+      <View style={[themed(theme).container, style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
         {range?.presets?.length ? (
           <RangePresets
             presets={range.presets}
@@ -118,7 +115,6 @@ export const Calendar = (props: CalendarProps) => {
           onTitlePress={nav.cycleView}
           onArrowPress={nav.onArrowPress}
           renderArrow={renderArrow}
-          rtl={nav.rtl}
           theme={theme}
           slots={slots}
         />

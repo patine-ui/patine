@@ -16,8 +16,8 @@ jest.mock('@/core/animation', () => ({
 }));
 
 const IMAGES = [
-  { source: { uri: 'https://example.com/1.jpg' }, alt: 'Beach' },
-  { source: { uri: 'https://example.com/2.jpg' }, alt: 'Forest' },
+  { src: 'https://example.com/1.jpg', alt: 'Beach' },
+  { src: { uri: 'https://example.com/2.jpg' }, alt: 'Forest' },
 ];
 const touch = (x: number, y: number) => ({
   locationX: x,

@@ -4,7 +4,7 @@ import type { HostInstance, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
 import type { ValueOf } from '@/core/core.types';
-import type { SheetChromeProps, WithPickerField } from '@/overlays/sheet';
+import type { FieldValueProps, SheetChromeProps, WithPickerField } from '@/overlays/sheet';
 import type { ACTIVE_TAB, CATEGORY_BAR_POSITION, EMOJI_CATEGORY, EMOJI_ROW_TYPE, EMOJI_SECTION } from './emoji.constants';
 
 export type EmojiCategory = ValueOf<typeof EMOJI_CATEGORY>;
@@ -108,10 +108,11 @@ export type EmojiPickerSheetProps = SheetChromeProps &
     closeOnSelect?: boolean;
   };
 
-export type EmojiPickerFieldProps = WithPickerField<EmojiPickerSheetProps, EmojiPickerSlot> & {
-  /** The picked emoji, shown in the field */
-  value?: string;
-};
+export type EmojiPickerFieldProps = WithPickerField<Omit<EmojiPickerSheetProps, 'onSelect'>, EmojiPickerSlot> &
+  FieldValueProps<string> & {
+    /** Called when an emoji is picked, with its data; `onValueChange` gets the emoji too */
+    onSelect?: EmojiPickerSheetProps['onSelect'];
+  };
 
 export interface EmojiSection {
   key: EmojiSectionKey;

@@ -5,7 +5,7 @@ import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { FieldFrame } from '@/overlays/sheet/components/FieldFrame';
 import { FloatingLabel } from '@/overlays/sheet/components/FloatingLabel';
-import { FIELD_DESIGN, FIELD_LABEL, FLOATING_LABEL_PADDING } from '@/overlays/sheet/sheet.constants';
+import { FIELD_DESIGN, FIELD_LABEL } from '@/overlays/sheet/sheet.constants';
 import { fieldStyles, styles as sheetStyles } from '@/overlays/sheet/sheet.styles';
 import { getFieldAccessibility } from '@/overlays/sheet/sheet.utils';
 import { CountryPicker } from './CountryPicker';
@@ -74,13 +74,13 @@ export const PhoneField = (props: PhoneFieldProps) => {
                 required={required}
                 borderWidth={borderWidth}
                 theme={theme}
-                style={[{ marginStart: theme.spacing.md - FLOATING_LABEL_PADDING - (borderWidth - 1) }, slots?.label]}
+                style={[active ? fieldStyles(theme).floatingStartOpen : fieldStyles(theme).floatingStart, slots?.label]}
               />
             ) : null}
             <View style={styles.phoneRow}>
               <CountryPicker
                 value={phone.country}
-                onValueChange={phone.changeCountry}
+                onValueChange={(code) => code && phone.changeCountry(code)}
                 countries={countries}
                 exclude={exclude}
                 preferred={preferred}

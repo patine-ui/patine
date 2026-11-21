@@ -54,9 +54,13 @@ export const addToast = (message: string, options: ToastOptions, type: ToastType
   return id;
 };
 
-/** Closes one toast, or all of them. A Toaster animates it out and then removes it; with none mounted it goes at once. */
-export const dismissToast = (id?: ToastId) => {
+/**
+ * Closes one toast, or all of them. A Toaster animates it out and then removes it; with none mounted it goes at once. Each
+ * open one's `onDismiss` runs, unless it closes because its action was pressed.
+ */
+export const dismissToast = (id?: ToastId, byAction = false) => {
   const matches = (t: ToastData) => id === undefined || t.id === id;
+  if (!byAction) for (const t of toasts) if (t.open && matches(t)) t.onDismiss?.(t.id);
   emit(listeners.size ? toasts.map((t) => (matches(t) ? { ...t, open: false } : t)) : toasts.filter((t) => !matches(t)));
 };
 
@@ -87,7 +91,7 @@ export const toast = Object.assign(show(TOAST_TYPE.default), {
   info: show(TOAST_TYPE.info),
   loading: show(TOAST_TYPE.loading),
   /** Closes the toast with this id, or every toast */
-  dismiss: dismissToast,
+  dismiss: (id?: ToastId) => dismissToast(id),
   promise,
 });
 

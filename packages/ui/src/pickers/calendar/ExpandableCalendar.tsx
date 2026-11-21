@@ -5,7 +5,7 @@ import { useControllableState } from '@/core/hooks/useControllableState';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { formatMonthYear, startOfMonth } from '@/core/utils/date.utils';
 import { CALENDAR_VIEW, DEFAULT_DAY_HEIGHT } from './calendar.constants';
-import { styles } from './calendar.styles';
+import { styles, themed } from './calendar.styles';
 import type { ExpandableCalendarProps } from './calendar.types';
 import { getStripWeek, getWeekMonth, getWeekStates } from './calendar.utils';
 import { CalendarHeader } from './components/CalendarHeader';
@@ -75,11 +75,7 @@ export const ExpandableCalendar = (props: ExpandableCalendarProps) => {
   const title = formatTitle ? formatTitle(shown, locale) : formatMonthYear(shown, locale);
 
   return (
-    <View
-      style={[{ backgroundColor: theme.colors.background, paddingTop: theme.spacing.sm }, style, slots?.container]}
-      {...ARROW_FOCUS}
-      testID={testID}
-    >
+    <View style={[themed(theme).expandableContainer, style, slots?.container]} {...ARROW_FOCUS} testID={testID}>
       {showHeader ? (
         <CalendarHeader
           label={title}
@@ -90,7 +86,6 @@ export const ExpandableCalendar = (props: ExpandableCalendarProps) => {
           onTitlePress={noop}
           onArrowPress={nav.onArrowPress}
           renderArrow={renderArrow}
-          rtl={nav.rtl}
           theme={theme}
           slots={slots}
         />

@@ -42,7 +42,7 @@ describe('getDurationColumnSpecs', () => {
     const options = resolveDurationOptions({ max: 2 * H, minuteInterval: 15 });
     const [hours, minutes] = getDurationColumnSpecs({ hours: 2, minutes: 0, seconds: 0 }, options, true);
     expect(labelsOf(hours)).toEqual(['0', '1', '2']);
-    expect(hours).toMatchObject({ suffix: 'h', accessibilityLabel: 'Hours', loop: false });
+    expect(hours).toMatchObject({ suffix: 'h', 'aria-label': 'Hours', loop: false });
     expect(labelsOf(minutes)).toEqual(['0', '15', '30', '45']);
     expect(minutes).toMatchObject({ suffix: 'min', loop: true });
     expect(disabledOf(minutes)).toEqual([15, 30, 45]);

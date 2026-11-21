@@ -8,6 +8,10 @@ describe('showsChevron', () => {
     expect(showsChevron(LIST_DESIGN.ios, false, undefined)).toBe(false);
   });
 
+  it('leaves it off a destructive row, an action rather than a way to another screen', () => {
+    expect(showsChevron(LIST_DESIGN.ios, true, undefined, true)).toBe(false);
+  });
+
   it('lets the prop win', () => {
     expect(showsChevron(LIST_DESIGN.material, true, true)).toBe(true);
     expect(showsChevron(LIST_DESIGN.ios, true, false)).toBe(false);

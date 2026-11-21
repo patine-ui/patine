@@ -11,15 +11,24 @@ export const BUTTON_VARIANT = {
   link: 'link',
 } as const;
 
-/** `icon` is a square button for a lone icon; give it an accessibilityLabel. */
+/** `icon`, `icon-sm` and `icon-lg` are square buttons for a lone icon, as tall as `default`, `sm` and `lg`; give them an `aria-label`. */
 export const BUTTON_SIZE = {
   sm: 'sm',
   default: 'default',
   lg: 'lg',
   icon: 'icon',
+  iconSm: 'icon-sm',
+  iconLg: 'icon-lg',
 } as const;
 
-/** How each design sizes and shapes a button. Heights are per size; `icon` takes the default height, square. */
+/** The text size each square size is as tall as. */
+export const ICON_BUTTON_SIDE = {
+  [BUTTON_SIZE.icon]: BUTTON_SIZE.default,
+  [BUTTON_SIZE.iconSm]: BUTTON_SIZE.sm,
+  [BUTTON_SIZE.iconLg]: BUTTON_SIZE.lg,
+} as const;
+
+/** How each design sizes and shapes a button. Heights are per size; the icon sizes take theirs, square. */
 export const BUTTON_DESIGN: Record<Design, ButtonDesign> = {
   brand: {
     heights: { sm: 36, default: 44, lg: 52 },

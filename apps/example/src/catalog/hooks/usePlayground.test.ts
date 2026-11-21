@@ -8,7 +8,6 @@ const CONFIG: PlaygroundConfig = {
   component: () => null,
   props: { label: 'Dates' },
   value: ({ mode }: { mode: string }) => (mode === 'range' ? { start: null, end: null } : null),
-  resetProp: 'onClear',
   controls: [
     { prop: 'mode', options: ['single', 'range'] },
     { prop: 'display', options: ['auto', 'wheel'], unset: 'auto' },
@@ -22,12 +21,12 @@ describe('usePlayground', () => {
     expect(result.current.live).not.toHaveProperty('display');
   });
 
-  it('keeps the value the component reports, and resets it', async () => {
+  it('keeps the value the component reports, a clear (null) included', async () => {
     const { result } = await renderHook(() => usePlayground(CONFIG));
     const date = new Date(2026, 9, 29);
     await act(() => (result.current.live.onValueChange as (d: Date) => void)(date));
     expect(result.current.live.value).toBe(date);
-    await act(() => (result.current.live.onClear as () => void)());
+    await act(() => (result.current.live.onValueChange as (d: Date | null) => void)(null));
     expect(result.current.live.value).toBeNull();
   });
 

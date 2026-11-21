@@ -11,4 +11,5 @@ export const styles = StyleSheet.create({
 export const themed = createStyles((t) => ({
   trigger: { minHeight: ACCORDION_DESIGN[t.design].minHeight, gap: t.spacing.sm, paddingVertical: t.spacing.sm, borderRadius: t.radius.sm },
   content: { paddingBottom: t.spacing.lg },
+  item: { borderBottomWidth: StyleSheet.hairlineWidth, borderColor: t.colors.border },
 }));

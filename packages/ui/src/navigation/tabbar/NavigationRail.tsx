@@ -16,7 +16,7 @@ export const NavigationRail = <T extends string>(props: NavigationRailProps<T>) 
     items,
     header,
     topInset = 0,
-    accessibilityLabel: accessibilityLabelProp,
+    'aria-label': accessibilityLabelProp,
     theme: themeProp,
     design,
     style,

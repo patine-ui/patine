@@ -6,6 +6,6 @@ export interface TypingIndicatorProps extends Omit<ViewProps, 'children'>, Thema
   /** Who is typing, for screen readers: "Maya is typing". Default: "Typing" */
   name?: string;
   /** Replaces what screen readers say */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   style?: StyleProp<ViewStyle>;
 }

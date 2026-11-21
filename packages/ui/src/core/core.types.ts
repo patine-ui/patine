@@ -171,6 +171,8 @@ export interface TouchFeedbackProps {
   theme: Theme;
   /** Match the element's corners, so the tint and ripple stay inside its shape. */
   borderRadius?: number;
+  /** Draw the hover and press layers in this color, faded, instead of the theme's neutral ones. */
+  feedbackColor?: string;
 }
 
 export interface TouchFeedbackState {
@@ -202,6 +204,8 @@ export type TouchableProps = Omit<PressableProps, 'style' | 'children' | 'role'>
   ripple?: boolean;
   /** Tint on pointer hover. Turn it off for media and cards that show hover their own way, or a selected row. Default: true */
   hover?: boolean;
+  /** The color of the hover tint and press layer, usually what's drawn on the control (`onPrimary` on a filled button), so they show on dark fills. Default: the theme's neutral tint */
+  feedbackColor?: string;
   /** Shrink a little while held and spring back on release, as buttons do in brand, iOS and the web (not Material). Default: false */
   pressScale?: boolean;
   /** Draw the theme's ring on keyboard focus; `inset` draws it inside, for controls in a clipping container. Default: true */

@@ -56,6 +56,7 @@ export type {
 } from './core.types';
 export { useControllableState } from './hooks/useControllableState';
 export { Touchable } from './primitives/Touchable';
+export { ContentColor, useContentColor } from './theme/ContentColor';
 export { DEFAULT_LABELS } from './theme/labels.constants';
 export type { Labels } from './theme/labels.types';
 export {

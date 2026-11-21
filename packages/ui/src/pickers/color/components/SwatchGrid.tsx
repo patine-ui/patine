@@ -48,7 +48,7 @@ export const SwatchGrid = ({ colors, shape, size, scroll = false, selected, onSe
       </Touchable>
     );
   });
-  const gap = { gap: theme.spacing.sm };
+  const gap = themed(theme).swatchGap;
   return scroll ? (
     <Scroll horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.swatchRow, gap]} testID={testID}>
       {swatches}

@@ -1,6 +1,8 @@
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
+import { isTextContent } from '@/core/utils/text.utils';
 import { useTabsTrigger } from './hooks/useTabsTrigger';
 import { TABS_VARIANT } from './tabs.constants';
 import { styles, themed } from './tabs.styles';
@@ -34,8 +36,8 @@ export const TabsTrigger = ({ value, disabled = false, icon, children, style, st
       style={[styles.trigger, pills ? sheet.pillsTab : sheet.underlineTab, !tabs.vertical && look.fullWidth && styles.fill, style]}
     >
       <View onLayout={onContentLayout} style={[styles.label, sheet.label]}>
-        {icon}
-        {typeof children === 'string' || typeof children === 'number' ? (
+        <ContentColor color={labelColor.color}>{icon}</ContentColor>
+        {isTextContent(children) ? (
           <Text size="sm" weight="medium" numberOfLines={1} style={[labelColor, slots?.label]}>
             {children}
           </Text>

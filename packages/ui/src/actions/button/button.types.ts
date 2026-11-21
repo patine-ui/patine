@@ -3,11 +3,11 @@ import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, ValueOf } from '@/core/core.types';
 import type { ShadowLevel, TextSize, TextWeight, Theme } from '@/core/theme/theme.types';
-import type { BUTTON_SIZE, BUTTON_VARIANT } from './button.constants';
+import type { BUTTON_SIZE, BUTTON_VARIANT, ICON_BUTTON_SIDE } from './button.constants';
 
 export type ButtonVariant = ValueOf<typeof BUTTON_VARIANT>;
 export type ButtonSize = ValueOf<typeof BUTTON_SIZE>;
-type TextButtonSize = Exclude<ButtonSize, typeof BUTTON_SIZE.icon>;
+type TextButtonSize = Exclude<ButtonSize, keyof typeof ICON_BUTTON_SIDE>;
 
 export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>, ThemableProps {
   /** The label. A string is drawn in the variant's text color; anything else is drawn as is */
@@ -18,7 +18,7 @@ export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'>,
   external?: boolean;
   /** 'default' (filled with the primary color), 'secondary', 'outline', 'ghost', 'destructive' or 'link'. Default: 'default' */
   variant?: ButtonVariant;
-  /** 'sm', 'default', 'lg', or 'icon' (square: give it an `accessibilityLabel`). Default: 'default' */
+  /** 'sm', 'default', 'lg', or a square 'icon', 'icon-sm' or 'icon-lg' (give those an `aria-label`). Default: 'default' */
   size?: ButtonSize;
   /** Shows a spinner in place of the start icon, and blocks presses while true. Default: false */
   loading?: boolean;

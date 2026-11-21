@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
 
 /** Each variant's fill and border (`default`…) and text (`defaultText`…). */
 export const themed = createStyles((t) => ({
-  shape: { borderRadius: t.radius.full, paddingHorizontal: t.spacing.sm },
+  shape: { borderRadius: t.radius.full, paddingHorizontal: t.spacing.sm, gap: t.spacing.xs },
   ...Object.fromEntries(
     Object.values(BADGE_VARIANT).flatMap((variant) => {
       const colors = getBadgeColors(t.colors, variant);

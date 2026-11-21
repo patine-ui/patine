@@ -43,7 +43,7 @@ export interface SortableListProps<T> extends ThemableProps, Omit<ScrollViewProp
 
 export interface SortableHandleProps extends ThemableProps {
   /** Default: 'Drag to reorder' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   testID?: string;

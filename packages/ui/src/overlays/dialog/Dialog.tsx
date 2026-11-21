@@ -1,4 +1,4 @@
-import { Children, isValidElement } from 'react';
+import { Children, isValidElement, useContext } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
 
 import { KEYBOARD_AVOID_BEHAVIOR } from '@/core/core.constants';
@@ -10,8 +10,9 @@ import { hasShorthand } from '@/core/utils/shorthand.utils';
 import { Heading } from '@/foundations/text/Heading';
 import type { HeadingProps, TextProps } from '@/foundations/text/text.types';
 import { DialogButton } from './components/DialogButton';
+import { DialogCloseButton } from './components/DialogCloseButton';
 import { PressSlot } from './components/PressSlot';
-import { DialogContext, useDialogContext } from './DialogContext';
+import { DialogCloseRoomContext, DialogContext, useDialogContext } from './DialogContext';
 import { DIALOG_FOOTER } from './dialog.constants';
 import { styles, themed } from './dialog.styles';
 import type {
@@ -31,7 +32,7 @@ import { useDialogContent } from './hooks/useDialogContent';
  * DialogTrigger and DialogContent inside for full control. Closes on the backdrop, Escape on the web and Android back, unless
  * `dismissible={false}`.
  */
-export const Dialog = ({ children, trigger, title, description, actions, ...props }: DialogProps) => {
+export const Dialog = ({ children, trigger, title, description, actions, showCloseButton, ...props }: DialogProps) => {
   const ctx = useDialog(props, false);
   return (
     <DialogContext.Provider value={ctx}>
@@ -40,6 +41,7 @@ export const Dialog = ({ children, trigger, title, description, actions, ...prop
           trigger={trigger}
           title={title}
           description={description}
+          showCloseButton={showCloseButton}
           footer={actions?.length ? <DialogFooter>{renderDialogActions(actions)}</DialogFooter> : null}
         >
           {children}
@@ -68,9 +70,10 @@ export const DialogClose = ({ children }: DialogPressSlotProps) => {
 };
 
 /** The dialog's window: a centered card over a dimmed backdrop. Scrolls when taller than the screen. */
-export const DialogContent = ({ children, style, ...rest }: DialogContentProps) => {
+export const DialogContent = ({ children, showCloseButton, closeLabel, style, ...rest }: DialogContentProps) => {
   const ctx = useDialogContext();
   const { theme, alert } = ctx;
+  const showClose = showCloseButton ?? !alert;
   const content = useDialogContent(ctx);
   const sheet = themed(theme);
   if (!content.mounted) return null;
@@ -105,8 +108,9 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
             style={[styles.card, sheet.card, alert && sheet.alertCard, content.pop, style]}
           >
             <Scroll style={styles.scroll} contentContainerStyle={sheet.body} bounces={false}>
-              {children}
+              <DialogCloseRoomContext.Provider value={showClose}>{children}</DialogCloseRoomContext.Provider>
             </Scroll>
+            {showClose ? <DialogCloseButton label={closeLabel} /> : null}
           </AnimatedView>
         </View>
       </KeyboardAvoidingView>
@@ -117,7 +121,8 @@ export const DialogContent = ({ children, style, ...rest }: DialogContentProps) 
 /** The title and description at the top. */
 export const DialogHeader = ({ style, ...rest }: DialogSectionProps) => {
   const { theme } = useDialogContext();
-  return <View style={[themed(theme).header, style]} {...rest} />;
+  const closeRoom = useContext(DialogCloseRoomContext);
+  return <View style={[themed(theme).header, closeRoom && styles.headerRoom, style]} {...rest} />;
 };
 
 /** The dialog's name: a heading that labels it for screen readers. */
@@ -174,10 +179,10 @@ export const DialogFooter = ({ children, style, ...rest }: DialogSectionProps) =
 };
 
 /** The shorthand's layout, built from the parts above: the trigger, then the content with its header, the body and a footer. */
-export const DialogLayout = ({ trigger, title, description, footer, children }: DialogLayoutProps) => (
+export const DialogLayout = ({ trigger, title, description, footer, showCloseButton, children }: DialogLayoutProps) => (
   <>
     {trigger ? <DialogTrigger>{trigger}</DialogTrigger> : null}
-    <DialogContent>
+    <DialogContent showCloseButton={showCloseButton}>
       {title || description ? (
         <DialogHeader>
           {title ? <DialogTitle>{title}</DialogTitle> : null}
@@ -191,7 +196,8 @@ export const DialogLayout = ({ trigger, title, description, footer, children }: 
 );
 
 /**
- * The shorthand's `actions`: a button in the dialog's design for each, that runs its `onPress`, then closes. An array, not
+ * The shorthand's `actions`: a button in the dialog's design for each, that runs its `onPress`, then closes (unless `onPress`
+ * calls `event.preventDefault()`). An array, not
  * one element, so DialogFooter can lay each button out in its own iOS cell.
  */
 export const renderDialogActions = (actions: DialogAction[]) =>

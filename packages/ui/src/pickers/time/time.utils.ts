@@ -316,7 +316,10 @@ export const getPanelTopRow = (index: number, count: number, rows: number) =>
   Math.max(0, Math.min(index - Math.floor(rows / 2), count - rows));
 
 /** A time panel cell's screen-reader label: its column and value, like "Hour 09". */
-export const getPanelCellLabel = ({ key, accessibilityLabel }: Pick<TimePanelColumn, 'key' | 'accessibilityLabel'>, label: string) => {
+export const getPanelCellLabel = (
+  { key, 'aria-label': accessibilityLabel }: Pick<TimePanelColumn, 'key' | 'aria-label'>,
+  label: string
+) => {
   const name = accessibilityLabel ?? TIME_COLUMN_LABEL[key];
   return name ? `${name} ${label}` : label;
 };

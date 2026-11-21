@@ -47,9 +47,9 @@ interface TextFieldAccessibilityOptions {
   helperText?: string;
   required?: boolean;
   disabled: boolean;
-  /** The visible label's `nativeID`, on the web where `aria-labelledby` ties it to the input; native reads `accessibilityLabel` */
+  /** The visible label's `nativeID`, on the web where `aria-labelledby` ties it to the input; native reads `aria-label` */
   labelledBy?: string;
-  /** The caller's own `aria-label` or `accessibilityLabel`: it wins over the name built from the label or placeholder */
+  /** The caller's own `aria-label` or `aria-label`: it wins over the name built from the label or placeholder */
   spokenName?: string;
 }
 

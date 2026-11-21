@@ -4,7 +4,7 @@ import type { PlaygroundConfig, PlaygroundOption, PlaygroundSelection } from '..
 import { initialSelection, resolveValue, selectedProps } from '../catalog.utils';
 
 /** The chosen options and the live props they make, with the value controlled when the playground has one. */
-export const usePlayground = ({ controls, props, value, changeProp = 'onValueChange', resetProp }: PlaygroundConfig) => {
+export const usePlayground = ({ controls, props, value, changeProp = 'onValueChange' }: PlaygroundConfig) => {
   const [selection, setSelection] = useState<PlaygroundSelection>(() => initialSelection(controls));
   const [current, setCurrent] = useState(() => resolveValue(value, selection));
 
@@ -18,7 +18,6 @@ export const usePlayground = ({ controls, props, value, changeProp = 'onValueCha
     ...props,
     ...selectedProps(controls, selection),
     ...(value === undefined ? {} : { value: current, [changeProp]: setCurrent }),
-    ...(resetProp ? { [resetProp]: () => setCurrent(resolveValue(value, selection)) } : {}),
   };
 
   return {

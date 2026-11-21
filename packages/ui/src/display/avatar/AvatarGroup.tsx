@@ -17,7 +17,7 @@ export const AvatarGroup = ({
   size = 'md',
   shape = 'circle',
   overlap = DEFAULT_OVERLAP,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   theme: themeProp,
   design,
   style,

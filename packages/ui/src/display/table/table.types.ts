@@ -4,7 +4,8 @@ import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import type { SlotStyles, ThemableProps } from '@/core/core.types';
 import type { Theme } from '@/core/theme/theme.types';
 
-export type TableAlign = 'left' | 'center' | 'right';
+/** Logical, so a column keeps its side of the reading direction in right-to-left layouts. */
+export type TableAlign = 'start' | 'center' | 'end';
 export type SortDirection = 'asc' | 'desc';
 
 export interface TableSort {
@@ -17,7 +18,7 @@ export interface TableColumn<T> {
   /** Unique; also the row field shown and sorted on, unless `accessor` says otherwise */
   key: string;
   title: string;
-  /** Default: 'left'. Put numbers on the right */
+  /** Default: 'start'. Put numbers at the 'end' */
   align?: TableAlign;
   /** A fixed width in points. Default: a share of the free width (`flex`) */
   width?: number;

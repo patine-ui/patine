@@ -10,7 +10,7 @@ import type { SortableHandleProps } from '@/display/sortable/sortable.types';
  * or the six-dot drag indicator of Material and the web. Hidden from screen readers, which move rows with actions instead.
  */
 export const SortableHandle = ({
-  accessibilityLabel = 'Drag to reorder',
+  'aria-label': accessibilityLabel = 'Drag to reorder',
   theme: themeProp,
   design,
   style,
