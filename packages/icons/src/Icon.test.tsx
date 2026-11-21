@@ -28,9 +28,9 @@ describe('Icon', () => {
   });
 
   it('is an image named by its label, in named and point sizes', async () => {
-    await render(<Icon name="bell" size="lg" accessibilityLabel="Notifications" />);
+    await render(<Icon name="bell" size="lg" aria-label="Notifications" />);
     expect(StyleSheet.flatten(screen.getByRole('img', { name: 'Notifications' }).props.style)).toMatchObject({ width: 24, height: 24 });
-    await render(<Icon name="bell" size={48} accessibilityLabel="Big" />);
+    await render(<Icon name="bell" size={48} aria-label="Big" />);
     expect(StyleSheet.flatten(screen.getByRole('img', { name: 'Big' }).props.style)).toMatchObject({ width: 48 });
   });
 
@@ -51,9 +51,9 @@ describe('Icon', () => {
   it('flips directional icons in right-to-left layouts, and only those', async () => {
     const rtl = I18nManager.isRTL;
     Object.defineProperty(I18nManager, 'isRTL', { value: true, configurable: true });
-    await render(<Glyph icon={iconArrowRight} accessibilityLabel="next" />);
+    await render(<Glyph icon={iconArrowRight} aria-label="next" />);
     expect(StyleSheet.flatten(screen.getByRole('img').props.style).transform).toEqual([{ scaleX: -1 }]);
-    await render(<Glyph icon={iconBell} accessibilityLabel="bell" />);
+    await render(<Glyph icon={iconBell} aria-label="bell" />);
     expect(StyleSheet.flatten(screen.getByRole('img').props.style).transform).toBeUndefined();
     Object.defineProperty(I18nManager, 'isRTL', { value: rtl, configurable: true });
   });
