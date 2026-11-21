@@ -30,7 +30,7 @@ export interface InputOTPProps extends ThemableProps, Omit<FieldStatusProps, 're
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** What screen readers call the field. Default: 'Verification code' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
   /** Per-part style overrides */

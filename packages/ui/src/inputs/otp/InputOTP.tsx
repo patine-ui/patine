@@ -19,7 +19,7 @@ export const InputOTP = (props: InputOTPProps) => {
     disabled = false,
     error,
     helperText,
-    accessibilityLabel: accessibilityLabelProp,
+    'aria-label': accessibilityLabelProp,
     style,
     styles: slots,
     theme: themeProp,
