@@ -8,13 +8,13 @@ import type { CountryCode } from './data';
 export type { CountryCode };
 
 export interface Country {
-  /** ISO 3166-1 alpha-2 code, e.g. 'IL' */
+  /** ISO 3166-1 alpha-2 code, e.g. 'FR' */
   code: CountryCode;
   /** English name */
   name: string;
   /** Name in the country's own language, when it differs from `name` */
   nativeName?: string;
-  /** Main international dialing code, e.g. '+972' */
+  /** Main international dialing code, e.g. '+33' */
   dialCode: string;
   /** Flag emoji */
   flag: string;
@@ -71,7 +71,7 @@ export interface PhoneDetails {
 export type PhoneFieldSlot = 'label' | 'field' | 'input' | 'countryButton' | 'dialCode' | 'chevron' | 'helperText';
 
 export interface PhoneFieldProps extends ThemableProps, FieldStatusProps, Omit<CountryListOptions, 'showDialCode'> {
-  /** The number in E.164, e.g. '+972541234567'; '' when empty */
+  /** The number in E.164, e.g. '+33612345678'; '' when empty */
   value?: string;
   /** The value at first, when it keeps its own state */
   defaultValue?: string;
