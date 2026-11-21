@@ -2,6 +2,7 @@ import { lightTheme } from '@/core/theme/theme.constants';
 import { TOAST_DESIGN, TOAST_TYPE } from './toast.constants';
 import type { ToastData } from './toast.types';
 import {
+  dismissToast,
   getDefaultPosition,
   getToastAnnouncement,
   getToastColors,
@@ -50,6 +51,22 @@ describe('toast store', () => {
     const kept = toast('Kept');
     toast.dismiss(kept);
     expect(getToasts()[0]?.open).toBe(false);
+    unsubscribe();
+  });
+
+  it('calls onDismiss once when it closes, but not when its action closes it', () => {
+    const onDismiss = jest.fn();
+    const id = toast('Deleted', { onDismiss });
+    toast.dismiss(id);
+    toast.dismiss(id);
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+    expect(onDismiss).toHaveBeenCalledWith(id);
+
+    const undone = jest.fn();
+    const unsubscribe = subscribeToasts(() => {});
+    const kept = toast('Deleted', { onDismiss: undone });
+    dismissToast(kept, true);
+    expect(undone).not.toHaveBeenCalled();
     unsubscribe();
   });
 

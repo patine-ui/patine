@@ -78,7 +78,7 @@ export const useToastItem = (t: ToastData, { duration, animationDuration, positi
     dismiss,
     onAction: () => {
       t.action?.onPress();
-      dismiss();
+      dismissToast(t.id, true);
     },
     handlers: {
       ...panHandlers,

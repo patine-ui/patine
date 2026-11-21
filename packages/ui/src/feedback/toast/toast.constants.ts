@@ -24,7 +24,6 @@ export const TOAST_ENTER_OFFSET = 16;
 export const TOAST_ICON_SIZE = 20;
 /** A one-line toast: room for a 36pt button, whose touch area grows to 44pt. */
 export const TOAST_MIN_HEIGHT = 52;
-export const TOAST_CLOSE_GLYPH = '✕';
 
 /** The status icon's color, from the theme. */
 export const TOAST_ACCENT: Record<ToastType, keyof Theme['colors']> = {
