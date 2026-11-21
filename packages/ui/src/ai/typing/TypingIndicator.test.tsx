@@ -12,7 +12,7 @@ describe('TypingIndicator', () => {
   it('takes the shape of an incoming bubble in each design', async () => {
     await render(<TypingIndicator testID="t" design="web" />);
     expect(screen.getByTestId('t')).toHaveStyle({ borderRadius: 8, backgroundColor: lightTheme.colors.background });
-    await render(<TypingIndicator testID="i" design="ios" accessibilityLabel="Assistant is thinking" />);
+    await render(<TypingIndicator testID="i" design="ios" aria-label="Assistant is thinking" />);
     expect(screen.getByLabelText('Assistant is thinking')).toHaveStyle({ borderRadius: 18, borderWidth: 0 });
   });
 });
