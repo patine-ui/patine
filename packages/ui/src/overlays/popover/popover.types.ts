@@ -108,6 +108,8 @@ export interface PopoverContentProps extends PopoverPlacementProps, ThemableProp
   arrow?: boolean;
   /** By the trigger, or a bottom sheet (as `DropdownMenu` does). Default: 'popover' */
   presentation?: PopoverPresentation;
+  /** As a sheet shown as a dialog (wide web): its close button, for content that draws its own. Default: true */
+  showCloseButton?: boolean;
   /** What screen readers call the dialog */
   'aria-label'?: string;
   /** The panel: its width, padding, colors */
