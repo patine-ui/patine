@@ -1,5 +1,5 @@
 import { Button } from '@/actions/button/Button';
-import { Text } from '@/core/primitives/Text';
+import { CloseMark } from '@/core/components/CloseMark';
 import { useDialogContext } from '@/overlays/dialog/DialogContext';
 import { CLOSE_BUTTON_ROOM, CLOSE_FILL_SIZE, MODAL_DESIGN } from '@/overlays/modal/modal.constants';
 import { styles, themed } from '@/overlays/modal/modal.styles';
@@ -25,9 +25,7 @@ export const ModalCloseButton = ({ label, top }: ModalCloseButtonProps) => {
       style={[styles.close, themed(theme).close, getClosePlace(top, look.padding, look.closeFill)]}
       hitSlop={look.closeFill ? (CLOSE_BUTTON_ROOM - CLOSE_FILL_SIZE) / 2 : undefined}
     >
-      <Text size="sm" weight="semibold" color="textSecondary">
-        ✕
-      </Text>
+      <CloseMark color={theme.colors.textSecondary} />
     </Button>
   );
 };

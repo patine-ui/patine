@@ -21,7 +21,7 @@ import { resolveModalLayout } from './modal.utils';
  * full control. Closes on the backdrop, the ✕, Escape on the web and Android back, unless `dismissible={false}`. For a short
  * question with two answers, use AlertDialog.
  */
-export const Modal = ({ children, trigger, title, description, actions, size, fullScreen, ...props }: ModalProps) => {
+export const Modal = ({ children, trigger, title, description, actions, size, fullScreen, showCloseButton, ...props }: ModalProps) => {
   const ctx = useModal(props);
   return (
     <DialogContext.Provider value={ctx}>
@@ -32,7 +32,7 @@ export const Modal = ({ children, trigger, title, description, actions, size, fu
           description={description}
           actions={actions}
           renderContent={(sections) => (
-            <ModalContent size={size} fullScreen={fullScreen}>
+            <ModalContent size={size} fullScreen={fullScreen} showCloseButton={showCloseButton}>
               {sections}
             </ModalContent>
           )}
