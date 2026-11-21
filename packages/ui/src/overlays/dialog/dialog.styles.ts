@@ -23,6 +23,9 @@ export const styles = StyleSheet.create({
   rowCells: { flexDirection: 'row' },
   columnCells: { flexDirection: 'column' },
   cellDivider: { borderStartWidth: StyleSheet.hairlineWidth },
+  close: { position: 'absolute' },
+  // Room for the ✕ beside the title, so a long one wraps before it.
+  headerRoom: { paddingEnd: 32 },
 });
 
 /** The design's dialog card, its padding and gaps, text alignment and iOS's footer cells. */
@@ -39,6 +42,7 @@ export const themed = createStyles((t) => {
     alertCard: { maxWidth: ALERT_DIALOG_MAX_WIDTH[t.design] },
     body: { padding: look.padding, gap: look.gap },
     header: { gap: look.headerGap },
+    close: { top: look.padding / 2, end: look.padding / 2 },
     // Start is Text's own default, which follows the layout direction; a physical 'left' wouldn't flip on the web.
     text: look.textAlign === 'center' ? { textAlign: 'center' } : {},
     hairline: { borderColor: t.colors.border },

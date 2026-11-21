@@ -13,7 +13,7 @@ export interface DialogPressSlotProps {
   children: React.ReactElement<{ onPress?: (...args: never[]) => void; 'aria-expanded'?: boolean }>;
 }
 
-/** A footer button for the shorthand `actions`: a Button that runs its `onPress`, then closes. */
+/** A footer button for the shorthand `actions`: a Button that runs its `onPress`, then closes. Call `event.preventDefault()` in `onPress` to keep the dialog open, as a Save that finds an error does. */
 export interface DialogAction extends Omit<ButtonProps, 'children'> {
   label: string;
 }
@@ -34,6 +34,7 @@ export interface DialogShorthandProps {
 /** The shorthand's layout: the trigger, then the content with its header, the body and a footer. */
 export interface DialogLayoutProps extends DialogShorthandProps {
   footer?: React.ReactNode;
+  showCloseButton?: boolean;
   children?: React.ReactNode;
 }
 
@@ -53,6 +54,8 @@ interface DialogBaseProps extends ThemableProps, DialogShorthandProps {
 export interface DialogProps extends DialogBaseProps {
   /** Shorthand: the footer's buttons, in order. Each runs its `onPress`, then closes the dialog */
   actions?: DialogAction[];
+  /** Shorthand: DialogContent's ✕ in the top corner. Default: true */
+  showCloseButton?: boolean;
 }
 
 export interface AlertDialogProps extends DialogBaseProps {
@@ -70,6 +73,10 @@ export interface AlertDialogProps extends DialogBaseProps {
 
 export interface DialogContentProps extends ViewProps {
   children?: React.ReactNode;
+  /** A close button (✕) in the top corner. Default: true, false in an AlertDialog, which closes only by its buttons */
+  showCloseButton?: boolean;
+  /** What a screen reader says for the ✕. Default: 'Close' */
+  closeLabel?: string;
 }
 
 export interface DialogSectionProps extends ViewProps {
