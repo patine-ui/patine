@@ -7,7 +7,6 @@ import {
   canGoToWeek,
   chunkRows,
   getAnchorMonth,
-  getArrowGlyph,
   getCollapseDate,
   getDayLook,
   getDayState,
@@ -300,11 +299,6 @@ describe('navigation helpers', () => {
     const weekdays = orderWeekdays(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'], 1);
     expect(weekdays.map((w) => w.label)).toEqual(['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']);
     expect(weekdays.map((w) => w.key)).toEqual([1, 2, 3, 4, 5, 6, 0]);
-  });
-  it('points arrows the right way in LTR and RTL', () => {
-    expect(getArrowGlyph('prev', false)).toBe('‹');
-    expect(getArrowGlyph('next', false)).toBe('›');
-    expect(getArrowGlyph('prev', true)).toBe('›');
   });
   it('blocks months outside min/max', () => {
     expect(canGoToMonth(day(1), -1, day(20))).toBe(false);

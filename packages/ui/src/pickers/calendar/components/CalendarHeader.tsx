@@ -1,11 +1,13 @@
+import { StyleSheet } from 'react-native';
+
+import { ChevronMark } from '@/core/components/ChevronMark';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
 import { useLabels } from '@/core/theme/ThemeProvider';
-import { ARROW_DIRECTIONS, CALENDAR_DESIGN, CALENDAR_VIEW } from '@/pickers/calendar/calendar.constants';
+import { ARROW_DIRECTION, ARROW_DIRECTIONS, CALENDAR_DESIGN, CALENDAR_VIEW } from '@/pickers/calendar/calendar.constants';
 import { styles, themed } from '@/pickers/calendar/calendar.styles';
 import type { CalendarHeaderProps } from '@/pickers/calendar/calendar.types';
-import { getArrowGlyph } from '@/pickers/calendar/calendar.utils';
 
 export const CalendarHeader = ({
   label,
@@ -16,7 +18,6 @@ export const CalendarHeader = ({
   onTitlePress,
   onArrowPress,
   renderArrow,
-  rtl,
   theme,
   slots,
 }: CalendarHeaderProps) => {
@@ -61,15 +62,11 @@ export const CalendarHeader = ({
               {renderArrow ? (
                 renderArrow(direction, disabled)
               ) : (
-                <Text
-                  theme={theme}
-                  size="lg"
-                  weight="semibold"
-                  color={CALENDAR_DESIGN[theme.design].arrowColor}
-                  style={[styles.arrowText, slots?.arrowText]}
-                >
-                  {getArrowGlyph(direction, rtl)}
-                </Text>
+                // The `arrowText` slot's color tints the drawn chevron.
+                <ChevronMark
+                  direction={direction === ARROW_DIRECTION.prev ? 'back' : 'forward'}
+                  color={String(StyleSheet.flatten(slots?.arrowText)?.color ?? theme.colors[CALENDAR_DESIGN[theme.design].arrowColor])}
+                />
               )}
             </Touchable>
           );

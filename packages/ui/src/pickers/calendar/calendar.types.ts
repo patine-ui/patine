@@ -252,7 +252,6 @@ export interface CalendarHeaderProps {
   onTitlePress: () => void;
   onArrowPress: (direction: ArrowDirection) => void;
   renderArrow?: CalendarBaseProps['renderArrow'];
-  rtl: boolean;
   theme: Theme;
   slots?: SlotStyles<CalendarSlot>;
 }
