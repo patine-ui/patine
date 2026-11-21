@@ -17,7 +17,7 @@ export const BottomTabBar = <T extends string>(props: TabBarProps<T>) => {
   const {
     items,
     bottomInset = 0,
-    accessibilityLabel: accessibilityLabelProp,
+    'aria-label': accessibilityLabelProp,
     theme: themeProp,
     design,
     style,
