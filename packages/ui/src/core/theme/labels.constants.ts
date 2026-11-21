@@ -4,6 +4,8 @@ import type { Labels } from './labels.types';
 export const DEFAULT_LABELS: Labels = {
   close: 'Close',
   cancel: 'Cancel',
+  done: 'Done',
+  ok: 'OK',
   back: 'Back',
   retry: 'Try again',
   clear: 'Clear',
