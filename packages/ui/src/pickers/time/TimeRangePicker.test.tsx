@@ -67,7 +67,7 @@ describe('TimeRangePickerField', () => {
   it('shows the range and confirms the one picked in the sheet', async () => {
     const onConfirm = jest.fn();
     await render(
-      <TimeRangePickerField label="Opening hours" format="24h" locale="en-US" design="web" value={WORK_DAY} onConfirm={onConfirm} />
+      <TimeRangePickerField label="Opening hours" format="24h" locale="en-US" design="web" value={WORK_DAY} onValueChange={onConfirm} />
     );
     expect(screen.getByText('09:00 – 17:00')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Opening hours' }));

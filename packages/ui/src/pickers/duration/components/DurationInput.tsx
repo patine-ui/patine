@@ -25,7 +25,7 @@ export const DurationInput = ({ columns, theme, style, testID }: DurationInputPr
             keyboardType={NUMERIC_KEYBOARD_TYPE}
             maxLength={getMaxDigits(column.items)}
             selectTextOnFocus
-            aria-label={column.accessibilityLabel}
+            aria-label={column['aria-label']}
             style={[timeStyles.fieldInput, styles.field, themed(theme).field, input.focused === column.key && themed(theme).fieldOn]}
             testID={column.testID}
           />

@@ -10,7 +10,7 @@ export const WheelTypingInput = ({
   numeric,
   itemHeight,
   theme,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   onChangeText,
   onDone,
 }: WheelTypingInputProps) => (

@@ -47,7 +47,7 @@ export const useDurationColumns = ({
       const durationFor = (v: number) => toSeconds({ ...parts, ...toPatch(v) });
       return {
         ...column,
-        accessibilityLabel: columnNames[column.key],
+        'aria-label': columnNames[column.key],
         testID: testID ? `${testID}-${column.key}` : undefined,
         onValueChange: (v: number) => onValueChange(clampDuration(durationFor(v), options.bounds)),
         onValueChanging: onValueChanging ? (v: number) => onValueChanging(durationFor(v)) : undefined,

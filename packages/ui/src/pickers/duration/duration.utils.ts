@@ -77,7 +77,7 @@ export const getDurationColumnSpecs = (parts: DurationParts, options: ResolvedDu
     flex: 1,
     textAlign: 'right',
     suffix: labels[key],
-    accessibilityLabel: DEFAULT_LABELS.durationColumns[key],
+    'aria-label': DEFAULT_LABELS.durationColumns[key],
     toPatch: (v) => ({ [key]: v }),
   });
 

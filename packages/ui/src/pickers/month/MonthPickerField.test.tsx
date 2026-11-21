@@ -5,7 +5,7 @@ import { MonthPickerField } from './MonthPickerField';
 describe('MonthPickerField', () => {
   it('shows the month and confirms it from the sheet', async () => {
     const onConfirm = jest.fn();
-    await render(<MonthPickerField label="Report" locale="en-US" value={new Date(2026, 9, 1)} onConfirm={onConfirm} design="web" />);
+    await render(<MonthPickerField label="Report" locale="en-US" value={new Date(2026, 9, 1)} onValueChange={onConfirm} design="web" />);
     expect(screen.getByText('October 2026')).toBeTruthy();
     await fireEvent.press(screen.getByRole('button', { name: 'Report' }));
     await fireEvent.press(screen.getByText('Dec'));
@@ -22,7 +22,7 @@ describe('MonthPickerField', () => {
         locale="en-US"
         value={new Date(2026, 9, 1)}
         presentation="inline"
-        onConfirm={onConfirm}
+        onValueChange={onConfirm}
         onOpenChange={onClose}
         design="web"
       />

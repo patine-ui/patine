@@ -290,7 +290,7 @@ describe('getPanelCellLabel', () => {
     expect(getPanelCellLabel({ key: 'hour' }, '09')).toBe('Hour 09');
     expect(getPanelCellLabel({ key: 'minute' }, '09')).toBe('Minute 09');
     expect(getPanelCellLabel({ key: 'period' }, 'PM')).toBe('PM');
-    expect(getPanelCellLabel({ key: 'hours', accessibilityLabel: 'Hours' }, '5')).toBe('Hours 5');
+    expect(getPanelCellLabel({ key: 'hours', 'aria-label': 'Hours' }, '5')).toBe('Hours 5');
   });
 });
 

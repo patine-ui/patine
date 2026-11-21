@@ -84,6 +84,7 @@ export const themed = createStyles((t) => ({
   large: { borderRadius: t.radius.md, borderColor: t.colors.border },
   shadow: { boxShadow: t.shadows.sm },
   border: { borderColor: t.colors.border },
+  swatchGap: { gap: t.spacing.sm },
   hexInput: { borderRadius: t.radius.sm, borderColor: t.colors.border, backgroundColor: t.colors.background, paddingStart: t.spacing.md },
   hexPad: { paddingEnd: t.spacing.md },
   hexPadCopy: { paddingEnd: 40 },

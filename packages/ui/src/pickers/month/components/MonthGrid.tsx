@@ -1,7 +1,7 @@
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
 import { View } from '@/core/primitives/View';
-import { useDirection } from '@/core/theme/ThemeProvider';
 import { CALENDAR_VIEW } from '@/pickers/calendar/calendar.constants';
+import { themed } from '@/pickers/calendar/calendar.styles';
 import { CalendarHeader } from '@/pickers/calendar/components/CalendarHeader';
 import { QuickGrid } from '@/pickers/calendar/components/QuickGrid';
 import { useMonthGrid } from '@/pickers/month/hooks/useMonthGrid';
@@ -10,11 +10,10 @@ import type { MonthGridProps } from '@/pickers/month/month.types';
 
 /** Material's and the web's month picker: the months of a year to tap, under the year; tap the year for a grid of years. */
 export const MonthGrid = (props: MonthGridProps) => {
-  const rtl = useDirection() === 'rtl';
   const { theme, style, styles: slots, testID } = props;
   const grid = useMonthGrid(props);
   return (
-    <View style={[{ backgroundColor: theme.colors.background, paddingVertical: theme.spacing.sm }, style]} {...ARROW_FOCUS} testID={testID}>
+    <View style={[themed(theme).container, style]} {...ARROW_FOCUS} testID={testID}>
       <CalendarHeader
         label={grid.title}
         spokenLabel={grid.title}
@@ -24,7 +23,6 @@ export const MonthGrid = (props: MonthGridProps) => {
         isArrowDisabled={grid.isArrowDisabled}
         onTitlePress={grid.toggleView}
         onArrowPress={grid.onArrowPress}
-        rtl={rtl}
         theme={theme}
         slots={slots}
       />

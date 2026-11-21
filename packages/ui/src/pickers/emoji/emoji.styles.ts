@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
 export const themed = createStyles((t) => {
   const search = SEARCH_DESIGN[t.design];
   return {
+    container: { backgroundColor: t.colors.background },
     list: { paddingHorizontal: t.spacing.xs },
     empty: { padding: t.spacing.xl },
     bar: { borderColor: t.colors.border },

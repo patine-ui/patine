@@ -44,7 +44,7 @@ export const WheelPicker = <T,>(props: WheelPickerProps<T>) => {
     styles: slots,
     theme: themeProp,
     design,
-    accessibilityLabel,
+    'aria-label': accessibilityLabel,
     testID,
   } = props;
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
@@ -187,7 +187,7 @@ export const WheelPicker = <T,>(props: WheelPickerProps<T>) => {
             numeric={typeToSelect.numeric}
             itemHeight={itemHeight}
             theme={theme}
-            accessibilityLabel={accessibilityLabel}
+            aria-label={accessibilityLabel}
             onChangeText={typeToSelect.onType}
             onDone={typeToSelect.stopTyping}
           />
