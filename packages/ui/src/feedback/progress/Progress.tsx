@@ -46,7 +46,7 @@ export const Progress = ({ value, max = 100, height, theme: themeProp, design, s
 export const Spinner = ({
   color = 'primary',
   size = 'small',
-  accessibilityLabel: accessibilityLabelProp,
+  'aria-label': accessibilityLabelProp,
   theme: themeProp,
   design,
   ...rest
