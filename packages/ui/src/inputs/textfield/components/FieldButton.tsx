@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { CloseMark } from '@/core/components/CloseMark';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
+import { View } from '@/core/primitives/View';
 import { ACTION_HIT_SLOP } from '@/inputs/textfield/textfield.constants';
 import { styles, themed } from '@/inputs/textfield/textfield.styles';
 import type { FieldButtonProps } from '@/inputs/textfield/textfield.types';
@@ -15,8 +16,10 @@ export const FieldButton = ({ label, spokenLabel, onPress, theme, style }: Field
         {label}
       </Text>
     ) : (
-      // The `action` slot's color reaches the drawn ✕ too.
-      <CloseMark size="sm" color={String(StyleSheet.flatten(style)?.color ?? theme.colors.textSecondary)} />
+      // The same side padding the text buttons have, so the ✕ sits off the field's edge; the `action` slot's color reaches it too.
+      <View style={styles.action}>
+        <CloseMark size="sm" color={String(StyleSheet.flatten(style)?.color ?? theme.colors.textSecondary)} />
+      </View>
     )}
   </Touchable>
 );
