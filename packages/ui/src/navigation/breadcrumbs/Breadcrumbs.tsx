@@ -17,7 +17,7 @@ export const Breadcrumbs = ({
   items,
   separator,
   maxItems,
-  accessibilityLabel: accessibilityLabelProp,
+  'aria-label': accessibilityLabelProp,
   expandLabel: expandLabelProp,
   theme: themeProp,
   design,

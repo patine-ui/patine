@@ -25,7 +25,7 @@ export interface BreadcrumbsProps extends Omit<ViewProps, 'children'>, ThemableP
   /** Past this many items, the middle ones fold into '…', which unfolds when pressed. Default: no limit */
   maxItems?: number;
   /** Names the trail for screen readers. Default: 'Breadcrumb' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The folded items' button, for screen readers. Default: 'Show path' */
   expandLabel?: string;
   /** The outer view, for layout */
