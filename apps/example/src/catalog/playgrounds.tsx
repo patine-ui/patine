@@ -3,29 +3,14 @@ import { Text, View } from 'react-native';
 import type { ThemeColor } from 'patine-ui';
 import {
   Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
   ActionSheet,
   Alert,
-  AlertDescription,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertTitle,
+  AlertDialog,
   Avatar,
   Badge,
   BottomSheet,
   Button,
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   Carousel,
   Checkbox,
   ChipGroup,
@@ -38,11 +23,7 @@ import {
   DateTimePicker,
   DateTimePickerField,
   DateWheelPicker,
-  DialogClose,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  Dialog,
   DropdownMenu,
   DurationPicker,
   DurationPickerField,
@@ -51,17 +32,13 @@ import {
   EmptyState,
   ExpandableCalendar,
   Header,
+  Image,
   InputOTP,
   LanguagePicker,
   List,
   ListItem,
   MessageBubble,
-  ModalBody,
-  ModalClose,
-  ModalDescription,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle,
+  Modal,
   MonthPicker,
   MonthPickerField,
   MultiWheelPicker,
@@ -69,7 +46,6 @@ import {
   Progress,
   QRCode,
   RadioGroup,
-  RadioGroupItem,
   Rating,
   SegmentedControl,
   Select,
@@ -82,9 +58,6 @@ import {
   Steps,
   Switch,
   Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   TextArea,
   TextField,
   TimePicker,
@@ -104,7 +77,6 @@ import { Icon } from '@patine-ui/icons';
 import { styles } from './catalog.styles';
 import type { PlaygroundConfig, PlaygroundKey, PlaygroundSelection } from './catalog.types';
 import { CollapsibleDemo } from './components/CollapsibleDemo';
-import { AlertDialogDemo, DialogDemo, ModalDemo } from './components/DialogDemo';
 import { DropdownMenuTrigger } from './components/DropdownMenuTrigger';
 import { ImageViewerDemo } from './components/ImageViewerDemo';
 import { PopoverDemo } from './components/PopoverDemo';
@@ -127,7 +99,12 @@ const icon = (name: IconName, color?: ThemeColor) => ({
 });
 const PHOTO = 'https://picsum.photos/id/64/160/160';
 
-const SLIDE_COLORS = ['#6366F1', '#0EA5E9', '#10B981', '#F59E0B'];
+const SLIDES = [
+  { photo: 1040, title: 'Castles and lakes', alt: 'A castle on a wooded hill' },
+  { photo: 1036, title: 'Winter in the north', alt: 'Snowy mountains at dusk' },
+  { photo: 1015, title: 'Fjord cabins', alt: 'A river between cliffs' },
+  { photo: 1043, title: 'Forest weekends', alt: 'A road through a forest' },
+];
 
 const toOptions = (labels: string[]) =>
   labels.map((label) => ({
@@ -184,9 +161,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         prop: 'startIcon',
         options: ['none', 'save', 'mail'],
         unset: 'none',
-        values: { save: icon('save', 'onPrimary'), mail: icon('mail', 'onPrimary') },
+        values: { save: icon('save'), mail: icon('mail') },
       },
-      { prop: 'endIcon', options: ['none', 'next'], unset: 'none', values: { next: icon('arrowRight', 'onPrimary') } },
+      { prop: 'endIcon', options: ['none', 'next'], unset: 'none', values: { next: icon('arrowRight') } },
       { prop: 'loading', options: [false, true] },
       {
         prop: 'href',
@@ -250,35 +227,37 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   radioGroup: {
     name: 'RadioGroup',
     component: RadioGroup,
-    props: { defaultValue: 'express', 'aria-label': 'Delivery' },
-    code: 'defaultValue="express" aria-label="Delivery"',
-    children: [
-      <RadioGroupItem key="standard" value="standard" label="Standard" description="4–6 working days · Free" />,
-      <RadioGroupItem key="express" value="express" label="Express" description="1–2 working days · $9.90" />,
-      <RadioGroupItem key="pickup" value="pickup" label="Store pickup" description="Ready tomorrow · Free" />,
-      <RadioGroupItem key="drone" value="drone" label="Drone" description="Not available in your area" disabled />,
-    ],
+    props: {
+      defaultValue: 'express',
+      'aria-label': 'Delivery',
+      options: [
+        { value: 'standard', label: 'Standard', description: '4–6 working days · Free' },
+        { value: 'express', label: 'Express', description: '1–2 working days · $9.90' },
+        { value: 'pickup', label: 'Store pickup', description: 'Ready tomorrow · Free' },
+        { value: 'drone', label: 'Drone', description: 'Not available in your area', disabled: true },
+      ],
+    },
+    code: 'options={deliveryOptions} defaultValue="express" aria-label="Delivery"',
     controls: [{ prop: 'orientation', options: ['vertical', 'horizontal'] }, DISABLED, DESIGN],
   },
   card: {
     name: 'Card',
     component: Card,
-    props: { style: { width: 320 } },
+    props: {
+      style: { width: 320 },
+      title: 'Pro plan',
+      description: 'Charts, scheduler and data grid.',
+      action: <Badge>Popular</Badge>,
+      footer: <Button>Upgrade</Button>,
+    },
+    code: 'title="Pro plan" description="Charts, scheduler and data grid." action={<Badge>Popular</Badge>} footer={<Button>Upgrade</Button>}',
     children: [
-      <CardHeader key="header">
-        <CardTitle>Pro plan</CardTitle>
-        <CardDescription>Charts, scheduler and data grid.</CardDescription>
-      </CardHeader>,
-      <CardContent key="content">
-        <UIText size="2xl" weight="semibold">
-          $199
-        </UIText>
-        <UIText color="textSecondary">One-time payment, a year of updates</UIText>
-      </CardContent>,
-      <CardFooter key="footer">
-        <Button>Upgrade</Button>
-        <Button variant="ghost">Compare</Button>
-      </CardFooter>,
+      <UIText key="price" size="2xl" weight="semibold">
+        $199
+      </UIText>,
+      <UIText key="terms" color="textSecondary">
+        One-time payment, a year of updates
+      </UIText>,
     ],
     controls: [
       { prop: 'shadow', options: ['auto', 'none', 'xs', 'sm', 'md', 'lg', 'xl'], unset: 'auto' },
@@ -292,7 +271,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     name: 'Avatar',
     component: Avatar,
     controls: [
-      { prop: 'name', options: ['Maya Cohen', 'Daniel', 'Ana Lucía Pérez'], default: null },
+      { prop: 'name', options: ['Sofia Rossi', 'Daniel', 'Ana Lucía Pérez'], default: null },
       {
         prop: 'src',
         options: ['none', 'photo', 'broken'],
@@ -311,16 +290,21 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     name: 'Badge',
     component: Badge,
     children: 'In stock',
-    controls: [{ prop: 'variant', options: ['default', 'secondary', 'outline', 'success', 'warning', 'destructive'] }, DESIGN],
+    controls: [
+      { prop: 'variant', options: ['default', 'secondary', 'outline', 'success', 'warning', 'destructive'] },
+      { prop: 'startIcon', options: ['none', 'check'], unset: 'none', values: { check: icon('check') } },
+      DESIGN,
+    ],
   },
   alert: {
     name: 'Alert',
     component: Alert,
-    props: { style: { width: 360 } },
-    children: [
-      <AlertTitle key="title">Payment failed</AlertTitle>,
-      <AlertDescription key="description">Your card was declined. Update it to keep your Pro plan.</AlertDescription>,
-    ],
+    props: {
+      style: { width: 360 },
+      title: 'Payment failed',
+      description: 'Your card was declined. Update it to keep your Pro plan.',
+    },
+    code: 'title="Payment failed" description="Your card was declined. Update it to keep your Pro plan."',
     controls: [
       { prop: 'variant', options: ['default', 'destructive', 'success', 'warning'] },
       {
@@ -342,7 +326,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         key="notifications"
         title="Notifications"
         leading={<Icon name="bell" />}
-        trailing={<Switch accessibilityLabel="Notifications" defaultChecked />}
+        trailing={<Switch aria-label="Notifications" defaultChecked />}
       />,
       <ListItem key="language" title="Language" leading={<Icon name="globe" />} value="English" onPress={() => {}} />,
       <ListItem key="storage" title="Storage" description="2.4 GB of 5 GB used" leading={<Icon name="database" />} onPress={() => {}} />,
@@ -366,7 +350,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: Header,
     props: { style: { width: 360 } },
     controls: [
-      { prop: 'title', options: ['Settings', 'Maya Cohen'], default: null },
+      { prop: 'title', options: ['Settings', 'Ana Ribeiro'], default: null },
       { prop: 'subtitle', options: ['none', 'Last seen 5 min ago'], unset: 'none' },
       { prop: 'onBack', options: ['set', 'none'], unset: 'none', default: null, values: { set: { live: () => {}, code: 'goBack' } } },
       { prop: 'backLabel', options: ['Back', 'Inbox'] },
@@ -392,8 +376,8 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   progress: {
     name: 'Progress',
     component: Progress,
-    props: { accessibilityLabel: 'Upload', style: { width: 280 } },
-    code: 'accessibilityLabel="Upload"',
+    props: { 'aria-label': 'Upload', style: { width: 280 } },
+    code: 'aria-label="Upload"',
     controls: [
       { prop: 'value', options: ['indeterminate', 0, 25, 60, 100], unset: 'indeterminate', default: null, initial: 60 },
       { prop: 'max', options: [100, 200], default: 100 },
@@ -475,11 +459,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   datePickerField: {
     name: 'DatePickerField',
     component: DatePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Due date', placeholder: 'Pick a date' },
     value: null,
-    code: 'label="Due date" placeholder="Pick a date" value={date} onConfirm={setDate}',
+    code: 'label="Due date" placeholder="Pick a date" value={date} onValueChange={setDate}',
     controls: [
       PRESENTATION,
       { prop: 'display', options: ['calendar', 'wheel'] },
@@ -503,11 +486,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   dateRangeField: {
     name: 'DatePickerField',
     component: DatePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Your stay', placeholder: 'Add dates' },
     value: dateValue,
-    code: 'label="Your stay" placeholder="Add dates" value={stay} onConfirm={setStay}',
+    code: 'label="Your stay" placeholder="Add dates" value={stay} onValueChange={setStay}',
     controls: [PRESENTATION, { prop: 'mode', options: ['range', 'multiple', 'ranges'], default: null }, CLEARABLE],
   },
   dateWheelPicker: {
@@ -534,11 +516,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   birthdayField: {
     name: 'DatePickerField',
     component: DatePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Birthday', placeholder: 'Pick a date', display: 'wheel' },
     value: null,
-    code: 'label="Birthday" placeholder="Pick a date" display="wheel" value={date} onConfirm={setDate}',
+    code: 'label="Birthday" placeholder="Pick a date" display="wheel" value={date} onValueChange={setDate}',
     controls: [PRESENTATION, CLEARABLE],
   },
   monthPicker: {
@@ -556,11 +537,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   monthPickerField: {
     name: 'MonthPickerField',
     component: MonthPickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Report month', placeholder: 'Pick a month' },
     value: () => undefined,
-    code: 'label="Report month" placeholder="Pick a month" value={month} onConfirm={setMonth}',
+    code: 'label="Report month" placeholder="Pick a month" value={month} onValueChange={setMonth}',
     controls: [PRESENTATION, { prop: 'display', options: ['auto', 'wheel', 'grid'], unset: 'auto' }, CLEARABLE],
   },
   weekStrip: {
@@ -607,11 +587,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   timePickerField: {
     name: 'TimePickerField',
     component: TimePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Alarm', placeholder: 'Set a time' },
     value: () => undefined,
-    code: 'label="Alarm" placeholder="Set a time" value={time} onConfirm={setTime}',
+    code: 'label="Alarm" placeholder="Set a time" value={time} onValueChange={setTime}',
     controls: [
       PRESENTATION,
       { prop: 'display', options: ['auto', 'wheel', 'dial', 'input', 'list'], unset: 'auto' },
@@ -635,11 +614,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   timeRangeField: {
     name: 'TimeRangePickerField',
     component: TimeRangePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Opening hours', placeholder: 'Set hours', minuteInterval: 15 },
     value: () => undefined,
-    code: 'label="Opening hours" placeholder="Set hours" minuteInterval={15} value={hours} onConfirm={setHours}',
+    code: 'label="Opening hours" placeholder="Set hours" minuteInterval={15} value={hours} onValueChange={setHours}',
     controls: [
       PRESENTATION,
       { prop: 'display', options: ['auto', 'wheel', 'dial', 'input', 'list'], unset: 'auto' },
@@ -664,11 +642,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   durationPickerField: {
     name: 'DurationPickerField',
     component: DurationPickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Timer', placeholder: 'Set a timer', minuteInterval: 5 },
     value: () => undefined,
-    code: 'label="Timer" placeholder="Set a timer" minuteInterval={5} value={seconds} onConfirm={setSeconds}',
+    code: 'label="Timer" placeholder="Set a timer" minuteInterval={5} value={seconds} onValueChange={setSeconds}',
     controls: [PRESENTATION, { prop: 'showSeconds', options: [false, true] }, CLEARABLE],
   },
   dateTimePicker: {
@@ -690,11 +667,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   dateTimePickerField: {
     name: 'DateTimePickerField',
     component: DateTimePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Reminder', placeholder: 'Set a reminder' },
     value: () => undefined,
-    code: 'label="Reminder" placeholder="Set a reminder" value={date} onConfirm={setDate}',
+    code: 'label="Reminder" placeholder="Set a reminder" value={date} onValueChange={setDate}',
     controls: [
       PRESENTATION,
       { prop: 'display', options: ['auto', 'wheel', 'calendar'], unset: 'auto' },
@@ -706,12 +682,20 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     name: 'Select',
     component: Select,
     props: {
-      label: 'Fruit',
-      options: toOptions(['Apple', 'Banana', 'Cherry', 'Grape', 'Mango', 'Orange', 'Peach', 'Pear', 'Plum']),
+      label: 'Project',
+      options: toOptions([
+        'Website redesign',
+        'Mobile app 3.0',
+        'Q4 launch',
+        'Brand refresh',
+        'Help center',
+        'Hiring',
+        'Onboarding',
+        'Pricing page',
+      ]),
     },
-    value: ({ multiple }: PlaygroundSelection) => (multiple ? ['Banana'] : 'Banana'),
-    resetProp: 'onClear',
-    code: 'label="Fruit" options={fruits} value={value} onValueChange={setValue}',
+    value: ({ multiple }: PlaygroundSelection) => (multiple ? ['Q4 launch'] : 'Q4 launch'),
+    code: 'label="Project" options={projects} value={value} onValueChange={setValue}',
     controls: [
       PRESENTATION,
       { prop: 'multiple', options: [false, true] },
@@ -732,7 +716,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: SelectList,
     props: {
       listHeight: 260,
-      options: toOptions(['Canada', 'France', 'Germany', 'Israel', 'Italy', 'Japan', 'Mexico', 'Spain', 'Sweden', 'United States']),
+      options: toOptions(['Canada', 'France', 'Germany', 'Italy', 'Japan', 'Mexico', 'Portugal', 'Spain', 'Sweden', 'United States']),
     },
     value: ({ multiple }: PlaygroundSelection) => (multiple ? ['Japan'] : 'Japan'),
     code: 'options={countries} value={value} onValueChange={setValue}',
@@ -746,10 +730,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   countryPicker: {
     name: 'CountryPicker',
     component: CountryPicker,
-    props: { label: 'Country', preferred: ['US', 'GB', 'IL'] },
+    props: { label: 'Country', preferred: ['US', 'GB', 'DE'] },
     value: ({ multiple }: PlaygroundSelection) => (multiple ? ['FR', 'JP'] : 'FR'),
-    resetProp: 'onClear',
-    code: "label=\"Country\" preferred={['US', 'GB', 'IL']} value={value} onValueChange={setValue}",
+    code: "label=\"Country\" preferred={['US', 'GB', 'DE']} value={value} onValueChange={setValue}",
     controls: [
       PRESENTATION,
       { prop: 'showDialCode', options: [false, true] },
@@ -764,7 +747,6 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: LanguagePicker,
     props: { label: 'App language', preferred: ['en', 'es'] },
     value: ({ multiple }: PlaygroundSelection) => (multiple ? ['en', 'fr'] : 'fr'),
-    resetProp: 'onClear',
     code: "label=\"App language\" preferred={['en', 'es']} value={value} onValueChange={setValue}",
     controls: [
       PRESENTATION,
@@ -778,9 +760,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   phoneField: {
     name: 'PhoneField',
     component: PhoneField,
-    props: { label: 'Phone', preferred: ['US', 'GB', 'IL'] },
+    props: { label: 'Phone', preferred: ['US', 'GB', 'DE'] },
     value: '+12015550123',
-    code: "label=\"Phone\" preferred={['US', 'GB', 'IL']} value={phone} onValueChange={setPhone}",
+    code: "label=\"Phone\" preferred={['US', 'GB', 'DE']} value={phone} onValueChange={setPhone}",
     controls: [
       PRESENTATION,
       { prop: 'locale', options: ['en', 'de', 'he', 'ja'], default: null },
@@ -794,7 +776,6 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     component: TimeZonePicker,
     props: { label: 'Time zone' },
     value: ({ multiple }: PlaygroundSelection) => (multiple ? ['Europe/Lisbon', 'Asia/Tokyo'] : 'Europe/Lisbon'),
-    resetProp: 'onClear',
     code: 'label="Time zone" value={timeZone} onValueChange={setTimeZone}',
     controls: [
       PRESENTATION,
@@ -862,11 +843,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   wheelPickerField: {
     name: 'WheelPickerField',
     component: WheelPickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Size', placeholder: 'Choose a size', items: ['XS', 'S', 'M', 'L', 'XL'] },
     value: () => undefined,
-    code: 'label="Size" placeholder="Choose a size" items={sizes} value={size} onConfirm={setSize}',
+    code: 'label="Size" placeholder="Choose a size" items={sizes} value={size} onValueChange={setSize}',
     controls: [PRESENTATION, { prop: 'variant', options: ['3d', 'flat'] }, CLEARABLE],
   },
   multiWheelPicker: {
@@ -905,8 +885,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   emojiPickerField: {
     name: 'EmojiPickerField',
     component: EmojiPickerField,
-    changeProp: 'onSelect',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Icon', placeholder: 'Pick an icon' },
     value: () => undefined,
     code: 'label="Icon" placeholder="Pick an icon" value={icon} onSelect={setIcon}',
@@ -926,9 +905,9 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   slider: {
     name: 'Slider',
     component: Slider,
-    props: { accessibilityLabel: 'Volume' },
+    props: { 'aria-label': 'Volume' },
     value: ({ range }: PlaygroundSelection) => (range ? [20, 80] : 40),
-    code: 'value={volume} onValueChange={setVolume} accessibilityLabel="Volume"',
+    code: 'value={volume} onValueChange={setVolume} aria-label="Volume"',
     controls: [
       { prop: 'range', options: [false, true] },
       { prop: 'step', options: [1, 10, 0], default: 1 },
@@ -980,11 +959,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   colorPickerField: {
     name: 'ColorPickerField',
     component: ColorPickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Label colour', placeholder: 'Pick a colour' },
     value: () => undefined,
-    code: 'label="Label colour" placeholder="Pick a colour" value={color} onConfirm={setColor}',
+    code: 'label="Label colour" placeholder="Pick a colour" value={color} onValueChange={setColor}',
     controls: [
       PRESENTATION,
       { prop: 'display', options: ['auto', 'tabs', 'swatches', 'spectrum'], unset: 'auto' },
@@ -995,11 +973,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   pickerField: {
     name: 'DatePickerField',
     component: DatePickerField,
-    changeProp: 'onConfirm',
-    resetProp: 'onClear',
+    changeProp: 'onValueChange',
     props: { label: 'Dates', placeholder: 'Pick dates' },
     value: dateValue,
-    code: 'label="Dates" placeholder="Pick dates" value={value} onConfirm={setValue}',
+    code: 'label="Dates" placeholder="Pick dates" value={value} onValueChange={setValue}',
     controls: [
       { prop: 'mode', options: ['single', 'range', 'multiple', 'ranges'] },
       { prop: 'display', options: ['calendar', 'wheel'] },
@@ -1071,7 +1048,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
     name: 'DropdownMenu',
     component: DropdownMenu,
     props: {
-      accessibilityLabel: 'Note options',
+      'aria-label': 'Note options',
       style: { alignSelf: 'center' },
       styles: { trigger: styles.pill },
       actions: [
@@ -1081,7 +1058,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         { label: 'Delete', icon: <Icon name="trash" size="sm" />, destructive: true },
       ],
     },
-    code: 'actions={actions} accessibilityLabel="Note options"',
+    code: 'actions={actions} aria-label="Note options"',
     controls: [
       { prop: 'align', options: ['auto', 'start', 'end'] },
       { prop: 'title', options: ['none', 'Note'], unset: 'none' },
@@ -1131,48 +1108,40 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   },
   dialog: {
     name: 'Dialog',
-    component: DialogDemo,
+    component: Dialog,
     opener: 'Edit profile',
-    code: 'open={open} onOpenChange={setOpen}',
-    controls: [{ prop: 'dismissible', options: [true, false] }, DESIGN],
+    props: {
+      title: 'Edit profile',
+      description: "Make changes to your profile. Save when you're done.",
+      actions: [{ label: 'Cancel', variant: 'outline' }, { label: 'Save changes' }],
+    },
+    code: 'open={open} onOpenChange={setOpen} title="Edit profile" description="Make changes to your profile. Save when you\'re done." actions={actions}',
+    controls: [{ prop: 'dismissible', options: [true, false] }, { prop: 'showCloseButton', options: [true, false] }, DESIGN],
     children: (
-      <>
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>Make changes to your profile. Save when you're done.</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose>
-            <Button>Save changes</Button>
-          </DialogClose>
-        </DialogFooter>
-      </>
+      <Stack gap="sm">
+        <TextField label="Name" defaultValue="Ana Ribeiro" />
+        <TextField label="Username" defaultValue="ana.ribeiro" autoCapitalize="none" />
+      </Stack>
     ),
   },
   alertDialog: {
     name: 'AlertDialog',
-    component: AlertDialogDemo,
+    component: AlertDialog,
     opener: 'Delete note',
-    code: 'open={open} onOpenChange={setOpen}',
+    props: {
+      title: 'Delete this note?',
+      description: "It's removed from all your devices. This can't be undone.",
+      confirmLabel: 'Delete',
+      destructive: true,
+    },
+    code: 'open={open} onOpenChange={setOpen} title="Delete this note?" description="It\'s removed from all your devices. This can\'t be undone." confirmLabel="Delete" destructive',
     controls: [{ prop: 'dismissible', options: [true, false] }, DESIGN],
-    children: (
-      <>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete this note?</AlertDialogTitle>
-          <AlertDialogDescription>This can't be undone.</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </>
-    ),
   },
   popover: {
     name: 'PopoverContent',
     component: PopoverDemo,
-    props: { accessibilityLabel: 'Details', style: { width: 240 } },
-    code: 'accessibilityLabel="Details"',
+    props: { 'aria-label': 'Details', style: { width: 240 } },
+    code: 'aria-label="Details"',
     controls: [
       { prop: 'side', options: ['bottom', 'top', 'left', 'right'] },
       { prop: 'align', options: ['center', 'start', 'end'] },
@@ -1192,8 +1161,8 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       { prop: 'delayDuration', options: [500, 0, 1000] },
     ],
     children: (
-      <Button size="icon" variant="outline" accessibilityLabel="Copy link" style={{ alignSelf: 'center' }}>
-        <UIText>⧉</UIText>
+      <Button size="icon" variant="outline" aria-label="Copy link" style={{ alignSelf: 'center' }}>
+        <Icon name="link" />
       </Button>
     ),
   },
@@ -1211,36 +1180,36 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   tabs: {
     name: 'Tabs',
     component: Tabs,
-    props: { defaultValue: 'account', style: { width: 360 } },
-    code: 'defaultValue="account"',
-    children: [
-      <TabsList key="list" aria-label="Settings">
-        <TabsTrigger value="account" icon={<Icon name="user" size="sm" />}>
-          Account
-        </TabsTrigger>
-        <TabsTrigger value="password" icon={<Icon name="lock" size="sm" />}>
-          Password
-        </TabsTrigger>
-        <TabsTrigger value="team" disabled>
-          Team
-        </TabsTrigger>
-      </TabsList>,
-      <TabsContent key="account" value="account">
-        <Stack gap="sm">
-          <TextField label="Name" defaultValue="Maya Cohen" />
-          <Button style={{ alignSelf: 'flex-start' }}>Save</Button>
-        </Stack>
-      </TabsContent>,
-      <TabsContent key="password" value="password">
-        <Stack gap="sm">
-          <TextField label="Current password" secureTextEntry />
-          <TextField label="New password" secureTextEntry helperText="At least 12 characters" />
-        </Stack>
-      </TabsContent>,
-      <TabsContent key="team" value="team">
-        <UIText>Invite people to your workspace.</UIText>
-      </TabsContent>,
-    ],
+    props: {
+      style: { width: 360 },
+      'aria-label': 'Settings',
+      items: [
+        {
+          value: 'account',
+          label: 'Account',
+          icon: <Icon name="user" size="sm" />,
+          content: (
+            <Stack gap="sm">
+              <TextField label="Name" defaultValue="Ana Ribeiro" />
+              <Button style={{ alignSelf: 'flex-start' }}>Save</Button>
+            </Stack>
+          ),
+        },
+        {
+          value: 'password',
+          label: 'Password',
+          icon: <Icon name="lock" size="sm" />,
+          content: (
+            <Stack gap="sm">
+              <TextField label="Current password" secureTextEntry />
+              <TextField label="New password" secureTextEntry helperText="At least 12 characters" />
+            </Stack>
+          ),
+        },
+        { value: 'team', label: 'Team', disabled: true, content: null },
+      ],
+    },
+    code: 'items={tabs} aria-label="Settings"',
     controls: [
       { prop: 'variant', options: ['auto', 'pills', 'underline'], unset: 'auto' },
       { prop: 'orientation', options: ['horizontal', 'vertical'] },
@@ -1259,9 +1228,14 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
   },
   modal: {
     name: 'Modal',
-    component: ModalDemo,
+    component: Modal,
     opener: 'Edit profile',
-    code: 'open={open} onOpenChange={setOpen}',
+    props: {
+      title: 'Edit profile',
+      description: 'Changes show on your public page.',
+      actions: [{ label: 'Cancel', variant: 'outline' }, { label: 'Save' }],
+    },
+    code: 'open={open} onOpenChange={setOpen} title="Edit profile" description="Changes show on your public page." actions={actions}',
     controls: [
       { prop: 'size', options: ['md', 'sm', 'lg', 'xl', 'full'] },
       { prop: 'fullScreen', options: ['auto', true, false], unset: 'auto' },
@@ -1269,59 +1243,43 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       { prop: 'dismissible', options: [true, false] },
     ],
     children: (
-      <>
-        <ModalHeader>
-          <ModalTitle>Edit profile</ModalTitle>
-          <ModalDescription>Changes show on your public page.</ModalDescription>
-        </ModalHeader>
-        <ModalBody>
-          <TextField label="Name" defaultValue="Maya Cohen" />
-          <TextArea label="Bio" defaultValue="Designer in Tel Aviv." />
-        </ModalBody>
-        <ModalFooter>
-          <ModalClose>
-            <Button>Save</Button>
-          </ModalClose>
-        </ModalFooter>
-      </>
+      <Stack gap="sm">
+        <TextField label="Name" defaultValue="Ana Ribeiro" />
+        <TextArea label="Bio" defaultValue="Product designer in Lisbon." />
+      </Stack>
     ),
   },
   accordion: {
     name: 'Accordion',
     component: Accordion,
-    props: { type: 'single', collapsible: true, defaultValue: 'shipping', style: { width: 340 } },
-    code: 'type="single" collapsible defaultValue="shipping"',
-    children: [
-      <AccordionItem key="shipping" value="shipping">
-        <AccordionTrigger>How long does shipping take?</AccordionTrigger>
-        <AccordionContent>
-          <UIText color="textSecondary">Orders ship within two working days.</UIText>
-        </AccordionContent>
-      </AccordionItem>,
-      <AccordionItem key="returns" value="returns">
-        <AccordionTrigger>Can I return an item?</AccordionTrigger>
-        <AccordionContent>
-          <UIText color="textSecondary">Yes, within 30 days.</UIText>
-        </AccordionContent>
-      </AccordionItem>,
-      <AccordionItem key="warranty" value="warranty">
-        <AccordionTrigger>Is there a warranty?</AccordionTrigger>
-        <AccordionContent>
-          <UIText color="textSecondary">Two years on every product.</UIText>
-        </AccordionContent>
-      </AccordionItem>,
-    ],
+    props: {
+      type: 'single',
+      collapsible: true,
+      defaultValue: 'shipping',
+      style: { width: 340 },
+      items: [
+        {
+          value: 'shipping',
+          title: 'How long does shipping take?',
+          content: <UIText color="textSecondary">Orders ship within two working days.</UIText>,
+        },
+        { value: 'returns', title: 'Can I return an item?', content: <UIText color="textSecondary">Yes, within 30 days.</UIText> },
+        { value: 'warranty', title: 'Is there a warranty?', content: <UIText color="textSecondary">Two years on every product.</UIText> },
+      ],
+    },
+    code: 'items={faqs} type="single" collapsible defaultValue="shipping"',
     controls: [DISABLED, DESIGN],
   },
   carousel: {
     name: 'Carousel',
     component: Carousel,
-    props: { accessibilityLabel: 'Featured', style: { width: 340 } },
-    code: 'accessibilityLabel="Featured"',
-    children: SLIDE_COLORS.map((color, i) => (
-      <View key={color} style={[styles.slide, { backgroundColor: color }]}>
-        <Text style={styles.slideText}>{i + 1}</Text>
-      </View>
+    props: { 'aria-label': 'Featured', style: { width: 340 } },
+    code: 'aria-label="Featured"',
+    children: SLIDES.map((slide) => (
+      <Stack key={slide.photo} gap="xs">
+        <Image src={`https://picsum.photos/id/${slide.photo}/640/360`} height={150} radius="lg" alt={slide.alt} />
+        <UIText weight="medium">{slide.title}</UIText>
+      </Stack>
     )),
     controls: [
       { prop: 'itemWidth', options: ['100%', '85%', '70%'] },

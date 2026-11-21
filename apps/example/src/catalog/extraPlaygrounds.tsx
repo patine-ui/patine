@@ -37,6 +37,15 @@ const tabIcon =
   (name: IconName) =>
   ({ color }: { color: string }) => <Icon name={name} color={color} />;
 
+const CATEGORIES: { label: string; icon: IconName }[] = [
+  { label: 'Shoes', icon: 'tag' },
+  { label: 'Bags', icon: 'bag' },
+  { label: 'Gifts', icon: 'gift' },
+  { label: 'Coffee', icon: 'coffee' },
+  { label: 'Books', icon: 'book' },
+  { label: 'Music', icon: 'music' },
+];
+
 const DESIGN = { prop: 'design', options: ['native', 'brand', 'ios', 'material', 'web'], unset: 'native' } as const;
 const DISABLED = { prop: 'disabled', options: [false, true] } as const;
 // Typed on its own: two controls with differently keyed `values` in one array widen to a union TypeScript rejects.
@@ -69,9 +78,10 @@ export const EXTRA_PLAYGROUNDS = {
     name: 'Grid',
     component: Grid,
     props: { style: { width: 360 } },
-    children: [1, 2, 3, 4, 5, 6].map((n) => (
-      <Box key={n} padding="md" background="primaryMuted" radius="md" align="center">
-        <Text>{n}</Text>
+    children: CATEGORIES.map(({ label, icon }) => (
+      <Box key={label} padding="md" background="primaryMuted" radius="md" align="center" gap="xs">
+        <Icon name={icon} color="primary" />
+        <Text>{label}</Text>
       </Box>
     )),
     controls: [
@@ -115,7 +125,15 @@ export const EXTRA_PLAYGROUNDS = {
     component: ButtonGroup,
     props: { 'aria-label': 'Pages' },
     code: 'aria-label="Pages"',
-    children: [<Button key="prev">‹ Prev</Button>, <Button key="today">Today</Button>, <Button key="next">Next ›</Button>],
+    children: [
+      <Button key="prev" startIcon={<Icon name="chevronLeft" size="sm" />}>
+        Prev
+      </Button>,
+      <Button key="today">Today</Button>,
+      <Button key="next" endIcon={<Icon name="chevronRight" size="sm" />}>
+        Next
+      </Button>,
+    ],
     controls: [
       { prop: 'variant', options: ['outline', 'default', 'secondary', 'ghost'], default: null },
       { prop: 'size', options: ['default', 'sm', 'lg'], default: null },
@@ -141,9 +159,9 @@ export const EXTRA_PLAYGROUNDS = {
   stepper: {
     name: 'Stepper',
     component: Stepper,
-    props: { accessibilityLabel: 'Guests', min: 0, max: 10 },
+    props: { 'aria-label': 'Guests', min: 0, max: 10 },
     value: 2,
-    code: 'accessibilityLabel="Guests" min={0} max={10} value={guests} onValueChange={setGuests}',
+    code: 'aria-label="Guests" min={0} max={10} value={guests} onValueChange={setGuests}',
     controls: [
       { prop: 'showValue', options: ['auto', true, false], unset: 'auto' },
       { prop: 'step', options: [1, 2, 5] },
@@ -288,10 +306,10 @@ export const EXTRA_PLAYGROUNDS = {
       columns: [
         { key: 'name', title: 'Name', flex: 2, sortable: true },
         { key: 'role', title: 'Role', flex: 2 },
-        { key: 'tasks', title: 'Tasks', align: 'right', sortable: true },
+        { key: 'tasks', title: 'Tasks', align: 'end', sortable: true },
       ],
       data: [
-        { id: '1', name: 'Maya Cohen', role: 'Designer', tasks: 12 },
+        { id: '1', name: 'Sofia Rossi', role: 'Designer', tasks: 12 },
         { id: '2', name: 'Daniel Okafor', role: 'Engineer', tasks: 31 },
         { id: '3', name: 'Ana Pérez', role: 'PM', tasks: 7 },
         { id: '4', name: 'Noah Kim', role: 'Engineer', tasks: 18 },
@@ -304,7 +322,7 @@ export const EXTRA_PLAYGROUNDS = {
     name: 'AvatarGroup',
     component: AvatarGroup,
     props: {
-      avatars: ['Maya Cohen', 'Daniel Okafor', 'Ana Pérez', 'Noah Kim', 'Priya Raman', 'Sven Larsen'].map((name) => ({ name })),
+      avatars: ['Sofia Rossi', 'Daniel Okafor', 'Ana Pérez', 'Noah Kim', 'Priya Raman', 'Sven Larsen'].map((name) => ({ name })),
     },
     code: 'avatars={members}',
     controls: [
@@ -329,8 +347,8 @@ export const EXTRA_PLAYGROUNDS = {
   fab: {
     name: 'Fab',
     component: Fab,
-    props: { icon: tabIcon('edit'), accessibilityLabel: 'Compose', style: { alignSelf: 'center' } },
-    code: 'icon={({ color }) => <Icon name="edit" color={color} />} accessibilityLabel="Compose"',
+    props: { icon: tabIcon('edit'), 'aria-label': 'Compose', style: { alignSelf: 'center' } },
+    code: 'icon={({ color }) => <Icon name="edit" color={color} />} aria-label="Compose"',
     controls: [
       { prop: 'label', options: ['none', 'Compose'], unset: 'none', default: null },
       { prop: 'size', options: ['md', 'sm', 'lg'] },
