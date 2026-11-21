@@ -82,7 +82,7 @@ interface SliderBaseProps extends ThemableProps {
   minimumIcon?: React.ReactNode;
   /** After the track */
   maximumIcon?: React.ReactNode;
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   style?: StyleProp<ViewStyle>;
   styles?: SlotStyles<SliderSlot>;
   testID?: string;

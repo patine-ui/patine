@@ -127,7 +127,7 @@ export const useSlider = (props: SliderProps, theme: Theme) => {
     halo: getHaloLevel(i, halo),
     valueText: format(value),
     adjustable: adjustableProps({
-      label: thumbLabels[i] ?? props.accessibilityLabel,
+      label: thumbLabels[i] ?? props['aria-label'],
       valueText: format(value),
       disabled,
       onStep: (direction) => setThumb(i, stepFrom(value, direction, keyStep)),

@@ -24,7 +24,7 @@ export const useRating = (props: RatingProps, theme: Theme): RatingState => {
     readOnly = false,
     disabled = false,
     formatValue = formatRating,
-    accessibilityLabel: accessibilityLabelProp,
+    'aria-label': accessibilityLabelProp,
   } = props;
   const words = useLabels();
   const accessibilityLabel = accessibilityLabelProp ?? words.rating;
