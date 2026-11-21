@@ -1,10 +1,11 @@
 import { Button } from '@/actions/button/Button';
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
+import { ChevronMark } from '@/core/components/ChevronMark';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { Text } from '@/core/primitives/Text';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
-import { ELLIPSIS, NEXT_ARROW, PAGINATION_DESIGN, PREV_ARROW } from './pagination.constants';
+import { ELLIPSIS, PAGINATION_DESIGN } from './pagination.constants';
 import { styles, themed } from './pagination.styles';
 import type { PaginationProps } from './pagination.types';
 import { clampPage, getPageItems } from './pagination.utils';
@@ -42,7 +43,8 @@ export const Pagination = ({
   };
   const arrow = (direction: -1 | 1) => {
     const label = direction === -1 ? labels.previous : labels.next;
-    const glyph = direction === -1 ? PREV_ARROW : NEXT_ARROW;
+    // Drawn, in the button's label color, and mirrored in right-to-left layouts.
+    const chevron = <ChevronMark direction={direction === -1 ? 'back' : 'forward'} />;
     return (
       <Button
         variant={look.other}
@@ -50,8 +52,10 @@ export const Pagination = ({
         disabled={disabled || (direction === -1 ? page <= 1 : page >= pageCount)}
         aria-label={label}
         onPress={() => go(page + direction)}
+        startIcon={!iconOnly && direction === -1 ? chevron : undefined}
+        endIcon={!iconOnly && direction === 1 ? chevron : undefined}
       >
-        {iconOnly ? glyph : direction === -1 ? `${glyph} ${label}` : `${label} ${glyph}`}
+        {iconOnly ? chevron : label}
       </Button>
     );
   };
