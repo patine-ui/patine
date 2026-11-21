@@ -1,5 +1,79 @@
 # Changelog
 
+## [0.3.0](https://github.com/patine-ui/patine/compare/v0.2.0...v0.3.0) (2026-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **pickers:** picker fields report through onValueChange instead of onConfirm.
+* **popover,tooltip:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **lightbox:** ImageViewer images take src (a URL or a source) instead of source.
+* **action:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **tabbar,tabs:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **breadcrumbs:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **textfield:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **select:** Select's onClear is removed; listen to onValueChange.
+* **segmented:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **rating,slider:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **otp:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **field:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **progress:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **table:** TableColumn align is 'start' | 'center' | 'end' instead of 'left' | 'center' | 'right'.
+* **qrcode,sortable:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **carousel:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **avatar:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **ai:** accessibilityLabel props are now aria-label, as on every React Native view.
+* **button:** accessibilityLabel props are now aria-label, as on every React Native view.
+
+### ✨ Features
+
+* **action:** action sheets open from a trigger, with no state of yours ([98b3374](https://github.com/patine-ui/patine/commit/98b3374f1d564484088caafd70cd110bb618223b))
+* **alert:** action at the alert's end, and icons in the variant color ([38a2c37](https://github.com/patine-ui/patine/commit/38a2c37d075a6731a13deb4010b92a2dc94f7e11))
+* **badge:** startIcon, drawn in the label color ([551d525](https://github.com/patine-ui/patine/commit/551d5259bdf61c941a7b869a226fda5ed1046573))
+* **button:** icon-sm and icon-lg, icons in the label color, a hover that shows ([101ee3a](https://github.com/patine-ui/patine/commit/101ee3a1b3af09e609f7e4ad8ad7d88c4104793e))
+* **calendar:** drawn chevrons, and days that fit narrow columns ([afacfae](https://github.com/patine-ui/patine/commit/afacfae2e9dbce1c51564651c20e418f2257efe3))
+* **card:** action at the header's end, as a prop or CardAction ([6d1781f](https://github.com/patine-ui/patine/commit/6d1781ff49b1c7e743df95f14d6124eed7127e41))
+* content color, props-first API and component polish ([179475e](https://github.com/patine-ui/patine/commit/179475e14240378eb116542fbf4382e2435a8010))
+* **core:** a drawn close mark for every close and clear button ([57882a9](https://github.com/patine-ui/patine/commit/57882a92eb6a10b344486db8de5732ee28a5a1d9))
+* **core:** content color, so icons take the color of what they sit on ([c700365](https://github.com/patine-ui/patine/commit/c70036572e7d222b4e4b7a8fd59a7ff3b42c5839))
+* **core:** feedbackColor on Touchable for hover and press on dark fills ([4db8da0](https://github.com/patine-ui/patine/commit/4db8da0d72a4144c334ebf53f28b305e48dc31dc))
+* **core:** translatable done and OK labels ([8e20ae1](https://github.com/patine-ui/patine/commit/8e20ae134e2b2417aad7770b5e22441175c2b4bb))
+* **core:** treat text split by JSX as text ([42db1a6](https://github.com/patine-ui/patine/commit/42db1a678fdaf03a8003506e1b7d55ba18ef9052))
+* **dialog:** a close button, and actions that can keep it open ([9b7b3bc](https://github.com/patine-ui/patine/commit/9b7b3bccb7418b720a77206971b641105757a6d9))
+* **lightbox:** images take src, like Image and Avatar ([9f578ee](https://github.com/patine-ui/patine/commit/9f578eeb3f22683035e6592882189dca25b59f4e))
+* **list:** destructive rows tint their icon and drop the chevron ([f09b0f4](https://github.com/patine-ui/patine/commit/f09b0f4014ee87c66b1d6a1fc4d6d71e3cc8cec2))
+* **modal:** showCloseButton, and a drawn close mark ([707d22a](https://github.com/patine-ui/patine/commit/707d22a7c71ebbada71aa6321f03706ec2a69987))
+* **pagination:** drawn chevrons that follow the reading direction ([061b9bb](https://github.com/patine-ui/patine/commit/061b9bb5c2d5395fc69d53106c81a51fafdb0879))
+* **pickers:** picker fields take value, defaultValue and onValueChange ([4188514](https://github.com/patine-ui/patine/commit/4188514d236406f0ca455bdbfa7d34d8869cc27d))
+* **segmented:** defaultValue, and drawn chevrons on the scroll arrows ([19fd332](https://github.com/patine-ui/patine/commit/19fd3325538b4667ef36e9dbdfcd7963abe86ba8))
+* **select:** clearing reports null through onValueChange ([42ff7db](https://github.com/patine-ui/patine/commit/42ff7db9632cb9ff94902ffe897a14937f759569))
+* **sheet:** bottom sheet trigger, field values, hover outline and translated confirm ([9f8be3a](https://github.com/patine-ui/patine/commit/9f8be3a3aa795833eba0edcd8e64940cd8aa9953))
+* **tabbar,tabs:** icons in the tab's label color ([de24f7b](https://github.com/patine-ui/patine/commit/de24f7b384117d95bfb226e28d3bf2a143004db9))
+* **table:** align columns by start and end ([7eb8a8c](https://github.com/patine-ui/patine/commit/7eb8a8c1d16f5fb971686f5ebbc7594fe5a9a2a7))
+* **textfield:** press anywhere in the box to focus, a hover border, a drawn clear mark ([eee76e8](https://github.com/patine-ui/patine/commit/eee76e832b2cbee728c82dc3fd4ac64115183dca))
+* **toast:** onDismiss, and a drawn close mark ([725c4d8](https://github.com/patine-ui/patine/commit/725c4d8f19c390eb327eda5105a400b1c2cf8dce))
+
+
+### 🐛 Bug Fixes
+
+* **core:** track drags inside zoomed regions of a web page ([c0dfc8d](https://github.com/patine-ui/patine/commit/c0dfc8d9b78bc5a209a7581529075bd1a7a5b52c))
+* **country:** phone field label offset and empty country picks ([ba5b246](https://github.com/patine-ui/patine/commit/ba5b2461e528ca1c871588ec86a42991ca4ad9d0))
+* **otp:** keep the cells drawn inside a centered column ([2a8659f](https://github.com/patine-ui/patine/commit/2a8659fc24c4b17dffb8bfc28f65b75a29d011a8))
+* **swipeable:** action icons and labels readable on every fill ([7413e0f](https://github.com/patine-ui/patine/commit/7413e0fb400ed167093d0cd274620d2d324fd13e))
+
+
+### ♻️ Refactoring
+
+* **ai:** aria-label on suggestion chips and the typing indicator ([f2e651a](https://github.com/patine-ui/patine/commit/f2e651a34da83aea1316d0f61aa9358904fce43d))
+* **avatar:** aria-label on AvatarGroup ([a03789a](https://github.com/patine-ui/patine/commit/a03789a3ab3c375497993784446cbc1dc7082166))
+* **breadcrumbs:** aria-label ([bf019cc](https://github.com/patine-ui/patine/commit/bf019ccd1944462f982a72bbf4f80e6f9407c4c8))
+* **carousel:** aria-label, slide size from a style helper ([91d8107](https://github.com/patine-ui/patine/commit/91d810731f0018a1458fb1bdc4461a683c1097c9))
+* **field:** aria-label on Stepper ([db6eedc](https://github.com/patine-ui/patine/commit/db6eedcc456a86538684c9953e46f849bafca426))
+* **popover,tooltip:** aria-label ([c3453a2](https://github.com/patine-ui/patine/commit/c3453a2df2065f948bcd7f9f0942739d0f03e700))
+* **progress:** aria-label ([9e8fe17](https://github.com/patine-ui/patine/commit/9e8fe1759ff05f59b744ee45fc16feeb10353a77))
+* **qrcode,sortable:** aria-label ([5ba215d](https://github.com/patine-ui/patine/commit/5ba215df83dbb53e21d7de2b367ebf931ff0beae))
+* **rating,slider:** aria-label ([ecb629a](https://github.com/patine-ui/patine/commit/ecb629acba7f5d6678efa78bdee409b912641420))
+
 ## [0.2.0](https://github.com/patine-ui/patine/compare/v0.1.0...v0.2.0) (2026-11-20)
 
 
