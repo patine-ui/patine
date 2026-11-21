@@ -121,14 +121,9 @@ export const Touchable = ({
       style={pressScale ? [scaled, { transform: scaleTransform }] : styleFor}
     >
       {(state) => {
-        const borderRadius = StyleSheet.flatten(callerStyle(state))?.borderRadius;
         return (
           <>
-            <TouchFeedback
-              {...touch.feedback}
-              feedbackColor={feedbackColor}
-              borderRadius={typeof borderRadius === 'number' ? borderRadius : undefined}
-            />
+            <TouchFeedback {...touch.feedback} feedbackColor={feedbackColor} shape={StyleSheet.flatten(callerStyle(state)) ?? undefined} />
             {typeof children === 'function' ? children(withFocus(state)) : children}
           </>
         );

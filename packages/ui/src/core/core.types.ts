@@ -171,6 +171,8 @@ export interface TouchFeedbackProps {
   theme: Theme;
   /** Match the element's corners, so the tint and ripple stay inside its shape. */
   borderRadius?: number;
+  /** The element's own style, instead of `borderRadius`: the tint takes each of its corners and reaches out under its border */
+  shape?: ViewStyle;
   /** Draw the hover and press layers in this color, faded, instead of the theme's neutral ones. */
   feedbackColor?: string;
 }
@@ -187,7 +189,7 @@ export interface TouchFeedbackState {
     onHoverIn: () => void;
     onHoverOut: () => void;
   };
-  feedback: Omit<TouchFeedbackProps, 'borderRadius'>;
+  feedback: Omit<TouchFeedbackProps, 'borderRadius' | 'shape'>;
 }
 
 /** Pressable's state, plus whether keyboard focus is on it (the ring is showing). */
