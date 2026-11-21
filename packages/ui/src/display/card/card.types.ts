@@ -25,6 +25,8 @@ export interface CardProps extends ViewProps, ThemableProps {
   description?: React.ReactNode;
   /** Shorthand: the CardFooter's content, such as Buttons */
   footer?: React.ReactNode;
+  /** Shorthand: the CardAction at the end of the header, such as a Badge, a menu or a small Button */
+  action?: React.ReactNode;
 }
 
 export interface CardSectionProps extends ViewProps {
