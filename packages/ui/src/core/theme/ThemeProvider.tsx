@@ -111,7 +111,8 @@ const noScheme = () => null;
  * provider listens to the system scheme: one listener per mounted component cost a long list ~80ms per re-render on the web.
  */
 const useBaseFor = (ctx: ThemeContextValue | null) => {
-  const system = useSyncExternalStore(ctx ? subscribeNone : subscribeScheme, ctx ? noScheme : systemScheme);
+  // The server has no system scheme: it renders light, and the client corrects it.
+  const system = useSyncExternalStore(ctx ? subscribeNone : subscribeScheme, ctx ? noScheme : systemScheme, noScheme);
   return ctx?.baseFor ?? (system === COLOR_SCHEME.dark ? BARE.dark : BARE.light);
 };
 
