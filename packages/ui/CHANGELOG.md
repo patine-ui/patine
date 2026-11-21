@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/patine-ui/patine/compare/v0.3.0...v0.4.0) (2026-11-21)
+
+
+### ✨ Features
+
+* brand tabs fill their track, touch tint reaches the frame, Popover showCloseButton ([ea7ce94](https://github.com/patine-ui/patine/commit/ea7ce9422f1a928c44de21aae93e6d408e5e0232))
+* **popover:** showCloseButton for the sheet presentation ([92129d5](https://github.com/patine-ui/patine/commit/92129d57c353f83ccd95280c6f5eb046c6b74f9d))
+* **tabs:** brand tabs share the track's width ([ea4d19c](https://github.com/patine-ui/patine/commit/ea4d19c83f8b1c677c03f8f514ba0b265be20a07))
+
+
+### 🐛 Bug Fixes
+
+* **textfield:** round 28pt clear button ([ec35e48](https://github.com/patine-ui/patine/commit/ec35e48b58a8462a9411c270d26a07de2d75de36))
+* **theme:** give the system scheme a server snapshot for SSR ([42fdc0d](https://github.com/patine-ui/patine/commit/42fdc0dab1caadc771d0aeee6f85372126198d04))
+* **touch:** hover and press tint fill to the frame ([ec23a5f](https://github.com/patine-ui/patine/commit/ec23a5f1860d8e8ce490d2f3fa597b1838475282))
+
 ## [0.3.0](https://github.com/patine-ui/patine/compare/v0.2.0...v0.3.0) (2026-11-21)
 
 
