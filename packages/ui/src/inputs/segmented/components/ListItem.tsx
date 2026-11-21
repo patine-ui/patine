@@ -2,6 +2,7 @@ import { CHECK_MARK } from '@/core/core.constants';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { CHOICE_ICON_POSITION, CHOICE_VARIANT, LIST_DESIGN } from '@/inputs/segmented/segmented.constants';
 import { styles, themed } from '@/inputs/segmented/segmented.styles';
 import type { ListItemProps } from '@/inputs/segmented/segmented.types';
@@ -61,7 +62,7 @@ export const ListItem = <T,>({
                 {CHECK_MARK}
               </Text>
             ) : (
-              icon
+              <ContentColor color={label.color}>{icon}</ContentColor>
             )}
             <Text
               size="sm"

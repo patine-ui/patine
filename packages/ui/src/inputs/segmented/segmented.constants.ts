@@ -46,7 +46,6 @@ export const SCROLL_ARROW_SIDE = {
 } as const;
 
 export const SCROLL_ARROW_SIDES: readonly ChoiceArrowSide[] = [SCROLL_ARROW_SIDE.left, SCROLL_ARROW_SIDE.right];
-export const SCROLL_ARROW_GLYPHS: Record<ChoiceArrowSide, string> = { left: '‹', right: '›' };
 export const SCROLL_ARROW_SIZE = 28;
 
 export const ARROW_POSITION = {

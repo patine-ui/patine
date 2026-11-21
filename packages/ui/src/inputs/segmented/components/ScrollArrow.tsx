@@ -1,13 +1,17 @@
-import { Text } from '@/core/primitives/Text';
+import { StyleSheet } from 'react-native';
+
+import { ChevronMark } from '@/core/components/ChevronMark';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
-import { useLabels } from '@/core/theme/ThemeProvider';
-import { SCROLL_ARROW_GLYPHS, SCROLL_ARROW_SIDE } from '@/inputs/segmented/segmented.constants';
+import { useDirection, useLabels } from '@/core/theme/ThemeProvider';
+import { SCROLL_ARROW_SIDE } from '@/inputs/segmented/segmented.constants';
 import { styles, themed } from '@/inputs/segmented/segmented.styles';
 import type { ScrollArrowProps } from '@/inputs/segmented/segmented.types';
 
 export const ScrollArrow = ({ side, disabled, overlay, renderArrow, onPress, theme, slots, testID }: ScrollArrowProps) => {
   const words = useLabels();
+  // `side` is physical, so the chevron points that way whatever the reading direction.
+  const back = (side === SCROLL_ARROW_SIDE.left) !== (useDirection() === 'rtl');
   const button = (
     <Touchable
       theme={theme}
@@ -21,9 +25,10 @@ export const ScrollArrow = ({ side, disabled, overlay, renderArrow, onPress, the
       {renderArrow ? (
         renderArrow(side, disabled)
       ) : (
-        <Text size="lg" weight="semibold" color="text" style={[styles.arrowText, slots?.arrowText]}>
-          {SCROLL_ARROW_GLYPHS[side]}
-        </Text>
+        <ChevronMark
+          direction={back ? 'back' : 'forward'}
+          color={String(StyleSheet.flatten(slots?.arrowText)?.color ?? theme.colors.text)}
+        />
       )}
     </Touchable>
   );
