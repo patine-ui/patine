@@ -1,4 +1,9 @@
-# Patine
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://patine.dev/img/wordmark-dark.svg">
+    <img src="https://patine.dev/img/wordmark.svg" alt="Patine" height="44">
+  </picture>
+</h1>
 
 [![npm](https://img.shields.io/npm/v/patine-ui)](https://www.npmjs.com/package/patine-ui) [![license](https://img.shields.io/npm/l/patine-ui)](LICENSE)
 
@@ -13,22 +18,14 @@
 
 ```tsx
 import { useState } from 'react';
-import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, DatePicker } from 'patine-ui';
+import { Button, Card, DatePicker } from 'patine-ui';
 
 export default function BookingCard() {
   const [date, setDate] = useState<Date | null>(new Date());
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Pick a day</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <DatePicker value={date} onValueChange={setDate} minDate={new Date()} />
-      </CardContent>
-      <CardFooter>
-        <Button onPress={() => console.log(date)}>Book</Button>
-      </CardFooter>
+    <Card title="Pick a day" footer={<Button onPress={() => console.log(date)}>Book</Button>}>
+      <DatePicker value={date} onValueChange={setDate} minDate={new Date()} />
     </Card>
   );
 }
@@ -38,8 +35,8 @@ export default function BookingCard() {
 
 - **One codebase.** The same components and props on iOS, Android and the web, with touch, keyboard, hover and screen readers handled on each.
 - **Nothing to set up.** Pure JavaScript on React Native core APIs. Runs in Expo Go, bare React Native and React Native Web, and ships in OTA updates. No Reanimated, Gesture Handler, SVG, Tailwind or Babel plugin.
-- **Familiar API.** shadcn/ui and Radix names: `variant`, `size`, `checked` + `onCheckedChange`, `value` + `onValueChange`, `open` + `onOpenChange` on every overlay, and composed parts such as `Card` + `CardHeader` or `RadioGroup` + `RadioGroupItem`.
-- **One element for the simple case.** Every compound component also takes its content as props: `<Dialog trigger={…} title="Edit profile" actions={[…]} />`, `<Tabs items={[…]} />`, `<Accordion items={[…]} />`, `<AlertDialog title="Delete?" destructive onConfirm={…} />`. Compose the parts only when you need full control.
+- **One element for the common case.** Titles, descriptions, icons, actions and triggers are props: `<Alert title="Saved" description="…" />`, `<Card title="Pro plan" footer={…} />`, `<Dialog trigger={…} title="Edit profile" actions={[…]} />`, `<Tabs items={[…]} />`.
+- **Familiar API.** shadcn/ui and Radix names: `variant`, `size`, `checked` + `onCheckedChange`, `value` + `onValueChange`, `open` + `onOpenChange` on every overlay. The shadcn parts (`CardHeader`, `DialogContent`…) are there too, for layouts the props don't cover.
 - **Finished on day one.** The Patine design looks the same, considered and calm, on every platform, while sheets, insets, gestures and focus follow each platform. Want the native look? `design="native"` gives iOS, Material 3 and web styling per platform. One theme drives colours, radius, type and every component's shadow (`theme.shadows`).
 - **Accessible by default.** Roles, labels and states on every component, 44pt touch targets, a focus ring on the web, and animations that respect reduced motion.
 - **Typed.** Generic value types, and `mode="range"` gives you a typed `{ start, end }`.

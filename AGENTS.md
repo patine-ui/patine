@@ -91,6 +91,7 @@ Every component folder has the same layout:
 - Dates are local time. Compare and serialize calendar days with `toDateKey`, never `toISOString()`.
 - `onValueChange` fires for user changes only. Changing `value` programmatically must not call it.
 - API names follow shadcn/ui and Radix where they exist (`variant`, `size`, `checked` + `onCheckedChange`, `value` + `onValueChange`, `RadioGroup` + `RadioGroupItem`), so agents that know shadcn already know Patine.
+- **Fixed slots are props on the root**: `title`, `description`, `icon`, `action` (one node at the header's end), `footer`, `trigger`, and `items` / `options` for repeated rows; `children` is the body. The shadcn parts (`CardHeader`, `DialogContent`…) stay exported for layouts the props can't draw, and a text slot is never available only as a part. Docs, playgrounds and README write the props; the parts appear in `## Anatomy` and in examples the props can't express.
 - **Platform**: `usePlatform()` for behaviour, `IS_WEB` only for "does a DOM API exist", never raw `Platform.OS`.
 - Accessibility is part of done: a role, a label, state (`selected`, `checked`, `expanded`, `disabled`), keyboard support on the web, 44pt touch targets, and `reduce motion` respected. `Touchable` already gives the focus ring, the disabled state and the 44pt target; `Text` caps font scaling at `MAX_FONT_SCALE`.
 
