@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { Platform, Text, type TextProps, View, type ViewStyle } from 'react-native';
 
+import { isTextContent } from '@/core/utils/text.utils';
+
 export interface VisuallyHiddenProps extends TextProps {
   children?: ReactNode;
 }
@@ -19,7 +21,7 @@ const HIDDEN: ViewStyle = {
 
 /** Content only screen readers get: a label for an icon, a hint, the text behind a symbol. Takes no space on screen. */
 export const VisuallyHidden = ({ children, style, ...rest }: VisuallyHiddenProps) =>
-  typeof children === 'string' || typeof children === 'number' ? (
+  isTextContent(children) ? (
     <Text style={[HIDDEN, style]} {...rest}>
       {children}
     </Text>
