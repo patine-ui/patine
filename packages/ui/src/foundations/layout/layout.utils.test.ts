@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { lightTheme } from '@/core/theme/theme.constants';
-import { getBoxStyle, getCellWidth, getColumnCount, getGridCellStyle, getSpacerStyle, toSpace } from './layout.utils';
+import { getAspectBox, getBoxStyle, getCellWidth, getColumnCount, getGridCellStyle, getSpacerStyle, toSpace } from './layout.utils';
 
 const { spacing } = lightTheme;
 
@@ -33,6 +33,12 @@ describe('getBoxStyle', () => {
 
   it('leaves out what was not asked for', () => {
     expect(getBoxStyle(lightTheme, {})).toEqual({});
+  });
+});
+
+describe('getAspectBox', () => {
+  it('keeps the width and the ratio', () => {
+    expect(getAspectBox('100%', 16 / 9)).toEqual({ width: '100%', aspectRatio: 16 / 9 });
   });
 });
 

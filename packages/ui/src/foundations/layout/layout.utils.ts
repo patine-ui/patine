@@ -1,4 +1,4 @@
-import { StyleSheet, type ViewStyle } from 'react-native';
+import { type DimensionValue, StyleSheet, type ViewStyle } from 'react-native';
 
 import type { Theme } from '@/core/theme/theme.types';
 import type { Space } from '@/foundations/stack/stack.types';
@@ -33,6 +33,12 @@ export const getBoxStyle = (theme: Theme, p: BoxStyleProps): ViewStyle => {
 };
 
 /** How many columns at least `minWidth` wide fit across `width`, with `gap` between them. Always at least one. */
+/** An AspectRatio's box: its width, and the height that keeps `ratio`. */
+export const getAspectBox = (width: DimensionValue, ratio: number): ViewStyle => ({
+  width,
+  aspectRatio: ratio,
+});
+
 export const getColumnCount = (width: number, minWidth: number, gap: number) => Math.max(1, Math.floor((width + gap) / (minWidth + gap)));
 
 /** One cell's width, so `columns` cells and the gaps between them fill `width` exactly. */
