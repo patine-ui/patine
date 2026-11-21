@@ -30,7 +30,7 @@ export interface AvatarGroupProps extends Omit<ViewProps, 'children'>, ThemableP
   /** How much each avatar tucks under the one before, as a share of its size. Default: 0.25 */
   overlap?: number;
   /** Names the group for screen readers. Default: the names, and how many more */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** The outer view, for layout */
   style?: StyleProp<ViewStyle>;
 }
