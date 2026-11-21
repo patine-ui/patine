@@ -4,6 +4,7 @@ import { useAnimatedTo } from '@/core/animation';
 import { IS_WEB } from '@/core/core.constants';
 import { AnimatedScrollView, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels, usePlatform } from '@/core/theme/ThemeProvider';
+import { extentOf } from '@/core/utils/style.utils';
 import { styles } from './carousel.styles';
 import type { CarouselProps } from './carousel.types';
 import { formatSlideLabel, getTrackStyle } from './carousel.utils';
@@ -26,7 +27,7 @@ export const Carousel = ({
   showIndicator = true,
   showArrows,
   gap: gapProp,
-  accessibilityLabel,
+  'aria-label': accessibilityLabel,
   labels: labelsProp,
   style,
   styles: slots,
@@ -84,7 +85,7 @@ export const Carousel = ({
                 <View
                   // biome-ignore lint/suspicious/noArrayIndexKey: copies of the same children; copy and position identify each.
                   key={`${copy}-${i}`}
-                  style={[{ [sizeKey]: pager.item }, snap, slots?.item]}
+                  style={[extentOf(sizeKey, pager.item), snap, slots?.item]}
                   {...(pager.copies > 1 && copy !== 1
                     ? HIDDEN
                     : IS_WEB

@@ -33,7 +33,7 @@ export interface PagerProps extends ThemableProps {
   /** Previous and next buttons over the edges. Default: false for Pager; on the web for Carousel */
   showArrows?: boolean;
   /** Names the carousel for screen readers, e.g. "Featured products" */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** Its built-in text, for translation */
   labels?: Partial<CarouselLabels>;
   /** The outer view, for layout */
