@@ -6,7 +6,7 @@ import { Stepper } from './Stepper';
 describe('Stepper', () => {
   it('steps up and down within the range, and dims the end it reached', async () => {
     const onValueChange = jest.fn();
-    await render(<Stepper defaultValue={1} min={1} max={2} onValueChange={onValueChange} accessibilityLabel="Guests" />);
+    await render(<Stepper defaultValue={1} min={1} max={2} onValueChange={onValueChange} aria-label="Guests" />);
     expect(screen.getByRole('button', { name: 'Decrease' })).toBeDisabled();
     await fireEvent.press(screen.getByRole('button', { name: 'Increase' }));
     expect(onValueChange).toHaveBeenLastCalledWith(2);
@@ -16,7 +16,7 @@ describe('Stepper', () => {
 
   it('answers screen-reader adjust actions', async () => {
     const onValueChange = jest.fn();
-    await render(<Stepper value={5} onValueChange={onValueChange} accessibilityLabel="Quantity" />);
+    await render(<Stepper value={5} onValueChange={onValueChange} aria-label="Quantity" />);
     const control = screen.getByRole('slider', { name: 'Quantity' });
     expect(control.props['aria-valuetext']).toEqual('5');
     await fireEvent(control, 'accessibilityAction', { nativeEvent: { actionName: 'decrement' } });

@@ -27,7 +27,7 @@ export interface StepperProps extends NumberRange, ThemableProps {
   /** Turns the value into text, for the display and screen readers. Default: the number as is */
   formatValue?: (value: number) => string;
   /** Names it for screen readers, e.g. 'Guests' */
-  accessibilityLabel?: string;
+  'aria-label'?: string;
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;
   /** Its built-in text, for translation */
