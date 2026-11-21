@@ -66,11 +66,10 @@ export interface TextAreaProps extends TextFieldBaseProps {
 export type FieldInputProps = TextFieldProps & Pick<TextAreaProps, 'rows' | 'minRows' | 'maxRows'> & { multiline?: boolean };
 
 export interface FieldButtonProps {
-  label: string;
+  /** A word in the primary color, such as Show. Leave it out for the clear button's drawn ✕ in the secondary color */
+  label?: string;
   spokenLabel: string;
   onPress: () => void;
-  /** A larger glyph, such as ×, in the secondary color; otherwise a word in the primary color */
-  glyph?: boolean;
   theme: Theme;
   style?: StyleProp<TextStyle>;
 }

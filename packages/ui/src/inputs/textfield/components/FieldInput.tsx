@@ -2,10 +2,9 @@ import { IS_WEB } from '@/core/core.constants';
 import { cs, startAlign } from '@/core/core.styles';
 import { Input } from '@/core/primitives/Input';
 import { Text } from '@/core/primitives/Text';
-import { View } from '@/core/primitives/View';
+import { Pressable, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useDirection, useLabels } from '@/core/theme/ThemeProvider';
 import { useTextField } from '@/inputs/textfield/hooks/useTextField';
-import { CLEAR_GLYPH } from '@/inputs/textfield/textfield.constants';
 import { styles, themed } from '@/inputs/textfield/textfield.styles';
 import type { FieldInputProps } from '@/inputs/textfield/textfield.types';
 import { formatCount, getTextFieldAccessibility, isLabelRaised } from '@/inputs/textfield/textfield.utils';
@@ -78,10 +77,18 @@ export const FieldInput = (props: FieldInputProps) => {
             <FieldLabel label={label} invalid={invalid} required={required} theme={theme} style={slots?.label} />
           </View>
         ) : null}
-        <View
+        <Pressable
+          // Only a wider press target for the input: screen readers and the Tab key reach the input itself.
+          accessible={false}
+          focusable={false}
+          disabled={!editable}
+          onPress={field.focusInput}
+          onHoverIn={field.onHoverIn}
+          onHoverOut={field.onHoverOut}
           style={[
             sheetStyles.trigger,
             box.box,
+            field.hovered && editable && box.hover,
             field.focused && box.open,
             invalid && box.invalid,
             disabled && cs.disabled,
@@ -147,7 +154,7 @@ export const FieldInput = (props: FieldInputProps) => {
             </Text>
           ) : null}
           {clearable && editable && field.value !== '' ? (
-            <FieldButton label={CLEAR_GLYPH} glyph spokenLabel={labels.clear} onPress={field.clear} theme={theme} style={slots?.action} />
+            <FieldButton spokenLabel={labels.clear} onPress={field.clear} theme={theme} style={slots?.action} />
           ) : null}
           {secureTextEntry && passwordToggle ? (
             <FieldButton
@@ -159,7 +166,7 @@ export const FieldInput = (props: FieldInputProps) => {
             />
           ) : null}
           {endIcon}
-        </View>
+        </Pressable>
         <View style={styles.footer}>
           <FieldMessage error={error} helperText={helperText} theme={theme} style={[styles.message, slots?.helperText]} />
           {showCount ? (
