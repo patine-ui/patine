@@ -3,7 +3,7 @@ language js
 // Static and theme styles live in *.styles.ts (StyleSheet.create / createStyles). Runtime values (measured, animated, per-prop)
 // come from a hook or util, never as a literal in JSX. Categories join the folder list as they're migrated.
 JsxAttribute() as $attr where {
-  $attr <: r"(?s)[a-zA-Z]*[sS]tyle=\{(?:\{|\[.*[^$]\{).*",
+  $attr <: r"(?s)[a-zA-Z]*[sS]tyle=\{(?:\{|\[(?:.*[^$])?\{).*",
   $filename <: r".*packages/ui/src/(?:core|actions|foundations|feedback|ai|display|navigation|inputs|overlays|pickers)/.*",
   $filename <: not r".*\.test\.tsx",
   register_diagnostic(span=$attr, message="Move this style to the folder's *.styles.ts (createStyles for theme values); compute runtime values in a hook or util.", severity="error")
