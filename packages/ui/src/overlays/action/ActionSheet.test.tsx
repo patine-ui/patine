@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Text } from 'react-native';
 
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -22,6 +23,26 @@ describe('ActionSheet', () => {
   });
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  it('opens itself from its trigger, and runs an action after closing, with no state of yours', async () => {
+    const onPress = jest.fn();
+    await render(
+      <ActionSheet
+        trigger={
+          <Text role="button" onPress={() => {}}>
+            Photo options
+          </Text>
+        }
+        actions={[{ label: 'Share', onPress }]}
+      />
+    );
+    expect(screen.queryByRole('button', { name: 'Share' })).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Photo options' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Share' }));
+    await finishAnimations();
+    expect(onPress).toHaveBeenCalled();
+    expect(screen.queryByRole('button', { name: 'Share' })).toBeNull();
   });
 
   it('runs an action after the sheet has closed', async () => {

@@ -1,9 +1,10 @@
+import { useControllableState } from '@/core/hooks/useControllableState';
 import { Scroll } from '@/core/primitives/Scroll';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
 import { BottomSheet } from '@/overlays/sheet/BottomSheet';
 import { ACTION_SHEET_DESIGN } from './action.constants';
-import { styles } from './action.styles';
+import { styles, themed } from './action.styles';
 import type { ActionSheetProps } from './action.types';
 import { ActionSheetHeader } from './components/ActionSheetHeader';
 import { ActionSheetRow } from './components/ActionSheetRow';
@@ -11,8 +12,10 @@ import { useActionPress } from './hooks/useActionPress';
 
 /** A list of actions in a bottom sheet: iOS cards with a separate Cancel, or Material and web rows with icons. `useActionSheet` shows one from a call. */
 export const ActionSheet = ({
-  open = false,
+  open,
+  defaultOpen = false,
   onOpenChange,
+  trigger,
   actions,
   title,
   message,
@@ -28,12 +31,13 @@ export const ActionSheet = ({
   const words = useLabels();
   const cancelLabel = cancelLabelProp ?? words.cancel;
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
-  const onClose = () => onOpenChange?.(false);
+  const [visible, setVisible] = useControllableState(open, defaultOpen, onOpenChange);
+  const onClose = () => setVisible(false);
   const look = ACTION_SHEET_DESIGN[theme.design];
   const { grouped } = look;
   const { press, onClosed } = useActionPress(onClose, sheetProps?.onClosed);
   const hasHeader = !!(title || message);
-  const group = grouped && [styles.group, { backgroundColor: theme.colors.sheet, borderRadius: theme.radius.lg }, slots?.group];
+  const group = grouped && [styles.group, themed(theme).groupCard, slots?.group];
 
   return (
     <ThemeScope theme={themeOverride}>
@@ -45,8 +49,9 @@ export const ActionSheet = ({
         showCloseButton={false}
         {...sheetProps}
         styles={grouped ? { ...sheetProps?.styles, sheet: [styles.groupedSheet, sheetProps?.styles?.sheet] } : sheetProps?.styles}
-        open={open}
-        onOpenChange={onClose}
+        trigger={trigger}
+        open={visible}
+        onOpenChange={setVisible}
         onClosed={onClosed}
         theme={themeProp}
         design={design}

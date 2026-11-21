@@ -28,7 +28,7 @@ describe('DropdownMenu', () => {
     const onPress = jest.fn();
     const onOpenChange = jest.fn();
     await render(
-      <DropdownMenu actions={[{ label: 'Rename', onPress }]} onOpenChange={onOpenChange} accessibilityLabel="More options">
+      <DropdownMenu actions={[{ label: 'Rename', onPress }]} onOpenChange={onOpenChange} aria-label="More options">
         <Text>⋯</Text>
       </DropdownMenu>
     );
@@ -47,7 +47,7 @@ describe('DropdownMenu', () => {
 
   it('opens on a long press as a context menu', async () => {
     await render(
-      <DropdownMenu actions={[{ label: 'Copy' }]} openOnLongPress accessibilityLabel="Message">
+      <DropdownMenu actions={[{ label: 'Copy' }]} openOnLongPress aria-label="Message">
         <Text>Hello</Text>
       </DropdownMenu>
     );
@@ -74,13 +74,13 @@ describe('DropdownMenu', () => {
 
   it('opens from `open` when controlled', async () => {
     const { rerender } = await render(
-      <DropdownMenu actions={[{ label: 'Share' }]} open={false} accessibilityLabel="More">
+      <DropdownMenu actions={[{ label: 'Share' }]} open={false} aria-label="More">
         <Text>⋯</Text>
       </DropdownMenu>
     );
     expect(screen.queryByRole('button', { name: 'Share' })).toBeNull();
     await rerender(
-      <DropdownMenu actions={[{ label: 'Share' }]} open accessibilityLabel="More">
+      <DropdownMenu actions={[{ label: 'Share' }]} open aria-label="More">
         <Text>⋯</Text>
       </DropdownMenu>
     );
@@ -90,7 +90,7 @@ describe('DropdownMenu', () => {
   it('stays shut while disabled', async () => {
     const onOpenChange = jest.fn();
     await render(
-      <DropdownMenu actions={[{ label: 'Share' }]} disabled onOpenChange={onOpenChange} accessibilityLabel="More">
+      <DropdownMenu actions={[{ label: 'Share' }]} disabled onOpenChange={onOpenChange} aria-label="More">
         <Text>⋯</Text>
       </DropdownMenu>
     );
@@ -100,7 +100,7 @@ describe('DropdownMenu', () => {
 
   it('opens as an action sheet', async () => {
     await render(
-      <DropdownMenu actions={[{ label: 'Share' }]} presentation="sheet" design="ios" accessibilityLabel="More">
+      <DropdownMenu actions={[{ label: 'Share' }]} presentation="sheet" design="ios" aria-label="More">
         <Text>⋯</Text>
       </DropdownMenu>
     );

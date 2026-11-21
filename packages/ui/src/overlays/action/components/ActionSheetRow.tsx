@@ -2,6 +2,7 @@ import { CHECK_MARK } from '@/core/core.constants';
 import { Text } from '@/core/primitives/Text';
 import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
+import { ContentColor } from '@/core/theme/ContentColor';
 import { styles, themed } from '@/overlays/action/action.styles';
 import type { ActionSheetRowProps } from '@/overlays/action/action.types';
 import { getRowMinHeight } from '@/overlays/action/action.utils';
@@ -40,7 +41,7 @@ export const ActionSheetRow = ({
         slots?.[cancel ? 'cancel' : 'action'],
       ]}
     >
-      {iconAtEnd ? null : action.icon}
+      {iconAtEnd ? null : <ContentColor color={action.destructive ? theme.colors.danger : undefined}>{action.icon}</ContentColor>}
       <View style={grouped ? styles.groupedText : styles.text}>
         <Text
           size={grouped ? 'lg' : compact ? 'sm' : 'md'}
@@ -61,7 +62,7 @@ export const ActionSheetRow = ({
           {CHECK_MARK}
         </Text>
       ) : null}
-      {iconAtEnd ? action.icon : null}
+      {iconAtEnd ? <ContentColor color={action.destructive ? theme.colors.danger : undefined}>{action.icon}</ContentColor> : null}
     </Touchable>
   );
 };

@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
 
 export const themed = createStyles((t) => ({
   header: { paddingHorizontal: t.spacing.lg, paddingVertical: t.spacing.sm },
+  groupCard: { backgroundColor: t.colors.sheet, borderRadius: t.radius.lg },
   groupedHeader: { paddingVertical: t.spacing.md },
   row: { paddingHorizontal: t.spacing.lg, paddingVertical: t.spacing.sm, gap: t.spacing.md },
   compactRow: { paddingHorizontal: t.spacing.md, paddingVertical: t.spacing.xs, gap: t.spacing.sm },

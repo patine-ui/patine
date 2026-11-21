@@ -28,7 +28,7 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
     presentation = MENU_PRESENTATION.menu,
     openOnLongPress = false,
     disabled,
-    accessibilityLabel,
+    'aria-label': accessibilityLabel,
     style,
     styles: slots,
     theme: themeProp,
