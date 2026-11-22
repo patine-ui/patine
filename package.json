@@ -3,7 +3,7 @@
   "private": true,
   "description": "Patine monorepo: the patine-ui library, its icons, its MCP server and example app.",
   "license": "MIT",
-  "author": "Patine <support@patine.dev>",
+  "author": "Patine UI <support@patine.dev>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/patine-ui/patine.git"
