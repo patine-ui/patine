@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/patine-ui/patine/compare/v0.4.0...v0.4.1) (2026-11-22)
+
+
+### 🐛 Bug Fixes
+
+* **packaging:** publish @patine-ui/icons and @patine-ui/mcp with every release ([5db0f3f](https://github.com/patine-ui/patine/commit/5db0f3f10b8eb8e1c0f0e2543b17fdbbe4db3e21))
+* **packaging:** publish @patine-ui/icons and @patine-ui/mcp with every release ([d33ee5e](https://github.com/patine-ui/patine/commit/d33ee5e7428c0ba65c2b1e6f428ce5afaf8ac4b4))
+
 ## [0.4.0](https://github.com/patine-ui/patine/compare/v0.3.0...v0.4.0) (2026-11-21)
 
 
