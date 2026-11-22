@@ -19,7 +19,7 @@
 ## [0.3.0](https://github.com/patine-ui/patine/compare/v0.2.0...v0.3.0) (2026-11-21)
 
 
-### ⚠ BREAKING CHANGES
+### 🔧 API changes
 
 * **pickers:** picker fields report through onValueChange instead of onConfirm.
 * **popover,tooltip:** accessibilityLabel props are now aria-label, as on every React Native view.
@@ -105,7 +105,7 @@
 ## 0.1.0 (2026-11-20)
 
 
-### ⚠ BREAKING CHANGES
+### 🔧 API changes
 
 * **theme:** fonts by role, semibold, display and hero sizes, density
 * **emoji:** DEFAULT_CATEGORY_LABELS is removed; use DEFAULT_LABELS.emoji.categories.
