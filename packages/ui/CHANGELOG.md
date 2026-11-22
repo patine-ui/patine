@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/patine-ui/patine/compare/v0.4.1...v0.4.2) (2026-11-22)
+
+
+### 🐛 Bug Fixes
+
+* **mcp:** point Pro imports at components/patine/&lt;item&gt; ([#18](https://github.com/patine-ui/patine/issues/18)) ([b2ae304](https://github.com/patine-ui/patine/commit/b2ae30491ee7761eed331b0e4bd580c1ccbab66c))
+
 ## [0.4.1](https://github.com/patine-ui/patine/compare/v0.4.0...v0.4.1) (2026-11-22)
 
 
