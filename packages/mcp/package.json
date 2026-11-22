@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "MCP server for Patine UI: lets Claude Code, Cursor, Windsurf and other coding agents list, read and search the patine-ui docs and find icons, matched to the version installed in your project. Zero dependencies.",
   "license": "MIT",
-  "author": "Eliyahu Kriel <elik56a@gmail.com>",
+  "author": "Patine <support@patine.dev>",
   "homepage": "https://patine.dev/docs/resources/mcp",
   "repository": {
     "type": "git",
@@ -33,8 +33,12 @@
   "files": [
     "src",
     "!src/**/*.test.js",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18"
   }
