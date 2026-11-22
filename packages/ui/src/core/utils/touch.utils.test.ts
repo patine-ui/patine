@@ -1,4 +1,4 @@
-import { getRippleBox, getRippleOrigin, shapeOf, toLayoutScale, touchSize } from './touch.utils';
+import { getRippleBox, getRippleOrigin, scaleGesture, shapeOf, toLayoutScale, touchSize } from './touch.utils';
 
 describe('getRippleOrigin', () => {
   it('reaches the farthest corner from the touch point', () => {
@@ -63,5 +63,29 @@ describe('shapeOf', () => {
   it('fills the box when there is no border', () => {
     expect(shapeOf({ borderRadius: 8 })).toEqual({ borderRadius: 8 });
     expect(shapeOf(undefined)).toEqual({});
+  });
+});
+
+describe('scaleGesture', () => {
+  const g = {
+    stateID: 1,
+    moveX: 5,
+    moveY: 6,
+    x0: 0,
+    y0: 0,
+    dx: 10,
+    dy: -20,
+    vx: 0.5,
+    vy: -1,
+    numberActiveTouches: 1,
+    _accountsForMovesUpTo: 0,
+  };
+
+  it('scales distance and speed into layout pixels', () => {
+    expect(scaleGesture(g, 2)).toMatchObject({ dx: 20, dy: -40, vx: 1, vy: -2, moveX: 5 });
+  });
+
+  it('returns the same gesture at scale 1', () => {
+    expect(scaleGesture(g, 1)).toBe(g);
   });
 });

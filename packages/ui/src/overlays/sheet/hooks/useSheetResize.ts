@@ -7,6 +7,7 @@ import { USE_NATIVE_DRIVER } from '@/core/animation/animation.constants';
 import { spring } from '@/core/animation/animation.utils';
 import { useAnimatedValue } from '@/core/animation/hooks/useAnimatedValue';
 import { IS_WEB } from '@/core/core.constants';
+import { toLayoutScale } from '@/core/utils/touch.utils';
 import { SHEET_SNAP, SNAP_BACK_BOUNCINESS, SNAP_BACK_SPEED, WHEEL_IDLE_MS, WHEEL_THRESHOLD } from '@/overlays/sheet/sheet.constants';
 import type { ScrollNode, SheetResize, SheetResizeOptions, SheetSnap, WheelEventLike, WheelHost } from '@/overlays/sheet/sheet.types';
 import {
@@ -70,6 +71,7 @@ export const useSheetResize = (options: SheetResizeOptions): SheetResize => {
   const panHandlers = useMemo((): GestureResponderHandlers | undefined => {
     if (!IS_WEB) return undefined;
     let start = 0;
+    let scale = 1;
     let frame = { height: 0, offset: 0 };
     const maxHeight = () => (latest.current.expandable ? latest.current.expandedHeight : latest.current.base);
     return PanResponder.create({
@@ -77,16 +79,18 @@ export const useSheetResize = (options: SheetResizeOptions): SheetResize => {
       // Buttons in the header sit deeper, so they still win their own taps.
       onStartShouldSetPanResponder: () => latest.current.draggable,
       onMoveShouldSetPanResponder: (_, g) => latest.current.draggable && isVerticalDrag(g.dx, g.dy),
-      onPanResponderGrant: () => {
+      onPanResponderGrant: (e) => {
+        scale = toLayoutScale(e.currentTarget);
         start = latest.current.expanded ? latest.current.expandedHeight : latest.current.base;
         frame = { height: start, offset: 0 };
       },
       onPanResponderMove: (_, g) => {
         const { base: current, stops: at, swipeToClose: canClose } = latest.current;
-        frame = getDragFrame(start, g.dy, current, maxHeight(), canClose);
+        frame = getDragFrame(start, g.dy * scale, current, maxHeight(), canClose);
         offset.setValue(at.base + frame.height - current - frame.offset);
       },
-      onPanResponderRelease: (_, g) => snapTo(getReleaseTarget(frame, g.vy, latest.current.base, maxHeight(), latest.current.swipeToClose)),
+      onPanResponderRelease: (_, g) =>
+        snapTo(getReleaseTarget(frame, g.vy * scale, latest.current.base, maxHeight(), latest.current.swipeToClose)),
       onPanResponderTerminate: () => snapTo(latest.current.expanded ? SHEET_SNAP.expanded : SHEET_SNAP.base),
     }).panHandlers;
   }, [offset, snapTo]);
