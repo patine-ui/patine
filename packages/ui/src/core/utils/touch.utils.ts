@@ -1,4 +1,4 @@
-import type { ViewStyle } from 'react-native';
+import type { PanResponderGestureState, ViewStyle } from 'react-native';
 
 import type { RippleOrigin } from '@/core/core.types';
 
@@ -79,3 +79,15 @@ export const toLayoutScale = (node: unknown) => {
   const shown = node.getBoundingClientRect().width;
   return shown > 0 && node.offsetWidth > 0 ? node.offsetWidth / shown : 1;
 };
+
+/** A drag's distance and speed in layout pixels, from the pointer's screen pixels and `toLayoutScale`. */
+export const scaleGesture = (g: PanResponderGestureState, scale: number): PanResponderGestureState =>
+  scale === 1
+    ? g
+    : {
+        ...g,
+        dx: g.dx * scale,
+        dy: g.dy * scale,
+        vx: g.vx * scale,
+        vy: g.vy * scale,
+      };
