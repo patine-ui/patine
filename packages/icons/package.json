@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Patine Icons: free outline icons for React Native, Expo and React Native Web. 227 hand-drawn 24pt icons (arrows, chevrons, actions, communication, media, files, commerce, time, users, devices, security, charts) that follow your patine-ui theme, flip in right-to-left layouts and import one by one. The same names and props as Patine Pro's full set.",
   "license": "MIT",
-  "author": "Eliyahu Kriel <elik56a@gmail.com>",
+  "author": "Patine <support@patine.dev>",
   "homepage": "https://patine.dev/icons",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     "icons": "node scripts/icons.js"
   },
   "peerDependencies": {
-    "patine-ui": "*",
+    "patine-ui": ">=0.4.0",
     "react": ">=19",
     "react-native": ">=0.78",
     "react-native-svg": ">=15"

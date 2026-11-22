@@ -2,7 +2,8 @@ name: Release
 
 # release-please reads the Conventional Commits on master and keeps a "chore(release)" PR open with the
 # version bump and CHANGELOG. Merging that PR tags the release, creates the GitHub release, publishes to
-# npm and redeploys the docs so the new version shows up in the version dropdown.
+# npm (patine-ui, @patine-ui/icons and @patine-ui/mcp) and redeploys the docs so the new version shows up in the
+# version dropdown.
 on:
   push:
     branches: [master]
@@ -65,9 +66,20 @@ jobs:
       # npm shows the package's README and LICENSE; the repo keeps one copy at the root.
       - run: cp README.md LICENSE packages/ui/
       - run: node packages/ui/scripts/check-pack.js
+      # @patine-ui/icons (built against the patine-ui just built) and @patine-ui/mcp ship with every release, at
+      # patine-ui's version: one version for the kit, so the MCP server's docs and the icons match the library.
+      - run: pnpm --filter @patine-ui/icons build
+      - name: Version icons and mcp as patine-ui
+        run: |
+          version=$(node -p "require('./packages/ui/package.json').version")
+          for pkg in icons mcp; do (cd "packages/$pkg" && npm pkg set version="$version"); done
       # npm pack doesn't create the destination folder.
-      - run: mkdir -p "$RUNNER_TEMP/package" && npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/package"
-        working-directory: packages/ui
+      - name: Pack
+        run: |
+          mkdir -p "$RUNNER_TEMP/package"
+          for pkg in ui icons mcp; do
+            (cd "packages/$pkg" && npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/package")
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package
@@ -96,5 +108,12 @@ jobs:
         with:
           name: package
           path: package
-      # The ./ matters: npm reads `package/x.tgz` as a GitHub repo shorthand.
-      - run: npm publish ./package/*.tgz --ignore-scripts --access public
+      # The ./ matters: npm reads `package/x.tgz` as a GitHub repo shorthand. A version already on npm is skipped, so a
+      # re-run after a partial publish finishes the rest. Each package needs this workflow as its Trusted Publisher.
+      - name: Publish
+        run: |
+          for tgz in package/*.tgz; do
+            id=$(tar -xOzf "$tgz" package/package.json | node -p "const p = JSON.parse(require('fs').readFileSync(0)); p.name + '@' + p.version")
+            if npm view "$id" version > /dev/null 2>&1; then echo "$id is already on npm"; continue; fi
+            npm publish "./$tgz" --ignore-scripts --access public
+          done
