@@ -266,4 +266,4 @@ Emoji data comes from [emojibase](https://emojibase.dev) (MIT).
 
 ## License
 
-MIT © Patine
+MIT © Patine UI

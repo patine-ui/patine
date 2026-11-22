@@ -19,4 +19,13 @@ describe('pro', () => {
     expect(searchProIcons('github')[0]).toContain('<BrandIcon name="github" />');
     expect(PRO_NOTE).toContain('https://patine.dev/pricing');
   });
+
+  // Pro is installed with the shadcn CLI into the app's components folder; an import from '@patine-ui/pro' never resolves.
+  it('points imports at the folder Pro lands in', () => {
+    const lines = [PRO_NOTE, ...searchProIcons('github'), ...searchProIcons('bell')];
+    expect(lines.join('\n')).not.toMatch(/from '@patine-ui\/pro/);
+    expect(searchProIcons('github')[0]).toContain("'@/components/patine/brands'");
+    const context7 = require('../../../context7.json');
+    expect(JSON.stringify(context7)).not.toMatch(/from @patine-ui\/pro|from '@patine-ui\/pro/);
+  });
 });
