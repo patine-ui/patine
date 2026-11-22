@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/patine-ui/patine/compare/v0.4.2...v0.4.3) (2026-11-22)
+
+
+### 🐛 Bug Fixes
+
+* drags follow the pointer inside a zoomed web view ([#22](https://github.com/patine-ui/patine/issues/22)) ([16cf74c](https://github.com/patine-ui/patine/commit/16cf74c0f7ef3095260c43ad101bf60762dd6c77))
+
 ## [0.4.2](https://github.com/patine-ui/patine/compare/v0.4.1...v0.4.2) (2026-11-22)
 
 
