@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/patine-ui/patine/compare/v0.4.3...v0.4.4) (2026-11-23)
+
+
+### 🐛 Bug Fixes
+
+* issues from a real RTL web app migration ([#24](https://github.com/patine-ui/patine/issues/24)) ([2e32c5e](https://github.com/patine-ui/patine/commit/2e32c5eab36bdf299d3ad32a0c8f1551a0efe46a))
+
 ## [0.4.3](https://github.com/patine-ui/patine/compare/v0.4.2...v0.4.3) (2026-11-22)
 
 
