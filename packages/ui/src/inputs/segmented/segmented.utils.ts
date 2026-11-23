@@ -25,6 +25,10 @@ export const getRevealOffset = (layouts: ReadonlyArray<ItemLayout | undefined>, 
 export const findItemIndex = <T>(items: ReadonlyArray<{ value: T }>, value: T | null | undefined, isEqual: (a: T, b: T) => boolean) =>
   value === undefined || value === null ? -1 : items.findIndex((item) => isEqual(item.value, value));
 
+/** The selected values after the user presses `value` in a multiple list: added when it's off, removed when it's on. */
+export const toggleChoice = <T>(values: readonly T[], value: T, isEqual: (a: T, b: T) => boolean) =>
+  values.some((v) => isEqual(v, value)) ? values.filter((v) => !isEqual(v, value)) : [...values, value];
+
 /** Which sides have content hidden past them, so an arrow shows there. A pixel of slack absorbs fractional scroll offsets. */
 export const getHiddenSides = ({ offset, width, contentWidth }: ScrollFrame) => ({
   left: width > 0 && offset > 1,

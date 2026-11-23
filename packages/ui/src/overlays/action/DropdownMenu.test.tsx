@@ -2,6 +2,7 @@ import { Pressable, Text } from 'react-native';
 
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
+import { Button } from '@/actions/button/Button';
 import { DropdownMenu } from './DropdownMenu';
 
 describe('DropdownMenu', () => {
@@ -106,5 +107,49 @@ describe('DropdownMenu', () => {
     );
     await fireEvent.press(screen.getByRole('button', { name: 'More' }));
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeTruthy();
+  });
+
+  it('merges into a Button child instead of wrapping it in a second button', async () => {
+    const onPress = jest.fn();
+    await render(
+      <DropdownMenu actions={[{ label: 'Share' }]}>
+        <Button aria-label="More" onPress={onPress}>
+          ⋯
+        </Button>
+      </DropdownMenu>
+    );
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+    await fireEvent.press(screen.getByRole('button', { name: 'More', expanded: false }));
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'More', expanded: true })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Share' })).toBeTruthy();
+  });
+
+  it('puts grouped actions under their group heading, in order of first appearance', async () => {
+    const actions = [
+      { label: 'Copy', group: 'Edit' },
+      { label: 'Share', group: 'Send' },
+      { label: 'Paste', group: 'Edit' },
+    ];
+    await render(
+      <DropdownMenu actions={actions} aria-label="More">
+        <Text>⋯</Text>
+      </DropdownMenu>
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'More' }));
+    expect(screen.getByRole('heading', { name: 'Edit' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Send' })).toBeTruthy();
+    const order = screen.getAllByText(/^(Edit|Send|Copy|Paste|Share)$/).map((node) => node.props.children);
+    expect(order).toEqual(['Edit', 'Copy', 'Paste', 'Send', 'Share']);
+  });
+
+  it('keeps group headings when it opens as an action sheet', async () => {
+    await render(
+      <DropdownMenu actions={[{ label: 'Copy', group: 'Edit' }]} presentation="sheet" aria-label="More">
+        <Text>⋯</Text>
+      </DropdownMenu>
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'More' }));
+    expect(screen.getByRole('heading', { name: 'Edit' })).toBeTruthy();
   });
 });

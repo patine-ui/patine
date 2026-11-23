@@ -1,8 +1,10 @@
 import { StyleSheet, Text } from 'react-native';
 
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import { lightTheme } from '@/core/theme/theme.constants';
+import { Checkbox } from '@/inputs/checkbox/Checkbox';
+import { BulletList } from './BulletList';
 import { List, ListItem } from './List';
 
 describe('List', () => {
@@ -61,5 +63,64 @@ describe('ListItem with href', () => {
       </List>
     );
     expect(screen.getByRole('link')).toBeTruthy();
+  });
+});
+
+describe('ListItem with controls', () => {
+  it('keeps a control in leading or trailing beside the row button, never inside it', async () => {
+    const onPress = jest.fn();
+    const onCheckedChange = jest.fn();
+    await render(
+      <ListItem
+        title="Case 1042"
+        description="Opened today"
+        onPress={onPress}
+        leading={<Checkbox checked={false} onCheckedChange={onCheckedChange} aria-label="Select case" />}
+        trailing={<Text onPress={() => {}}>⋯</Text>}
+      />
+    );
+    const row = screen.getByRole('button');
+    expect(row).toHaveTextContent('Case 1042Opened today');
+    expect(within(row).queryByRole('checkbox')).toBeNull();
+    expect(within(row).queryByText('⋯')).toBeNull();
+    await fireEvent.press(row);
+    expect(onPress).toHaveBeenCalledTimes(1);
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'Select case' }));
+    expect(onCheckedChange).toHaveBeenCalledWith(true);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps plain leading content inside the row button', async () => {
+    await render(<ListItem title="Billing" onPress={() => {}} leading={<Text>icon</Text>} />);
+    expect(within(screen.getByRole('button')).getByText('icon')).toBeTruthy();
+  });
+});
+
+describe('ListItem content', () => {
+  it('takes nodes for its title and description, and keeps the styling for strings', async () => {
+    await render(<ListItem title={<Text>Rich title</Text>} description={<Text>Rich line</Text>} />);
+    expect(screen.getByText('Rich title')).toBeTruthy();
+    expect(screen.getByText('Rich line')).toBeTruthy();
+    expect(StyleSheet.flatten(screen.getByText('Rich title').props.style)?.color).toBeUndefined();
+  });
+
+  it('draws a muted row in secondary text', async () => {
+    await render(<ListItem title="Archived" muted />);
+    expect(StyleSheet.flatten(screen.getByText('Archived').props.style).color).toBe(lightTheme.colors.textSecondary);
+  });
+});
+
+describe('BulletList', () => {
+  it('is a list of items, each with a bullet', async () => {
+    await render(<BulletList items={['Milk', 'Eggs']} testID="list" />);
+    // A View with a role but no label isn't an accessible element to the query, so check the roles themselves.
+    expect(screen.getByTestId('list').props.role).toBe('list');
+    expect(screen.getByTestId('list').children.map((item) => (typeof item === 'string' ? item : item.props.role))).toEqual([
+      'listitem',
+      'listitem',
+    ]);
+    expect(screen.getByText('Eggs')).toBeTruthy();
+    expect(screen.queryByText('•')).toBeNull();
+    expect(screen.getAllByText('•', { includeHiddenElements: true })).toHaveLength(2);
   });
 });

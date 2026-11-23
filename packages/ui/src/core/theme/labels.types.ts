@@ -106,6 +106,145 @@ export interface LightboxLabels {
   image: string;
 }
 
+// Patine Pro's words. They're typed here so one PatineProvider `labels` translates Pro as well; their English defaults ship
+// with Pro, so the free library doesn't carry them.
+
+/** Pro's QueryState and blocks: a failed or empty load. "Try again" is `retry`, the loading name `spinner`. */
+export interface QueryStateLabels {
+  /** Default: 'Something went wrong' */
+  error: string;
+  /** Default: 'Check your connection and try again. Nothing you entered was lost.' */
+  errorDescription: string;
+  /** Default: 'Nothing here yet' */
+  empty: string;
+}
+
+/** Pro's DataTable. */
+export interface DataTableLabels {
+  /** A sortable header's name, with `{column}`. Default: 'Sort by {column}' */
+  sortBy: string;
+  /** Default: 'Select all rows' */
+  selectAll: string;
+  /** A row's checkbox, with `{row}`. Default: 'Select {row}' */
+  selectRow: string;
+  /** No rows. Default: 'No results' */
+  empty: string;
+}
+
+/** Pro's upload family: Dropzone, useUpload and FileUploadList. `{name}`, `{size}`, `{max}`, `{count}` are filled in. */
+export interface UploadLabels {
+  /** Rejections. Default: '{name} is not a supported file type' */
+  type: string;
+  /** Default: '{name} is {size}; the limit is {max}' */
+  tooLarge: string;
+  /** Default: '{name} is smaller than {max}' */
+  tooSmall: string;
+  /** Default: 'You can add up to {count} files' */
+  tooMany: string;
+  /** Status lines. Defaults: 'Waiting…', 'Paused', 'Uploaded', 'Upload failed', '{loaded} of {total}', '{time} left' */
+  queued: string;
+  paused: string;
+  done: string;
+  failed: string;
+  progress: string;
+  remaining: string;
+  /** Action names. Defaults: 'Pause', 'Resume', 'Retry', 'Cancel upload', 'Remove' */
+  pause: string;
+  resume: string;
+  retry: string;
+  cancel: string;
+  remove: string;
+  /** Dropzone's title, before its link. Default: 'Drag and drop files, or ' */
+  title: string;
+  /** The compact Dropzone's. Default: 'Drop files or ' */
+  titleCompact: string;
+  /** The title's link. Default: 'browse' */
+  browse: string;
+  /** While files hover. Default: 'Drop to upload' */
+  drop: string;
+  /** The zone's name for screen readers. Default: 'Upload files' */
+  upload: string;
+  /** A rejection's close button, with `{message}`. Default: 'Dismiss: {message}' */
+  dismiss: string;
+  /** The rules line: 'PNG or PDF · up to 10 MB · 5 files max'. Defaults: 'or', 'up to {size}', '{count} files max' */
+  or: string;
+  upTo: string;
+  maxFiles: string;
+  /** `image/*`, `video/*` and `audio/*` in the rules line. Defaults: 'Images', 'Videos', 'Audio' */
+  images: string;
+  videos: string;
+  audio: string;
+}
+
+/** Pro's Wizard. `cancel` and `step` default to the provider's `cancel` and `steps.step`. */
+export interface WizardLabels {
+  /** Default: 'Back' */
+  back: string;
+  /** Default: 'Next' */
+  next: string;
+  /** Default: 'Finish' */
+  finish: string;
+  /** Default: 'Skip' */
+  skip: string;
+  /** Default: 'Cancel' */
+  cancel: string;
+  /** With `{page}` and `{count}`. Default: 'Step {page} of {count}' */
+  step: string;
+  /** Default: 'Check this step before going on' */
+  invalid: string;
+  /** Default: 'Optional' */
+  optional: string;
+}
+
+/** Pro's ActivityFeed. Its error state reads `queryState`. */
+export interface ActivityLabels {
+  /** Default: 'Activity' */
+  feed: string;
+  /** Default: 'Unread' */
+  unread: string;
+  /** Default: 'Mark all as read' */
+  markAllRead: string;
+  /** Default: 'Load more' */
+  loadMore: string;
+  /** Default: 'No activity yet' */
+  empty: string;
+  /** Default: 'Nothing matches this filter' */
+  emptyFiltered: string;
+  /** Day headings. Defaults: 'Today', 'Yesterday', 'Tomorrow' */
+  today: string;
+  yesterday: string;
+  tomorrow: string;
+}
+
+/** Pro's AppShell: its sidebar, top bar, drawer and pages. AppShell's own `labels` win over these. */
+export interface ShellLabels {
+  /** Default: 'More' */
+  more: string;
+  /** Default: 'Search' */
+  search: string;
+  /** Default: 'Search…' */
+  searchPlaceholder: string;
+  /** The search button's spoken name, with its shortcut. Default: 'Search, Command K' */
+  searchShortcut: string;
+  /** Default: 'Search  ⌘K' */
+  searchTooltip: string;
+  /** Default: 'Type a command or search…' */
+  commandPlaceholder: string;
+  openNavigation: string;
+  closeNavigation: string;
+  collapseSidebar: string;
+  expandSidebar: string;
+  resizeSidebar: string;
+  favorites: string;
+  breadcrumb: string;
+  workspaces: string;
+  createWorkspace: string;
+  /** The switcher's spoken name, with `{name}`. Default: '{name}, switch workspace' */
+  switchWorkspace: string;
+  /** Under the workspace's name, with `{plan}`. Default: '{plan} plan' */
+  plan: string;
+}
+
 /** Every default word in the library, by component. Give PatineProvider a partial copy in your language. */
 export interface Labels {
   /** Closes a sheet, dialog, popover or menu. Default: 'Close' */
@@ -190,6 +329,13 @@ export interface Labels {
     thisMonth: string;
     lastMonth: string;
   };
+  /** Patine Pro's words (English defaults in Pro) */
+  queryState?: Partial<QueryStateLabels>;
+  dataTable?: Partial<DataTableLabels>;
+  upload?: Partial<UploadLabels>;
+  wizard?: Partial<WizardLabels>;
+  activity?: Partial<ActivityLabels>;
+  shell?: Partial<ShellLabels>;
 }
 
 export type EmojiCategoryKey =

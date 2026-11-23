@@ -15,8 +15,11 @@ export const styles = StyleSheet.create({
   // (a switch) never shrinks.
   endYields: { flexShrink: 4, minWidth: 0 },
   value: { flexShrink: 1 },
+  // The row box already dims a disabled row; its button doesn't dim again.
+  opaque: { opacity: 1 },
   // On the web a heading is an <h1>–<h6>, which a page's stylesheet may give margins.
   heading: { margin: 0 },
+  bulletItem: { flexDirection: 'row', alignItems: 'flex-start' },
   uppercase: { textTransform: 'uppercase', letterSpacing: 0.4 },
 });
 
@@ -36,7 +39,15 @@ export const themed = createStyles((t) => {
     leading: { marginEnd: t.spacing.md, paddingVertical: t.spacing.md },
     content: { minHeight: look.minHeight, paddingEnd: t.spacing.lg, paddingVertical: t.spacing.sm, gap: t.spacing.sm },
     end: { gap: t.spacing.sm },
+    // The text as the row's button: the row's full height, so it's as easy to hit as a whole row.
+    press: { alignSelf: 'stretch', justifyContent: 'center', marginVertical: -t.spacing.sm, paddingVertical: t.spacing.sm },
     item: { paddingStart: t.spacing.lg },
     line: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.colors.border },
   };
 });
+
+/** A BulletList's spacing: a small gap between items and between each bullet and its text. */
+export const bulletStyles = createStyles((t) => ({
+  root: { gap: t.spacing.xs },
+  item: { gap: t.spacing.sm },
+}));

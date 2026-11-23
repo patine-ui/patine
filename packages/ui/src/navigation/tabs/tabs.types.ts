@@ -6,6 +6,7 @@ import type {
   LayoutChangeEvent,
   PressableProps,
   StyleProp,
+  TextStyle,
   ViewProps,
   ViewStyle,
 } from 'react-native';
@@ -47,6 +48,14 @@ export interface TabsItem {
   icon?: React.ReactNode;
   /** Can't be selected, and arrow keys skip it. Default: false */
   disabled?: boolean;
+  /** Vertical tabs only: a heading drawn over each run of tabs sharing it, as a settings sidebar's "Advanced" */
+  group?: string;
+}
+
+export interface TabsGroupLabelProps {
+  /** The group's name */
+  children: React.ReactNode;
+  style?: StyleProp<TextStyle>;
 }
 
 export interface TabsListProps extends ViewProps {

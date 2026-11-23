@@ -7,7 +7,7 @@ import { ThemeScope, useComponentTheme, useDirection, useLabels } from '@/core/t
 import { useTextField } from '@/inputs/textfield/hooks/useTextField';
 import { styles, themed } from '@/inputs/textfield/textfield.styles';
 import type { FieldInputProps } from '@/inputs/textfield/textfield.types';
-import { formatCount, getTextFieldAccessibility, isLabelRaised } from '@/inputs/textfield/textfield.utils';
+import { formatCount, getInputDirection, getNodeText, getTextFieldAccessibility, isLabelRaised } from '@/inputs/textfield/textfield.utils';
 import { FieldLabel } from '@/overlays/sheet/components/FieldLabel';
 import { FieldMessage } from '@/overlays/sheet/components/FieldMessage';
 import { FloatingLabel } from '@/overlays/sheet/components/FloatingLabel';
@@ -20,6 +20,7 @@ export const FieldInput = (props: FieldInputProps) => {
   const dir = useDirection();
   const {
     label,
+    dir: textDir,
     placeholder,
     error,
     helperText,
@@ -49,6 +50,8 @@ export const FieldInput = (props: FieldInputProps) => {
     onBlur: _onBlur,
     onContentSizeChange: _onContentSizeChange,
     onLayout: _onLayout,
+    onKeyPress: _onKeyPress,
+    onSubmit: _onSubmit,
     ref: _ref,
     rows: _rows,
     minRows: _minRows,
@@ -65,7 +68,9 @@ export const FieldInput = (props: FieldInputProps) => {
   const editable = !disabled && !readOnly;
   const invalid = !!error;
   const borderWidth = field.focused ? look.openBorderWidth : 1;
-  const floating = look.label === FIELD_LABEL.floating && !!label;
+  // A node label (with a tooltip or a tag) can't float, so it sits above in every design.
+  const textLabel = typeof label === 'string' ? label : undefined;
+  const floating = look.label === FIELD_LABEL.floating && !!textLabel;
   const labelAbove = !!label && !floating;
   const raised = isLabelRaised({ focused: field.focused, filled: field.value !== '', hasStart: !!startIcon || !!prefix, multiline });
 
@@ -73,8 +78,12 @@ export const FieldInput = (props: FieldInputProps) => {
     <ThemeScope theme={themeOverride}>
       <View style={style}>
         {labelAbove ? (
-          <View nativeID={field.labelId}>
-            <FieldLabel label={label} invalid={invalid} required={required} theme={theme} style={slots?.label} />
+          <View nativeID={field.labelId} style={textLabel === undefined && sheetStyles.fieldLabel}>
+            {textLabel === undefined ? (
+              label
+            ) : (
+              <FieldLabel label={textLabel} invalid={invalid} required={required} theme={theme} style={slots?.label} />
+            )}
           </View>
         ) : null}
         <Pressable
@@ -98,7 +107,7 @@ export const FieldInput = (props: FieldInputProps) => {
         >
           {floating ? (
             <FloatingLabel
-              label={label}
+              label={textLabel ?? ''}
               raised={raised}
               open={field.focused}
               invalid={invalid}
@@ -122,6 +131,7 @@ export const FieldInput = (props: FieldInputProps) => {
             onChangeText={field.changeText}
             onFocus={field.onFocus}
             onBlur={field.onBlur}
+            onKeyPress={field.onKeyPress}
             placeholder={floating && !raised ? '' : placeholder}
             editable={editable}
             maxLength={maxLength}
@@ -131,7 +141,7 @@ export const FieldInput = (props: FieldInputProps) => {
             autoCorrect={secureTextEntry ? false : undefined}
             {...getTextFieldAccessibility(
               {
-                label,
+                label: textLabel ?? (getNodeText(label) || undefined),
                 placeholder,
                 error,
                 helperText,
@@ -146,7 +156,14 @@ export const FieldInput = (props: FieldInputProps) => {
               ? { scrollEnabled: field.multiline.scrollEnabled, onContentSizeChange: field.multiline.onContentSizeChange }
               : null)}
             {...rest}
-            style={[styles.input, startAlign[dir], multiline && [styles.multilineInput, field.multiline.style], slots?.input]}
+            {...(IS_WEB && textDir ? { dir: textDir } : null)}
+            style={[
+              styles.input,
+              startAlign[dir],
+              getInputDirection(textDir, dir, IS_WEB),
+              multiline && [styles.multilineInput, field.multiline.style],
+              slots?.input,
+            ]}
           />
           {suffix ? (
             <Text color="textSecondary" style={slots?.affix}>

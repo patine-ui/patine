@@ -5,6 +5,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Tabs } from './Tabs';
 import { TabsContent } from './TabsContent';
+import { TabsGroupLabel } from './TabsGroupLabel';
 import { TabsList } from './TabsList';
 import { TabsTrigger } from './TabsTrigger';
 
@@ -145,5 +146,35 @@ describe('Tabs shorthand', () => {
     expect(onValueChange).toHaveBeenCalledWith('password');
     expect(screen.getByText('Password panel')).toBeTruthy();
     expect(screen.queryByText('Account panel')).toBeNull();
+  });
+
+  it('heads each group of vertical tabs, once per run of tabs sharing it', async () => {
+    const items = [
+      { value: 'profile', label: 'Profile', content: null },
+      { value: 'sync', label: 'Sync', content: null, group: 'Advanced' },
+      { value: 'api', label: 'API keys', content: null, group: 'Advanced' },
+    ];
+    const { rerender } = await render(<Tabs orientation="vertical" items={items} />);
+    expect(screen.getAllByRole('heading', { name: 'Advanced' })).toHaveLength(1);
+    await rerender(<Tabs items={items} />);
+    expect(screen.queryByText('Advanced')).toBeNull();
+  });
+});
+
+describe('TabsGroupLabel', () => {
+  it('heads a group in a composed vertical list, outside the arrow-key order', async () => {
+    const onValueChange = jest.fn();
+    await render(
+      <Tabs orientation="vertical" defaultValue="profile" onValueChange={onValueChange}>
+        <TabsList>
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsGroupLabel>Advanced</TabsGroupLabel>
+          <TabsTrigger value="sync">Sync</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    expect(screen.getByRole('heading', { name: 'Advanced' })).toBeTruthy();
+    await fireEvent(screen.getByRole('tab', { name: 'Profile' }), 'keyDown', keyDown('ArrowDown'));
+    expect(onValueChange).toHaveBeenLastCalledWith('sync');
   });
 });

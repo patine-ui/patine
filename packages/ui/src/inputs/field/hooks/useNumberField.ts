@@ -13,8 +13,9 @@ export const useNumberField = (
     value,
     defaultValue = null,
     onValueChange,
+    onValueChanging,
     formatValue = String,
-  }: Pick<NumberFieldProps, 'value' | 'defaultValue' | 'onValueChange' | 'formatValue'>,
+  }: Pick<NumberFieldProps, 'value' | 'defaultValue' | 'onValueChange' | 'onValueChanging' | 'formatValue'>,
   range: NumberRange
 ) => {
   const [current, setCurrent] = useControllableState<number | null>(value, defaultValue, onValueChange);
@@ -23,15 +24,19 @@ export const useNumberField = (
     if (next !== current) setCurrent(next);
   };
   const read = () => (draft === null ? current : parseNumber(draft, current));
+  const clamp = (parsed: number | null) => (parsed === null ? null : clampValue(parsed, range));
   return {
     value: current,
     text: draft ?? (current === null ? '' : formatValue(current)),
-    onChangeText: setDraft,
+    onChangeText: (text: string) => {
+      setDraft(text);
+      onValueChanging?.(clamp(parseNumber(text, current)));
+    },
     onFocus: () => setDraft(current === null ? '' : String(current)),
     commit: () => {
       const parsed = read();
       setDraft(null);
-      set(parsed === null ? null : clampValue(parsed, range));
+      set(clamp(parsed));
     },
     step: (direction: 1 | -1) => {
       const next = stepValue(read(), direction, range);

@@ -46,13 +46,29 @@ export interface ChoiceRenderItemInfo<T> {
   theme: Theme;
 }
 
-export type ChoiceListProps<T> = ThemableProps & {
-  items: ReadonlyArray<ChoiceItem<T>>;
+/** One item selected: a radio group. */
+export interface ChoiceSingleProps<T> {
   /** The selected item's value, when you control it; `null` for none */
   value?: T | null;
   /** The value selected at first, when it keeps its own state. Default: none */
   defaultValue?: T | null;
   onValueChange?: (value: NoInferValue<T>, item: ChoiceItem<T>) => void;
+}
+
+/** Any number of items selected, such as filters that combine. */
+export interface ChoiceMultipleProps<T> {
+  /** 'single': one item selected, as radios. 'multiple': any number, each chip a checkbox. Default: 'single' */
+  type: 'multiple';
+  /** The selected items' values, when you control it */
+  value?: T[];
+  /** The values selected at first, when it keeps its own state. Default: [] */
+  defaultValue?: T[];
+  /** Called with every selected value and the item the user pressed; never when `value` changes from your code */
+  onValueChange?: (value: NoInferValue<T>[], item: ChoiceItem<T>) => void;
+}
+
+type ChoiceListBaseProps<T> = ThemableProps & {
+  items: ReadonlyArray<ChoiceItem<T>>;
   isEqual?: (a: T, b: T) => boolean;
   /** 'segmented': items on a track, the selected one on a sliding thumb. 'chips': separate pills. Set by SegmentedControl and ChipGroup */
   variant?: ChoiceVariant;
@@ -75,6 +91,22 @@ export type ChoiceListProps<T> = ThemableProps & {
   styles?: SlotStyles<ChoiceSlot>;
   testID?: string;
 };
+
+export type ChoiceListProps<T> = ChoiceListBaseProps<T> & ChoiceSingleProps<T>;
+
+/** What ChoiceList draws: one selected, or with `type: 'multiple'` (ChipGroup only) any number. */
+export type ChoiceListAnyProps<T> = (ChoiceListProps<T> & { type?: 'single' }) | (ChoiceListBaseProps<T> & ChoiceMultipleProps<T>);
+
+/** What useChoiceSelection reads: either kind of list's selection props. */
+export interface ChoiceSelectionOptions<T> {
+  items: ReadonlyArray<ChoiceItem<T>>;
+  type?: 'single' | 'multiple';
+  value?: T | T[] | null;
+  defaultValue?: T | T[] | null;
+  /** Either kind's callback: the value is a T or a T[], by `type` */
+  onValueChange?: (value: never, item: ChoiceItem<T>) => void;
+  isEqual?: (a: T, b: T) => boolean;
+}
 
 export interface ItemLayout {
   x: number;
@@ -103,6 +135,8 @@ export interface ListDesign {
 export interface ListItemProps<T> {
   item: ChoiceItem<T>;
   selected: boolean;
+  /** Any number can be selected, so the item is a checkbox, not a radio */
+  multiple: boolean;
   /** Not the first item, so an outlined segment draws a divider before it */
   divided: boolean;
   variant: ChoiceVariant;
@@ -130,5 +164,6 @@ export interface ScrollArrowProps {
 /** One choice from a few, on a track with a sliding thumb. Scrolls sideways when the items don't fit. */
 export type SegmentedControlProps<T> = Omit<ChoiceListProps<T>, 'variant'>;
 
-/** One choice from separate pills that scroll sideways, such as filters or categories. */
-export type ChipGroupProps<T> = Omit<ChoiceListProps<T>, 'variant'>;
+/** Separate pills that scroll sideways: one choice, such as a category, or with `type="multiple"` filters that combine. */
+export type ChipGroupProps<T> = Omit<ChoiceListBaseProps<T>, 'variant'> &
+  ((ChoiceSingleProps<T> & { type?: 'single' }) | ChoiceMultipleProps<T>);

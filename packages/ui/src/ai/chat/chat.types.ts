@@ -15,8 +15,8 @@ export interface MessageBubbleProps extends ViewProps, ThemableProps {
   from?: MessageFrom;
   /** The sender's name above the bubble, for group chats and assistants */
   name?: string;
-  /** Under the bubble, e.g. "9:41" or "Read" */
-  meta?: string;
+  /** Under the bubble: a string such as "9:41" or "Read" in small muted text, or any node, such as a colored status with an inline Retry */
+  meta?: React.ReactNode;
   /** Styles for its parts: `bubble`, `text` */
   styles?: SlotStyles<'bubble' | 'text'>;
 }

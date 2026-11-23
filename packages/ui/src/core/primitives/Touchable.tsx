@@ -131,3 +131,6 @@ export const Touchable = ({
     </Host>
   );
 };
+
+// So a DropdownMenu or a ListItem takes it as a control of its own instead of wrapping it in another button.
+Touchable.pressable = true;

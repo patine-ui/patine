@@ -76,7 +76,7 @@ export const StepRow = ({ step, index, count, current, vertical, labels, theme, 
     'aria-selected': status === STEP_STATUS.current,
     style: vertical ? styles.itemVertical : styles.item,
   };
-  return onValueChange && done ? (
+  return onValueChange && done && !step.disabled ? (
     <Touchable theme={theme} role="button" onPress={() => onValueChange(index)} {...a11y}>
       {content}
     </Touchable>

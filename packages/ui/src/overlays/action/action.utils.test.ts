@@ -1,4 +1,4 @@
-import { getMenuAnchor } from './action.utils';
+import { getMenuAnchor, groupActions } from './action.utils';
 
 const trigger = (x: number) => ({
   x,
@@ -17,5 +17,12 @@ describe('getMenuAnchor', () => {
     expect(getMenuAnchor(trigger(16), 200, 'end', 400, false).x).toBe(-144);
     expect(getMenuAnchor(trigger(340), 200, 'start', 400, false).x).toBe(340);
     expect(getMenuAnchor(trigger(340), 200, 'start', 400, true).x).toBe(180);
+  });
+});
+
+describe('groupActions', () => {
+  it('gathers each group at its first appearance and leaves ungrouped actions in place', () => {
+    const actions = [{ label: 'a', group: 'x' }, { label: 'b' }, { label: 'c', group: 'y' }, { label: 'd', group: 'x' }];
+    expect(groupActions(actions).map((a) => a.label)).toEqual(['a', 'd', 'b', 'c']);
   });
 });

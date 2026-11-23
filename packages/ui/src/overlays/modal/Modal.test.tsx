@@ -159,4 +159,19 @@ describe('Modal and Drawer shorthand', () => {
     await finishAnimations();
     expect(screen.getByRole('heading', { name: 'Navigation' })).toBeTruthy();
   });
+
+  it('draws any footer node, with the actions after it, in a modal and a drawer', async () => {
+    const footer = <Text>Edited 2 min ago</Text>;
+    const { rerender } = await render(
+      <Modal defaultOpen footer={footer} actions={[{ label: 'Done' }]}>
+        <Text>Body</Text>
+      </Modal>
+    );
+    await finishAnimations();
+    expect(screen.getByText('Edited 2 min ago')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Done' })).toBeTruthy();
+    await rerender(<Drawer defaultOpen footer={footer} />);
+    await finishAnimations();
+    expect(screen.getByText('Edited 2 min ago')).toBeTruthy();
+  });
 });

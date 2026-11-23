@@ -1,3 +1,5 @@
+import { Text, View } from 'react-native';
+
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { MessageBubble } from './Chat';
@@ -13,6 +15,34 @@ describe('MessageBubble', () => {
     expect(screen.getByText('Lunch?')).toBeTruthy();
     expect(screen.getByText('Ava')).toBeTruthy();
     expect(screen.getByText('9:41')).toBeTruthy();
+  });
+
+  it('draws a node meta as given, such as a status with an inline Retry', async () => {
+    const retry = jest.fn();
+    await render(
+      <MessageBubble
+        from="me"
+        meta={
+          <Text>
+            Not delivered.{' '}
+            <Text role="button" onPress={retry}>
+              Retry
+            </Text>
+          </Text>
+        }
+      >
+        Lunch?
+      </MessageBubble>
+    );
+    await fireEvent.press(screen.getByRole('button', { name: 'Retry' }));
+    expect(retry).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a string meta in the caption text, and lays a node meta out as a view, not inside text', async () => {
+    const { rerender } = await render(<MessageBubble meta="Read">Hi</MessageBubble>);
+    expect(screen.getByText('Read').type).toBe('Text');
+    await rerender(<MessageBubble meta={<View testID="status" />}>Hi</MessageBubble>);
+    expect(screen.getByTestId('status').parent?.type).toBe('View');
   });
 });
 

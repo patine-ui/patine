@@ -1,11 +1,16 @@
+import { Fragment } from 'react';
+
 import { useControllableState } from '@/core/hooks/useControllableState';
 import { Scroll } from '@/core/primitives/Scroll';
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme, useLabels } from '@/core/theme/ThemeProvider';
+import { groupHeadingAt } from '@/core/utils/group.utils';
 import { BottomSheet } from '@/overlays/sheet/BottomSheet';
 import { ACTION_SHEET_DESIGN } from './action.constants';
 import { styles, themed } from './action.styles';
 import type { ActionSheetProps } from './action.types';
+import { groupActions } from './action.utils';
+import { ActionGroupHeading } from './components/ActionGroupHeading';
 import { ActionSheetHeader } from './components/ActionSheetHeader';
 import { ActionSheetRow } from './components/ActionSheetRow';
 import { useActionPress } from './hooks/useActionPress';
@@ -37,6 +42,7 @@ export const ActionSheet = ({
   const { grouped } = look;
   const { press, onClosed } = useActionPress(onClose, sheetProps?.onClosed);
   const hasHeader = !!(title || message);
+  const rows = groupActions(actions);
   const group = grouped && [styles.group, themed(theme).groupCard, slots?.group];
 
   return (
@@ -60,18 +66,23 @@ export const ActionSheet = ({
         <View style={group || styles.group}>
           <ActionSheetHeader title={title} message={message} grouped={grouped} theme={theme} slots={slots} />
           <Scroll style={styles.list} bounces={false}>
-            {actions.map((action, i) => (
-              <ActionSheetRow
-                key={action.label}
-                action={action}
-                onPress={press}
-                grouped={grouped}
-                separated={grouped && (i > 0 || hasHeader)}
-                rowHeight={look.rowHeight}
-                theme={theme}
-                slots={slots}
-              />
-            ))}
+            {rows.map((action, i) => {
+              const heading = groupHeadingAt(rows, i);
+              return (
+                <Fragment key={action.label}>
+                  {heading ? <ActionGroupHeading group={heading} theme={theme} slots={slots} /> : null}
+                  <ActionSheetRow
+                    action={action}
+                    onPress={press}
+                    grouped={grouped}
+                    separated={grouped && (i > 0 || hasHeader) && !heading}
+                    rowHeight={look.rowHeight}
+                    theme={theme}
+                    slots={slots}
+                  />
+                </Fragment>
+              );
+            })}
           </Scroll>
         </View>
         {(showCancel ?? look.showCancel) && (

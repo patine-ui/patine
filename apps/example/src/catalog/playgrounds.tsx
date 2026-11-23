@@ -815,9 +815,10 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         { label: 'Calendar', value: 'calendar', icon: <Icon name="calendar" size="sm" /> },
       ],
     },
-    value: 'grid',
+    value: ({ type }: PlaygroundSelection) => (type === 'multiple' ? ['grid', 'map'] : 'grid'),
     code: 'items={views} value={view} onValueChange={setView}',
     controls: [
+      { prop: 'type', options: ['single', 'multiple'] },
       { prop: 'iconPosition', options: ['left', 'right', 'top', 'bottom'] },
       { prop: 'showArrows', options: [false, true] },
       { prop: 'arrowPosition', options: ['outside', 'overlay'] },
@@ -1079,6 +1080,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       { prop: 'startIcon', options: ['none', 'mail'], unset: 'none', values: { mail: icon('mail') } },
       { prop: 'prefix', options: ['none', '$', 'https://'], unset: 'none' },
       { prop: 'suffix', options: ['none', 'kg', '.com'], unset: 'none' },
+      { prop: 'dir', options: ['none', 'ltr', 'rtl', 'auto'], unset: 'none' },
       CLEARABLE,
       { prop: 'secureTextEntry', options: [false, true] },
       { prop: 'passwordToggle', options: [true, false] },
@@ -1198,6 +1200,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
         {
           value: 'password',
           label: 'Password',
+          group: 'Security',
           icon: <Icon name="lock" size="sm" />,
           content: (
             <Stack gap="sm">
@@ -1206,7 +1209,7 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
             </Stack>
           ),
         },
-        { value: 'team', label: 'Team', disabled: true, content: null },
+        { value: 'team', label: 'Team', group: 'Workspace', disabled: true, content: null },
       ],
     },
     code: 'items={tabs} aria-label="Settings"',
@@ -1241,6 +1244,12 @@ export const PLAYGROUNDS: Record<PlaygroundKey, PlaygroundConfig> = {
       { prop: 'fullScreen', options: ['auto', true, false], unset: 'auto' },
       { prop: 'showCloseButton', options: [true, false] },
       { prop: 'dismissible', options: [true, false] },
+      {
+        prop: 'footer',
+        options: ['none', 'note'],
+        unset: 'none',
+        values: { note: { live: <UIText color="textSecondary">Saved 2 min ago</UIText>, code: '<Text>Saved 2 min ago</Text>' } },
+      },
     ],
     children: (
       <Stack gap="sm">

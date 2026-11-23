@@ -7,6 +7,8 @@ import { Touchable } from '@/core/primitives/Touchable';
 import { View } from '@/core/primitives/View';
 import { ContentColor } from '@/core/theme/ContentColor';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { hasControl } from '@/core/utils/slot.utils';
+import { isTextContent } from '@/core/utils/text.utils';
 import { Heading } from '@/foundations/text/Heading';
 import { ListInsetContext } from './ListInsetContext';
 import { LIST_DESIGN } from './list.constants';
@@ -58,7 +60,11 @@ export const List = ({ title, footer, theme: themeProp, design, style, styles: s
   );
 };
 
-/** One row of a List: a title, an optional description, something before it, and a value, control or chevron after it. */
+/**
+ * One row of a List: a title, an optional description, something before it, and a value, control or chevron after it. A row
+ * with `onPress` is a button; a control in `leading` or `trailing` (a Checkbox, a DropdownMenu) sits beside that button,
+ * never inside it.
+ */
 export const ListItem = ({
   title,
   description,
@@ -67,6 +73,7 @@ export const ListItem = ({
   value,
   showChevron,
   destructive = false,
+  muted = false,
   disabled = false,
   onPress,
   href,
@@ -82,24 +89,45 @@ export const ListItem = ({
   const look = LIST_DESIGN[theme.design];
   const sheet = themed(theme);
   const separator = getSeparatorEdge(look, first);
+  const pressable = !!(onPress || href);
+  const leadingControl = pressable && hasControl(leading);
+  const trailingControl = pressable && hasControl(trailing);
+  // With a control in it, the row is a box and only its text is the button, so no button holds another control.
+  const split = leadingControl || trailingControl;
+  const press = { role: 'button' as const, disabled, onPress, href, external };
+  const text = (
+    <>
+      {isTextContent(title) ? (
+        <Text color={destructive ? 'danger' : muted ? 'textSecondary' : 'text'} style={slots?.title}>
+          {title}
+        </Text>
+      ) : (
+        title
+      )}
+      {isTextContent(description) ? (
+        <Text size="sm" color="textSecondary">
+          {description}
+        </Text>
+      ) : (
+        description
+      )}
+    </>
+  );
   const content = (
     <>
       {leading ? (
         <View style={sheet.leading}>
-          <ContentColor color={destructive ? theme.colors.danger : undefined}>{leading}</ContentColor>
+          <ContentColor color={destructive ? theme.colors.danger : muted ? theme.colors.textSecondary : undefined}>{leading}</ContentColor>
         </View>
       ) : null}
       <View style={[styles.row, styles.content, sheet.content, separator === 'content' && sheet.line]}>
-        <View style={styles.text}>
-          <Text color={destructive ? 'danger' : 'text'} style={slots?.title}>
-            {title}
-          </Text>
-          {description ? (
-            <Text size="sm" color="textSecondary">
-              {description}
-            </Text>
-          ) : null}
-        </View>
+        {split ? (
+          <Touchable {...press} style={[styles.text, sheet.press, disabled && styles.opaque]} {...rest}>
+            {text}
+          </Touchable>
+        ) : (
+          <View style={styles.text}>{text}</View>
+        )}
         <View style={[styles.end, sheet.end, value ? styles.endYields : null]}>
           {value ? (
             <Text color="textSecondary" numberOfLines={1} style={styles.value}>
@@ -107,7 +135,7 @@ export const ListItem = ({
             </Text>
           ) : null}
           {trailing}
-          {showsChevron(look, !!(onPress || href), showChevron, destructive) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
+          {showsChevron(look, pressable, showChevron, destructive) ? <ChevronMark color={theme.colors.textSecondary} /> : null}
         </View>
       </View>
     </>
@@ -115,12 +143,12 @@ export const ListItem = ({
   const rowStyle = [styles.row, sheet.item, separator === 'row' && sheet.line, style];
   return (
     <ThemeScope theme={themeOverride}>
-      {onPress || href ? (
-        <Touchable role="button" disabled={disabled} onPress={onPress} href={href} external={external} style={rowStyle} {...rest}>
+      {pressable && !split ? (
+        <Touchable {...press} style={rowStyle} {...rest}>
           {content}
         </Touchable>
       ) : (
-        <View style={[rowStyle, disabled && cs.disabled]} {...rest}>
+        <View style={[rowStyle, disabled && cs.disabled]} {...(split ? null : rest)}>
           {content}
         </View>
       )}

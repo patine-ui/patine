@@ -3,6 +3,8 @@ import { StyleSheet, type TextInput } from 'react-native';
 
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { Text } from '@/core/primitives/Text';
+import { PatineProvider } from '@/core/theme/ThemeProvider';
 import { lightTheme } from '@/core/theme/theme.constants';
 import { TextField } from './TextField';
 
@@ -147,5 +149,32 @@ describe('TextField names', () => {
     expect(screen.getByLabelText('Work email')).toBeTruthy();
     expect(screen.getByLabelText('Search orders')).toBeTruthy();
     expect(screen.queryByLabelText('Email')).toBeNull();
+  });
+
+  it('takes a node as its label, drawn above in every design, and named by its words', async () => {
+    await render(
+      <TextField
+        design="material"
+        label={
+          <Text>
+            Phone <Text color="primary">New</Text>
+          </Text>
+        }
+      />
+    );
+    expect(screen.getByText('New')).toBeTruthy();
+    expect(screen.getByLabelText('Phone New')).toBeTruthy();
+  });
+});
+
+describe('TextField dir', () => {
+  it('runs a phone field left to right, from its start, in a right-to-left app', async () => {
+    await render(
+      <PatineProvider dir="rtl">
+        <TextField label="Phone" dir="ltr" />
+      </PatineProvider>
+    );
+    // Native mirrors 'left' and 'right' in a right-to-left layout, so 'right' is the left edge there.
+    expect(StyleSheet.flatten(input('Phone').props.style)).toMatchObject({ writingDirection: 'ltr', textAlign: 'right' });
   });
 });

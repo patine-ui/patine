@@ -14,7 +14,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
   },
-  label: { textAlign: 'center' },
+  // A one-line label clips its overflow. At 1x, rounding can cut a glyph's overhang at the start edge (the last letter in
+  // RTL); a pixel of padding, given back by the margin, keeps it inside the clip without moving anything.
+  label: { textAlign: 'center', paddingHorizontal: 1, marginHorizontal: -1 },
   underline: { textDecorationLine: 'underline' },
   fab: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   groupRow: { flexDirection: 'row', alignItems: 'center' },

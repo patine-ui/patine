@@ -20,6 +20,20 @@ describe('Steps', () => {
     expect(screen.queryByRole('button', { name: 'Step 3 of 3: Payment' })).toBeNull();
   });
 
+  it("keeps a done step that can't be reopened out of the buttons", async () => {
+    const onValueChange = jest.fn();
+    await render(
+      <Steps
+        steps={[{ title: 'Cart', disabled: true }, { title: 'Shipping' }, { title: 'Payment' }]}
+        value={2}
+        onValueChange={onValueChange}
+      />
+    );
+    expect(screen.queryByRole('button', { name: 'Step 1 of 3: Cart, completed' })).toBeNull();
+    expect(screen.getByLabelText('Step 1 of 3: Cart, completed')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Step 2 of 3: Shipping, completed' })).toBeTruthy();
+  });
+
   it('shows a progress bar with the step in the progress variant', async () => {
     await render(<Steps steps={STEPS} value={1} variant="progress" />);
     expect(screen.getByText('Step 2 of 3 · Shipping')).toBeTruthy();

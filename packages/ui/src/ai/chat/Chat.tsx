@@ -37,10 +37,12 @@ export const MessageBubble = ({
             children
           )}
         </View>
-        {meta ? (
+        {isTextContent(meta) ? (
           <Text size="xs" color="textSecondary" style={sheet.caption}>
             {meta}
           </Text>
+        ) : meta ? (
+          <View style={sheet.caption}>{meta}</View>
         ) : null}
       </View>
     </ThemeScope>

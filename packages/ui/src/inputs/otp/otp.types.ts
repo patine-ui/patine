@@ -1,4 +1,5 @@
-import type { Animated, StyleProp, ViewStyle } from 'react-native';
+import type React from 'react';
+import type { Animated, StyleProp, TextInput, ViewStyle } from 'react-native';
 
 import type { SlotStyles, ThemableProps, Theme } from '@/core';
 import type { ValueOf } from '@/core/core.types';
@@ -37,6 +38,15 @@ export interface InputOTPProps extends ThemableProps, Omit<FieldStatusProps, 're
   styles?: SlotStyles<InputOTPSlot>;
   /** On the text input; cell `i` gets `${testID}-cell-${i}` */
   testID?: string;
+  /** To `focus()`, `blur()` or `clear()` it, such as after a wrong code */
+  ref?: React.Ref<InputOTPHandle>;
+}
+
+/** What an InputOTP's `ref` holds. `clear()` empties a field that keeps its own state, without `onValueChange`; a controlled one sets `value` to '' */
+export interface InputOTPHandle {
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
 }
 
 export interface OtpCellState {
@@ -59,6 +69,7 @@ export interface InputOTPState {
   changeText: (text: string) => void;
   onFocus: () => void;
   onBlur: () => void;
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>;
 }
 
 export interface OtpCellProps {
