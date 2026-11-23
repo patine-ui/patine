@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5](https://github.com/patine-ui/patine/compare/v0.4.4...v0.4.5) (2026-11-23)
+
+
+### 🐛 Bug Fixes
+
+* harden the MCP server, release and CI ([#26](https://github.com/patine-ui/patine/issues/26)) ([523b11f](https://github.com/patine-ui/patine/commit/523b11fc259ca60ac3b63c090b5cc344b45272e8))
+
 ## [0.4.4](https://github.com/patine-ui/patine/compare/v0.4.3...v0.4.4) (2026-11-23)
 
 
