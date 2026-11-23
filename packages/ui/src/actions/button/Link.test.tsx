@@ -42,11 +42,11 @@ describe('Fab', () => {
 describe('CopyButton', () => {
   it('copies the value and says so', async () => {
     const onCopy = jest.fn();
-    await render(<CopyButton value="sk_live_123" onCopy={onCopy} />);
+    await render(<CopyButton value="sk_test_123" onCopy={onCopy} />);
     await act(async () => {
       fireEvent.press(screen.getByRole('button', { name: 'Copy' }));
     });
-    expect(onCopy).toHaveBeenCalledWith('sk_live_123');
+    expect(onCopy).toHaveBeenCalledWith('sk_test_123');
     expect(screen.getByRole('button', { name: 'Copied' })).toBeTruthy();
   });
 });

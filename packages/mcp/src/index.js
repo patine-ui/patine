@@ -41,7 +41,12 @@ const main = async () => {
       process.stdout.write(`${JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } })}\n`);
       return;
     }
-    const response = handle(pages, version, message);
+    let response;
+    try {
+      response = handle(pages, version, message);
+    } catch {
+      response = { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32603, message: 'Internal error' } };
+    }
     if (response) process.stdout.write(`${JSON.stringify(response)}\n`);
   });
 };

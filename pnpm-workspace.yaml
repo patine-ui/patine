@@ -2,6 +2,10 @@ packages:
   - packages/*
   - apps/*
 
+# A version must be 3 days old (in minutes) before pnpm resolves it: long enough for a hijacked release to be caught.
+# Dependabot honours it too.
+minimumReleaseAge: 4320
+
 onlyBuiltDependencies:
   - esbuild
   - lefthook

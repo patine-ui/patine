@@ -39,6 +39,7 @@ jobs:
       - run: pnpm build
       # Nothing outside the files allowlist ships to npm, and every `exports` target is in the tarball.
       - run: node packages/ui/scripts/check-pack.js
+      - run: node packages/ui/scripts/check-pack.js packages/mcp
 
   # Fails a PR that adds a dependency with a known high or critical advisory.
   dependency-review:
