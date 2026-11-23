@@ -106,7 +106,7 @@ const callTool = (pages, name, args = {}) => {
 
 /** The response to one JSON-RPC message, or `null` for a notification. */
 const handle = (pages, version, message) => {
-  const { id, method, params } = message;
+  const { id, method, params } = message !== null && typeof message === 'object' ? message : {};
   if (id === undefined || id === null) return null;
   const reply = (result) => ({
     jsonrpc: '2.0',
@@ -138,7 +138,7 @@ const handle = (pages, version, message) => {
     case 'tools/list':
       return reply({ tools: TOOLS });
     case 'tools/call': {
-      const result = callTool(pages, params?.name, params?.arguments);
+      const result = callTool(pages, params?.name, params?.arguments ?? {});
       return result ? reply(result) : fail(-32602, `Unknown tool: ${params?.name}`);
     }
     default:

@@ -65,4 +65,10 @@ describe('handle', () => {
     expect(call('tools/call', { name: 'nope' }).error.code).toBe(-32602);
     expect(call('resources/list').error.code).toBe(-32601);
   });
+
+  it('survives malformed messages', () => {
+    expect(handle(pages, '1.0.0', null)).toBeNull();
+    expect(handle(pages, '1.0.0', 42)).toBeNull();
+    expect(call('tools/call', { name: 'search_docs', arguments: null }).result.isError).toBe(false);
+  });
 });

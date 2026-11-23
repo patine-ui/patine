@@ -12,6 +12,8 @@ permissions: {}
 jobs:
   redeploy:
     runs-on: ubuntu-24.04
+    # The token lives in the `site` environment, limited to master, so a workflow on another branch can't read it.
+    environment: site
     steps:
       # A fine-grained token for patine-ui/pro only, Contents: read and write (what repository_dispatch needs).
       - env:
