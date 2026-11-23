@@ -13,13 +13,15 @@ export interface StepItem {
   description?: string;
   /** Marks the step as failed, in the danger colour */
   error?: boolean;
+  /** Done but can't be gone back to, such as a payment already made: it stays out of `onValueChange`'s buttons */
+  disabled?: boolean;
 }
 
 export interface StepsProps extends ThemableProps {
   steps: readonly StepItem[];
   /** The current step, from 0. Steps before it are done; `steps.length` marks them all done */
   value: number;
-  /** Makes done steps pressable, to go back to one */
+  /** Makes done steps pressable, to go back to one; a step with `disabled` stays put */
   onValueChange?: (index: number) => void;
   /** 'steps' draws numbered circles; 'progress' a Progress bar with "Step 2 of 4", for narrow screens. Default: 'steps' */
   variant?: StepsVariant;

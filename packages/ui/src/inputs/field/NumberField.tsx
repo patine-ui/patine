@@ -23,6 +23,7 @@ export const NumberField = ({
   value,
   defaultValue,
   onValueChange,
+  onValueChanging,
   min,
   max,
   step = 1,
@@ -41,7 +42,7 @@ export const NumberField = ({
 }: NumberFieldProps) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const range = { min, max, step };
-  const field = useNumberField({ value, defaultValue, onValueChange, formatValue }, range);
+  const field = useNumberField({ value, defaultValue, onValueChange, onValueChanging, formatValue }, range);
   const words = useLabels();
   const labels = { ...words.stepper, ...stepLabels };
   const layout = NUMBER_FIELD_DESIGN[theme.design].buttons;

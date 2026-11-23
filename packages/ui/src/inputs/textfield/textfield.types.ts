@@ -5,6 +5,8 @@ import type { SlotStyles, ThemableProps, Theme } from '@/core';
 import type { SearchFieldLabels, TextFieldLabels } from '@/core/theme/labels.types';
 import type { FieldStatusProps } from '@/overlays/sheet/sheet.types';
 
+export type TextDirection = 'ltr' | 'rtl' | 'auto';
+
 export type TextFieldSlot = 'label' | 'field' | 'input' | 'affix' | 'action' | 'helperText' | 'counter';
 
 /** The props TextField and TextArea share. Other `TextInput` props (`keyboardType`, `autoComplete`, `maxLength`, `onSubmitEditing`…) pass through. */
@@ -15,8 +17,13 @@ export interface TextFieldBaseProps
     >,
     ThemableProps,
     FieldStatusProps {
-  /** Above the field, or inside it in Material until it's focused or filled. Screen readers read it as the field's name */
-  label?: string;
+  /**
+   * Above the field, or inside it in Material until it's focused or filled. Screen readers read it as the field's name. A node
+   * (a label with an info tooltip or a tag) is drawn as is, above the field; its words name the field, or set `aria-label`
+   */
+  label?: React.ReactNode;
+  /** Which way the typed text runs, aligned to its start: 'ltr' for a phone, e-mail or ID field in a right-to-left app. Default: the layout's */
+  dir?: TextDirection;
   value?: string;
   /** Initial text when uncontrolled. Default: '' */
   defaultValue?: string;
@@ -60,10 +67,12 @@ export interface TextAreaProps extends TextFieldBaseProps {
   minRows?: number;
   /** It grows with the text up to this many lines, then scrolls. Default: no limit */
   maxRows?: number;
+  /** Enter on a hardware keyboard calls it with the text instead of adding a line; Shift+Enter still adds one. A chat box's send */
+  onSubmit?: (text: string) => void;
 }
 
 /** What the shared field draws from: TextField's props, or TextArea's with `multiline`. */
-export type FieldInputProps = TextFieldProps & Pick<TextAreaProps, 'rows' | 'minRows' | 'maxRows'> & { multiline?: boolean };
+export type FieldInputProps = TextFieldProps & Pick<TextAreaProps, 'rows' | 'minRows' | 'maxRows' | 'onSubmit'> & { multiline?: boolean };
 
 export interface FieldButtonProps {
   /** A word in the primary color, such as Show. Leave it out for the clear button's drawn ✕ in the secondary color */

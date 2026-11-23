@@ -59,3 +59,6 @@ export const LIST_DESIGN: Record<Design, ListDesign> = {
     headerColor: 'textSecondary',
   },
 };
+
+/** The mark before each BulletList item. */
+export const BULLET = '•';

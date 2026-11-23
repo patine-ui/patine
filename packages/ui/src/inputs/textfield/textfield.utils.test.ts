@@ -1,9 +1,14 @@
+import { createElement } from 'react';
+
 import {
   formatCount,
+  getInputDirection,
   getLineHeight,
+  getNodeText,
   getTextAreaHeight,
   getTextFieldAccessibility,
   isLabelRaised,
+  isSubmitKey,
   measureTextArea,
   resolveRows,
 } from './textfield.utils';
@@ -95,5 +100,40 @@ describe('getTextFieldAccessibility', () => {
 
   it('reads Invalid for an error without a message', () => {
     expect(getTextFieldAccessibility({ label: 'Name', error: true, disabled: false }).accessibilityHint).toBe('Invalid');
+  });
+});
+
+describe('isSubmitKey', () => {
+  const press = (nativeEvent: { key: string; shiftKey?: boolean }) => ({ nativeEvent }) as Parameters<typeof isSubmitKey>[0];
+
+  it('sends on Enter, not on Shift+Enter or other keys', () => {
+    expect(isSubmitKey(press({ key: 'Enter' }))).toBe(true);
+    expect(isSubmitKey(press({ key: 'Enter', shiftKey: true }))).toBe(false);
+    expect(isSubmitKey(press({ key: 'a' }))).toBe(false);
+  });
+});
+
+describe('getInputDirection', () => {
+  it("keeps the layout's direction without a dir", () => {
+    expect(getInputDirection(undefined, 'rtl', false)).toBeNull();
+  });
+
+  it('starts at the left for ltr: mirrored on native in a right-to-left layout, as is on the web', () => {
+    expect(getInputDirection('ltr', 'rtl', false)).toEqual({ writingDirection: 'ltr', textAlign: 'right' });
+    expect(getInputDirection('ltr', 'ltr', false)).toEqual({ writingDirection: 'ltr', textAlign: 'left' });
+    expect(getInputDirection('ltr', 'rtl', true)).toEqual({ writingDirection: 'ltr', textAlign: 'left' });
+    expect(getInputDirection('rtl', 'ltr', true)).toEqual({ writingDirection: 'rtl', textAlign: 'right' });
+  });
+
+  it('aligns each value by its script on the web with auto', () => {
+    expect(getInputDirection('auto', 'rtl', true)).toEqual({ writingDirection: 'auto', textAlign: 'start' });
+    expect(getInputDirection('auto', 'rtl', false)).toEqual({ writingDirection: 'auto' });
+  });
+});
+
+describe('getNodeText', () => {
+  it('joins the words of a node and its children', () => {
+    expect(getNodeText(createElement('span', null, 'Phone ', createElement('b', null, 'New'), null))).toBe('Phone New');
+    expect(getNodeText(null)).toBe('');
   });
 });

@@ -29,4 +29,18 @@ describe('SegmentedControl and ChipGroup', () => {
     expect(onValueChange).toHaveBeenCalledWith('week', items[1]);
     expect(screen.getByLabelText('Week').props.accessibilityState).toMatchObject({ checked: true });
   });
+
+  it('lets a multiple chip group combine filters, adding and removing each', async () => {
+    const onValueChange = jest.fn();
+    await render(<ChipGroup type="multiple" items={items} defaultValue={['day']} onValueChange={onValueChange} testID="filters" />);
+    expect(screen.getByTestId('filters').props.role).toBe('group');
+    expect(screen.getByLabelText('Day').props.role).toBe('checkbox');
+    await fireEvent.press(screen.getByLabelText('Week'));
+    expect(onValueChange).toHaveBeenLastCalledWith(['day', 'week'], items[1]);
+    expect(screen.getByLabelText('Day').props.accessibilityState).toMatchObject({ checked: true });
+    expect(screen.getByLabelText('Week').props.accessibilityState).toMatchObject({ checked: true });
+    await fireEvent.press(screen.getByLabelText('Day'));
+    expect(onValueChange).toHaveBeenLastCalledWith(['week'], items[0]);
+    expect(screen.getByLabelText('Day').props.accessibilityState).toMatchObject({ checked: false });
+  });
 });

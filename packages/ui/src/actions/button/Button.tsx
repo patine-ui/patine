@@ -69,3 +69,6 @@ export const Button = ({
     </ThemeScope>
   );
 };
+
+// Its root is one pressable, so a DropdownMenu or a ListItem takes it as a control of its own instead of wrapping it.
+Button.pressable = true;

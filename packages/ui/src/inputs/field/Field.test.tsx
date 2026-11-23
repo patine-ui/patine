@@ -70,4 +70,18 @@ describe('NumberField', () => {
     await fireEvent(screen.getByLabelText('Qty'), 'keyPress', { nativeEvent: { key: 'ArrowUp' }, preventDefault: () => {} });
     expect(onValueChange).toHaveBeenCalledWith(2);
   });
+
+  it('reports each keystroke with onValueChanging, and commits with onValueChange only on blur', async () => {
+    const onValueChange = jest.fn();
+    const onValueChanging = jest.fn();
+    await render(<NumberField label="Qty" max={50} onValueChange={onValueChange} onValueChanging={onValueChanging} />);
+    const qty = screen.getByLabelText('Qty');
+    await fireEvent(qty, 'focus');
+    await fireEvent.changeText(qty, '1');
+    await fireEvent.changeText(qty, '12');
+    await fireEvent.changeText(qty, '120');
+    await fireEvent.changeText(qty, '');
+    expect(onValueChanging.mock.calls).toEqual([[1], [12], [50], [null]]);
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
 });

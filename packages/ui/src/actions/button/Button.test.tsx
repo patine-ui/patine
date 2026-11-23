@@ -113,6 +113,11 @@ describe('Button', () => {
     expect(boxOf('Focus me').outlineWidth).toBeUndefined();
   });
 
+  it("leaves its one-line label a pixel each side, so rounding can't clip a glyph's overhang (RTL at 1x)", async () => {
+    await render(<Button>קליטה</Button>);
+    expect(StyleSheet.flatten(screen.getByText('קליטה').props.style)).toMatchObject({ paddingHorizontal: 1, marginHorizontal: -1 });
+  });
+
   it('styles its label through the `styles.label` slot', async () => {
     await render(<Button styles={{ label: { letterSpacing: 2 } }}>Save</Button>);
     expect(StyleSheet.flatten(screen.getByText('Save').props.style).letterSpacing).toBe(2);

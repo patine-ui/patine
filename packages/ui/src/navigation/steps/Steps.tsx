@@ -10,7 +10,7 @@ import { clampStep, formatStep } from './steps.utils';
 
 /**
  * Where the user is in a flow of steps, such as checkout: numbered circles with connectors (a check on each done step),
- * across or down, or a Progress bar with "Step 2 of 4" for narrow screens. With `onValueChange`, done steps go back.
+ * across or down, or a Progress bar with "Step 2 of 4" for narrow screens. With `onValueChange`, done steps go back, except those marked `disabled`.
  */
 export const Steps = ({
   steps,

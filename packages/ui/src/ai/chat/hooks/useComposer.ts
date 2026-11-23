@@ -2,6 +2,7 @@ import type { TextInputKeyPressEvent } from 'react-native';
 
 import { getSendableText } from '@/ai/chat/chat.utils';
 import { useControllableState } from '@/core/hooks/useControllableState';
+import { isSubmitKey } from '@/inputs/textfield/textfield.utils';
 
 /** The composer's text, and sending it: the send button, or Enter on a hardware keyboard (Shift+Enter for a new line). */
 export const useComposer = ({
@@ -28,13 +29,11 @@ export const useComposer = ({
     setText('');
   };
   const onKeyPress = (event: TextInputKeyPressEvent) => {
-    // Hardware keyboards (the web, iPad) report Shift; a phone keyboard's return key never sends.
-    const { key, shiftKey } = event.nativeEvent as { key: string; shiftKey?: boolean };
-    if (key === 'Escape' && onStop) {
+    if (event.nativeEvent.key === 'Escape' && onStop) {
       onStop();
       return;
     }
-    if (key !== 'Enter' || shiftKey) return;
+    if (!isSubmitKey(event)) return;
     // Keeps the web from adding the new line; fired test events have no preventDefault.
     event.preventDefault?.();
     send();

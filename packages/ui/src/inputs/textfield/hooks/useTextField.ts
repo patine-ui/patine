@@ -6,10 +6,12 @@ import { IS_WEB } from '@/core/core.constants';
 import { useControllableState } from '@/core/hooks/useControllableState';
 import type { Theme } from '@/core/theme/theme.types';
 import type { FieldInputProps, WebTextArea } from '@/inputs/textfield/textfield.types';
-import { getLineHeight, getTextAreaHeight, measureTextArea, resolveRows } from '@/inputs/textfield/textfield.utils';
+import { getLineHeight, getTextAreaHeight, isSubmitKey, measureTextArea, resolveRows } from '@/inputs/textfield/textfield.utils';
 
 type TextInputInstance = ComponentRef<typeof TextInput>;
-type EventOf<K extends 'onFocus' | 'onBlur' | 'onContentSizeChange' | 'onLayout'> = Parameters<NonNullable<TextInputProps[K]>>[0];
+type EventOf<K extends 'onFocus' | 'onBlur' | 'onContentSizeChange' | 'onLayout' | 'onKeyPress'> = Parameters<
+  NonNullable<TextInputProps[K]>
+>[0];
 
 /** The text, focus, password reveal and TextArea height behind a field. `onValueChange` fires for the user's typing and clearing only. */
 export const useTextField = (
@@ -22,6 +24,8 @@ export const useTextField = (
     onBlur,
     onContentSizeChange,
     onLayout,
+    onKeyPress,
+    onSubmit,
     multiline,
     ref,
     rows,
@@ -72,6 +76,13 @@ export const useTextField = (
       node.current = instance;
       if (typeof ref === 'function') ref(instance);
       else if (ref) ref.current = instance;
+    },
+    onKeyPress: (e: EventOf<'onKeyPress'>) => {
+      onKeyPress?.(e);
+      if (!onSubmit || !isSubmitKey(e)) return;
+      // Keeps the web from adding the new line; fired test events have no preventDefault.
+      e.preventDefault?.();
+      onSubmit(value);
     },
     onLayout: (e: EventOf<'onLayout'>) => {
       measureOnWeb();

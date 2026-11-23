@@ -37,4 +37,15 @@ describe('TextArea', () => {
     await grow(10);
     expect(heightOf()).toBe(110);
   });
+
+  it('sends on Enter with onSubmit, and keeps Shift+Enter for a new line', async () => {
+    const onSubmit = jest.fn();
+    const onKeyPress = jest.fn();
+    await render(<TextArea label="Bio" defaultValue="Hi" onSubmit={onSubmit} onKeyPress={onKeyPress} />);
+    await fireEvent(input(), 'keyPress', { nativeEvent: { key: 'Enter', shiftKey: true } });
+    expect(onSubmit).not.toHaveBeenCalled();
+    await fireEvent(input(), 'keyPress', { nativeEvent: { key: 'Enter' } });
+    expect(onSubmit).toHaveBeenCalledWith('Hi');
+    expect(onKeyPress).toHaveBeenCalledTimes(2);
+  });
 });

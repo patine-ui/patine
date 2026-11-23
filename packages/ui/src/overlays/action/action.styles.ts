@@ -25,6 +25,7 @@ export const themed = createStyles((t) => ({
   groupedHeader: { paddingVertical: t.spacing.md },
   row: { paddingHorizontal: t.spacing.lg, paddingVertical: t.spacing.sm, gap: t.spacing.md },
   compactRow: { paddingHorizontal: t.spacing.md, paddingVertical: t.spacing.xs, gap: t.spacing.sm },
+  groupHeading: { paddingHorizontal: t.spacing.lg, paddingTop: t.spacing.md, paddingBottom: t.spacing.xs },
   compactHeader: { paddingHorizontal: t.spacing.md, paddingTop: t.spacing.sm, paddingBottom: t.spacing.xs },
   separator: { borderColor: t.colors.border },
   label: { color: t.colors.text },

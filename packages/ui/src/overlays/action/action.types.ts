@@ -19,6 +19,8 @@ export interface ActionSheetAction {
   /** Drawn in the theme's `danger` colour, for Delete and the like */
   destructive?: boolean;
   disabled?: boolean;
+  /** Actions sharing a group are gathered under its heading, in the order the groups first appear */
+  group?: string;
   testID?: string;
 }
 
@@ -27,6 +29,7 @@ export type ActionSheetSlot =
   | 'header'
   | 'title'
   | 'message'
+  | 'groupHeading'
   | 'action'
   | 'actionLabel'
   | 'actionDescription'
@@ -72,6 +75,14 @@ export interface ActionSheetHeaderProps {
   grouped: boolean;
   theme: Theme;
   slots?: SlotStyles<ActionSheetSlot>;
+}
+
+export interface ActionGroupHeadingProps {
+  group: string;
+  /** A mouse-driven menu: tighter padding */
+  compact?: boolean;
+  theme: Theme;
+  slots?: SlotStyles<'groupHeading'>;
 }
 
 export interface ActionSheetRowProps {
@@ -121,12 +132,24 @@ export interface DropdownMenuTriggerInfo {
   visible: boolean;
 }
 
-export type DropdownMenuSlot = 'trigger' | 'menu' | 'header' | 'title' | 'action' | 'actionLabel' | 'actionDescription' | 'check';
+export type DropdownMenuSlot =
+  | 'trigger'
+  | 'menu'
+  | 'header'
+  | 'title'
+  | 'groupHeading'
+  | 'action'
+  | 'actionLabel'
+  | 'actionDescription'
+  | 'check';
 
 export interface DropdownMenuProps extends ThemableProps, TriggeredOpenProps {
   /** The items, in order. A press closes the menu and runs the item */
   actions: DropdownMenuAction[];
-  /** The trigger: a node that opens the menu on press, or a function that gets `open` for your own button */
+  /**
+   * The trigger. A Button or anything given `onPress` becomes the trigger itself (one button, Radix's `asChild`); other content
+   * is wrapped in a pressable; a function gets `open` for your own button
+   */
   children: React.ReactNode | ((info: DropdownMenuTriggerInfo) => React.ReactNode);
   /** A small heading above the actions */
   title?: string;

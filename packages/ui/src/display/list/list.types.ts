@@ -20,13 +20,13 @@ export interface ListProps extends ViewProps, ThemableProps {
 }
 
 export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProps {
-  /** The main line */
-  title: string;
-  /** A second line under the title */
-  description?: string;
-  /** An icon or avatar before the text */
+  /** The main line. A string is drawn in the row's text style; a node is drawn as it is */
+  title: React.ReactNode;
+  /** A second line under the title. A string is drawn in small secondary text; a node as it is */
+  description?: React.ReactNode;
+  /** An icon or avatar before the text, or a control such as a Checkbox */
   leading?: React.ReactNode;
-  /** A control after the text, such as a Switch or a Badge */
+  /** A control after the text, such as a Switch, a Badge or a DropdownMenu */
   trailing?: React.ReactNode;
   /** The current value, in secondary text at the end, e.g. "English" */
   value?: string;
@@ -34,9 +34,11 @@ export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProp
   showChevron?: boolean;
   /** Draws the title, and an `Icon` in `leading` without its own color, in the danger color, for rows like "Delete account" */
   destructive?: boolean;
+  /** Draws the title, and an `Icon` in `leading` without its own color, in secondary text, for rows that are done, read or archived. Default: false */
+  muted?: boolean;
   /** Dims it and ignores input. Default: false */
   disabled?: boolean;
-  /** Makes the row a button */
+  /** Makes the row a button. A control in `leading` or `trailing` then sits beside the button, with the text as the button */
   onPress?: (event: GestureResponderEvent) => void;
   /** Styles for its parts: `title` */
   styles?: SlotStyles<'title'>;
@@ -44,6 +46,13 @@ export interface ListItemProps extends Omit<ViewProps, 'children'>, ThemableProp
   href?: string;
   /** With `href`, opens in a new tab on the web. Default: false */
   external?: boolean;
+}
+
+export interface BulletListProps extends ViewProps, ThemableProps {
+  /** The items, each after a bullet. Strings are drawn in body text; nodes as they are */
+  items: React.ReactNode[];
+  /** Styles for its parts: `item` (a row), `bullet`, `text` */
+  styles?: SlotStyles<'item' | 'bullet' | 'text'>;
 }
 
 export interface ListDesign {

@@ -5,7 +5,8 @@ import { FIELD_DESIGN, FOCUS_RING_WIDTH } from '@/overlays/sheet/sheet.constants
 import { CARET_HEIGHT_RATIO, CARET_WIDTH, NO_ZOOM_FONT_SIZE, OTP_CELL_MAX_WIDTH, OTP_CELL_MIN_WIDTH } from './otp.constants';
 
 export const styles = StyleSheet.create({
-  row: { flexDirection: 'row', justifyContent: 'center' },
+  // Codes read left to right, so the first cell stays on the left in a right-to-left app too.
+  row: { flexDirection: 'row', justifyContent: 'center', direction: 'ltr' },
   cell: { flex: 1, minWidth: OTP_CELL_MIN_WIDTH, maxWidth: OTP_CELL_MAX_WIDTH, alignItems: 'center', justifyContent: 'center' },
   caret: { width: CARET_WIDTH },
   // Over the cells, so a tap anywhere focuses it and a long press offers to paste; the cells draw what it holds.

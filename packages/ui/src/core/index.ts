@@ -58,7 +58,15 @@ export { useControllableState } from './hooks/useControllableState';
 export { Touchable } from './primitives/Touchable';
 export { ContentColor, useContentColor } from './theme/ContentColor';
 export { DEFAULT_LABELS } from './theme/labels.constants';
-export type { Labels } from './theme/labels.types';
+export type {
+  ActivityLabels,
+  DataTableLabels,
+  Labels,
+  QueryStateLabels,
+  ShellLabels,
+  UploadLabels,
+  WizardLabels,
+} from './theme/labels.types';
 export {
   PatineProvider,
   ThemeScope,
@@ -99,3 +107,4 @@ export type {
 } from './theme/theme.types';
 export { createStyles, createTheme, fontFace, mergeTheme, resolveDesign, stepShadow, textStyle } from './theme/theme.utils';
 export * from './utils/date.utils';
+export { getAnchorProps, openHref } from './utils/href.utils';

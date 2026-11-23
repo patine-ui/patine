@@ -46,6 +46,8 @@ export interface NumberFieldProps
   defaultValue?: number | null;
   /** Called when the user steps, or leaves the field or presses Enter after typing; never when `value` changes from your code */
   onValueChange?: (value: number | null) => void;
+  /** Called on every keystroke with the number typed so far, kept within `min` and `max`, before it's committed: a live total */
+  onValueChanging?: (value: number | null) => void;
   /** Hides the − and + buttons, leaving the arrow keys and screen-reader actions. Default: false */
   hideButtons?: boolean;
   /** Turns the value into the text shown while the field isn't being edited. Default: the number as is */

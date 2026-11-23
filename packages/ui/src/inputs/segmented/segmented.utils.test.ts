@@ -1,4 +1,4 @@
-import { findItemIndex, getHiddenSides, getPageOffset, getRevealOffset } from './segmented.utils';
+import { findItemIndex, getHiddenSides, getPageOffset, getRevealOffset, toggleChoice } from './segmented.utils';
 
 /** Five 80px items, 8px apart. */
 const layouts = [0, 88, 176, 264, 352].map((x) => ({
@@ -70,5 +70,17 @@ describe('getPageOffset', () => {
   it('stays inside the content', () => {
     expect(getPageOffset(frame(144), 'right', 56)).toBe(232);
     expect(getPageOffset(frame(100), 'left', 56)).toBe(0);
+  });
+});
+
+describe('toggleChoice', () => {
+  it('adds a value that is off and removes one that is on, keeping the order', () => {
+    expect(toggleChoice(['a'], 'b', Object.is)).toEqual(['a', 'b']);
+    expect(toggleChoice(['a', 'b', 'c'], 'b', Object.is)).toEqual(['a', 'c']);
+  });
+
+  it('matches with isEqual', () => {
+    const same = (x: { id: number }, y: { id: number }) => x.id === y.id;
+    expect(toggleChoice([{ id: 1 }], { id: 1 }, same)).toEqual([]);
   });
 });

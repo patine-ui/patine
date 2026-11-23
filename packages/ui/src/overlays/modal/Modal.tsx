@@ -17,19 +17,31 @@ import { resolveModalLayout } from './modal.utils';
 
 /**
  * A window for rich content: forms, details, media. Centered on a wide screen and full screen on a phone. Give it `trigger`,
- * `title`, `description` and `actions` (children are the scrolling body), or put ModalTrigger and ModalContent inside for
+ * `title`, `description`, `footer` and `actions` (children are the scrolling body), or put ModalTrigger and ModalContent inside for
  * full control. Closes on the backdrop, the ✕, Escape on the web and Android back, unless `dismissible={false}`. For a short
  * question with two answers, use AlertDialog.
  */
-export const Modal = ({ children, trigger, title, description, actions, size, fullScreen, showCloseButton, ...props }: ModalProps) => {
+export const Modal = ({
+  children,
+  trigger,
+  title,
+  description,
+  footer,
+  actions,
+  size,
+  fullScreen,
+  showCloseButton,
+  ...props
+}: ModalProps) => {
   const ctx = useModal(props);
   return (
     <DialogContext.Provider value={ctx}>
-      {hasShorthand(trigger, title, description, actions) ? (
+      {hasShorthand(trigger, title, description, footer, actions) ? (
         <ModalLayout
           trigger={trigger}
           title={title}
           description={description}
+          footer={footer}
           actions={actions}
           renderContent={(sections) => (
             <ModalContent size={size} fullScreen={fullScreen} showCloseButton={showCloseButton}>
@@ -104,7 +116,7 @@ export const ModalFooter = ({ style, ...rest }: ModalSectionProps) => {
 };
 
 /** The shorthand's layout, built from the parts above: the trigger, then the panel with its header, body and footer. */
-export const ModalLayout = ({ trigger, title, description, actions, renderContent, children }: ModalLayoutProps) => (
+export const ModalLayout = ({ trigger, title, description, footer, actions, renderContent, children }: ModalLayoutProps) => (
   <>
     {trigger ? <ModalTrigger>{trigger}</ModalTrigger> : null}
     {renderContent(
@@ -116,7 +128,12 @@ export const ModalLayout = ({ trigger, title, description, actions, renderConten
           </ModalHeader>
         ) : null}
         {children ? <ModalBody>{children}</ModalBody> : null}
-        {actions?.length ? <ModalFooter>{renderDialogActions(actions)}</ModalFooter> : null}
+        {footer || actions?.length ? (
+          <ModalFooter>
+            {footer}
+            {actions ? renderDialogActions(actions) : null}
+          </ModalFooter>
+        ) : null}
       </>
     )}
   </>

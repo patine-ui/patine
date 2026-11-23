@@ -1,8 +1,12 @@
+import { Fragment } from 'react';
+
 import { View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
+import { groupHeadingAt } from '@/core/utils/group.utils';
 import { useTabsState } from './hooks/useTabsState';
 import { TabsContent } from './TabsContent';
 import { TabsContext } from './TabsContext';
+import { TabsGroupLabel } from './TabsGroupLabel';
 import { TabsList } from './TabsList';
 import { TabsTrigger } from './TabsTrigger';
 import { TABS_DESIGN, TABS_ORIENTATION } from './tabs.constants';
@@ -11,7 +15,7 @@ import type { TabsProps } from './tabs.types';
 import { firstEnabledValue } from './tabs.utils';
 
 /**
- * Panels of content shown one at a time. Give it `items` ({ value, label, content }), or compose a TabsList of TabsTriggers
+ * Panels of content shown one at a time. Give it `items` ({ value, label, content, group? }), or compose a TabsList of TabsTriggers
  * and a TabsContent for each for full control.
  */
 export const Tabs = ({
@@ -44,10 +48,13 @@ export const Tabs = ({
           {items ? (
             <>
               <TabsList>
-                {items.map((item) => (
-                  <TabsTrigger key={item.value} value={item.value} icon={item.icon} disabled={item.disabled}>
-                    {item.label}
-                  </TabsTrigger>
+                {items.map((item, index) => (
+                  <Fragment key={item.value}>
+                    {vertical && groupHeadingAt(items, index) ? <TabsGroupLabel>{item.group}</TabsGroupLabel> : null}
+                    <TabsTrigger value={item.value} icon={item.icon} disabled={item.disabled}>
+                      {item.label}
+                    </TabsTrigger>
+                  </Fragment>
                 ))}
               </TabsList>
               {items.map((item) => (

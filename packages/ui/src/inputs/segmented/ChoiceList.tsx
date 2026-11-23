@@ -1,24 +1,27 @@
 import { ARROW_FOCUS } from '@/core/a11y/keyboard.utils';
-import { useControllableState } from '@/core/hooks/useControllableState';
 import { Scroll } from '@/core/primitives/Scroll';
 import { AnimatedView, View } from '@/core/primitives/View';
 import { ThemeScope, useComponentTheme } from '@/core/theme/ThemeProvider';
 import { ListItem } from './components/ListItem';
 import { ScrollArrow } from './components/ScrollArrow';
 import { useChoiceList } from './hooks/useChoiceList';
+import { useChoiceSelection } from './hooks/useChoiceSelection';
 import { useSegmentThumb } from './hooks/useSegmentThumb';
 import { ARROW_POSITION, CHOICE_ICON_POSITION, CHOICE_VARIANT, LIST_DESIGN, SCROLL_ARROW_SIDES } from './segmented.constants';
 import { styles, themed } from './segmented.styles';
-import type { ChoiceListProps } from './segmented.types';
-import { findItemIndex } from './segmented.utils';
+import type { ChoiceListAnyProps } from './segmented.types';
 
-/** A row of choices that scrolls sideways. Pressing an item at the edge scrolls the next one into view, so the user sees there's more. */
+/**
+ * A row of choices that scrolls sideways, one selected (radios) or with `type: 'multiple'` any number (checkboxes). Pressing
+ * an item at the edge scrolls the next one into view, so the user sees there's more.
+ */
 export const ChoiceList = <T,>({
   items,
+  type,
   value,
-  defaultValue = null,
+  defaultValue,
   onValueChange,
-  isEqual = Object.is,
+  isEqual,
   variant = CHOICE_VARIANT.segmented,
   iconPosition = CHOICE_ICON_POSITION.left,
   showArrows = false,
@@ -31,16 +34,12 @@ export const ChoiceList = <T,>({
   theme: themeProp,
   design,
   testID,
-}: ChoiceListProps<T>) => {
+}: ChoiceListAnyProps<T>) => {
   const { theme, themeOverride } = useComponentTheme(themeProp, design);
   const sheet = themed(theme);
-  const [selected, setSelected] = useControllableState<T | null>(value, defaultValue);
-  const list = useChoiceList<T>((next, item) => {
-    setSelected(next);
-    onValueChange?.(next, item);
-  }, theme.spacing.lg);
-  const selectedIndex = findItemIndex(items, selected, isEqual);
-  const thumb = useSegmentThumb(selectedIndex, theme.animation.duration);
+  const selection = useChoiceSelection<T>({ items, type, value, defaultValue, onValueChange, isEqual });
+  const list = useChoiceList<T>((_, item) => selection.select(item), theme.spacing.lg);
+  const thumb = useSegmentThumb(selection.selectedIndex, theme.animation.duration);
   const segmented = variant === CHOICE_VARIANT.segmented;
   const { outlined } = LIST_DESIGN[theme.design];
   const overlay = arrowPosition === ARROW_POSITION.overlay;
@@ -53,7 +52,7 @@ export const ChoiceList = <T,>({
       onContentSizeChange={list.onContentSizeChange}
       onScroll={list.onScroll}
       scrollEventThrottle={16}
-      role="radiogroup"
+      role={selection.multiple ? 'group' : 'radiogroup'}
       aria-label={accessibilityLabel}
       style={[
         styles.list,
@@ -75,7 +74,8 @@ export const ChoiceList = <T,>({
         <ListItem
           key={item.label}
           item={item}
-          selected={index === selectedIndex}
+          selected={selection.isSelected(item, index)}
+          multiple={selection.multiple}
           divided={index > 0}
           variant={variant}
           iconPosition={iconPosition}

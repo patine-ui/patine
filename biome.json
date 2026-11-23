@@ -81,6 +81,7 @@
                   "AlertDialogAction",
                   "AlertDialogCancel",
                   "TabsTrigger",
+                  "TabsGroupLabel",
                   "AccordionTrigger",
                   "CollapsibleTrigger",
                   "ModalTitle",

@@ -9,15 +9,16 @@ import type { DrawerContentProps, DrawerProps } from './modal.types';
 
 /**
  * A full-height panel that slides in from the side: navigation, filters, details. Works like Modal: give it `trigger`,
- * `title`, `description` and `actions` (children are the body), or put DrawerTrigger and DrawerContent inside.
+ * `title`, `description`, `footer` and `actions` (children are the body), or put DrawerTrigger and DrawerContent inside.
  */
-export const Drawer = ({ children, trigger, title, description, actions, side, size, showCloseButton, ...props }: DrawerProps) => (
+export const Drawer = ({ children, trigger, title, description, footer, actions, side, size, showCloseButton, ...props }: DrawerProps) => (
   <Modal {...props}>
-    {hasShorthand(trigger, title, description, actions) ? (
+    {hasShorthand(trigger, title, description, footer, actions) ? (
       <ModalLayout
         trigger={trigger}
         title={title}
         description={description}
+        footer={footer}
         actions={actions}
         renderContent={(sections) => (
           <DrawerContent side={side} size={size} showCloseButton={showCloseButton}>

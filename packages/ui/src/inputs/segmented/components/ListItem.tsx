@@ -10,6 +10,7 @@ import type { ListItemProps } from '@/inputs/segmented/segmented.types';
 export const ListItem = <T,>({
   item,
   selected,
+  multiple,
   divided,
   variant,
   iconPosition,
@@ -35,7 +36,7 @@ export const ListItem = <T,>({
         pressScale={!segmented}
         disabled={disabled}
         onPress={onPress}
-        role="radio"
+        role={multiple ? 'checkbox' : 'radio'}
         aria-checked={selected}
         aria-label={item.label}
         style={[

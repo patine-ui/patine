@@ -50,6 +50,7 @@ export const InputOTP = (props: InputOTPProps) => {
           </View>
         </FieldFrame>
         <Input
+          ref={otp.inputRef}
           theme={theme}
           value={otp.code}
           onChangeText={otp.changeText}

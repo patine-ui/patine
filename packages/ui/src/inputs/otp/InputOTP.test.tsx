@@ -1,6 +1,11 @@
+import { act, createRef } from 'react';
+import { StyleSheet, TextInput } from 'react-native';
+
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { PatineProvider } from '@/core/theme/ThemeProvider';
 import { InputOTP } from './InputOTP';
+import type { InputOTPHandle } from './otp.types';
 
 const input = () => screen.getByLabelText('Verification code');
 const cellText = (index: number) => screen.getByTestId(`otp-cell-${index}`, { includeHiddenElements: true });
@@ -56,5 +61,29 @@ describe('InputOTP', () => {
   it('offers the code from a text message on a number pad', async () => {
     await render(<InputOTP />);
     expect(input().props).toMatchObject({ textContentType: 'oneTimeCode', keyboardType: 'number-pad', maxLength: 6 });
+  });
+
+  it('focuses and clears through its ref, without reporting the clear', async () => {
+    const ref = createRef<InputOTPHandle>();
+    const onValueChange = jest.fn();
+    await render(<InputOTP ref={ref} defaultValue="1234" onValueChange={onValueChange} />);
+    // The jest preset's TextInput shares one mock focus across instances.
+    const { focus } = TextInput.prototype as unknown as { focus: jest.Mock };
+    focus.mockClear();
+    act(() => ref.current?.focus());
+    expect(focus).toHaveBeenCalled();
+    await act(async () => ref.current?.clear());
+    expect(input().props.value).toBe('');
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('fills its cells left to right in a right-to-left app, as codes read', async () => {
+    await render(
+      <PatineProvider dir="rtl">
+        <InputOTP length={4} testID="otp" />
+      </PatineProvider>
+    );
+    const row = cellText(0).parent;
+    expect(StyleSheet.flatten(row?.props.style).direction).toBe('ltr');
   });
 });

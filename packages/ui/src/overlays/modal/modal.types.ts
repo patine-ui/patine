@@ -10,14 +10,20 @@ type AnimatedNumber = Animated.AnimatedInterpolation<number>;
 export type ModalSize = keyof typeof MODAL_SIZE;
 export type DrawerSide = ValueOf<typeof DRAWER_SIDE>;
 
-export interface ModalProps extends DialogProps {
+/** Shorthand slots Modal and Drawer add to Dialog's. */
+interface ModalShorthandProps {
+  /** Shorthand: what the ModalFooter draws before `actions`' buttons, such as an Edit button and a ⋯ menu */
+  footer?: React.ReactNode;
+}
+
+export interface ModalProps extends DialogProps, ModalShorthandProps {
   /** Shorthand: ModalContent's `size`. Default: 'md' */
   size?: ModalSize;
   /** Shorthand: ModalContent's `fullScreen` */
   fullScreen?: boolean;
 }
 
-export interface DrawerProps extends DialogProps {
+export interface DrawerProps extends DialogProps, ModalShorthandProps {
   /** Shorthand: DrawerContent's `side`. Default: 'end' */
   side?: DrawerSide;
   /** Shorthand: DrawerContent's `size`. Default: 'sm' */
@@ -25,7 +31,7 @@ export interface DrawerProps extends DialogProps {
 }
 
 /** The shorthand's layout: the trigger, then `content` (a ModalContent or DrawerContent) wrapped around the sections. */
-export interface ModalLayoutProps extends DialogProps {
+export interface ModalLayoutProps extends DialogProps, ModalShorthandProps {
   /** Wraps the header, body and footer in the panel */
   renderContent: (sections: React.ReactNode) => React.ReactNode;
 }

@@ -34,6 +34,24 @@ describe('Text', () => {
     expect(styleOf('Night').color).toBe(darkTheme.colors.text);
   });
 
+  it('inherits size, weight, font and color from an enclosing Text unless it sets its own', async () => {
+    await render(
+      <Text size="sm" color="textSecondary">
+        Due <Text weight="semibold">today</Text> <Text color="danger">late</Text>
+      </Text>
+    );
+    expect(styleOf('today')).toMatchObject({
+      fontSize: lightTheme.typography.sizes.sm,
+      fontWeight: lightTheme.typography.weights.semibold,
+      color: lightTheme.colors.textSecondary,
+    });
+    expect(styleOf('late')).toMatchObject({
+      fontSize: lightTheme.typography.sizes.sm,
+      fontWeight: lightTheme.typography.weights.regular,
+      color: lightTheme.colors.danger,
+    });
+  });
+
   it('caps font scaling so fixed-height controls keep their text, unless told otherwise', async () => {
     await render(
       <>

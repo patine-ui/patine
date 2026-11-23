@@ -7,6 +7,7 @@
   "folders": ["packages/ui", "packages/icons", "packages/mcp"],
   "rules": [
     "Install patine-ui. It has zero native code (pure JavaScript), so it works in Expo Go without a rebuild. It needs React 19 and React Native 0.78 or later (Expo SDK 53+).",
+    "With Vite, alias react-native to a small shim that re-exports react-native-web, define __DEV__ and global, and put .web.* extensions first; the full vite.config.ts and the Vitest lines are on patine.dev/docs/getting-started/installation#vite.",
     "On native, import from feature subpaths such as 'patine-ui/date' so Metro only bundles what you use.",
     "Names and props follow shadcn/ui: variant, size, checked + onCheckedChange, value + onValueChange, and composed parts like Card + CardHeader + CardTitle.",
     "Every overlay (sheets, picker sheets, ActionSheet, Dialog, Modal, Popover) takes open + onOpenChange. Dialog, BottomSheet and ActionSheet also take a trigger element and defaultOpen, so a simple one needs no state.",
